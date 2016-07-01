@@ -673,7 +673,7 @@ void exceptionHandler(NSException * exception)
             return [[NSEvent alloc]init];
         }
         
-        if(result.keyCode == 36) {
+        if(isEnterAccess(result)) {
             if([appWindow().navigationController.currentController proccessEnterAction]) {
                 return [[NSEvent alloc] init];
             }

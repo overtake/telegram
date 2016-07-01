@@ -429,7 +429,7 @@ DYNAMIC_PROPERTY(DUser);
     
 }
 
--(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result))choiceHandler {
     
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
@@ -468,7 +468,7 @@ DYNAMIC_PROPERTY(DUser);
     
     
     
-    NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]])] : nil;
+    NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:allowUsernameless && ( self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]]))] : nil;
     
     
     __block NSMutableArray *botUsers = [[NSMutableArray alloc] init];
@@ -494,44 +494,44 @@ DYNAMIC_PROPERTY(DUser);
                     
                     if(user && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0))
                         [botUsers addObject:user];
-
+                    
                 }];
                 
                 *stop = YES;
             }
             
         }];
-
         
         
-//        __block NSMutableDictionary *bots;
-//
-//        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-//            
-//            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
-//            
-//        }];
-//        
-//        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
-//            
-//            int dateUsed = [bot[@"date"] intValue];
-//            int botId = [bot[@"id"] intValue];
-//            
-//            TLUser *user = [[UsersManager sharedManager] find:botId];
-//            //two weeks
-//            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
-//                [botUsers addObject:user];
-//            }
-//            
-//        }];
-//        
-//        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-//            
-//            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
-//            
-//            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-//            
-//        }];
+        
+        //        __block NSMutableDictionary *bots;
+        //
+        //        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        //
+        //            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
+        //
+        //        }];
+        //
+        //        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
+        //
+        //            int dateUsed = [bot[@"date"] intValue];
+        //            int botId = [bot[@"id"] intValue];
+        //
+        //            TLUser *user = [[UsersManager sharedManager] find:botId];
+        //            //two weeks
+        //            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
+        //                [botUsers addObject:user];
+        //            }
+        //
+        //        }];
+        //
+        //        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
+        //
+        //            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
+        //
+        //            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+        //
+        //        }];
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
@@ -567,6 +567,10 @@ DYNAMIC_PROPERTY(DUser);
         [self show:NO];
     else
         [self hide];
+}
+
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
+    [self showMentionPopupWithQuery:query conversation:conversation chat:chat allowInlineBot:allowInlineBot allowUsernameless:YES choiceHandler:choiceHandler];
 }
 
 

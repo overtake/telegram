@@ -170,8 +170,8 @@
     NSRange range = [_messagesViewController.table rowsInRect:[_messagesViewController.table visibleRect]];
     
     __block MessageTableItem *item;
-    //NSEnumerationReverse
-    [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    
+    [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(obj.message != nil) {
             item = obj;

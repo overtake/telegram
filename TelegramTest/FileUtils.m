@@ -145,11 +145,19 @@ NSString *const kBotInlineTypeVoice = @"voice";
 
 
 NSString* mediaFilePath(TL_localMessage *message) {
+    
+    TL_documentAttributeVersion *version = (TL_documentAttributeVersion *) [message.media.document attributeWithClass:[TL_documentAttributeVersion class]];
+    
     if(message.media.document.audioAttr.isVoice) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.document.n_id,message.media.document.access_hash];
+        return version ? [NSString stringWithFormat:@"%@/%lu_%lu_v%d.ogg",path(),message.media.document.n_id,message.media.document.access_hash,version.version] : [NSString stringWithFormat:@"%@/%lu_%lu.ogg",path(),message.media.document.n_id,message.media.document.access_hash];
     }
+    
+    if(message.media.document.isSticker) {
+        return version ? [NSString stringWithFormat:@"%@/%lu_%lu_v%d.webp",path(),message.media.document.n_id,message.media.document.access_hash,version.version] : [NSString stringWithFormat:@"%@/%lu_%lu.webp",path(),message.media.document.n_id,message.media.document.access_hash];
+    }
+    
     if([message.media isKindOfClass:[TL_messageMediaVideo class]]) {
-        return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
+        return version ? [NSString stringWithFormat:@"%@/%lu_%lu_v%d.mp4",path(),message.media.video.n_id,message.media.video.access_hash,version.version] : [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.video.n_id,message.media.video.access_hash];
     }
     
     if([message.media isKindOfClass:[TL_messageMediaDocument class]] || [message.media isKindOfClass:[TL_messageMediaDocument_old44 class]] || message.media.bot_result.document) {
@@ -167,19 +175,19 @@ NSString* mediaFilePath(TL_localMessage *message) {
         
         if((nondocValue != nil && hasAttr )) {
             
-            return [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
+            return version ? [NSString stringWithFormat:@"%@/%ld_v%d.%@",path(),document.n_id,version.version,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]] : [NSString stringWithFormat:@"%@/%ld.%@",path(),document.n_id,[document.mime_type substringFromIndex:[document.mime_type rangeOfString:@"/"].location + 1]];
             
         }
         
         if([document attributeWithClass:[TL_documentAttributeVideo class]]) {
-            return [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.document.n_id,message.media.document.access_hash];
+            return version ? [NSString stringWithFormat:@"%@/%lu_%lu_v%d.mp4",path(),message.media.document.n_id,message.media.document.access_hash,version.version] : [NSString stringWithFormat:@"%@/%lu_%lu.mp4",path(),message.media.document.n_id,message.media.document.access_hash];
         }
         
         if([message isKindOfClass:[TL_destructMessage class]] || [message.media.document.mime_type hasPrefix:@"image/gif"] || [message.media.document.mime_type hasPrefix:@"audio"]) {
             
             TL_documentAttributeFilename *name = (TL_documentAttributeFilename *) [message.media.document attributeWithClass:[TL_documentAttributeFilename class]];
             
-            return [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
+            return version ? [NSString stringWithFormat:@"%@/%ld_v%d_%@",path(),message.media.document.n_id,version.version,name.file_name] : [NSString stringWithFormat:@"%@/%ld_%@",path(),message.media.document.n_id,name.file_name];
         }
         
         return [FileUtils documentName:document];
@@ -191,11 +199,13 @@ NSString* mediaFilePath(TL_localMessage *message) {
             return locationFilePath(size.location, @"jpg");
         } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeFile]) {
         
+            TL_documentAttributeVersion *version = (TL_documentAttributeVersion *) [message.media.bot_result.document attributeWithClass:[TL_documentAttributeVersion class]];
+            
             NSRange srange = [message.media.bot_result.document.mime_type rangeOfString:@"/"];
             
             NSString *ext = srange.location == NSNotFound ? @"file" : [message.media.bot_result.document.mime_type substringFromIndex:srange.location + 1];
             
-            return [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.bot_result.document.n_id,ext];
+            return version ? [NSString stringWithFormat:@"%@/%ld_%d.%@",path(),message.media.bot_result.document.n_id,version.version,ext] : [NSString stringWithFormat:@"%@/%ld.%@",path(),message.media.bot_result.document.n_id,ext];
         } else if([message.media.bot_result isKindOfClass:[TL_messageMediaBotResult class]]) {
             return [NSString stringWithFormat:@"%@/%ld.%@",path(),[message.media.bot_result.content_url hash],[message.media.bot_result.content_url pathExtension]];
         } else
@@ -1618,6 +1628,21 @@ NSString *priorityString(NSString * str, ...) {
     va_end(args);
     
     return str;
+}
+
+BOOL isEnterEvent(NSEvent *theEvent) {
+    return (theEvent.keyCode == 36 || theEvent.keyCode == 76);
+}
+
+BOOL isEnterAccess(NSEvent *theEvent) {
+    
+    if((theEvent.keyCode == 36 || theEvent.keyCode == 76)) {
+        
+        return [SettingsArchiver checkMaskedSetting:SendEnter] ? (theEvent.modifierFlags & NSCommandKeyMask) == 0 : (theEvent.modifierFlags & NSCommandKeyMask) > 0;
+
+    }
+    
+    return NO;
 }
 
 @end

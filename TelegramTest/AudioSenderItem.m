@@ -121,7 +121,7 @@
                     NSString *filePath = mediaFilePath(msg);
                     
                     
-                    if ([[NSFileManager defaultManager] isReadableFileAtPath:weakSelf.filePath]) {
+                    if ([[NSFileManager defaultManager] isReadableFileAtPath:[weakSelf.filePath stringByDeletingLastPathComponent]]) {
                         [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:weakSelf.filePath] toURL:[NSURL fileURLWithPath:filePath] error:nil];
                     }
                     

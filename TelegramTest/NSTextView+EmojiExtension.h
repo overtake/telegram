@@ -12,4 +12,6 @@
 
 - (void)showEmoji;
 
+-(void)tryShowHintView:(TL_conversation *)conversation;
+
 @end

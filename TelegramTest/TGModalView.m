@@ -309,7 +309,7 @@
 -(void)keyUp:(NSEvent *)theEvent {
     if(theEvent.keyCode == 53) {
         [self close:YES];
-    } else if(theEvent.keyCode == 36) {
+    } else if(isEnterAccess(theEvent)) {
         [self okAction];
         
     }

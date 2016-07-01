@@ -293,7 +293,7 @@
                  
                  NSString *itemUrl = locationFilePath([TGPhotoViewer currentItem].imageObject.location, @"jpg");
                  
-                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
+                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
                      [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
                  }
                  
@@ -396,7 +396,7 @@
                      
                      NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
                      
-                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
+                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
                          [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
                      }
                      
@@ -511,7 +511,7 @@
                      
                      NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
                      
-                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:itemUrl] ) {
+                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
                          [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
                      }
                      

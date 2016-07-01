@@ -132,7 +132,14 @@
     NSArray *fullName;
     
     
-    NSArray *filtered = uids.count > 0 ? [[[self sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id IN %@ and self.isBotInlinePlaceholder == 0",uids]] : [[[self sharedManager] all] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.isBotInlinePlaceholder == 0",uids]];
+    NSArray *filtered;
+    
+    UsersManager *manager = [self sharedManager];
+    
+    if( uids.count > 0)
+       filtered = [manager.all filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:acceptNonameUsers ? @"self.n_id IN %@ and self.isBotInlinePlaceholder == 0" : @"self.n_id IN %@ and self.isBotInlinePlaceholder == 0 and self.username.length > 0",uids]];
+        else
+           filtered = [manager.all filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:acceptNonameUsers ? @"self.isBotInlinePlaceholder == 0" : @"self.isBotInlinePlaceholder == 0 and self.username.length > 0",uids]];
     
     if(userName.length > 0) {
         userNames = [filtered filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.username BEGINSWITH[c] %@",userName]];

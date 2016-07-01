@@ -38,9 +38,8 @@
 static TMMenuPopover *popover;
 static TGMessagesHintViewController *hintController;
 
-+(TGMessagesHintView *)showHintViewForView:(NSView *)view ofRect:(NSRect)rect {
-    
-    
+
++(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         hintController = [[TGMessagesHintViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, 140)];
@@ -50,21 +49,22 @@ static TGMessagesHintViewController *hintController;
         popover = [[TMMenuPopover alloc] initWithController:(NSViewController *)hintController];
         popover.animates = NO;
         
-//        [popover setDidCloseBlock:^(TMMenuPopover *popover) {
-//           
-//        }];
-        
-        [hintController.hintView setUpdateSizeHandler:^(NSSize newSize) {
-            
-            
-            [hintController.view setFrameSize:newSize];
-           // [popover close];
-            [popover showRelativeToRect:rect ofView:view preferredEdge:CGRectMaxYEdge];
-        }];
     });
+}
+
++(TGMessagesHintView *)showHintViewForView:(NSView *)view ofRect:(NSRect)rect {
     
-    [popover showRelativeToRect:rect ofView:view preferredEdge:CGRectMaxYEdge];
+//    [hintController.hintView setUpdateSizeHandler:^(NSSize newSize) {
+//        
+//        
+//        [hintController.view setFrameSize:newSize];
+//        // [popover close];
+//        [popover showRelativeToRect:rect ofView:view preferredEdge:CGRectMaxYEdge];
+//    }];
     
+    [hintController.view setFrameSize:hintController.hintView.frame.size];
+    
+     [popover showRelativeToRect:rect ofView:view preferredEdge:CGRectMaxYEdge];
     
     return hintController.hintView;
 }
@@ -72,6 +72,14 @@ static TGMessagesHintViewController *hintController;
 +(void)close {
     [popover close];
     [hintController.hintView hide];
+}
+
++(BOOL)isShown {
+    return popover.isShown;
+}
+
++(TGMessagesHintView *)hintView {
+    return hintController.hintView;
 }
 
 @end

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 23.06.16.
+//  Auto created by Mikhail Filimonov on 01.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2338,6 +2338,7 @@
 @property (nonatomic, strong) NSString* performer;
 @property (nonatomic, strong) NSData* waveform;
 @property (nonatomic, strong) NSString* file_name;
+@property int version;
 @property (nonatomic, strong) NSString* file_path;
 @end
 
@@ -2358,6 +2359,9 @@
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
+@end
+@interface TL_documentAttributeVersion : TLDocumentAttribute<NSCoding>
++(TL_documentAttributeVersion*)createWithVersion:(int)version;
 @end
 @interface TL_documentAttributeAudio_old31 : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeAudio_old31*)createWithDuration:(int)duration;

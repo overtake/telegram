@@ -121,4 +121,8 @@ NSString *priorityString(NSString *, ...);
 
 + (TGAudioWaveform *)waveformForPath:(NSString *)path;
 + (int)convertBinaryStringToDecimalNumber:(NSString *)binaryString;
+
+BOOL isEnterAccess(NSEvent *theEvent);
+BOOL isEnterEvent(NSEvent *theEvent);
+
 @end

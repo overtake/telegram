@@ -186,9 +186,13 @@ static BOOL mouseIsDown = NO;
             if (result == NSFileHandlingPanelOKButton) {
                 
                 NSURL *file = [panel URL];
-                if ( [[NSFileManager defaultManager] isReadableFileAtPath:path] ) {
+                if ( [[NSFileManager defaultManager] isReadableFileAtPath:[path stringByDeletingLastPathComponent]] ) {
+                    
+                    NSError *error;
 
-                    [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:path] toURL:file error:nil];
+                    [[NSFileManager defaultManager] copyItemAtPath:path toPath:[file path] error:&error];
+                    
+                    int bp = 0;
                 }
             } else if(result == NSFileHandlingPanelCancelButton) {
                 

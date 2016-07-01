@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 23.06.16.
+//  Auto created by Mikhail Filimonov on 01.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -18686,6 +18686,47 @@
     TL_documentAttributeFilename *objc = [[TL_documentAttributeFilename alloc] init];
     
     objc.file_name = self.file_name;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_documentAttributeVersion
++(TL_documentAttributeVersion*)createWithVersion:(int)version {
+	TL_documentAttributeVersion* obj = [[TL_documentAttributeVersion alloc] init];
+	obj.version = version;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.version];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.version = [stream readInt];
+}
+        
+-(TL_documentAttributeVersion *)copy {
+    
+    TL_documentAttributeVersion *objc = [[TL_documentAttributeVersion alloc] init];
+    
+    objc.version = self.version;
     
     return objc;
 }

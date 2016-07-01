@@ -9,6 +9,9 @@
 #import "TGModalSetCaptionView.h"
 #import "TGImageAttachment.h"
 #import "TGModernESGViewController.h"
+#import "NSTextView+EmojiExtension.h"
+#import "TGPopoverHint.h"
+
 @interface TGModalSetCaptionView ()
 -(void)changeResponder;
 @property (nonatomic,assign) NSUInteger currentResponderId;
@@ -54,7 +57,17 @@
 }
 - (BOOL) TMGrowingTextViewCommandOrControlPressed:(TMGrowingTextView *)textView isCommandPressed:(BOOL)isCommandPressed {
     
-    [_controller changeResponder];
+    BOOL isNeedSend = ([SettingsArchiver checkMaskedSetting:SendEnter] && !isCommandPressed) || ([SettingsArchiver checkMaskedSetting:SendCmdEnter] && isCommandPressed);
+    
+    if(isNeedSend) {
+        if([TGPopoverHint isShown]) {
+            [[TGPopoverHint hintView] performSelected];
+        } else
+            [_controller changeResponder];
+    } else
+    {
+        [_textView insertNewline:nil];
+    }
     
     return YES;
 }
@@ -84,7 +97,7 @@
         
         _textView = [[TMGrowingTextView alloc] initWithFrame:NSMakeRect(80, 4, NSWidth(frameRect) - 84, NSHeight(frameRect) - 12)];
         
-        
+        _textView.delegate = self;
         
         
         _textView.containerView.frame = NSMakeRect(75, 4, NSWidth(frameRect) - 79, NSHeight(frameRect) - 9);
@@ -115,6 +128,13 @@
     
     
     return self;
+}
+
+
+- (void)textDidChange:(NSNotification *)notification {
+    [_textView textDidChange:notification];
+    
+    [_textView tryShowHintView:[Telegram conversation]];
 }
 
 - (void)smileButtonEntered:(BTRButton *)button {

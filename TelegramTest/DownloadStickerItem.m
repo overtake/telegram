@@ -7,14 +7,14 @@
 //
 
 #import "DownloadStickerItem.h"
-
+#import "TLDocument+Extension.h"
 @implementation DownloadStickerItem
 
 -(id)initWithObject:(TLDocument *)object {
     if(self = [super initWithObject:object]) {
         self.isEncrypted = NO;
         self.n_id = object.n_id;
-        self.path = [NSString stringWithFormat:@"%@/%ld.webp",path(),object.n_id];
+        self.path = object.path_with_cache;
         self.fileType = DownloadFileDocument;
         self.dc_id = object.dc_id;
         self.size = object.size;

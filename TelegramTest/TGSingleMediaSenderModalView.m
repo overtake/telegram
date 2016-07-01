@@ -11,6 +11,7 @@
 #import "TGGeneralInputRowItem.h"
 #import "TGSingleMediaPreviewRowItem.h"
 #import "TGGeneralInputTextRowView.h"
+#import "TGPopoverHint.h"
 @interface TGSingleMediaSenderModalView ()
 @property (nonatomic,strong) NSString *filepath;
 @property (nonatomic,strong) TGSettingsTableView *tableView;
@@ -48,6 +49,21 @@
     return self;
 }
 
+-(void)keyUp:(NSEvent *)theEvent {
+    if(theEvent.keyCode == 53) {
+        [self close:YES];
+    } else if(isEnterAccess(theEvent)) {
+        
+        if(![TGPopoverHint isShown]) {
+            [self okAction];
+        } else {
+            [[TGPopoverHint hintView] performSelected];
+        }
+
+    } else {
+        [self becomeFirstResponder];
+    }
+}
 
 
 -(void)okAction {
@@ -73,11 +89,7 @@
             
         }
     }
-    
-    
-    
-        
-    
+
     
 }
 
@@ -138,7 +150,7 @@
     if(caption.length > 0)
         _inputItem.result = [[NSAttributedString alloc] initWithString:caption];
     _inputItem.placeholder = NSLocalizedString(@"Media.AddCaptionPlaceholder", nil);
-    
+    _inputItem.hintAbility = YES;
     
     weak();
     [_inputItem setCallback:^(TGGeneralRowItem *item) {

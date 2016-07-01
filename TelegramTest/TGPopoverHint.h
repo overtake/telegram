@@ -14,4 +14,9 @@
 
 +(void)close;
 
++(BOOL)isShown;
+
++(TGMessagesHintView *)hintView;
+
+
 @end
