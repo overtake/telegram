@@ -24,7 +24,7 @@ static  const int wh = 40;
     
     
     NSInteger x = (self.item.startDay - 1) * wh;
-    NSInteger y = NSHeight(self.frame) - wh;
+    NSInteger y = NSHeight(self.frame) - wh - 10;
     
     for (int i = 0; i < self.item.lastDayOfMonth; i++) {
         
@@ -50,9 +50,9 @@ static  const int wh = 40;
         
         
         NSMutableAttributedString *day = [[NSMutableAttributedString alloc] init];
-        [day appendString:[NSString stringWithFormat:@"%d",i+1] withColor:i+1 == self.item.selectedDay ? [NSColor whiteColor] : TEXT_COLOR];
+        [day appendString:[NSString stringWithFormat:@"%d",i+1] withColor:i+1 == self.item.selectedDay || (_mouseIsDown && self.indexDayBelowMouse == i) ? [NSColor whiteColor] : TEXT_COLOR];
         
-        [day setFont:TGSystemFont(14) forRange:day.range];
+        [day setFont:i+1 == self.item.selectedDay ? TGSystemMediumFont(14) : TGSystemFont(14) forRange:day.range];
         [day setAlignment:NSCenterTextAlignment range:day.range];
         
         [day drawInRect:NSMakeRect(x, y, wh, wh)];
@@ -78,7 +78,7 @@ static  const int wh = 40;
     NSPoint mouse = [self convertPoint:[self.window convertScreenToBase:[NSEvent mouseLocation]] fromView:nil];
 
     NSInteger x = (self.item.startDay - 1) * wh;
-    NSInteger y = NSHeight(self.frame) - wh;
+    NSInteger y = NSHeight(self.frame) - wh - 10;
 
     int row = 0;
 
@@ -120,8 +120,6 @@ static  const int wh = 40;
 -(void)mouseUp:(NSEvent *)theEvent {
     [super mouseUp:theEvent];
     self.mouseIsDown = NO;
-    
-    // works fine ;)
     
     int day = self.indexDayBelowMouse + 1;
     if(self.item.dayClickHandler != nil)

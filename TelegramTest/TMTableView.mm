@@ -776,7 +776,11 @@ static TMTableView *tableStatic;
     
     NSRect rowRect = [self rectOfRow:[self indexOfItem:item]];
     
-    [self.scrollView.clipView scrollRectToVisible:NSMakeRect(0, NSMinY(rowRect) + yOffset, NSWidth(rowRect),  NSHeight(rowRect)) animated:animated];
+    NSPoint scrollOffset = self.scrollView.documentOffset;
+    
+    NSLog(@"%@",NSStringFromPoint(scrollOffset));
+    
+    [self.scrollView.clipView scrollRectToVisible:NSMakeRect(0, NSMinY(rowRect) + yOffset, NSWidth(rowRect),  NSHeight(self.scrollView.frame)) animated:animated];
     
 }
 

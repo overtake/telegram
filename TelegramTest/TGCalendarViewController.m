@@ -170,8 +170,8 @@
     NSRange range = [_messagesViewController.table rowsInRect:[_messagesViewController.table visibleRect]];
     
     __block MessageTableItem *item;
-    
-    [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:NSEnumerationReverse usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    //NSEnumerationReverse
+    [_messagesViewController.messageList enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:range] options:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if(obj.message != nil) {
             item = obj;
@@ -190,25 +190,23 @@
                
                 NSCalendar *cal = [NSCalendar currentCalendar];
                 cal.timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-                unsigned unitFlags = NSCalendarUnitDay;
-                NSDateComponents *components = [cal components:unitFlags fromDate:date];
+                NSDateComponents *components = [cal components:NSCalendarUnitDay fromDate:date];
                 
                 BOOL otherDay = _selectedItem.selectedDay != components.day;
                 
                 obj.selectedDay = components.day;
                 
-                
-                
-                if(scroll && _selectedItem != obj) {
-                    if(idx == _tableView.count - 1)
-                        [_tableView scrollToItem:[_tableView itemAtPosition:idx] animated:animated yOffset:0];
-                    else
-                        [_tableView scrollToItem:[_tableView itemAtPosition:idx - 2] animated:animated yOffset:0];
+               if(_selectedItem != obj || otherDay) {
                     
-                }
-                
-                if(_selectedItem != obj || otherDay)
+                    if(scroll) {
+                     //   if(idx == _tableView.count - 1)
+                      //      [_tableView scrollToItem:[_tableView itemAtPosition:idx] animated:animated yOffset:10];
+                      //  else
+                        [_tableView scrollToItem:[_tableView itemAtPosition:idx - 2] animated:animated yOffset:10];
+                    }
+                    
                     [self.tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:idx] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                }
 
                 _selectedItem = obj;
                 
