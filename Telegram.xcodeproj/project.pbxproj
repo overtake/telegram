@@ -235,6 +235,7 @@
 		C20A7E7C19DC1379008844F2 /* TGCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A7E7B19DC1379008844F2 /* TGCTextView.m */; };
 		C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */; };
 		C20A8A6B1D2672F400C70134 /* TGPopoverHint.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8A6A1D2672F400C70134 /* TGPopoverHint.m */; };
+		C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C26E80171B7B748A003CC483 /* SSignalKit.framework */; };
 		C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */; };
 		C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
@@ -2913,6 +2914,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C2C5DCD21D19CC080070AC56 /* Sparkle.framework in Frameworks */,
 				C2B0A7CC1D180235001BAE72 /* HockeySDK.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,

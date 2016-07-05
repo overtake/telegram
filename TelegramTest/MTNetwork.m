@@ -19,6 +19,7 @@
 #import "TGTLSerialization.h"
 #import "TGPasslock.h"
 #import <Security/SecRandom.h>
+#import <MTProtoKit/MTRequestErrorContext.h>
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -860,6 +861,157 @@ void remove_global_dispatcher(id internalId) {
     }];
     
 }
+- (SSignal *)requestSignal:(TLApiObject *)rpc
+{
+    return [self requestSignal:rpc continueOnServerErrors:false];
+}
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors
+{
+    return [self requestSignal:rpc requestClass:continueOnServerErrors ? 0 : TGRequestClassFailOnServerErrors];
+}
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc requestClass:(int)requestClass
+{
+    
+    static NSArray *noAuthClasses;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        noAuthClasses = @[[TLAPI_auth_resendCode class],[TLAPI_auth_signIn class], [TLAPI_auth_signUp class], [TLAPI_auth_sendCode class], [TLAPI_auth_checkPhone class], [TLAPI_help_getConfig class], [TLAPI_help_getNearestDc class], [TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
+    });
+    
+    if(![self isAuth] && ([noAuthClasses containsObject:[rpc class]])) {
+        return [SSignal fail:rpc];
+    }
+    
+    
+    return [[SSignal alloc] initWithGenerator:^(SSubscriber *subscriber)
+            {
+                MTRequest *request = [[MTRequest alloc] init];
+                request.body = rpc;
+                [request setCompleted:^(id result, __unused NSTimeInterval timestamp, id error)
+                 {
+                     if (error == nil)
+                     {
+                         [subscriber putNext:result];
+                         [subscriber putCompletion];
+                     }
+                     else
+                         [subscriber putError:error];
+                 }];
+                
+                
+                
+                static NSArray *dependsOnPwd;
+                static NSArray *sequentialMessageClasses = nil;
+                static dispatch_once_t onceToken;
+                dispatch_once(&onceToken, ^
+                              {
+                    dependsOnPwd = @[[TLAPI_account_deleteAccount class], [TLAPI_account_getPassword class], [TLAPI_auth_checkPassword class], [TLAPI_auth_requestPasswordRecovery class], [TLAPI_auth_recoverPassword class]];
+                                  
+                    sequentialMessageClasses = @[ [TLAPI_messages_sendMessage class],
+                                                [TLAPI_messages_sendMedia class],
+                                                [TLAPI_messages_forwardMessage class],
+                                                [TLAPI_messages_forwardMessages class],
+                                                [TLAPI_messages_sendEncrypted class],
+                                                [TLAPI_messages_sendEncryptedFile class],
+                                                [TLAPI_messages_sendEncryptedService class]
+                                                ];
+                });
+                
+                if([dependsOnPwd containsObject:[request.body class]]) {
+                    request.dependsOnPasswordEntry = NO;
+                }
+                
+                
+                for (Class sequentialClass in sequentialMessageClasses)
+                {
+                    if ([rpc isKindOfClass:sequentialClass])
+                    {
+                        [request setShouldDependOnRequest:^bool (MTRequest *anotherRequest)
+                         {
+                             for (Class sequentialClass in sequentialMessageClasses)
+                             {
+                                 if ([anotherRequest.body isKindOfClass:sequentialClass])
+                                     return true;
+                             }
+                             
+                             return false;
+                         }];
+                        
+                        break;
+                    }
+                }
+                
+                
+                if([sequentialMessageClasses containsObject:[request.body class]]) {
+                    request.hasHighPriority = true;
+                }
+               
+                
+                [request setShouldContinueExecutionWithErrorContext:^bool(__unused MTRequestErrorContext *errorContext)
+                 {
+                     if (errorContext.floodWaitSeconds > 0)
+                     {
+                         if (requestClass & TGRequestClassFailOnFloodErrors)
+                             return false;
+                     }
+                     
+                     if (!(requestClass & TGRequestClassFailOnServerErrors))
+                         return errorContext.internalServerErrorCount < 5;
+                     return true;
+                 }];
+                
+                [_requestService addRequest:request];
+                id requestToken = request.internalId;
+                
+                return [[SBlockDisposable alloc] initWithBlock:^
+                        {
+                            [_requestService removeRequestByInternalId:requestToken];
+                        }];
+            }];
+}
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc worker:(TGNetworkWorkerGuard *)worker
+{
+    return [[SSignal alloc] initWithGenerator:^(SSubscriber *subscriber)
+            {
+                MTRequest *request = [[MTRequest alloc] init];
+                request.body = rpc;
+                [request setCompleted:^(id result, __unused NSTimeInterval timestamp, id error)
+                 {
+                     if (error == nil)
+                     {
+                         [subscriber putNext:result];
+                         [subscriber putCompletion];
+                     }
+                     else
+                     {
+                         [subscriber putError:error];
+                     }
+                 }];
+                
+                [request setProgressUpdated:^(float value, __unused NSUInteger completeSize)
+                 {
+                     [subscriber putNext:@(value)];
+                 }];
+                
+                [request setShouldContinueExecutionWithErrorContext:^bool(__unused MTRequestErrorContext *errorContext)
+                 {
+                     return true;
+                 }];
+                
+                [(TGNetworkWorker *)worker.worker addRequest:request];
+                id requestToken = request.internalId;
+                
+                return [[SBlockDisposable alloc] initWithBlock:^
+                        {
+                            [(TGNetworkWorker *)worker.worker cancelRequestById:requestToken];
+                        }];
+            }];
+}
+
 
 
 @end

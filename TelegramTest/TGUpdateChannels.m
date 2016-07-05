@@ -419,7 +419,7 @@
         
         
         dispatch_block_t dispatch = ^{
-            if(!chat.left && chat.type != TLChatTypeForbidden) {
+            if(!chat.isLeft && chat.type != TLChatTypeForbidden) {
                 
                 [[ChatFullManager sharedManager] requestChatFull:chat.n_id withCallback:^(TLChatFull *fullChat) {
                    
@@ -449,6 +449,10 @@
                         channel.invisibleChannel = NO;
                         [channel save];
                         [self failUpdateWithChannelId:[update channel_id] limit:50 withCallback:nil errorCallback:nil];
+                        
+                        if([[DialogsManager sharedManager] find:-fullChat.migrated_from_chat_id]) {
+                            [Notification perform:SWAP_DIALOG data:@{@"o":@(-fullChat.migrated_from_chat_id),@"n":@(channel.peer_id)}];
+                        }
                     }
                 
                 }];
@@ -546,7 +550,7 @@
             _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
                 
                 
-               if(channel && channel.left)
+               if(channel && channel.isLeft)
                    return;
                 
                 TGMessageHole *longHole;

@@ -19,6 +19,14 @@
     return self;
 }
 
+-(int)height {
+    return 60;
+}
+
+-(Class)viewClass {
+    return NSClassFromString(@"TGSessionRowView");
+}
+
 -(NSUInteger)hash {
     return _authorization.n_hash;
 }

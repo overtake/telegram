@@ -235,9 +235,11 @@
             iconImage = cropCenterWithSize(image, NSMakeSize(70, 70));
         } else {
             type = PasteBoardItemTypeDocument;
+            if(!path) {
+                path = exportPath(rand_long(), @"jpg");
+                [jpegNormalizedData(image) writeToFile:path atomically:YES];
+            }
             
-            path = exportPath(rand_long(), @"jpg");
-            [jpegNormalizedData(image) writeToFile:path atomically:YES];
         }
         
        
@@ -246,7 +248,7 @@
     dispatch_block_t modal_caption_block = ^{
         TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
         
-        [modalView show:self.window animated:YES file:image ? image.name : path filedata:[image TIFFRepresentation] ptype:type caption:caption conversation:self.controller.conversation messagesViewController:self.controller];
+        [modalView show:self.window animated:YES file:path ? path : image.name filedata:jpegNormalizedData(image) ptype:type caption:caption conversation:self.controller.conversation messagesViewController:self.controller];
     };
     
     

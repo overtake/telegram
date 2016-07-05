@@ -36,7 +36,7 @@
 
 @property (nonatomic,strong) TMView *blackContainer;
 
-@property (nonatomic,strong) TGEmbedModalView *embedModalView;
+@property (nonatomic,weak) TGEmbedModalView *embedModalView;
 
 @end
 
@@ -153,9 +153,11 @@
         [_progressIndicator setAnimates:NO];
         [_blackContainer removeFromSuperview];
         
-        _embedModalView = [[TGEmbedModalView alloc] initWithFrame:self.window.contentView.subviews[0].frame];
-        [_embedModalView setWebpage:self.webpage.webpage];
-        [_embedModalView show:self.window animated:YES];
+        TGEmbedModalView *modalView = [[TGEmbedModalView alloc] initWithFrame:self.window.contentView.subviews[0].frame];
+        
+        _embedModalView = modalView;
+        [modalView setWebpage:self.webpage.webpage];
+        [modalView show:self.window animated:YES];
         
     };
     

@@ -353,7 +353,11 @@
 }
 
 -(BOOL)becomeFirstResponder {
+    CreateChannelHeaderView *header = [self.tableView viewAtColumn:0 row:0 makeIfNecessary:NO];
     
+    if(header) {
+        return [header becomeFirstResponder];
+    }
     return YES;
 }
 

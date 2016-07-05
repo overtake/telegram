@@ -15,7 +15,7 @@
 #import "NewContactsManager.h"
 #import "TGSettingsTableView.h"
 #import "FullUsersManager.h"
-@interface PrivacySettingsViewController () <TMTableViewDelegate>
+@interface PrivacySettingsViewController ()
 @property (nonatomic,strong) TMTextButton *doneButton;
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 
@@ -102,7 +102,7 @@
     
     
     [self.doneButton setTapBlock:^{
-        [weakSelf savePrivacy];
+        [weakSelf savePrivacy:YES];
     }];
     
     [rightView setFrameSize:self.doneButton.frame.size];
@@ -240,7 +240,11 @@
     [self.tableView reloadData];
 }
 
--(void)savePrivacy {
+-(void)_didStackRemoved {
+    [self savePrivacy:NO];
+}
+
+-(void)savePrivacy:(BOOL)stateback {
     
     id pk;
     
@@ -249,6 +253,7 @@
     else if([self.changedPrivacy.privacyType isEqualToString:kStatusGroups])
         pk = [TL_inputPrivacyKeyChatInvite create];
     
+    if(stateback)
     [self showModalProgress];
     
     [RPCRequest sendRequest:[TLAPI_account_setPrivacy createWithN_key:pk rules:[[self.changedPrivacy rules] mutableCopy]] successHandler:^(RPCRequest *request, id response) {
@@ -263,9 +268,12 @@
        
         [[NewContactsManager sharedManager] getStatuses:^ {
            
-            [self hideModalProgress];
+            if(stateback) {
+                [self hideModalProgress];
+                
+                [self.navigationViewController goBackWithAnimation:YES];
+            }
             
-            [self.navigationViewController goBackWithAnimation:YES];
             
         }];
         
@@ -348,6 +356,10 @@
         self.changedPrivacy = [privacy copy];
     }
     
+}
+
+-(void)dealloc {
+    [_tableView clear];
 }
 
 

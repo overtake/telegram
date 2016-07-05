@@ -82,8 +82,11 @@
         
         if(![photoSize.location.cacheKey isEqualToString:[(TLPhotoSize *)_commonItem.media location].cacheKey]) {
             PreviewObject *preview = [[PreviewObject alloc] initWithMsdId:obj.action.photo.n_id media:photoSize peer_id:obj.peer_id];
+            preview.reservedObject = obj;
             preview.date = obj.date;
             [previewObjects addObject:preview];
+        } else {
+            _commonItem.reservedObject = obj;
         }
         
     }];

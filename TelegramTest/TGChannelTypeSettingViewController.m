@@ -30,6 +30,10 @@
     return self;
 }
 
+-(BOOL)becomeFirstResponder {
+    return [_container becomeFirstResponder];
+}
+
 -(void)redrawRow {
     [super redrawRow];
         
@@ -182,7 +186,25 @@
 }
 
 
+-(BOOL)becomeFirstResponder {
+    if([self.action.result.singleObject boolValue]) {
+        
+        NSUInteger index = [self.tableView indexOfItem:_userNameContainerItem];
+        
+        if(index != NSNotFound) {
+            TGUserNameContainerRowView *view = (TGUserNameContainerRowView *) [self.tableView rowViewAtRow:index makeIfNecessary:NO].subviews[0];
+            
+            
+            if(view)
+                return [view becomeFirstResponder];
+        }
+       
 
+        
+    }
+    
+    return [super becomeFirstResponder];
+}
 
 
 -(void)reload {
@@ -229,10 +251,13 @@
     [self.tableView addItem:privateSelector tableRedraw:NO];
     [self.tableView addItem:selectorDesc tableRedraw:NO];
     
+    [self.tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:NO];
+    
     
     if([self.action.result.singleObject boolValue]) {
         [self.tableView addItem:_userNameContainerItem tableRedraw:NO];
     } else {
+        
         [self.tableView addItem:_joinLinkItem tableRedraw:NO];
         
         GeneralSettingsBlockHeaderItem *joinDescription = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(!chat.isMegagroup ? @"Channel.NewChannelSettingUpJoinLinkDescription" : @"Group.PrivateTypeUpJoinLinkDescription", nil) flipped:YES];

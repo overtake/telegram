@@ -326,6 +326,9 @@ float ease(float t, float b, float c, float d) {
 
 
 -(void)setHidden:(BOOL)flag {
+    
+    BOOL updateRotate = self.isHidden != flag;
+    
     [super setHidden:flag];
     if(flag) {
         [self.timer invalidate];
@@ -333,7 +336,9 @@ float ease(float t, float b, float c, float d) {
         [self pop_removeAllAnimations];
     }
     
-    rotateAngel = 0;
+    if(updateRotate) {
+         rotateAngel = 0;
+    }
 }
 
 

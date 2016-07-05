@@ -62,7 +62,7 @@
 -(void)didChangeDeleteDialog:(NSNotification *)notification {
     TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
     
-    if(conversation.peer_id == self.conversation.peer_id) {
+    if(conversation.peer_id == self.conversation.peer_id && ![notification.userInfo[KEY_DATA] boolValue]) {
         [self.view.window close];
     }
     

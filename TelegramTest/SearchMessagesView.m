@@ -83,19 +83,19 @@
         [self.nextButton setBackgroundImage:image_SearchDown() forControlState:BTRControlStateNormal];
         
         [self.prevButton addBlock:^(BTRControlEvents events) {
-           [weakSelf prev];
+           [weakSelf next];
         } forControlEvents:BTRControlEventClick];
         
         [self.nextButton addBlock:^(BTRControlEvents events) {
-           [weakSelf next];
+           [weakSelf prev];
         } forControlEvents:BTRControlEventClick];
         
         
         [self.prevButton setCenterByView:self];
         [self.nextButton setCenterByView:self];
         
-        [self.prevButton setFrameOrigin:NSMakePoint(23, NSMinY(self.prevButton.frame))];
-        [self.nextButton setFrameOrigin:NSMakePoint(46, NSMinY(self.prevButton.frame))];
+        [self.prevButton setFrameOrigin:NSMakePoint(20, NSMinY(self.prevButton.frame))];
+        [self.nextButton setFrameOrigin:NSMakePoint(48, NSMinY(self.prevButton.frame))];
         
         self.progressIndicator = [[NSProgressIndicator alloc] initWithFrame:NSMakeRect(25, 0, 20, 20)];
         
@@ -239,9 +239,9 @@
 }
 
 -(void)updateSearchArrows {
-    [self.prevButton setBackgroundImage:self.messages.count == 0 ? image_SearchUpDisabled() : image_SearchUp() forControlState:BTRControlStateNormal];
+    [self.prevButton setBackgroundImage:_messages.count < 2 || _currentIdx >= _messages.count -1 ? image_SearchUpDisabled() : image_SearchUp() forControlState:BTRControlStateNormal];
     
-    [self.nextButton setBackgroundImage:self.messages.count == 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
+    [self.nextButton setBackgroundImage:_messages.count < 2 || _currentIdx <= 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
     
     
 }
@@ -251,25 +251,36 @@
     if(_messages.count == 0)
         return;
     
+    if(_currentIdx == _messages.count)
+        return;
+    
     if(++_currentIdx == _messages.count)
     {
-        _currentIdx = 0;
+        [self updateSearchArrows];
+        return;
     }
     
     _goToMessage(_messages[_currentIdx],_searchField.stringValue);
+    
+    [self updateSearchArrows];
 }
 
 -(void)prev {
     if(_messages.count == 0)
         return;
     
+    if(_currentIdx == -1)
+        return;
     
     if(--_currentIdx == -1)
     {
-        _currentIdx = (int)_messages.count - 1;
+        [self updateSearchArrows];
+        return;
     }
     
     _goToMessage(_messages[_currentIdx],_searchField.stringValue);
+    
+    [self updateSearchArrows];
 }
 
 -(void)setLocked:(BOOL)locked {

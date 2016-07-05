@@ -201,6 +201,9 @@
     }
     
 }
+-(BOOL)becomeFirstResponder {
+    return [_textView becomeFirstResponder];
+}
 
 
 

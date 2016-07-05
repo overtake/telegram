@@ -202,6 +202,7 @@
         
         PreviewObject *previewObject =[[PreviewObject alloc] initWithMsdId:self.webpage.webpage.photo.n_id media:[self.webpage.webpage.photo.sizes lastObject] peer_id:0];
         
+        previewObject.reservedObject1 = self.item.message;
         previewObject.reservedObject = self.imageView.image;
         
         if([self.webpage.webpage.type isEqualToString:@"video"] && [self.webpage.webpage.embed_type isEqualToString:@"video/mp4"]) {

@@ -559,7 +559,7 @@
             
         }
         
-        if(chat.type != TLChatTypeNormal || chat.left)
+        if(chat.type != TLChatTypeNormal || chat.isLeft)
             showСhatProfile.target = nil;
         
         [menu addItem:showСhatProfile];
@@ -584,7 +584,7 @@
             [menu addItem:deleteAndExitItem];
             
             if(dialog.type == DialogTypeChat) {
-                NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.left ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
+                NSMenuItem *leaveFromGroupItem = [NSMenuItem menuItemWithTitle:!dialog.chat.isLeft ? NSLocalizedString(@"Conversation.Actions.LeaveGroup", nil) : NSLocalizedString(@"Conversation.Actions.ReturnToGroup", nil) withBlock:^(id sender) {
                     [[Telegram rightViewController].messagesViewController leaveOrReturn:dialog];
                 }];
                 if(chat.type != TLChatTypeNormal)

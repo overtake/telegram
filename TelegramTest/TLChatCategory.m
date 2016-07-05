@@ -290,9 +290,7 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 
--(BOOL)left {
-    return self.flags & (1 << 2);
-}
+
 
 -(BOOL)isKicked {
     return self.flags & (1 << 1);

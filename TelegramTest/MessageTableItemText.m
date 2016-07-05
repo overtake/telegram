@@ -269,8 +269,6 @@
 
          _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
 
-        
-        
     } else if([self isWebPagePending]) {
         
         remove_global_dispatcher(_requestKey);
@@ -279,11 +277,13 @@
         _requestKey = dispatch_in_time(self.message.media.webpage.date, ^{
             
             if([self.message.media.webpage isKindOfClass:[TL_secretWebpage class]]) {
+                
+                
+               
+                
                 [RPCRequest sendRequest:[TLAPI_messages_getWebPagePreview createWithMessage:self.message.media.webpage.url] successHandler:^(RPCRequest *request, TL_messageMediaWebPage *response) {
                     
                     if([response isKindOfClass:[TL_messageMediaWebPage class]]) {
-                        
-                        
                         
                         if(![response.webpage isKindOfClass:[TL_webPagePending class]]) {
                             [Storage addWebpage:response.webpage forLink:display_url(response.webpage.url)];

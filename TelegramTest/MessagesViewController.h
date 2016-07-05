@@ -198,6 +198,6 @@ typedef enum {
 -(BOOL)isShownESGController;
 -(BOOL)canShownESGController;
 
-
+-(void)paste:(id)sender;
 
 @end

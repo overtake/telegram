@@ -184,28 +184,32 @@
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
-    [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
-    
-    weak();
-    
-    __block NSUInteger nFeaturedSets = 0;
-    
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    if(ACCEPT_FEATURE) {
+        [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
         
-        nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
+        weak();
         
-    }];
- 
-    [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
+        __block NSUInteger nFeaturedSets = 0;
         
-        TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
+        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            
+            nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
+            
+        }];
         
-        [weakSelf.navigationViewController pushViewController:featured animated:YES];
+        [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
+            
+            TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
+            
+            [weakSelf.navigationViewController pushViewController:featured animated:YES];
+            
+        } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
         
-    } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
+        
+        [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
+
+    }
     
-    
-    [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
     
    
     

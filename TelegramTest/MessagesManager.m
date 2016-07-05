@@ -34,6 +34,8 @@
 
 @property (nonatomic,assign) int unread_count;
 
+@property (nonatomic,assign) BOOL isLockedScreen;
+
 
 
 @end
@@ -48,8 +50,30 @@
         self.lastNotificationTimes = [[NSMutableDictionary alloc] init];
         self.orderedMessages = [[NSMutableOrderedSet alloc] init];
         //_supportMessagesQueue = [[ASQueue alloc] initWithName:"SupportMessagesQueue"];
+        
+        NSDistributedNotificationCenter * center =
+        [NSDistributedNotificationCenter defaultCenter];
+        
+        [center addObserver:self selector:@selector(screenIsLocked:) name:@"com.apple.screenIsLocked" object:nil];
+        
+        [center
+         addObserver:self
+         selector:@selector(screenIsUnlocked:)
+         name:@"com.apple.screenIsUnlocked"
+         object:nil];
+        
     }
     return self;
+}
+
+-(void)screenIsLocked:(NSNotification *)notification
+{
+    _isLockedScreen = YES;
+}
+
+- (void) screenIsUnlocked:(NSNotification *)notification
+{
+    _isLockedScreen = NO;
 }
 
 
@@ -183,7 +207,7 @@ static const int seconds_to_notify = 120;
         
         if ([NSUserNotification class] && [NSUserNotificationCenter class] && [SettingsArchiver checkMaskedSetting:PushNotifications] && !message.isSilent) {
             
-            if([TGPasslock isVisibility] || [message.to_id isSecret] || ![SettingsArchiver checkMaskedSetting:MessagesNotificationPreview])
+            if([TGPasslock isVisibility] || [message.to_id isSecret] || ![SettingsArchiver checkMaskedSetting:MessagesNotificationPreview] || _isLockedScreen)
             {
                 title = appName();
                 subTitle = nil;

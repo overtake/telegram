@@ -11,8 +11,9 @@
 #import "GeneralSettingsBlockHeaderView.h"
 #import "GeneralSettingsRowView.h"
 #import "TGTimer.h"
+#import "TGSettingsTableView.h"
 @interface TGSessionsViewController ()<TMTableViewDelegate>
-@property (nonatomic,strong) TMTableView *tableView;
+@property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) NSProgressIndicator *progressIndicator;
 
 @property (nonatomic,strong) NSMutableArray *authorizations;
@@ -30,9 +31,8 @@
     
     
     
-    self.tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
+    self.tableView = [[TGSettingsTableView alloc] initWithFrame:self.view.bounds];
     
-    self.tableView.tm_delegate = self;
     
     self.progressIndicator = [[TGProgressIndicator alloc] initWithFrame:NSMakeRect(0, 0, 35, 35)];
     
@@ -90,8 +90,8 @@
 -(void)reload {
     
     
-    
-    [RPCRequest sendRequest:[TLAPI_account_getAuthorizations create] successHandler:^(RPCRequest *request, TL_account_authorizations *response) {
+
+     [RPCRequest sendRequest:[TLAPI_account_getAuthorizations create] successHandler:^(RPCRequest *request, TL_account_authorizations *response) {
         
         [self.progressIndicator stopAnimation:self.view];
         [self.progressIndicator setHidden:YES];
@@ -107,11 +107,7 @@
         
         [response.authorizations enumerateObjectsUsingBlock:^(TL_authorization *obj, NSUInteger idx, BOOL *stop) {
             
-            
-            
             [self.authorizations addObject:[[TGSessionRowitem alloc] initWithObject:obj]];
-            
-            
             
         }];
         
@@ -243,41 +239,8 @@
     _updateTimer = nil;
 }
 
-
-- (CGFloat)rowHeight:(NSUInteger)row item:(TMRowItem *) item {
-    if([item isKindOfClass:[GeneralSettingsRowItem class]] || [item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
-        return [(GeneralSettingsRowItem *)item height];
-    }
-    
-    return 60;
-}
-- (BOOL)isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
-    return NO;
-}
-
-- (TMRowView *)viewForRow:(NSUInteger)row item:(TMRowItem *) item {
-    
-    if([item isKindOfClass:[GeneralSettingsRowItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsRowView class] identifier:@"GeneralSettingsRowView"];
-    }
-    
-    if([item isKindOfClass:[GeneralSettingsBlockHeaderItem class]]) {
-        return [self.tableView cacheViewForClass:[GeneralSettingsBlockHeaderView class] identifier:@"GeneralSettingsBlockHeaderView"];
-    }
-    
-    return [self.tableView cacheViewForClass:[TGSessionRowView class] identifier:@"TGSessionRowView" withSize:NSMakeSize(NSWidth(self.view.frame), 50)];
-}
-
-- (void)selectionDidChange:(NSInteger)row item:(TMRowItem *) item {
-    
-}
-
-- (BOOL)selectionWillChange:(NSInteger)row item:(TMRowItem *) item {
-    return NO;
-}
-
-- (BOOL)isSelectable:(NSInteger)row item:(TMRowItem *) item {
-    return NO;
+-(void)dealloc {
+    [_tableView clear];
 }
 
 @end

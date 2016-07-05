@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 01.07.16.
+//  Auto created by Mikhail Filimonov on 05.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -4081,14 +4081,13 @@
 @end
 
 @implementation TL_chat_old34
-+(TL_chat_old34*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date left:(Boolean)left version:(int)version {
++(TL_chat_old34*)createWithN_id:(int)n_id title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count date:(int)date version:(int)version {
 	TL_chat_old34* obj = [[TL_chat_old34 alloc] init];
 	obj.n_id = n_id;
 	obj.title = title;
 	obj.photo = photo;
 	obj.participants_count = participants_count;
 	obj.date = date;
-	obj.left = left;
 	obj.version = version;
 	return obj;
 }
@@ -4098,7 +4097,6 @@
 	[ClassStore TLSerialize:self.photo stream:stream];
 	[stream writeInt:self.participants_count];
 	[stream writeInt:self.date];
-	[stream writeBool:self.left];
 	[stream writeInt:self.version];
 }
 -(void)unserialize:(SerializedData*)stream {
@@ -4107,7 +4105,6 @@
 	self.photo = [ClassStore TLDeserialize:stream];
 	super.participants_count = [stream readInt];
 	super.date = [stream readInt];
-	super.left = [stream readBool];
 	super.version = [stream readInt];
 }
         
@@ -4120,7 +4117,6 @@
     objc.photo = [self.photo copy];
     objc.participants_count = self.participants_count;
     objc.date = self.date;
-    objc.left = self.left;
     objc.version = self.version;
     
     return objc;

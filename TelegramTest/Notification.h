@@ -40,6 +40,7 @@ extern NSString *const KEY_LAST_CONVRESATION_DATA;
 extern NSString *const DIALOG_UPDATE; // просто обновить содержимое диалога
 extern NSString *const DIALOG_TO_TOP; // надо поднять диалог на самый верх.
 extern NSString *const DIALOG_DELETE; // надо поднять диалог на самый верх.
+extern NSString *const SWAP_DIALOG;
 extern NSString *const DIALOG_MOVE_POSITION; // сменить позацию диалога
 
 extern NSString *const DIALOGS_NEED_FULL_RESORT; // надо полностью обновить список всех диалогов (многое изменилось)

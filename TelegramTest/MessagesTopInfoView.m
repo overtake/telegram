@@ -438,7 +438,7 @@ static NSMutableDictionary *cache;
      dispatch_block_t block = ^{
         TLChatFull *chat = [[ChatFullManager sharedManager] find:chat_id];
          
-         if(!withRequest) {
+         if(!_conversation.chat.isManager && withRequest) {
              [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg.n_id,chat_id]];
          }
          

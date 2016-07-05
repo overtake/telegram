@@ -82,8 +82,11 @@
             if(_sendAsCompressed)
                 [_messagesViewController sendImage:_filepath forConversation:_conversation file_data:_item.data caption:_inputItem.result.string];
             else {
-                _filepath = exportPath(rand_long(), @"jpg");
-                [_item.data writeToFile:_filepath atomically:YES];
+                if(!_filepath) {
+                    _filepath = exportPath(rand_long(), @"jpg");
+                    [_item.data writeToFile:_filepath atomically:YES];
+                }
+                
                 [_messagesViewController sendDocument:_filepath forConversation:_conversation caption:_inputItem.result.string addCompletionHandler:nil];
             }
             

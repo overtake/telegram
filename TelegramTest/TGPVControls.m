@@ -503,13 +503,14 @@
             NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
             dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             
-            [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"IMG_%@.jpg",[dateFormatter stringFromDate:[NSDate date]]]];
+            NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
+            
+            [savePanel setNameFieldStringValue:[itemUrl lastPathComponent]];
             [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
              {
                  if (result == NSFileHandlingPanelOKButton) {
                      NSURL *file = [savePanel URL];
                      
-                     NSString *itemUrl = mediaFilePath([TGPhotoViewer currentItem].previewObject.media);
                      
                      if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
                          [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
@@ -559,6 +560,165 @@
     return theMenu;
 }
 
+-(NSMenu *)TGPVChatPhotoBehaviorMenu {
+    
+    
+    
+    NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    
+    TL_photoSize *size = [TGPhotoViewer currentItem].previewObject.media;
+    TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.reservedObject;
+    
+    if(msg) {
+             
+        
+        NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+            
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation withMessage:msg];
+            
+            [[TGPhotoViewer viewer] hide];
+            
+        }];
+        
+        [theMenu addItem:photoGoto];
+        
+        
+    }
+    
+    NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
+        
+        
+        NSSavePanel *savePanel = [NSSavePanel savePanel];
+        
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        
+        [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"IMG_%@.jpg",[dateFormatter stringFromDate:[NSDate date]]]];
+        [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
+         {
+             if (result == NSFileHandlingPanelOKButton) {
+                 NSURL *file = [savePanel URL];
+                 
+                 NSString *itemUrl = size.location.path;
+                 
+                 if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
+                     [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
+                 }
+                 
+             } else if(result == NSFileHandlingPanelCancelButton) {
+                 
+             }
+             
+         }];
+        
+        
+    }];
+    
+    [theMenu addItem:photoSave];
+    
+    
+    NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+        
+        NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+        [pasteboard clearContents];
+        [pasteboard writeObjects:@[[NSURL fileURLWithPath:size.location.path]]];
+        
+    }];
+    
+    
+    
+    [theMenu addItem:copy];
+    
+    
+    
+    
+    
+    return theMenu;
+}
+
+-(NSMenu *)TGPVEmptyBehaviorMenu {
+    
+    
+    
+    NSMenu *theMenu = [[NSMenu alloc] init];
+    
+    
+    TL_localMessage *msg = [TGPhotoViewer currentItem].previewObject.reservedObject1;
+    
+    
+    if(msg) {
+        
+        
+        NSMenuItem *photoGoto = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.Goto", nil) withBlock:^(id sender) {
+            
+            
+            [[TGPhotoViewer viewer].invokeWindow.navigationController showMessagesViewController:msg.conversation withMessage:msg];
+            
+            [[TGPhotoViewer viewer] hide];
+            
+        }];
+        
+        [theMenu addItem:photoGoto];
+        
+        
+    }
+    
+    if([TGPhotoViewer currentItem].path != nil) {
+        NSMenuItem *photoSave = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"PhotoViewer.SaveAs", nil) withBlock:^(id sender) {
+            
+            
+            NSSavePanel *savePanel = [NSSavePanel savePanel];
+            
+            NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+            dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
+            [savePanel setNameFieldStringValue:[[TGPhotoViewer currentItem].path lastPathComponent]];
+            [savePanel beginSheetModalForWindow:[TGPhotoViewer viewer] completionHandler:^(NSInteger result)
+             {
+                 if (result == NSFileHandlingPanelOKButton) {
+                     NSURL *file = [savePanel URL];
+                     
+                     NSString *itemUrl =  [TGPhotoViewer currentItem].path;
+                     
+                     if ( [[NSFileManager defaultManager] isReadableFileAtPath:[itemUrl stringByDeletingLastPathComponent]] ) {
+                         [[NSFileManager defaultManager] copyItemAtURL:[NSURL fileURLWithPath:itemUrl] toURL:file error:nil];
+                     }
+                     
+                 } else if(result == NSFileHandlingPanelCancelButton) {
+                     
+                 }
+                 
+             }];
+            
+            
+        }];
+        
+        [theMenu addItem:photoSave];
+        
+        
+        NSMenuItem *copy = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.CopyToClipBoard", nil) withBlock:^(id sender) {
+            
+            NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+            [pasteboard clearContents];
+            [pasteboard writeObjects:@[[NSURL fileURLWithPath:[TGPhotoViewer currentItem].path]]];
+            
+        }];
+        
+        
+        
+        [theMenu addItem:copy];
+    }
+    
+    
+    
+    
+    
+    
+    
+    return theMenu;
+}
 
 
 -(void)mouseDown:(NSEvent *)theEvent {

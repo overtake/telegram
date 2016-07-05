@@ -98,7 +98,7 @@
             [DownloadQueue setProgress:70 toOperation:self];
         }
         
-        if(![self.item isEncrypted] && self.item.size != 0 && self.downloaded == self.item.size && self.item.fileType != DownloadFileImage) {
+        if(![self.item isEncrypted] && self.item.size != 0 && self.downloaded >= self.item.size && self.item.fileType != DownloadFileImage) {
             _item.downloadState = DownloadStateCompleted;
             [self.target performSelectorInBackground:self.selector withObject:self];
             return;

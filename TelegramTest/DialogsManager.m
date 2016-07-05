@@ -454,7 +454,7 @@
         return;
     }
     
-    if((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat.left && dialog.chat.type == TLChatTypeNormal) {
+    if((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat.isLeft && dialog.chat.type == TLChatTypeNormal) {
         
         id request = [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:[[UsersManager currentUser] inputUser]];
         
@@ -610,7 +610,7 @@
     [self.queue dispatchOnQueue:^{
         
         
-        if([message.to_id isKindOfClass:[TL_peerChannel class]] && message.chat.left) {
+        if([message.to_id isKindOfClass:[TL_peerChannel class]] && message.chat.isLeft) {
             return;
         }
         

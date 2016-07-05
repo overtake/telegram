@@ -104,14 +104,14 @@
     }
     
     if(self.type == DialogTypeChat) {
-        return !(self.chat.type != TLChatTypeNormal || self.chat.left || self.chat.isDeactivated);
+        return !(self.chat.type != TLChatTypeNormal || self.chat.isLeft || self.chat.isDeactivated);
     }
     
     if(self.type == DialogTypeUser && self.user.isBot)
         return  !self.user.isBot || !self.user.isBlocked;
     
     if(self.type == DialogTypeChannel)
-        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isCreator || self.chat.isEditor) && !self.chat.isKicked && !self.chat.left && self.chat.type == TLChatTypeNormal;
+        return ((!self.chat.isBroadcast && !self.isInvisibleChannel) || self.chat.isCreator || self.chat.isEditor) && !self.chat.isKicked && !self.chat.isLeft && self.chat.type == TLChatTypeNormal;
     
     if(self.type == DialogTypeUser)
         return !self.user.isBlocked;
@@ -157,7 +157,7 @@
                 return NSLocalizedString(@"Conversation.Action.Join", nil);
             }
             
-            if(self.chat.isKicked || self.chat.left || self.chat.type == TLChatTypeForbidden) {
+            if(self.chat.isKicked || self.chat.isLeft || self.chat.type == TLChatTypeForbidden) {
                 return NSLocalizedString(@"Conversation.DeleteAndExit", nil);
             }
             
@@ -177,7 +177,7 @@
         }
         
         
-        if(self.chat.left) {
+        if(self.chat.isLeft) {
             return NSLocalizedString(@"Conversation.Action.YouLeftGroup", nil);
         }
         

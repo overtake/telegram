@@ -581,7 +581,7 @@ void join_group_by_hash(NSString * hash) {
         
         [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_chatInvite *response) {
             
-            if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] left]) {
+            if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] isLeft]) {
                 
                 [appWindow().navigationController showMessagesViewController:[[DialogsManager sharedManager] findByChatId:[[response chat] n_id]]];
                 

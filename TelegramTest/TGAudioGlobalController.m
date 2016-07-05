@@ -40,6 +40,8 @@
 -(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation {
     if(_conversation == conversation)
         return;
+    
+    
     _navigationController = navigation;
     
     _conversation = conversation;
@@ -56,6 +58,7 @@
     [self.currentItem.downloadItem removeEvent:_downloadEventListener];
     _downloadEventListener = nil;
     [_playerList setConversation:nil];
+    _conversation = nil;
 }
 
 -(TGAudioPlayerGlobalState)pState {

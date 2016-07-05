@@ -351,6 +351,8 @@
     [Notification addObserver:self selector:@selector(messageTableItemsEntitiesUpdate:) name:UPDATE_MESSAGE_ENTITIES];
     [Notification addObserver:self selector:@selector(messagTableEditedMessageUpdate:) name:UPDATE_EDITED_MESSAGE];
     [Notification addObserver:self selector:@selector(updateMessageTemplate:) name:UPDATE_MESSAGE_TEMPLATE];
+    
+    [Notification addObserver:self selector:@selector(needSwapDialog:) name:SWAP_DIALOG];
 
     
     [Notification addObserver:self selector:@selector(didChangeDeleteDialog:) name:DIALOG_DELETE];
@@ -526,9 +528,8 @@
 -(void)didChangeDeleteDialog:(NSNotification *)notification {
     TL_conversation *conversation = notification.userInfo[KEY_DIALOG];
     
-    if(conversation.peer_id == _conversation.peer_id && self.navigationViewController.currentController == self) {
+    if(conversation.peer_id == _conversation.peer_id && self.navigationViewController.currentController == self && ![notification.userInfo[KEY_DATA] boolValue]) {
         [self.navigationViewController goBackWithAnimation:NO];
-        
     }
     
 }
@@ -768,6 +769,20 @@ static NSMutableDictionary *savedScrolling;
             [self.bottomView setTemplate:_editTemplate checkElements:YES];
         }
         
+    }
+}
+
+-(void)needSwapDialog:(NSNotification *)notification {
+    
+    int oPeerId = [notification.userInfo[@"o"] intValue];
+    int nPeerId = [notification.userInfo[@"n"] intValue];
+    
+    if(_conversation.peer_id == oPeerId) {
+        TL_conversation *conversation = [[DialogsManager sharedManager] find:nPeerId];
+        
+        if(conversation) {
+            [self setCurrentConversation:conversation];
+        }
     }
 }
 
@@ -2942,6 +2957,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
+-(void)paste:(id)sender {
+    [self.bottomView paste:sender];
+}
+
 -(void)selectInputTextByText:(NSString *)text {
     [self.bottomView selectInputTextByText:text];
 }
@@ -3180,7 +3199,7 @@ static NSTextAttachment *headerMediaIcon() {
 
 - (void)readHistory:(int)offset{
     
-    if(!self.conversation || (self.conversation.unread_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.left)))
+    if(!self.conversation || (self.conversation.unread_count == 0) || (self.conversation.type != DialogTypeSecretChat && (self.conversation.chat.isKicked || self.conversation.chat.isLeft)))
         return;
     
     [[DialogsManager sharedManager] markAllMessagesAsRead:self.conversation];
@@ -4597,11 +4616,11 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)leaveOrReturn:(TL_conversation *)dialog {
     TLInputUser *input = [[UsersManager currentUser] inputUser];
     
-    id request = dialog.chat.left ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
+    id request = dialog.chat.isLeft ? [TLAPI_messages_addChatUser createWithChat_id:dialog.chat.n_id user_id:input fwd_limit:50] : [TLAPI_messages_deleteChatUser createWithChat_id:dialog.chat.n_id user_id:input];
     
     
-    confirm(appName(), dialog.chat.left ? NSLocalizedString(@"Confirm.ReturnToGroup", nil) : NSLocalizedString(@"Confirm.LeaveFromGroup", nil), ^{
-        if(dialog.chat.left) {
+    confirm(appName(), dialog.chat.isLeft ? NSLocalizedString(@"Confirm.ReturnToGroup", nil) : NSLocalizedString(@"Confirm.LeaveFromGroup", nil), ^{
+        if(dialog.chat.isLeft) {
             [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
                 
                 [[ChatFullManager sharedManager] requestChatFull:dialog.chat.n_id force:YES];
@@ -4650,7 +4669,7 @@ static NSTextAttachment *headerMediaIcon() {
         return;
     }
     
-    if(dialog.type == DialogTypeChat && dialog.chat.left) {
+    if(dialog.type == DialogTypeChat && dialog.chat.isLeft) {
         if(startDeleting != nil)
             startDeleting();
         block();

@@ -33,7 +33,6 @@ typedef enum {
 - (NSAttributedString *)statusForMessagesHeaderView;
 - (NSAttributedString *)statusForSearchTableView;
 
--(BOOL)left;
 
 
 -(BOOL)isManager;

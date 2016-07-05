@@ -51,6 +51,7 @@
 #import "TGStickerPreviewModalView.h"
 #import "SPMediaKeyTap.h"
 #import "TGAudioPlayerWindow.h"
+#import <SSignalKit/SSignal.h>
 @interface NSUserNotification(For107)
 
 @property (nonatomic, strong) NSAttributedString *response;
@@ -102,6 +103,9 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     
+
+    
+
     
     _mediaKeyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
     
@@ -652,8 +656,19 @@ void exceptionHandler(NSException * exception)
             
         }
         
-        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]] && ![responder isKindOfClass:[TGModalView class]])
-            [appWindow().navigationController becomeFirstResponder];
+        if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]] && ![responder isKindOfClass:[TGModalView class]]) {
+            if([appWindow().navigationController becomeFirstResponder]) {
+                
+                if(result.keyCode == 9 && (result.modifierFlags & NSCommandKeyMask) > 0) {
+                    if([appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]]) {
+                        [appWindow().navigationController.messagesViewController paste:nil];
+                    }
+                }
+
+            }
+            
+        }
+        
         
         if([TGPasslock isVisibility]) {
            

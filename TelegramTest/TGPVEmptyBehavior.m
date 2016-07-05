@@ -35,7 +35,9 @@
     
     [list enumerateObjectsUsingBlock:^(PreviewObject *obj, NSUInteger idx, BOOL *stop) {
         
+
         TL_localMessage *message = obj.media;
+        
         
         if([obj.media isKindOfClass:[TLPhotoSize class]]) {
             

@@ -26,6 +26,10 @@
     }
 }
 
+-(NSString *)path {
+    return self.imageObject.location.path;
+}
+
 -(BOOL)isEqualTo:(TGPhotoViewerItem *)object {
     return self.previewObject.msg_id == object.previewObject.msg_id;
 }

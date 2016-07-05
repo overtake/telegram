@@ -70,4 +70,6 @@ typedef enum {
 -(BOOL)removeQuickRecord;
 -(void)showQuickRecordedPreview:(NSString *)file audioAttr:(TL_documentAttributeAudio *)audioAttr;
 
+-(void)paste:(id)sender;
+
 @end

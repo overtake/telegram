@@ -14,6 +14,20 @@
 
 @interface MTNetwork : NSObject<MTContextChangeListener>
 
+typedef enum {
+    TGRequestClassGeneric = 1,
+    TGRequestClassDownloadMedia = 2,
+    TGRequestClassUploadMedia = 4,
+    TGRequestClassEnableUnauthorized = 8,
+    TGRequestClassEnableMerging = 16,
+    TGRequestClassHidesActivityIndicator = 64,
+    TGRequestClassLargeMedia = 128,
+    TGRequestClassFailOnServerErrors = 256,
+    TGRequestClassFailOnFloodErrors = 512,
+    TGRequestClassPassthroughPasswordNeeded = 1024,
+    TGRequestClassIgnorePasswordEntryRequired = 2048
+} TGRequestClass;
+
 + (MTNetwork *)instance;
 -(void)initConnectionWithId:(NSInteger)dc_id;
 -(void)sendRequest:(RPCRequest *)request;
@@ -56,5 +70,8 @@
 
 id dispatch_in_time(int time, dispatch_block_t callback);
 void remove_global_dispatcher(id internalId);
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors;
+- (SSignal *)requestSignal:(TLApiObject *)rpc;
 
 @end

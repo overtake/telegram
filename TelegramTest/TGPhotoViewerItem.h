@@ -20,6 +20,8 @@
 
 -(NSSize)size;
 
+-(NSString *)path;
+
 -(void)startDownload;
 
 @end

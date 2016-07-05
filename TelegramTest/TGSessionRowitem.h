@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "TMRowItem.h"
+#import "TGGeneralRowItem.h"
 
-@interface TGSessionRowitem : TMRowItem
+@interface TGSessionRowitem : TGGeneralRowItem
 
 @property (nonatomic,strong,readonly) TL_authorization *authorization;
 

@@ -298,7 +298,7 @@
 }
 
 -(BOOL)unread {
-    return self.isN_out ? (self.conversation.user.isBot ? NO :  self.conversation.read_outbox_max_id == 0 ? YES  : self.conversation.read_outbox_max_id < self.n_id) : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID);
+    return self.peer_id == [UsersManager currentUserId] ? NO :  self.isN_out ? (self.conversation.user.isBot || self.conversation.chat.isChannel ? NO :  self.conversation.read_outbox_max_id == 0 ? YES  : self.conversation.read_outbox_max_id < self.n_id) : (self.conversation.read_inbox_max_id < self.n_id || self.conversation.read_inbox_max_id > TGMINFAKEID);
 }
 
 -(BOOL)readedContent {

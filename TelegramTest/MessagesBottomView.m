@@ -328,7 +328,7 @@
     
     if(self.dialog.type == DialogTypeUser) {
         [self.botCommandButton setHidden:!self.dialog.user.isBot];
-    } else if(self.dialog.type == DialogTypeChat || self.dialog.type == DialogTypeChannel) {
+    } else if(self.dialog.type == DialogTypeChat || (self.dialog.type == DialogTypeChannel && self.dialog.chat.isMegagroup)) {
         [self.botCommandButton setHidden:_chatFull.bot_info.count == 0];
     } else
         [self.botCommandButton setHidden:YES];
@@ -1203,7 +1203,7 @@ static RBLPopover *popover;
             } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
             
             
-        } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked)) {
+        } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.isLeft || weakSelf.dialog.chat.isKicked)) {
             
             
             [weakSelf.dialog muteOrUnmute:^{
@@ -1213,7 +1213,7 @@ static RBLPopover *popover;
             } until:weakSelf.dialog.isMute ? 0 : 365*24*60*60];
             
             
-        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.left || weakSelf.dialog.chat.isKicked || weakSelf.dialog.chat.type == TLChatTypeForbidden)) {
+        } else if(weakSelf.dialog.type == DialogTypeChannel && (weakSelf.dialog.chat.isLeft || weakSelf.dialog.chat.isKicked || weakSelf.dialog.chat.type == TLChatTypeForbidden)) {
             [[DialogsManager sharedManager] deleteDialog:weakSelf.dialog completeHandler:nil];
             
         } else if(!weakSelf.dialog.canSendMessage && weakSelf.dialog.user.isBot && _onClickToLockedView == nil) {
@@ -1567,6 +1567,10 @@ static RBLPopover *popover;
         [self.messagesViewController.hintView hide];
         [self setProgress:NO];
     }
+}
+
+-(void)paste:(id)sender {
+    [_inputMessageTextField paste:sender];
 }
 
 -(void)setInlineBot:(TLUser *)inlineBot {
