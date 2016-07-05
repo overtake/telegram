@@ -703,9 +703,9 @@ static NSMutableDictionary *flagRules = nil;
         fortamer = [[RMPhoneFormat alloc] init];
     });
     
-    if(![orig hasPrefix:@"+"])
-        orig = [NSString stringWithFormat:@"+%@", orig];
-        
+//    if(![orig hasPrefix:@"+"])
+//        orig = [NSString stringWithFormat:@"+%@", orig];
+    
     return [fortamer format:orig];
 }
 

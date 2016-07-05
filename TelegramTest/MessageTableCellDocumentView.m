@@ -184,7 +184,7 @@
 }
 
 -(int)maxFieldWidth {
-    return MAX(120,self.item.blockSize.width - NSWidth(self.attachButton.frame) - self.item.defaultOffset);
+    return MAX(150,self.item.blockSize.width - NSWidth(self.attachButton.frame) - self.item.defaultOffset);
 }
 
 - (void)startDownload:(BOOL)cancel {

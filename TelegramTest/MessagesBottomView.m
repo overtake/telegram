@@ -1501,6 +1501,9 @@ static RBLPopover *popover;
     if(search != nil && ![string hasPrefix:@" "]) {
         
         
+        NSString *check = [self.inputMessageTextField.string substringWithRange:NSMakeRange(selectedRange.location - 2,1)];
+        
+       
         
         void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
@@ -1514,7 +1517,7 @@ static RBLPopover *popover;
         if(type == TGHintViewShowMentionType) {
             [self.messagesViewController.hintView showMentionPopupWithQuery:search conversation:self.dialog chat:self.dialog.chat allowInlineBot:[self.inputMessageTextField.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
             
-        } else if(type == TGHintViewShowHashtagType) {
+        } else if(type == TGHintViewShowHashtagType && [check isEqualToString:@" "]) {
             
             [self.messagesViewController.hintView showHashtagHintsWithQuery:search conversation:self.dialog peer_id:self.dialog.peer_id choiceHandler:callback];
             
@@ -1527,6 +1530,8 @@ static RBLPopover *popover;
                 }];
                 
             }
+        } else {
+             [self.messagesViewController.hintView hide];
         }
         
     } else if([self.inputMessageTextField.stringValue hasPrefix:@"@"] && self.dialog.type != DialogTypeSecretChat) {

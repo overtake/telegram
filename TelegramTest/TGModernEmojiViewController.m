@@ -240,6 +240,7 @@ static NSArray *segment_list;
         NSRectFill(NSMakeRect(0, NSHeight(weakSelf.bottomView.frame) - DIALOG_BORDER_WIDTH, NSWidth(weakSelf.bottomView.frame), DIALOG_BORDER_WIDTH));
     }];
     
+    
     for(int i = 1; i <= 6; i++) {
         BTRButton *button = [self createButtonForIndex:i];//20
         [button setFrameOrigin:NSMakePoint(i * 26 + 30 * (i - 1), roundf((NSHeight(self.bottomView.frame) - NSHeight(button.frame))/2.0f))];
@@ -308,6 +309,8 @@ static NSArray *segment_list;
     
     
     NSArray *segments = @[@"Emoji.Recent",@"Emoji.People",@"Emoji.Nature",@"Emoji.Food",@"Emoji.TravelAndPlaces",@"Emoji.Symbols"];
+    if(NSAppKitVersionNumber >= 1404)
+        segments = @[@"Emoji.Recent",@"Emoji.SmilesAndPeople",@"Emoji.AnimalsAndNature",@"Emoji.FoodAndDrink",@"Emoji.ActivityAndSport",@"Emoji.TravelAndPlaces",@"Emoji.Objects",@"Emoji.Symbols",@"Emoji.Flags"];
     
     NSMutableArray *stickyItems = [NSMutableArray array];
     
@@ -319,7 +322,8 @@ static NSArray *segment_list;
         [stickyItems addObject:stickyItem];
         [_tableView addItem:stickyItem tableRedraw:NO];
         
-        [self.bottomView.subviews[idx] setStickItem:stickyItem];
+        if(self.bottomView.subviews.count > idx)
+            [self.bottomView.subviews[idx] setStickItem:stickyItem];
         
         
         [list enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -522,9 +526,21 @@ static NSArray *segment_list;
             }];
             
             
+            __block BOOL s = NO;
+            
             [self.bottomView.subviews enumerateObjectsUsingBlock:^(TGModernEmojiBottomButton *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 [obj setSelected:obj.stickItem == currentStick];
+                
+                if(obj.isSelected && !s)
+                {
+                    s = YES;
+                }
+                
+                
+                if(idx == self.bottomView.subviews.count-1 && !s) {
+                    [obj setSelected:YES];
+                }
                 
             }];
         }

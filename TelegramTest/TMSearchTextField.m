@@ -89,7 +89,7 @@
 }
 
 - (void)setStringValue:(NSString *)aString {
-    aString = [[aString htmlentities] singleLine];
+    aString = [aString singleLine];
     
     while(aString.length > 0 && [aString characterAtIndex:0] == ' ') {
         aString = [aString substringFromIndex:1];

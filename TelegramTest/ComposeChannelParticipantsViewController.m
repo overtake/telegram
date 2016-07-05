@@ -279,7 +279,7 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]] && (chat.isManager)) {
+    if([self.action.behavior isKindOfClass:[ComposeActionChannelMembersBehavior class]] && ((chat.isChannel && chat.isCreator) || (chat.isManager && chat.isMegagroup))) {
         
         if(chat.chatFull.participants_count < maxChatUsers()) {
             GeneralSettingsRowItem *addMembersItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
