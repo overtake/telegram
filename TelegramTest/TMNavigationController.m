@@ -783,19 +783,28 @@ static const int navigationOffset = 48;
 -(void)showMessagesViewController:(TL_conversation *)conversation {
     
 #ifndef TGSTABLE
-    
+//    
 #ifndef TGDEBUG
+    
     
     if(conversation.chat && [conversation.chat isKindOfClass:[TLChat class]] && conversation.chat.isRestricted) {
         
-        alert(appName(), conversation.chat.restriction_reason);
+        NSString *reason = conversation.chat.restriction_reason;
         
-        return;
+        NSArray *split = [reason componentsSeparatedByString:@":"];
+        
+        if(split.count == 2 && ([split[0] rangeOfString:@"ios"].location != NSNotFound || [split[0] rangeOfString:@"all"].location != NSNotFound  || [split[0] rangeOfString:@"macos"].location != NSNotFound )) {
+            alert(appName(), split[1]);
+            
+            return;
+        }
+        
+        
         
     }
     
 #endif
-    
+//    
 #endif
     
     

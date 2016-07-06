@@ -260,7 +260,12 @@
     }
     
     template.autoSave = NO;
-    [template setReplyMessage:nil save:NO];    
+    [template setReplyMessage:nil save:NO];
+    
+    if(message.length > 0) {
+        [template updateTextAndSave:@""];
+    }
+    
     [template saveForce];
     [template saveTemplateInCloudIfNeeded];
     [template performNotification];
@@ -801,14 +806,14 @@ static TGLocationRequest *locationRequest;
 
 
 
-+(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation messageId:(int)messageId handler:(void (^)(TGInlineKeyboardProccessType type))handler {
++(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation message:(TL_localMessage *)message handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
     
     if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
         
         handler(TGInlineKeyboardProccessingType);
         
-        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:messageId data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:message.n_id data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.message.length > 0) {
                 if(response.isAlert)
@@ -904,7 +909,7 @@ static TGLocationRequest *locationRequest;
             
             [m.contextModalView didNeedCloseAndSwitch:keyboard];
         } else {
-            [[Telegram rightViewController] showInlineBotSwitchModalView:conversation.user keyboard:keyboard];
+            [[Telegram rightViewController] showInlineBotSwitchModalView:message.via_bot_id != 0 ? message.via_bot_user : message.fromUser keyboard:keyboard];
         }
         
     }

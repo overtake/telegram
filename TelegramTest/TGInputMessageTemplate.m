@@ -17,6 +17,7 @@
 
 static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 static ASQueue *queue;
+static NSMutableDictionary *list;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
     if(self = [super init]) {
         _text = [aDecoder decodeObjectForKey:@"text"];
@@ -32,10 +33,13 @@ static ASQueue *queue;
     return self;
 }
 
+
+
 +(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         queue = [[ASQueue alloc] initWithName:"inputSaveQueue"];
+        list = [NSMutableDictionary dictionary];
     });
 }
 
@@ -353,14 +357,13 @@ static ASQueue *queue;
 
 -(void)saveForce {
     
-     cancel_delayed_block(_futureblock);
     
+     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        
-        [transaction setObject:self forKey:self.key inCollection:kYapTemplateCollection];
-        
-    }];
+     [def setObject:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:self.key];
+    
+     [def synchronize];
+    
 }
 
 +(TGInputMessageTemplate *)templateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id {
@@ -368,20 +371,34 @@ static ASQueue *queue;
     
     __block BOOL n = NO;
     
-    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        
-        template = [transaction objectForKey:[NSString stringWithFormat:@"%d_%d",peer_id,type] inCollection:kYapTemplateCollection];
-        
-        
-        if(!template) {
-            template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:peer_id];
-            n = YES;
-            
-            [transaction setObject:template forKey:template.key inCollection:kYapTemplateCollection];
-        }
-        
-    }];
     
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    
+    NSString *key = [NSString stringWithFormat:@"%d_%d",peer_id,type];
+    
+    
+    
+    template = list[key];
+    
+    if(!template)
+    {
+        template = [NSKeyedUnarchiver unarchiveObjectWithData:[def objectForKey:key]];
+        
+        if(template)
+            list[key] = template;
+    }
+    
+    if(!template) {
+        template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:peer_id];
+        n = YES;
+        
+        list[key] = template;
+        
+        [def setObject:[NSKeyedArchiver archivedDataWithRootObject:template] forKey:template.key];
+        
+        [def synchronize];
+    }
+
     
     if(n) {
         

@@ -65,7 +65,7 @@
                    if([button isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
                        
                        dispatch_after_seconds(0.2, ^{
-                           [MessageSender proccessInlineKeyboardButton:button messagesViewController:self conversation:self.conversation messageId:0 handler:^(TGInlineKeyboardProccessType type) {
+                           [MessageSender proccessInlineKeyboardButton:button messagesViewController:self conversation:self.conversation message:nil handler:^(TGInlineKeyboardProccessType type) {
                                
                            }];
                        });
