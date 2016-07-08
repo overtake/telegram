@@ -51,6 +51,11 @@
 
 - (void)protocolUpdated:(NSNotification *)notify {
     [self getStatuses:nil];
+    
+    NSLog(@"updated");
+    
+    int bp = 0;
+    
 }
 
 
@@ -310,11 +315,11 @@
         
         [self removeContact:contact];
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             compleHandler(YES);
         }];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             compleHandler(NO);
         }];
         
@@ -410,14 +415,14 @@
             
         }
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             callback(YES, importedContact, userContact);
         }];
         
         [Notification perform:CONTACTS_MODIFIED data:@{@"CONTACTS_RELOAD": self->list}];
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             callback(NO, nil, nil);
         }];
         

@@ -13,6 +13,7 @@
 #import "TGRecentSearchTableView.h"
 #import "ComposeActionCreateChannelBehavior.h"
 #import "ComposeActionCreateMegaGroupBehavior.h"
+#import "TGModernSearchvViewController.h"
 @interface StandartViewController ()<TMSearchTextFieldDelegate>
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSearchTextField *searchTextField;
@@ -70,6 +71,8 @@
 @implementation StandartViewController
 
 -(void)loadView {
+    
+    
     
     ExtendView *exView = [[ExtendView alloc] initWithFrame: self.frameInit];
     
@@ -145,7 +148,7 @@
         [self.menuPopover setHoverView:self.topButton];
     }
     
-    _searchViewController = [[SearchViewController alloc] initWithFrame:self.view.bounds];
+    _searchViewController = [[TGModernSearchvViewController alloc] initWithFrame:self.view.bounds];
     
     self.searchView = _searchViewController.view;
     
@@ -246,8 +249,7 @@
     
     [self hideSearch:!hidden];
     
-    [self.searchViewController searchByString:searchString ? searchString : @""];
-    
+    [self.searchViewController search:searchString ? searchString : @""];
     
 }
 

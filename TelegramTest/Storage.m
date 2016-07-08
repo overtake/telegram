@@ -612,7 +612,7 @@ static NSString *encryptionKey;
         [result close];
         
         if(completeHandler) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 completeHandler(file != nil, file);
             }];
         }
@@ -1966,16 +1966,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(void)insertChat:(TLChat *)chat completeHandler:(void (^)(BOOL))completeHandler {
+-(void)insertChat:(TLChat *)chat {
     
-    [queue inDatabase:^(FMDatabase *db) {
-        //[db beginTransaction];
-        BOOL result = [db executeUpdate:@"insert or replace into chats (n_id,serialized) values (?,?)",[NSNumber numberWithInt:chat.n_id], [TLClassStore serialize:chat]];
-        //[db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(result);
-        });
-    }];
+    if(chat) {
+        [self insertChats:@[chat]];
+    }
 }
 
 
@@ -2013,7 +2008,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
--(void)insertChats:(NSArray *)chats completeHandler:(void (^)(BOOL))completeHandler {
+-(void)insertChats:(NSArray *)chats {
     
     [queue inDatabase:^(FMDatabase *db) {
         __block BOOL result;
@@ -2029,9 +2024,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         [db commit];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(completeHandler) completeHandler(result);
-        });
         
     }];
 }
@@ -2114,11 +2106,11 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
-- (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler {
-    [self insertUsers:@[user] completeHandler:completeHandler];
+- (void)insertUser:(TLUser *)user {
+    [self insertUsers:@[user]];
 }
 
-- (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler {
+- (void)insertUsers:(NSArray *)users{
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -2144,12 +2136,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         }
         
         [db commit];
-        
-        if(completeHandler) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
-                completeHandler(YES);
-            }];
-        }
     }];
 }
 

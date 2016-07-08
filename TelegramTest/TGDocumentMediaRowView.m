@@ -321,7 +321,7 @@ static NSDictionary *colors;
         
         [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 weakSelf.item.downloadItem = nil;
                 [weakSelf updateCellState];
                 [weakSelf setNeedsDisplay:YES];

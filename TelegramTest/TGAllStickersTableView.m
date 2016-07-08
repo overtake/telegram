@@ -500,7 +500,7 @@ static NSImage *higlightedImage() {
         
     } errorHandler:^(id request, RpcError *error) {
         
-    } timeout:60 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:60 queue:[ASQueue globalQueue]._dispatch_queue];
     
     
 }

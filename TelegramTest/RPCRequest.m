@@ -146,7 +146,6 @@
         self.queue = dispatch_get_main_queue();
     }
     
-    NSLog(@"complete request:%@",self.response);
     
     dispatch_block_t block = ^{
         if([self.response isKindOfClass:[RpcError class]]) {
@@ -220,7 +219,7 @@
     };
     
     
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self.timer invalidate];
         self.timer = nil;
     }];

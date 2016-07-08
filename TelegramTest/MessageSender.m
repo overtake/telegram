@@ -546,6 +546,9 @@
                         });
                         
                     } else {
+                        
+                        [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
+                        
                         dispatch_async(dqueue, ^{
                             completeHandler(top);
                         });

@@ -89,7 +89,7 @@
         } errorHandler:^(id request, RpcError *error) {
             
             
-        } timeout:10 queue:[ASQueue globalQueue].nativeQueue];
+        } timeout:10 queue:[ASQueue globalQueue]._dispatch_queue];
         
         multiRequest = [[TGMultipleRequestCallback alloc] initWithRequest:q];
         

@@ -42,7 +42,7 @@
     
     self.ticker = [[TGTimer alloc] initWithTimeout:1.0 repeat:YES completion:^{
         [self loopAndCheckMessages];
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     
     [self.ticker start];
     

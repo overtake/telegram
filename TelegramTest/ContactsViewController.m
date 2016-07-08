@@ -7,8 +7,6 @@
 //
 
 #import "ContactsViewController.h"
-#import "SearchTableCell.h"
-#import "SearchItem.h"
 #import "SearchSeparatorItem.h"
 
 #import "SelectUserItem.h"
@@ -204,7 +202,7 @@
     
     int topOffset = 48;
     
-    self.searchViewController.type = SearchTypeContacts | SearchTypeGlobalUsers | SearchTypeDialogs;
+    self.searchViewController.type = TGModernSearchTypeDialogs | TGModernSearchTypeGlobalUsers;
     
     self.addContactViewController = [[AddContactViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, 200)];
     

@@ -7,7 +7,7 @@
 //
 
 #import "SearchLoadMoreCell.h"
-
+#import "SearchLoadMoreItem.h"
 @interface SearchLoadMoreCell()
 @property (nonatomic, strong) TMTextButton *loadMore;
 @end
@@ -26,8 +26,8 @@
     [self.loadMore setFont:TGSystemFont(13)];
     [self.loadMore setTapBlock:^{
         SearchLoadMoreItem *item = (SearchLoadMoreItem *)[weakSelf rowItem];
-        if(item.clickBlock)
-            item.clickBlock();
+        if(item.callback)
+            item.callback(item);
     }];
     [self addSubview:self.loadMore];
     return self;
@@ -42,7 +42,7 @@
     
     SearchLoadMoreItem *item = (SearchLoadMoreItem *)[self rowItem];
     
-    NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Search.More", nil), item.num ];
+    NSString *text = [NSString stringWithFormat:NSLocalizedString(@"Search.More", nil), item.items.count ];
     
     [self.loadMore setStringValue:text];
     [self.loadMore sizeToFit];

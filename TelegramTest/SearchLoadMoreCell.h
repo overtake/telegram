@@ -7,7 +7,7 @@
 //
 
 #import "TMRowView.h"
-#import "SearchLoadMoreItem.h"
+
 
 @interface SearchLoadMoreCell : TMRowView
 

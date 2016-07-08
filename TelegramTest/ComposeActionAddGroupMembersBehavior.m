@@ -144,7 +144,7 @@
         }];
         
 
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue  alwayContinueWithErrorContext:YES];
+    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue  alwayContinueWithErrorContext:YES];
 }
 
 

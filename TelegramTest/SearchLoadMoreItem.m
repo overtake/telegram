@@ -10,6 +10,15 @@
 
 @implementation SearchLoadMoreItem
 
+-(id)initWithObject:(id)object callback:(void (^)(id item))callback {
+    if(self = [super initWithObject:object]) {
+        _items = object;
+        _callback = callback;
+    }
+    
+    return self;
+}
+
 - (NSObject *)itemForHash {
     return self;
 }
@@ -17,6 +26,14 @@
 + (NSUInteger)hash:(NSObject *)object {
     NSString *hash = [NSString stringWithFormat:@"more_%@", object];
     return [hash hash];
+}
+
+-(Class)viewClass {
+    return NSClassFromString(@"SearchLoadMoreCell");
+}
+
+-(int)height {
+    return 40;
 }
 
 @end

@@ -12,7 +12,7 @@
 {
     bool _isMainQueue;
     bool _isGlobalQueue;
-    dispatch_queue_t _queue;
+    dispatch_queue_t _asqueue;
     
     const char *_name;
 }
@@ -27,33 +27,14 @@
     if (self != nil)
     {
         _name = name;
-        
-        _queue = dispatch_queue_create(_name, 0);
-        dispatch_queue_set_specific(_queue, _name, (void *)_name, NULL);
+//        
+//        self._dispatch_queue = dispatchself._dispatch_queue_create(_name, 0);
+//        dispatchself._dispatch_queue_set_specific(self._dispatch_queue, _name, (void *)_name, NULL);
     }
     return self;
 }
 
-- (void)dealloc
-{
-#if !OS_OBJECT_HAVE_OBJC_SUPPORT
-    dispatch_release(_queue);
-#endif
-    _queue = nil;
-}
 
-+ (ASQueue *)mainQueue
-{
-    static ASQueue *queue = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^
-    {
-        queue = [[ASQueue alloc] init];
-        queue->_queue = dispatch_get_main_queue();
-        queue->_isMainQueue = true;
-    });
-    return queue;
-}
 
 + (ASQueue *)globalQueue
 {
@@ -74,28 +55,21 @@
 }
 
 + (void)dispatchOnMainQueue:(dispatch_block_t)block {
-    [[ASQueue mainQueue] dispatchOnQueue:block];
+    [[ASQueue mainQueue] dispatch:block];
 }
 
 + (void)dispatchOnMainQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous {
-     [[ASQueue mainQueue] dispatchOnQueue:block synchronous:synchronous];
+    if(synchronous)
+        [[ASQueue mainQueue] dispatchSync:block];
+    else
+        [[ASQueue mainQueue] dispatch:block];
 }
 
 - (dispatch_queue_t)nativeQueue
 {
-    return _queue;
+    return self._dispatch_queue;
 }
 
-- (bool)isCurrentQueue
-{
-    if (_queue == nil)
-        return false;
-    
-    if (_isMainQueue)
-        return [NSThread isMainThread];
-    else
-        return dispatch_get_specific(_name) == _name;
-}
 
 - (void)dispatchOnQueue:(dispatch_block_t)block
 {
@@ -107,126 +81,96 @@
     if (block == nil)
         return;
     
-    if (_queue != nil)
-    {
-        if (_isMainQueue)
-        {
-            if ([NSThread isMainThread]) {
-            @try {
-                     block();
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"fatal error: %@",[exception callStackSymbols]);
-                    
-#ifdef TGDEBUG
-                 //   [self alertUserWithCrash:exception];
-#endif
-                }
-                
-            }
-            
-            else if (synchronous)
-                dispatch_sync(_queue, ^{
-                    @try {
-                        block();
-                    }
-                    @catch (NSException *exception) {
-                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
-#ifdef TGDEBUG
-                     //   [self alertUserWithCrash:exception];
-#endif
-                    }
-                    
-                });
-            else
-                dispatch_async(_queue, ^{
-                    @try {
-                        block();
-                    }
-                    @catch (NSException *exception) {
-                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
-#ifdef TGDEBUG
-                   //     [self alertUserWithCrash:exception];
-#endif
-                    }
-                });
-        }
-        else
-        {
-            if (dispatch_get_current_queue() == self.nativeQueue)
-                @try {
-                    block();
-                }
-                @catch (NSException *exception) {
-                    NSLog(@"fatal error: %@",[exception callStackSymbols]);
-#ifdef TGDEBUG
-                  //  [self alertUserWithCrash:exception];
-#endif
-                }
-            else if (synchronous)
-                dispatch_sync(_queue, ^{
-                    @try {
-                        block();
-                    }
-                    @catch (NSException *exception) {
-                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
-#ifdef TGDEBUG
-                   //     [self alertUserWithCrash:exception];
-#endif
-                    }
-                });
-            else
-                dispatch_async(_queue, ^{
-                    @try {
-                        block();
-                    }
-                    @catch (NSException *exception) {
-                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
-#ifdef TGDEBUG
-                     //   [self alertUserWithCrash:exception];
-#endif
-                    }
-                });
-        }
-    }
+    if(synchronous)
+        [self dispatchSync:block];
+    else
+        [self dispatch:block];
+    
+//    if (self._dispatchself._dispatch_queue != nil)
+//    {
+//        if (_isMainQueue)
+//        {
+//            if ([NSThread isMainThread]) {
+//            @try {
+//                     block();
+//                }
+//                @catch (NSException *exception) {
+//                    NSLog(@"fatal error: %@",[exception callStackSymbols]);
+//                    
+//#ifdef TGDEBUG
+//                 //   [self alertUserWithCrash:exception];
+//#endif
+//                }
+//                
+//            }
+//            
+//            else if (synchronous)
+//                dispatch_sync(self._dispatch_queue, ^{
+//                    @try {
+//                        block();
+//                    }
+//                    @catch (NSException *exception) {
+//                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
+//#ifdef TGDEBUG
+//                     //   [self alertUserWithCrash:exception];
+//#endif
+//                    }
+//                    
+//                });
+//            else
+//                dispatch_async(self._dispatch_queue, ^{
+//                    @try {
+//                        block();
+//                    }
+//                    @catch (NSException *exception) {
+//                         MTLog(@"fatal error: %@",[exception callStackSymbols]);
+//#ifdef TGDEBUG
+//                   //     [self alertUserWithCrash:exception];
+//#endif
+//                    }
+//                });
+//        }
+//        else
+//        {
+//            if (dispatch_get_current_queue() == self.nativeQueue)
+//                @try {
+//                    block();
+//                }
+//                @catch (NSException *exception) {
+//                    NSLog(@"fatal error: %@",[exception callStackSymbols]);
+//#ifdef TGDEBUG
+//                  //  [self alertUserWithCrash:exception];
+//#endif
+//                }
+//            else if (synchronous)
+//                dispatch_sync(self._dispatch_queue, ^{
+//                    @try {
+//                        block();
+//                    }
+//                    @catch (NSException *exception) {
+//                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
+//#ifdef TGDEBUG
+//                   //     [self alertUserWithCrash:exception];
+//#endif
+//                    }
+//                });
+//            else
+//                dispatch_async(self._dispatch_queue, ^{
+//                    @try {
+//                        block();
+//                    }
+//                    @catch (NSException *exception) {
+//                         NSLog(@"fatal error: %@",[exception callStackSymbols]);
+//#ifdef TGDEBUG
+//                     //   [self alertUserWithCrash:exception];
+//#endif
+//                    }
+//                });
+//        }
+//    }
 
 }
 
--(void)alertUserWithCrash:(NSException *)crash {
-    
-#ifdef TGDEBUG
-    
-    [ASQueue dispatchOnMainQueue:^{
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setAlertStyle:NSInformationalAlertStyle];
-        [alert setMessageText:appName()];
-        [alert setInformativeText:[NSString stringWithFormat:@"Application throw uncaught exception: \n%@",crash]];
-        
-        [alert addButtonWithTitle:@"Crash application"];
-        [alert addButtonWithTitle:@"Send Logs"];
-        
-        [alert addButtonWithTitle:@"Ignore ;("];
-        [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(crash)];
-    }];
-    
-#endif
-   
-}
-
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
-    
-    #ifdef TGDEBUG
-    
-    if(returnCode == 1000) {
-        NSException *crash = (__bridge NSException *)(contextInfo);
-        @throw crash;
-    } else if(returnCode == 1001) {
-        [Telegram sendLogs];
-    }
-    
-    #endif
-    
-}
 
 
 void dispatch_after_seconds(float seconds, dispatch_block_t block) {

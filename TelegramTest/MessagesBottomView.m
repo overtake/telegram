@@ -1200,7 +1200,7 @@ static RBLPopover *popover;
                 }];
                 
                 
-            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
             
             
         } else if(weakSelf.dialog.chat.isBroadcast  && !(weakSelf.dialog.chat.isLeft || weakSelf.dialog.chat.isKicked)) {
@@ -1638,7 +1638,7 @@ static RBLPopover *popover;
         
         if(strongSelf == weakSelf) {
             
-            [MessageSender proccessInlineKeyboardButton:botCommand messagesViewController:strongSelf.messagesViewController conversation:keyboard.conversation messageId:0  handler:^(TGInlineKeyboardProccessType type) {
+            [MessageSender proccessInlineKeyboardButton:botCommand messagesViewController:strongSelf.messagesViewController conversation:keyboard.conversation message:nil handler:^(TGInlineKeyboardProccessType type) {
                 
                 [strongSelf.botKeyboard setProccessing:type == TGInlineKeyboardProccessingType forKeyboardButton:botCommand];
                 

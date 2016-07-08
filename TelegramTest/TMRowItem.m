@@ -79,4 +79,8 @@
     return 0;
 }
 
+-(BOOL)updateItemHeightWithWidth:(int)width {
+    return NO;
+}
+
 @end

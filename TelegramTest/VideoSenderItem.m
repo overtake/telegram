@@ -173,7 +173,7 @@
                     return;
                 
                 strongSelf.state = MessageSendingStateError;
-            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
         };
 
         if(!isFirstSend) {

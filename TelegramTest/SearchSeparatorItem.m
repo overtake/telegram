@@ -32,4 +32,12 @@
     return [hashStr hash];
 }
 
+-(int)height {
+    return 27;
+}
+
+-(Class)viewClass {
+    return NSClassFromString(@"SearchSeparatorTableCell");
+}
+
 @end

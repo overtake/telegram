@@ -10,7 +10,9 @@
 
 @interface SearchLoadMoreItem : TMRowItem
 
-@property (nonatomic, strong) dispatch_block_t clickBlock;
-@property (nonatomic) int num;
+@property (nonatomic, strong,readonly) void (^callback)(id item);
+@property (nonatomic,strong,readonly) NSArray *items;
+
+-(id)initWithObject:(id)object callback:(void (^)(id item))callback;
 
 @end

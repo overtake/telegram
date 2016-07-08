@@ -225,7 +225,7 @@ static NSCache *cacheItems;
             
         }];
         
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             [self.items addObjectsFromArray:items];
             [self insert:items startIndex:self.count tableRedraw:NO];
             [self reloadData];

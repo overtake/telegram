@@ -43,6 +43,7 @@
 
 -(void)notifyAfterUpdateConversation:(TL_conversation *)conversation;
 
-- (void)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent;
+- (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent;
+- (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent autoStart:(BOOL)autoStart;
 
 @end

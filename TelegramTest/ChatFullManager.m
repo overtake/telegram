@@ -268,9 +268,12 @@
 }
 
 
-- (void) add:(NSArray *)all {
+- (SSignal *) add:(NSArray *)all {
     
-    [self.queue dispatchOnQueue:^{
+    SSignal *signal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        __block BOOL dispose;
+        
         for (TLChatFull *newChatFull in all) {
             
             TLChatFull *currentChat = [self->keys objectForKey:@(newChatFull.n_id)];
@@ -315,7 +318,7 @@
                 [self->keys setObject:newChatFull forKey:@(newChatFull.n_id)];
                 [self->list addObject:newChatFull];
                 
-               currentChat = newChatFull;
+                currentChat = newChatFull;
                 
                 if(currentChat.chat) {
                     
@@ -328,7 +331,7 @@
                         [self loadParticipantsWithMegagroupId:currentChat.n_id];
                     else
                         [Notification performOnStageQueue:CHAT_UPDATE_PARTICIPANTS data:@{KEY_CHAT_ID: @(currentChat.n_id), KEY_PARTICIPANTS: currentChat.participants}];
-                
+                    
                 }
                 
                 
@@ -341,6 +344,27 @@
                 
             }
         }
+        
+        [subscriber putNext:nil];
+        
+        
+        return [[SBlockDisposable alloc] initWithBlock:^
+                {
+                    dispose = YES;
+                }];
+    }] startOn:self.queue];
+    
+    
+    [signal startWithNext:^(id next) {
+        
+    }];
+    
+    
+    return signal;
+    
+    
+    
+    [self.queue dispatchOnQueue:^{
         
     }];
     

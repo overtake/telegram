@@ -437,7 +437,7 @@ static const int maxWidth = 120;
         strongWeak();
         
         if(strongSelf != nil) {
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 
                 strongSelf.isProgress = NO;
                 

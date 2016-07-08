@@ -7,12 +7,11 @@
  */
 
 #import <Foundation/Foundation.h>
-
-@interface ASQueue : NSObject
+#import "SSignalKit/SSignalKit.h"
+@interface ASQueue : SQueue
 
 - (instancetype)initWithName:(const char *)name;
 
-+ (ASQueue *)mainQueue;
 + (ASQueue *)globalQueue;
 
 + (void)dispatchOnStageQueue:(dispatch_block_t)block;

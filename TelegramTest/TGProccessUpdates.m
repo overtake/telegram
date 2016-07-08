@@ -716,7 +716,7 @@ static NSArray *channelUpdates;
             
             
             if(updateNotification.popup) {
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+                [ASQueue dispatchOnMainQueue:^{
                     alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
                 }];
                 
@@ -883,7 +883,7 @@ static NSArray *channelUpdates;
                 user.photo = [update photo];
                 
                 if(user) {
-                    [[Storage manager] insertUser:user completeHandler:nil];
+                    [[Storage manager] insertUser:user];
                     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:user.photo.photo_id media:[TL_photoSize createWithType:@"x" location:user.photo.photo_big w:640 h:640 size:0] peer_id:user.n_id];
                     [Notification perform:USER_UPDATE_PHOTO data:@{KEY_USER:user,KEY_PREVIOUS:@([update previous]), KEY_PREVIEW_OBJECT:previewObject}];
                 }
@@ -1081,6 +1081,9 @@ static NSArray *channelUpdates;
     TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
+        NSLog(@"start new updateDifference update update: %@",_updateState);
+
+        
         TL_updates_difference *updates = response;
         
         int stateQts = _updateState.qts;
@@ -1140,9 +1143,9 @@ static NSArray *channelUpdates;
             
             for (TLUpdate *update in [updates other_updates]) {
                 
-                if([channelUpdates indexOfObject:update.className] != NSNotFound)
+                if([channelUpdates indexOfObject:update.className] != NSNotFound) {
                     [self.channelsUpdater addUpdate:update];
-                else {
+                } else {
                      [self proccessUpdate:update];
                 }
                 
@@ -1160,10 +1163,8 @@ static NSArray *channelUpdates;
             
             
             if(intstate != nil) {
-             //   dispatch_after_seconds_queue(0.5, ^{
                  _holdUpdates = NO;
                 [self uptodateWithConnectionState:updateConnectionState];
-             //   }, queue.nativeQueue);
                 
             } else {
                 

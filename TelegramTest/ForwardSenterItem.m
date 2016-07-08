@@ -165,7 +165,7 @@ static const int fwdUserFlag = 1 << 31;
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         weakSelf.state = MessageSendingStateError;
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
 
 }
 

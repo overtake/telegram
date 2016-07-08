@@ -224,7 +224,7 @@
         
         [_downloadEventListener setCompleteHandler:^(DownloadItem * item) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 
                 [weakSelf.progressView setDisableChanges:NO];
                 

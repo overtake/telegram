@@ -361,7 +361,7 @@ static ShareViewController *shareViewController;
         
     } errorHandler:^(TGS_RPCRequest *request, RpcError *error) {
         _isLoaded = NO;
-    } timeout:30 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:30 queue:[ASQueue globalQueue]._dispatch_queue];
 
 }
 

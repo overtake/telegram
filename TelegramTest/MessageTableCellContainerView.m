@@ -338,7 +338,7 @@ static BOOL mouseIsDown = NO;
             
             [strongSelf.item doAfterDownload];
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 
                 if(strongSelf == weakSelf) {
                     [weakSelf downloadProgressHandler:item];

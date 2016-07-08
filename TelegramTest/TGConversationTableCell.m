@@ -365,7 +365,7 @@ static NSDictionary *attributes() {
             [self checkMessageState];
         }
         
-    } queue:[ASQueue mainQueue].nativeQueue];
+    } queue:[ASQueue mainQueue]._dispatch_queue];
     
     [_timer start];
     [_timer fire];
@@ -451,7 +451,9 @@ static NSDictionary *attributes() {
                 stateImage = self.isSelected ? image_MessageStateSentWhite() : image_MessageStateSent();
             }
             
-            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - 10);
+            
+            
+            point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width , NSHeight(self.frame) - stateImage.size.height - (self.class == [TGConversationTableCell class] ? 10 : 5));
             
         } else if(self.item.message.dstate == DeliveryStateError) {
             

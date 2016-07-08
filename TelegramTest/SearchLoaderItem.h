@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMRowItem.h"
+#import "TGGeneralRowItem.h"
 
-@interface SearchLoaderItem : TMRowItem
+@interface SearchLoaderItem : TGGeneralRowItem
 
 @end

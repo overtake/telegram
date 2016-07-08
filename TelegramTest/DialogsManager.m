@@ -960,10 +960,6 @@
                 
                 NSUInteger position = [self->list indexOfObject:obj];
                 
-                
-                
-
-                
                 [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
                 [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
 
@@ -995,15 +991,28 @@
     return success;
 }
 
-- (void)add:(NSArray *)all {
+- (SSignal *)add:(NSArray *)all {
     
-    [self add:all updateCurrent:YES];
+    return [self add:all updateCurrent:YES autoStart:YES];
+}
+
+- (SSignal *)add:(NSArray *)all autoStart:(BOOL)autoStart {
+    
+    return [self add:all updateCurrent:YES autoStart:autoStart];
+}
+
+- (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent {
+    return [self add:all updateCurrent:YES autoStart:YES];
 }
 
 
-- (void)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent {
+- (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent autoStart:(BOOL)autoStart {
     
-    [self.queue dispatchOnQueue:^{
+    
+    SSignal *signal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        __block BOOL dispose = NO;
+        
         [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
             TL_conversation *current = [keys objectForKey:@(dialog.peer_id)];
             if(current) {
@@ -1024,7 +1033,7 @@
                     current.invisibleChannel = dialog.invisibleChannel;
                     current.lastMessage = dialog.lastMessage;
                 }
-               
+                
             } else {
                 [self->list addObject:dialog];
                 [self->keys setObject:dialog forKey:@(dialog.peer_id)];
@@ -1036,10 +1045,31 @@
                 [current save];
             }
             
-            [self resort];
+            
+            *stop = dispose;
             
         }];
-    }];
+        
+        [self resort];
+        
+        [subscriber putNext:nil];
+        
+        
+        return [[SBlockDisposable alloc] initWithBlock:^
+                {
+                    dispose = YES;
+                }];
+    }] startOn:self.queue];
+    
+    
+    if(autoStart)
+        [signal startWithNext:^(id next) {
+            
+        }];
+    
+    
+    return signal;
+
 }
 
 - (TL_conversation *)findByUserId:(int)user_id {

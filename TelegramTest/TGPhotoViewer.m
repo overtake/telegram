@@ -283,7 +283,7 @@ static const int controlsHeight = 75;
         _totalCount = MAX([_behavior totalCount],(int)[self listCount]);
         
         NSUInteger index = [self indexOfObject:self.currentItem.previewObject];
-        [[ASQueue mainQueue] dispatchOnQueue:^{
+        [ASQueue dispatchOnMainQueue:^{
             self.currentItemId = index;
         }];
         
@@ -307,7 +307,7 @@ static const int controlsHeight = 75;
             }];
         } else {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 
                 NSInteger pos = [self indexOfObject:_currentItem.previewObject];
                 

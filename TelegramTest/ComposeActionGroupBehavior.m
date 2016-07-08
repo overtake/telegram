@@ -162,7 +162,7 @@
         rpcError = error;
         
         [ASQueue dispatchOnMainQueue:process_error];
-     } timeout:10 queue:[ASQueue globalQueue].nativeQueue alwayContinueWithErrorContext:YES];
+     } timeout:10 queue:[ASQueue globalQueue]._dispatch_queue alwayContinueWithErrorContext:YES];
     
     
     

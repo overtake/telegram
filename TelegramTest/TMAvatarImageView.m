@@ -408,7 +408,7 @@ static CAAnimation *ani2() {
             if(object == self.fileLocation) {
                 __block NSImage *image = [TMAvatarImageView generateTextAvatar:colorMask size:self.bounds.size text:text type:self.type font:self.font offsetY:self.offsetTextY];
                 
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+                [ASQueue dispatchOnMainQueue:^{
                     
                     if(object == self.fileLocation) {
                         [TGCache cacheImage:image forKey:key groups:@[AVACACHE]];

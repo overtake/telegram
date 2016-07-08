@@ -43,7 +43,8 @@
         
         
         [self.namesField setFrame:NSMakeRect(5, NSHeight(frameRect) - 18, NSWidth(frameRect) - image_CancelReply().size.width - 10, 20)];
-        
+        [[self.namesField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [[self.namesField cell] setTruncatesLastVisibleLine:YES];
         [self.descriptionField setFrame:NSMakeRect(5, 0, NSWidth(frameRect), 17)];
         
         [self addSubview:self.descriptionField];
@@ -78,6 +79,12 @@
     [self updateLayout];
 }
 
+
+-(void)setFrameSize:(NSSize)newSize {
+    [super setFrameSize:newSize];
+    
+    [self.namesField setFrameSize:NSMakeSize(NSWidth(self.frame) - image_CancelReply().size.width - 10, 20)];
+}
 
 -(void)updateLayout {
     

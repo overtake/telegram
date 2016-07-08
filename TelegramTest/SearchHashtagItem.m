@@ -27,4 +27,12 @@
     return [_hashtag hash];
 }
 
+-(int)height {
+    return 40;
+}
+
+-(Class)viewClass {
+    return NSClassFromString(@"SearchHashtagCellView");
+}
+
 @end

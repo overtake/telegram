@@ -901,6 +901,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__28-[TGSearchSignalKit search:]_block_invoke:TGSearchSignalKit.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "foundCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[AccountSettingsViewController enterClick]:AccountSettingsViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -1133,6 +1144,9 @@
                value = "menuItem.action">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__40-[TGModernSearchvViewController search:]_block_invoke:TGModernSearchvViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController resendItem:]:MessagesViewController.m">
@@ -2940,6 +2954,9 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke.643:SearchViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__40-[TGModernSearchvViewController search:]_block_invoke_2:TGModernSearchvViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessagesViewController setConversation:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -3246,6 +3263,17 @@
       </ContextState>
       <ContextState
          contextName = "-[GeneralSettingsRowView redrawRow]:GeneralSettingsRowView.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGSearchSignalKit reIndexSearchWithItem:]:TGSearchSignalKit.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_indexData">
+            </PersistentString>
+            <PersistentString
+               value = "changeItem.changed">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__51-[ChatHistoryController addItemWithoutSavingState:]_block_invoke:ChatHistoryController.m">
@@ -4150,6 +4178,9 @@
                value = "unread_count">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke_3:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke103:PhoneChangeController.m">
@@ -5067,6 +5098,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.filter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernSearchItem initWithObject:selectText:]:TGModernSearchItem.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_conversation.chat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -6502,6 +6541,9 @@
       </ContextState>
       <ContextState
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke298:AppDelegate.m">
+      </ContextState>
+      <ContextState
+         contextName = "__44-[UsersManager add:withCustomKey:autoStart:]_block_invoke:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "__26-[Storage insertMessages:]_block_invoke_2:Storage.m">

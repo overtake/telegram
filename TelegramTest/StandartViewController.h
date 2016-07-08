@@ -7,9 +7,9 @@
 //
 
 #import "TMViewController.h"
-#import "SearchViewController.h"
+#import "TGModernSearchvViewController.h"
 @interface StandartViewController : TMViewController
-@property (nonatomic, strong, readonly) SearchViewController *searchViewController;
+@property (nonatomic, strong, readonly) TGModernSearchvViewController *searchViewController;
 
 @property (nonatomic,strong) NSView *searchView;
 @property (nonatomic,strong) NSView *mainView;

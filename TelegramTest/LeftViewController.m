@@ -7,7 +7,6 @@
 //
 
 #import "LeftViewController.h"
-#import "SearchViewController.h"
 #import "RBLPopover.h"
 #import "TMTabViewController.h"
 #import "AccountSettingsViewController.h"
@@ -78,7 +77,6 @@
 
 @interface LeftViewController ()<TMTabViewDelegate>
 
-@property (nonatomic, strong) SearchViewController *searchViewController;
 @property (nonatomic, strong) AccountSettingsViewController *settingsViewController;
 @property (nonatomic, strong) BTRButton *topButton;
 @property (nonatomic, strong) TMSimpleTabViewController *tabViewController;
@@ -293,7 +291,7 @@ static TMViewController *changedController;
 }
 
 - (BOOL)isSearchActive {
-    return self.tabViewController.currentController == self.searchViewController;
+    return NO;
 }
 
 -(BOOL)becomeFirstResponder {

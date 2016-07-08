@@ -238,7 +238,7 @@
         self.total_parts = ceil(self.total_size / 1.0 / self.part_size);
     }
     
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         if(self.uploadStarted)
             self.uploadStarted(self, self.fileData);
         
@@ -247,7 +247,7 @@
             if(self.uploadTypingNeed && self.uploadState == UploadExecuting)
                 self.uploadTypingNeed(self);
             
-        } queue:[ASQueue globalQueue].nativeQueue];
+        } queue:[ASQueue globalQueue]._dispatch_queue];
         
         [self.typingTimer start];
     }];

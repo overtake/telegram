@@ -119,7 +119,7 @@ static const int width = 180;
     
     
     
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
 

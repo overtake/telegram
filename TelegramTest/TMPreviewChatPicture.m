@@ -72,7 +72,7 @@
             
             [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
                 
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+                [ASQueue dispatchOnMainQueue:^{
                     if([[TMMediaController getCurrentController] currentItem] == weakSelf)
                         [[TMMediaController getCurrentController] refreshCurrentPreviewItem];
                     weakSelf.downloadItem = nil;

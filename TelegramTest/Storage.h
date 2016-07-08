@@ -105,16 +105,16 @@ extern NSString *const TOP_PEERS;
 ;
 -(void)updateTopMessage:(TL_conversation *)dialog completeHandler:(void (^)(BOOL result))completeHandler;
 
--(void)insertChats:(NSArray *)chats completeHandler:(void (^)(BOOL result))completeHandler;
--(void)insertChat:(TLChat *)chat completeHandler:(void (^)(BOOL result))completeHandler;
+-(void)insertChats:(NSArray *)chats;
+-(void)insertChat:(TLChat *)chat;
 
 
 -(void)chats:(void (^)(NSArray *result))completeHandler;
 // END MESSAGE AND DIALOGS PROCEDURES!!!
 
 
-- (void)insertUser:(TLUser *)user completeHandler:(void (^)(BOOL result))completeHandler;
-- (void)insertUsers:(NSArray *)users completeHandler:(void (^)(BOOL result))completeHandler;
+- (void)insertUser:(TLUser *)user;
+- (void)insertUsers:(NSArray *)users;
 - (void)users:(void (^)(NSArray *result))completeHandler;
 
 

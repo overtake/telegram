@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import "TMRowItem.h"
+#import "TGGeneralRowItem.h"
 
-@interface SearchHashtagItem : TMRowItem
+@interface SearchHashtagItem : TGGeneralRowItem
 
 @property (nonatomic,strong,readonly) NSString *hashtag;
 

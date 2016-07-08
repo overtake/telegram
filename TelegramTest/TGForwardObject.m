@@ -46,6 +46,12 @@
         
         [n setFont:TGSystemMediumFont(13) forRange:n.range];
         
+        
+        NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+        style.lineBreakMode = NSLineBreakByTruncatingTail;
+        
+        [n addAttribute:NSParagraphStyleAttributeName value:style range:n.range];
+        
         _names = n;
         
         

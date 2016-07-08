@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TL.h"
 #import "ASQueue.h"
+#import "SSignalKit/SSignalKit.h"
 @interface SharedManager : NSObject {
     NSMutableArray *list;
     NSMutableDictionary *keys;
@@ -24,8 +25,14 @@
 +(instancetype)sharedManager;
 -(id)find:(NSInteger)_id;
 -(id)find:(NSInteger)_id withCustomKey:(NSString*)key;
--(void)add:(NSArray *)all;
--(void)add:(NSArray *)all withCustomKey:(NSString*)key;
+
+-(SSignal *)add:(NSArray *)all autoStart:(BOOL)autoStart;
+-(SSignal *)add:(NSArray *)all;
+-(SSignal *)add:(NSArray *)all withCustomKey:(NSString*)key;
+-(SSignal *)add:(NSArray *)all withCustomKey:(NSString*)key autoStart:(BOOL)autoStart;
+
+
+
 -(NSArray*)all;
 -(void)remove:(NSArray *)all;
 -(void)remove:(NSArray*)all withCustomKey:(NSString*)key;
@@ -36,5 +43,6 @@
 
 -(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector;
 -(NSArray *)searchWithString:(NSString *)search selector:(NSString *)selector checker:(BOOL (^)(id object))checker;
+-(SSignal *)search:(NSString *)query;
 
 @end

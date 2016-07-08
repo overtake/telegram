@@ -161,7 +161,7 @@
         }
         
         
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     
     [self.timer start];
     

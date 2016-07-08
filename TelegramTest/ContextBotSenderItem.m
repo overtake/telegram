@@ -71,7 +71,7 @@
                     _timer = nil;
                 }
                 
-            } queue:[ASQueue globalQueue].nativeQueue];
+            } queue:[ASQueue globalQueue]._dispatch_queue];
         }];
         
         
@@ -141,7 +141,7 @@
             }
         }
 
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
     
 }
 

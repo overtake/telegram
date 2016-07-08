@@ -50,6 +50,7 @@
     [self setBordered:NO];
     [self setEditable:NO];
     [self setSelectable:NO];
+    [self setDrawsBackground:NO];
     [[self cell] setTruncatesLastVisibleLine:YES];
     [[self cell] setLineBreakMode:NSLineBreakByTruncatingTail];
     
@@ -207,6 +208,9 @@
         case DialogTypeUser:
             [self setUser:conversation.user];
         default:
+            [self setBroadcast:nil];
+            [self setUser:nil];
+            [self setChat:nil];
             break;
             
     }

@@ -305,6 +305,29 @@ DYNAMIC_PROPERTY(ProfileTitle);
     return [self getDIALOGTITLEENCRYPTED];
 }
 
+-(NSString *)searchString {
+    
+    NSString *search = [[self.fullName trim] lowercaseString];
+    
+    
+    NSMutableString *transform = [search mutableCopy];
+    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transform;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
+    
+    NSMutableString *transformReverse = [search mutableCopy];
+    bufferRef = (__bridge CFMutableStringRef)transformReverse;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
+    
+    
+    search = [[[[search stringByAppendingString:@" "] stringByAppendingString:transform] stringByAppendingString:@" "] stringByAppendingString:transformReverse];
+    
+    if(self.username.length > 0)
+        search = [[search stringByAppendingString:@" "] stringByAppendingString:self.username];
+    
+    return search;
+
+}
+
 - (NSAttributedString *)chatInfoTitle {
     
     id title = [self getCHATINFOTITLE];

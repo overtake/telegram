@@ -112,7 +112,7 @@ typedef enum {
         
         [self.downloadListener setCompleteHandler:^(DownloadItem * item) {
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 if(weakSelf.currentHash != hash) return;
                 
                 if(!item.result) {

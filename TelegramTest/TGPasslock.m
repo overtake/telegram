@@ -98,7 +98,7 @@
         [self checkLocker];
         
         
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     
     
     [_lockTimer start];

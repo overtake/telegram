@@ -82,7 +82,7 @@
     {
         __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
         [strongSelf begin];
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     
     
     [_startupTimer start];
@@ -100,7 +100,7 @@
         {
             __strong TGDatacenterWatchdogActor *strongSelf = weakSelf;
             [strongSelf addOneMoreDatacenter];
-        } queue:[ASQueue globalQueue].nativeQueue];
+        } queue:[ASQueue globalQueue]._dispatch_queue];
         [_addOneMoreDatacenterTimer start];
     }
 }

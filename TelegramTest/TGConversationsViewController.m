@@ -8,7 +8,6 @@
 
 #import "TGConversationsViewController.h"
 #import "TGSecretAction.h"
-#import "SearchViewController.h"
 #import "SelfDestructionController.h"
 #import "TGModernTypingManager.h"
 #import "TGPasslock.h"
@@ -54,7 +53,7 @@
     
     int topOffset = 48;
     
-    self.searchViewController.type = SearchTypeDialogs | SearchTypeMessages | SearchTypeContacts | SearchTypeGlobalUsers;
+    self.searchViewController.type = TGModernSearchTypeDialogs  | TGModernSearchTypeGlobalUsers | TGModernSearchTypeMessages;
     
     NSRect tableRect = NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset);
     
@@ -92,7 +91,7 @@
     
     [[Storage manager] users:^(NSArray *result) {
         
-        [[UsersManager sharedManager] addFromDB:result];
+        [[UsersManager sharedManager] add:result];
         
         [[Storage manager] broadcastList:^(NSArray *broadcasts) {
             

@@ -19,4 +19,12 @@
     return [hash hash];
 }
 
+-(Class)viewClass {
+    return NSClassFromString(@"SearchLoaderCell");
+}
+
+-(int)height {
+    return 40;
+}
+
 @end

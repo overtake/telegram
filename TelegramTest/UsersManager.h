@@ -25,9 +25,7 @@
 +(NSArray *)findUsersByMention:(NSString *)userName withUids:(NSArray *)uids acceptContextBots:(BOOL)acceptContextBots acceptNonameUsers:(BOOL)acceptNonameUsers;
 
 
-- (void)addFromDB:(NSArray *)array;
-
-- (void)add:(NSArray *)all withCustomKey:(NSString *)key update:(BOOL)isNeedUpdateDB;
+-(SSignal *)search:(NSString *)query;
 
 - (void)loadUsers:(NSArray *)users completeHandler:(void (^)())completeHandler;
 

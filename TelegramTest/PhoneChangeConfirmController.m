@@ -151,7 +151,7 @@
         
         [self updateCallTime];
         
-    } queue:[ASQueue mainQueue].nativeQueue];
+    } queue:[ASQueue mainQueue]._dispatch_queue];
     
     [self.callTimer start];
     

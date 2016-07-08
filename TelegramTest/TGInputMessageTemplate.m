@@ -312,7 +312,7 @@ static NSMutableDictionary *list;
                     } errorHandler:^(id request, RpcError *error) {
                         
                         
-                    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+                    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
                 }
                 
             } forIds:@[@(draft.reply_to_msg_id)] random:NO sync:NO  queue:[ASQueue globalQueue] isChannel:conversation.isChannel];

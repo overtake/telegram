@@ -613,7 +613,7 @@
             [self drawParticipants];
         }];
 
-    } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
 }
 
 -(void)dealloc {
@@ -655,7 +655,7 @@
                 alert(appName(), NSLocalizedString(@"Alert.somethingIsWrong", nil));
             }];
 
-        } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+        } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
         
     }, nil);
     

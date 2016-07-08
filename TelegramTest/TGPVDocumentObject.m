@@ -113,7 +113,7 @@
         [TGCache cacheImage:image forKey:[self cacheKey] groups:@[PVCACHE]];
     }
         
-    [[ASQueue mainQueue] dispatchOnQueue:^{
+    [ASQueue dispatchOnMainQueue:^{
         [self.delegate didDownloadImage:image object:self];
     }];
 }

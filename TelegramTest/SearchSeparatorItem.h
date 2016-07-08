@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMElements.h"
+#import "TGGeneralRowItem.h"
 
-@interface SearchSeparatorItem : TMRowItem
+@interface SearchSeparatorItem : TGGeneralRowItem
 
 @property (nonatomic, strong) NSString *oneName;
 @property (nonatomic, strong) NSString *pluralName;
 @property (nonatomic) int itemCount;
 
 - (id)initWithOneName:(NSString *)oneName pluralName:(NSString *)pluralName;
+
+
 
 @end

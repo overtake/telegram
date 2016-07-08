@@ -105,7 +105,7 @@ Telegram *TelegramInstance() {
     self.accountStatusTimer = [[TGTimer alloc] initWithTimeout:ONLINE_EXPIRE - 5 repeat:YES completion:^{
         _isOnline = NO;
         [self setAccountOnline];
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     [self.accountStatusTimer start];
 }
 
@@ -185,7 +185,7 @@ int megagroupSizeMax() {
         if(!self.accountOfflineStatusTimer) {
             self.accountOfflineStatusTimer = [[TGTimer alloc] initWithTimeout:OFFLINE_AFTER repeat:NO completion:^{
                 [self setAccountOffline:YES];
-            } queue:[ASQueue globalQueue].nativeQueue];
+            } queue:[ASQueue globalQueue]._dispatch_queue];
             [self.accountOfflineStatusTimer start];
         }
     }
@@ -395,7 +395,9 @@ static TGEnterPasswordPanel *panel;
             
             if(response.users.count == 1) {
                 
-                [[UsersManager sharedManager] add:response.users withCustomKey:@"n_id" update:YES];
+                [[[UsersManager sharedManager] add:response.users autoStart:NO] startWithNext:^(id next) {
+                    [[Storage manager] insertUsers:next];
+                }];
                 
                 user = response.users[0];
                 

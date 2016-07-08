@@ -260,7 +260,7 @@ static NSCache *replyCache;
             } errorHandler:^(id request, RpcError *error) {
                 
                 
-            } timeout:0 queue:[ASQueue globalQueue].nativeQueue];
+            } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
         }
         
     } forIds:@[@([fromMessage isKindOfClass:[TL_destructMessage class]] ? ((TL_destructMessage *)fromMessage).reply_to_random_id : ([fromMessage.to_id isKindOfClass:[TL_peerChannel class]] ? channelMsgId(fromMessage.reply_to_msg_id, fromMessage.peer_id) : fromMessage.reply_to_msg_id))] random:[fromMessage isKindOfClass:[TL_destructMessage class]] sync:NO queue:[ASQueue globalQueue] isChannel:[fromMessage.to_id isKindOfClass:[TL_peerChannel class]]];

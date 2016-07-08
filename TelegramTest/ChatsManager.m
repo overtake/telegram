@@ -11,6 +11,13 @@
 #import "Crypto.h"
 #import <MTProtoKit/MTEncryption.h>
 #import "SecretChatAccepter.h"
+#import "TGSearchSignalKit.h"
+
+
+
+@interface ChatsManager ()
+@end
+
 @implementation ChatsManager
 +(id)sharedManager {
     static id instance;
@@ -21,15 +28,25 @@
     return instance;
 }
 
+-(id)initWithQueue:(ASQueue *)queue {
+    if(self = [super initWithQueue:queue]) {
+    }
+    
+    return self;
+}
 
-- (void)add:(NSArray *)all withCustomKey:(NSString*)key {
+
+- (SSignal *)add:(NSArray *)all withCustomKey:(NSString*)key autoStart:(BOOL)autoStart {
     
-    int bp = 0;
-    
-    [self.queue dispatchOnQueue:^{
+    SSignal *signal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        __block BOOL dispose = NO;
+        
+        NSMutableArray *chatsToUpdate = [NSMutableArray array];
+        
         
         for (id obj in all) {
-            if([obj isKindOfClass:[TL_chatEmpty class]])
+            if([obj isKindOfClass:[TL_chatEmpty class]]) 
                 continue;
             
             if([obj isKindOfClass:[TLChat class]]) {
@@ -40,27 +57,48 @@
                 if(currentChat != nil) {
                     
                     BOOL isNeedUpdateTypeNotification = NO;
-                    
+                    BOOL isUpdated = NO;
                     if(!newChat.isMin) {
                         
+                        isUpdated = currentChat.flags != newChat.flags || currentChat.class != newChat.class;
+                        
                         if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
+                            isUpdated = YES;
                             currentChat.photo = newChat.photo;
                             [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
                         }
                         
                         if(![currentChat.title isEqualToString:newChat.title]) {
+                            isUpdated = YES;
                             currentChat.title = newChat.title;
+                            
                             [Notification perform:CHAT_UPDATE_TITLE data:@{KEY_CHAT: currentChat}];
                         }
                         
-                        currentChat.username = newChat.username;
+                        if(![currentChat.username isEqualToString:newChat.username]) {
+                            
+                            
+                            currentChat.username = newChat.username;
+                            isUpdated = YES;
+                        }
                         
-                        currentChat.participants_count = newChat.participants_count;
-                        currentChat.date = newChat.date;
+                        if(currentChat.participants_count != newChat.participants_count) {
+                            isUpdated = YES;
+                            currentChat.participants_count = newChat.participants_count;
+                        }
+                        if(currentChat.date != newChat.date) {
+                            currentChat.date = newChat.date;
+                            isUpdated = YES;
+                        }
                         
-                        currentChat.access_hash = newChat.access_hash;
+                        if(currentChat.access_hash != newChat.access_hash) {
+                            isUpdated = YES;
+                            currentChat.access_hash = newChat.access_hash;
+                        }
+                        
                         
                         if(currentChat.version != newChat.version) {
+                            isUpdated = YES;
                             currentChat.version = newChat.version;
                             
                             [[ChatFullManager sharedManager] requestChatFull:currentChat.n_id force:YES];
@@ -75,7 +113,7 @@
                         
                         if((currentChat.migrated_to || newChat.migrated_to) && (![currentChat.migrated_to isKindOfClass:newChat.migrated_to.class] || currentChat.migrated_to.channel_id !=  newChat.migrated_to.channel_id)) {
                             currentChat.migrated_to = newChat.migrated_to;
-                            
+                            isUpdated = YES;
                             if(currentChat.isDeactivated && currentChat.migrated_to.channel_id != 0) {
                                 [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:currentChat.dialog,KEY_DATA:@(YES)}];
                             }
@@ -84,13 +122,14 @@
                         
                         
                         if(currentChat.type != newChat.type) {
+                            isUpdated = YES;
                             currentChat.type = newChat.type;
                             isNeedUpdateTypeNotification = YES;
                         }
                         
                     } else {
                         
-                         isNeedUpdateTypeNotification = newChat.flags != currentChat.flags;
+                        isUpdated = isNeedUpdateTypeNotification = newChat.flags != currentChat.flags;
                         
                         if(newChat.isBroadcast)
                             currentChat.flags|= (1 << 5);
@@ -101,30 +140,39 @@
                             currentChat.flags|= (1 << 7);
                         else
                             currentChat.flags&= ~(1 << 7);
-
+                        
                         if(newChat.isMegagroup)
                             currentChat.flags|= (1 << 8);
                         else
                             currentChat.flags&= ~(1 << 8);
-
+                        
                         if(newChat.isDemocracy)
                             currentChat.flags|= (1 << 10);
                         else
                             currentChat.flags&= ~(1 << 10);
                         
-                        if(![currentChat.title isEqualToString:newChat.title])
+                        if(![currentChat.title isEqualToString:newChat.title]) {
+                            isUpdated = YES;
                             currentChat.title = newChat.title;
+                        }
                         
-                        if(![currentChat.username isEqualToString:newChat.username])
+                        
+                        if(![currentChat.username isEqualToString:newChat.username]) {
+                            isUpdated = YES;
                             currentChat.username = newChat.username;
+                        }
+                        
                         
                         if([currentChat.photo.photo_small hashCacheKey] != [newChat.photo.photo_small hashCacheKey]) {
+                            isUpdated = YES;
                             currentChat.photo = newChat.photo;
                             [Notification perform:CHAT_UPDATE_PHOTO data:@{KEY_CHAT: currentChat}];
                         }
                         
-                       
-                        
+                    }
+                    
+                    if(isUpdated) {
+                        [chatsToUpdate addObject:newChat];
                     }
                     
                     if(isNeedUpdateTypeNotification) {
@@ -136,6 +184,9 @@
                 } else {
                     [self->list addObject:newChat];
                     [self->keys setObject:newChat forKey:[newChat valueForKey:key]];
+                    
+                    [chatsToUpdate addObject:newChat];
+                    
                 }
                 
             } else {
@@ -154,11 +205,36 @@
                     [self->list addObject:newChat];
                     [self->keys setObject:newChat forKey:[newChat valueForKey:key]];
                 }
+                
+                [chatsToUpdate addObject:newChat];
             }
+            
+            if(dispose)
+                break;
         }
 
-    }];
+        if(chatsToUpdate.count)
+            [subscriber putNext:chatsToUpdate];
+        
+        
+        return [[SBlockDisposable alloc] initWithBlock:^
+                {
+                    dispose = YES;
+                }];
+    }] startOn:self.queue];
+    
+    
+    if(autoStart)
+        [signal startWithNext:^(id next) {
+            
+        }];
+    
+    
+    return signal;
+
+    
 }
+
 
 
 - (NSArray *)secretChats {
@@ -257,7 +333,7 @@
         
         if([response isKindOfClass:[TL_boolTrue class]]) {
             channel.username = userName;
-            [[Storage manager] insertChat:channel completeHandler:nil];
+            [[Storage manager] insertChat:channel];
             
             if(completeHandler != nil) {
                 completeHandler(channel);

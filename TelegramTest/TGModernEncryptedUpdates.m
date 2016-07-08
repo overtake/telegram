@@ -118,9 +118,14 @@
             [params discard];
         }
         
-        void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
-        func(self, proccessMethod,des,params,chat.dialog, update);
-         
+        @try {
+            void (*func)(id, SEL, id, EncryptedParams *, TL_conversation *, TL_encryptedMessage *) = (void *)imp;
+            func(self, proccessMethod,des,params,chat.dialog, update);
+        } @catch (NSException *exception) {
+            
+        }
+        
+
     }
     
 }

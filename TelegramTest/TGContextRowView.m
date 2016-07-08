@@ -212,7 +212,7 @@
             
             __strong TGContextRowView *strongSelf = weakSelf;
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 
                 [strongSelf.loaderView setProgress:item.progress animated:YES];
                 

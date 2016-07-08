@@ -119,7 +119,7 @@ static int pollingDelay = 5;
         }];
         
         
-    } queue:[ASQueue globalQueue].nativeQueue];
+    } queue:[ASQueue globalQueue]._dispatch_queue];
     
     [_timer start];
     

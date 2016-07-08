@@ -66,12 +66,35 @@
     [self add:array];
 }
 
-- (void)add:(NSArray *)all {
-    [self.queue dispatchOnQueue:^{
+- (SSignal *)add:(NSArray *)all {
+    
+    SSignal *signal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        __block BOOL dispose = NO;
+        
         for (TLContactBlocked *blockedContact in all) {
             [self->keys setObject:blockedContact forKey:@(blockedContact.user_id)];
+            
+            if(dispose)
+                break;
         }
+        
+        [subscriber putNext:nil];
+        
+        
+        return [[SBlockDisposable alloc] initWithBlock:^
+                {
+                    dispose = YES;
+                }];
+    }] startOn:[ASQueue globalQueue]];
+    
+    
+    [signal startWithNext:^(id next) {
+        
     }];
+    
+    return signal;
+    
 }
 
 - (BOOL)isBlocked:(int)user_id {

@@ -71,7 +71,7 @@
         if([[NSApplication sharedApplication] isActive])
             [self reload];
         
-    } queue:[ASQueue mainQueue].nativeQueue];
+    } queue:[ASQueue mainQueue]._dispatch_queue];
     
     [self.tableView removeAllItems:YES];
     

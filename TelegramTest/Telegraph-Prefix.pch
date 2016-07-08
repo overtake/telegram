@@ -43,7 +43,6 @@
 #import "TLClassStore.h"
 #import "UsersManager.h"
 #import "DialogsManager.h"
-#import "ChannelsManager.h"
 #import "MessagesManager.h"
 #import "BlockedUsersManager.h"
 #import "BroadcastManager.h"

@@ -343,7 +343,7 @@ static ChatHistoryController *observer;
             
             NSArray *converted = [controller.controller messageTableItemsFromMessages:accepted];
             
-            [[ASQueue mainQueue] dispatchOnQueue:^{
+            [ASQueue dispatchOnMainQueue:^{
                 [controller.controller receivedMessageList:converted inRange:range itsSelf:NO];
             }];
             
@@ -387,7 +387,7 @@ static ChatHistoryController *observer;
                         
                         if(message != nil) {
                             
-                            [[ASQueue mainQueue] dispatchOnQueue:^{
+                            [ASQueue dispatchOnMainQueue:^{
                                 [controller.controller deleteItems:@[message] orMessageIds:@[@(message.n_id)]];
                             }];
                         }
@@ -454,7 +454,7 @@ static ChatHistoryController *observer;
                     
                     [obj clear];
                     
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [ASQueue dispatchOnMainQueue:^{
                         [controller.controller flushMessages];
                     }];
                 }
@@ -503,7 +503,7 @@ static ChatHistoryController *observer;
                 
                 NSArray *converted = [obj.controller messageTableItemsFromMessages:@[message]];
                     
-                [[ASQueue mainQueue] dispatchOnQueue:^{
+                [ASQueue dispatchOnMainQueue:^{
                         
                     [obj.controller receivedMessageList:converted inRange:NSMakeRange(position+1, converted.count) itsSelf:NO];
                     
@@ -586,7 +586,7 @@ static const int maxCacheCount = 30;
    
     self.proccessing = NO;
     
-   [[ASQueue mainQueue] dispatchOnQueue:^{
+   [ASQueue dispatchOnMainQueue:^{
         
        if(selectHandler)
             selectHandler(result,range,controller);
@@ -841,7 +841,7 @@ static const int maxCacheCount = 30;
                     
                     [controller updateMessageIds:filtred];
                     
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [ASQueue dispatchOnMainQueue:^{
                         
                         [controller.controller receivedMessageList:copyItems inRange:NSMakeRange(0, filtred.count) itsSelf:YES];
                         
@@ -893,7 +893,7 @@ static const int maxCacheCount = 30;
                     
                     [controller updateMessageIds:filtred];
 
-                    [[ASQueue mainQueue] dispatchOnQueue:^{
+                    [ASQueue dispatchOnMainQueue:^{
                         
                         [controller.controller receivedMessageList:items inRange:NSMakeRange(0, items.count) itsSelf:YES];
                         

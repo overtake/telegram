@@ -23,6 +23,7 @@
 @property (nonatomic,assign) TGAudioPlayerGlobalState audioState;
 @property (nonatomic,strong) BTRButton *playView;
 @property (nonatomic,strong) TGCTextView *nameView;
+@property (nonnull,strong) TMView *cView;
 @end
 
 @implementation MessageTablecellAudioDocumentView
@@ -41,12 +42,18 @@
         
         weak();
         
+        _cView= [[TMView alloc] initWithFrame:self.containerView.bounds];
+        
+        [self.containerView addSubview:_cView];
+        
+        
+        
         self.playView = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, blue_circle_background_image().size.width, blue_circle_background_image().size.height)];
         
         [self.playView addBlock:^(BTRControlEvents events) {
             
             if(weakSelf.item.isset) {
-                [TGAudioPlayerWindow show:weakSelf.item.message.conversation navigation:self.item.table.viewController.navigationViewController];
+                [TGAudioPlayerWindow show:weakSelf.item.message.conversation navigation:weakSelf.item.table.viewController.navigationViewController];
                 [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
 
             } else {
@@ -56,11 +63,11 @@
         } forControlEvents:BTRControlEventClick];
         [_playView setBackgroundImage:blue_circle_background_image() forControlState:BTRControlStateNormal];
 
-        [self.containerView addSubview:_playView];
+        [_cView addSubview:_playView];
     
         _nameView = [[TGCTextView alloc] initWithFrame:NSZeroRect];
         
-         [self.containerView addSubview:_nameView];
+        [_cView addSubview:_nameView];
         
         [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
         [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
@@ -71,6 +78,7 @@
         [self setProgressStyle:TMCircularProgressLightStyle];
         [self.progressView setProgressColor:[NSColor whiteColor]];
         [self setProgressToView:_playView];
+        
         
         [TGAudioPlayerWindow addEventListener:self];
         
@@ -192,9 +200,13 @@
      else
          _audioState = TGAudioPlayerGlobalStatePaused;
     
+    [_cView setFrame:NSMakeRect(0, 0, NSWidth(self.containerView.frame), NSHeight(self.playView.frame))];
+    
     [_nameView setAttributedString:item.nameAttributedString];
     [_nameView setFrame:NSMakeRect(NSMaxX(_playView.frame) + item.defaultOffset, 0, item.nameSize.width, item.nameSize.height)];
     [_nameView setCenteredYByView:_nameView.superview];
+
+    
     
     [self updateDownloadState:NO];
     

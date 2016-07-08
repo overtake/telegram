@@ -290,7 +290,28 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
 }
 
 
-
+-(NSString *)searchString {
+    
+    NSString *search = [[self.title trim] lowercaseString];
+    
+    
+    NSMutableString *transform = [search mutableCopy];
+    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)transform;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, false);
+    
+    NSMutableString *transformReverse = [search mutableCopy];
+    bufferRef = (__bridge CFMutableStringRef)transformReverse;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformLatinCyrillic, true);
+    
+    
+    search = [[[[search stringByAppendingString:@" "] stringByAppendingString:transform] stringByAppendingString:@" "] stringByAppendingString:transformReverse];
+    
+    if(self.username.length > 0)
+        search = [[search stringByAppendingString:@" "] stringByAppendingString:self.username];
+    
+    return search;
+    
+}
 
 -(BOOL)isKicked {
     return self.flags & (1 << 1);

@@ -64,6 +64,8 @@ typedef enum {
 - (int)lastSeenUpdate;
 - (void)setLastSeenUpdate:(int)seenUpdate;
 
+-(NSString *)searchString;
+
 
 - (NSString *)dialogFullName;
 - (TLInputPeer *)inputPeer;

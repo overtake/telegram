@@ -714,7 +714,7 @@
         if([[NSApplication sharedApplication] isActive])
             [self backgroundReload];
         
-    } queue:[ASQueue mainQueue].nativeQueue];
+    } queue:[ASQueue mainQueue]._dispatch_queue];
     
     return [super becomeFirstResponder];
 }

@@ -35,10 +35,6 @@
             
             _conversation = [chat dialog];
             
-            /*
-             27.04.15, 18:47:02: Dmitry Moskovsky: Оро
-             
-             */
         }
         
         _message = message;
@@ -102,5 +98,8 @@
     return[[NSString stringWithFormat:@"search_message_%d",_message.n_id] hash];
 }
 
+-(Class)viewClass {
+    return NSClassFromString(@"SearchMessageCellView");
+}
 
 @end
