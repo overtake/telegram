@@ -51,11 +51,11 @@
     
     weak();
     
-    [self.doneButton setTapBlock:^{
-       
-        [weakSelf changeEditable:!weakSelf.action.isEditable];
-        
-    }];
+//    [self.doneButton setTapBlock:^{
+//       
+//        [weakSelf changeEditable:!weakSelf.action.isEditable];
+//        
+//    }];
     
     
     _adminsItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNone callback:^(TGGeneralRowItem *item) {
@@ -120,10 +120,9 @@
     
 }
 
--(void)changeEditable:(BOOL)editable {
+-(void)didUpdatedEditableState {
     
-    if(self.action.isEditable == editable)
-        return;
+    BOOL editable = self.action.editable;
     
     if(!editable && ![self.headerItem.firstChangedValue isEqualToString:_chat.title] && self.headerItem.firstChangedValue.length > 0) {
         
@@ -151,12 +150,6 @@
         }
     }
     
-   
-    
-    
-    [self.action setEditable:editable];
-    
-    [self updateActionNavigation];
     
     if(self.action.isEditable && _chat.isCreator) {
         [_tableView insert:_adminsItem atIndex:[_tableView indexOfItem:_notificationItem]+1 tableRedraw:YES];
@@ -176,7 +169,7 @@
         
     }];
     
-
+    
     [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[_tableView indexOfItem:_headerItem]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
     
     
@@ -197,7 +190,9 @@
     
     if(!editable)
         [_tableView removeItem:_convertToSuperGroup tableRedraw:YES];
+
 }
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];

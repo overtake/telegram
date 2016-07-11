@@ -692,7 +692,7 @@ Class convertClass(NSString *c, int layer) {
         
         NSMutableArray *attrs = [self convertDocumentAttributes:[media valueForKey:@"attributes"] layer:layer];
         
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue] attributes:attrs] caption:@""];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:[[media valueForKey:@"pid"] longValue] access_hash:[[media valueForKey:@"access_hash"] longValue] date:[[media valueForKey:@"date"] intValue] mime_type:[media valueForKey:@"mime_type"] size:[[media valueForKey:@"size"] intValue] thumb:pthumb dc_id:[[media valueForKey:@"dc_id"] intValue]  version:0 attributes:attrs] caption:@""];
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVenue", layer)]) {
         
@@ -746,7 +746,7 @@ Class convertClass(NSString *c, int layer) {
             attributes = [self convertDocumentAttributes:[(Secret45_DecryptedMessageMedia_decryptedMessageMediaDocument *)media attributes] layer:45];
         }
         
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] attributes:attributes] caption:@""];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:[media valueForKey:@"mime_type"] size:file.size thumb:size dc_id:[file dc_id] version:0 attributes:attributes] caption:@""];
        
            
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaVideo", layer)]) {
@@ -757,7 +757,7 @@ Class convertClass(NSString *c, int layer) {
         
         [attrs addObject:[TL_documentAttributeVideo createWithDuration:[[media valueForKey:@"duration"] intValue] w:[[media valueForKey:@"w"] intValue] h:[[media valueForKey:@"h"] intValue]]];
         
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:file.dc_id attributes:attrs] caption:@""];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoCachedSize createWithType:@"jpeg" location:location w:[[media valueForKey:@"thumb_w"] intValue] h:[[media valueForKey:@"thumb_h"] intValue] bytes:[media valueForKey:@"thumb"]] dc_id:file.dc_id version:0 attributes:attrs] caption:@""];
 
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaAudio", layer)]) {
@@ -768,7 +768,7 @@ Class convertClass(NSString *c, int layer) {
         
         [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:[[media valueForKey:@"duration"] intValue] title:nil performer:nil waveform:nil]];
         
-        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:file.dc_id attributes:attrs] caption:@""];
+        return [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:file.n_id access_hash:file.access_hash date:[[MTNetwork instance] getTime] mime_type:mime_type size:file.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:file.dc_id version:0 attributes:attrs] caption:@""];
         
     }
     

@@ -244,5 +244,6 @@ extern NSString *const TOP_PEERS;
 -(void)removeHole:(TGMessageHole *)hole;
 -(NSArray *)groupHoles:(int)peer_id min:(int)min max:(int)max;
 -(void)addHolesAroundMessage:(TL_localMessage *)message;
+-(void)addHolesAroundMessage:(TL_localMessage *)message completionHandler:(void (^)(TGMessageHole *hole, BOOL next))completionHandler;
 -(int)syncedMessageIdWithPeerId:(int)peer_id latest:(BOOL)latest isChannel:(BOOL)isChannel;
 @end

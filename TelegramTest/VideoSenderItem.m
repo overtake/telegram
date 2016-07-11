@@ -54,7 +54,7 @@
         [attributes addObject:[TL_documentAttributeFilename createWithFile_name:[path_for_file lastPathComponent]]];
         [attributes addObject:[TL_documentAttributeVideo createWithDuration:duration w:size.width h:size.height]];
         
-        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 attributes:attributes] caption:caption];
+        TL_messageMediaDocument *media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:[[MTNetwork instance] getTime] mime_type:@"video/mp4" size:(int)fileSize(path_for_file) thumb:cachedSize dc_id:0 version:0 attributes:attributes] caption:caption];
         
         [TGCache cacheImage:thumbImage forKey:cachedSize.location.cacheKey groups:@[IMGCACHE]];
         

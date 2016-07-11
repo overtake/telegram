@@ -682,13 +682,13 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:msg.media.audio.duration title:nil performer:nil waveform:nil]];
             
-            msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.audio.n_id access_hash:msg.media.audio.access_hash date:msg.media.audio.date mime_type:msg.media.audio.mime_type size:msg.media.audio.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:msg.media.audio.dc_id attributes:attrs] caption:@""];
+            msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.audio.n_id access_hash:msg.media.audio.access_hash date:msg.media.audio.date mime_type:msg.media.audio.mime_type size:msg.media.audio.size thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:msg.media.audio.dc_id version:0 attributes:attrs] caption:@""];
         } else if([msg.media isKindOfClass:[TL_messageMediaVideo class]]) {
             NSMutableArray *attrs = [NSMutableArray array];
             
             [attrs addObject:[TL_documentAttributeVideo createWithDuration:msg.media.video.duration w:msg.media.video.w h:msg.media.video.h]];
             
-            msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.video.n_id access_hash:msg.media.video.access_hash date:msg.media.video.date mime_type:msg.media.video.mime_type size:msg.media.video.size thumb:msg.media.video.thumb dc_id:msg.media.video.dc_id attributes:attrs] caption:msg.media.caption];
+            msg.media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:msg.media.video.n_id access_hash:msg.media.video.access_hash date:msg.media.video.date mime_type:msg.media.video.mime_type size:msg.media.video.size thumb:msg.media.video.thumb dc_id:msg.media.video.dc_id version:0 attributes:attrs] caption:msg.media.caption];
         }
         
         if(![msg isKindOfClass:[TL_messageEmpty class]])
@@ -2952,10 +2952,20 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 -(void)addHolesAroundMessage:(TL_localMessage *)message {
+    [self addHolesAroundMessage:message completionHandler:nil];
+}
+
+-(void)addHolesAroundMessage:(TL_localMessage *)message completionHandler:(void (^)(TGMessageHole *hole, BOOL next))completionHandler {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
     [queue inDatabase:^(FMDatabase *db) {
         
         
         BOOL messageIsset = [db boolForQuery:[NSString stringWithFormat:@"select count(*) from %@ where n_id = ?",message.isChannelMessage ? tableChannelMessages : tableMessages],@(message.channelMsgId)];
+        
+        TGMessageHole *hole;
+        BOOL next;
         
         if(!messageIsset)
         {
@@ -2965,15 +2975,21 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 minSynchedId = INT32_MAX;
             }
             
-            TGMessageHole *hole;
-            
             if(minSynchedId > message.n_id) {
                 hole  = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:message.n_id+1 max_id:minSynchedId-1 date:message.date count:0];
+                next = YES;
             } else {
                 hole = [[TGMessageHole alloc] initWithUniqueId:-rand_int() peer_id:message.peer_id min_id:minSynchedId+1 max_id:message.n_id-1 date:message.date count:0];
+                next = NO;
             }
             
             [self insertMessagesHole:hole];
+        }
+        
+        if(completionHandler) {
+            dispatch_async(dqueue, ^{
+                completionHandler(hole,next);
+            });
         }
         
     }];

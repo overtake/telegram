@@ -288,6 +288,18 @@
     [self.tableView insert:esglayout atIndex:self.tableView.list.count tableRedraw:NO];
 
     
+    GeneralSettingsRowItem *nregistredusers = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeSwitch callback:^(TGGeneralRowItem *item) {
+        
+        [SettingsArchiver addOrRemoveSetting:NRegistredUsers];
+        
+        
+    } description:NSLocalizedString(@"Settings.NRegistredUsers", nil) height:42 stateback:^id(TGGeneralRowItem *item) {
+        return @([SettingsArchiver checkMaskedSetting:NRegistredUsers]);
+    }];
+    
+    
+    [self.tableView insert:nregistredusers atIndex:self.tableView.list.count tableRedraw:NO];
+    
     
     
 #ifdef TGDEBUG

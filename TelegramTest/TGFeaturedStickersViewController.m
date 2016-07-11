@@ -77,18 +77,18 @@
     [_tableView reloadData];
     
     
-//    if(unread.count > 0) {
-//        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers create] successHandler:^(id request, id response) {
-//            
-//            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-//                [transaction removeObjectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
-//            }];
-//            
-//        } errorHandler:^(id request, RpcError *error) {
-//            
-//            
-//        }];
-//    }
+    if(unread.count > 0) {
+        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers create] successHandler:^(id request, id response) {
+            
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [transaction removeObjectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
+            }];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+            
+        }];
+    }
     
 }
 

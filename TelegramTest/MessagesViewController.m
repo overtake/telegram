@@ -3050,11 +3050,11 @@ static NSTextAttachment *headerMediaIcon() {
   
          if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
-        } else if(dialog.last_marked_message != -1 && dialog.last_marked_message < dialog.universalTopMessage && dialog.universalTopMessage < TGMINFAKEID) {
+        } else if(dialog.read_inbox_max_id != -1 && dialog.read_inbox_max_id < dialog.top_message && dialog.top_message < TGMINFAKEID) {
             
             TL_localMessage *msg =  [[TL_localMessage alloc] init];
             
-            msg.n_id = dialog.last_marked_message;
+            msg.n_id = dialog.read_inbox_max_id;
             msg.to_id = dialog.peer;
             
             [self showMessage:msg fromMsg:nil flags:ShowMessageTypeUnreadMark];

@@ -244,6 +244,7 @@
 		C20A8AC21D2E90AB00C70134 /* TGModernSearchResult.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AC11D2E90AB00C70134 /* TGModernSearchResult.m */; };
 		C20A8AC71D2EA91A00C70134 /* TGModernSearchItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AC61D2EA91A00C70134 /* TGModernSearchItem.m */; };
 		C20A8ACA1D2EA93400C70134 /* TGModernSearchRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AC91D2EA93400C70134 /* TGModernSearchRowView.m */; };
+		C20A8ACD1D2FCECD00C70134 /* TGJoinModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8ACC1D2FCECD00C70134 /* TGJoinModalView.m */; };
 		C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */; };
 		C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
@@ -1554,6 +1555,8 @@
 		C20A8AC61D2EA91A00C70134 /* TGModernSearchItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernSearchItem.m; sourceTree = "<group>"; };
 		C20A8AC81D2EA93400C70134 /* TGModernSearchRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModernSearchRowView.h; sourceTree = "<group>"; };
 		C20A8AC91D2EA93400C70134 /* TGModernSearchRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModernSearchRowView.m; sourceTree = "<group>"; };
+		C20A8ACB1D2FCECD00C70134 /* TGJoinModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGJoinModalView.h; sourceTree = "<group>"; };
+		C20A8ACC1D2FCECD00C70134 /* TGJoinModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGJoinModalView.m; sourceTree = "<group>"; };
 		C20AEF3C1C1F2953001BAAA0 /* TGBlurImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlurImageObject.h; sourceTree = "<group>"; };
 		C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBlurImageObject.m; sourceTree = "<group>"; };
 		C20AEF3F1C1F347D001BAAA0 /* TGThumbnailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGThumbnailObject.h; sourceTree = "<group>"; };
@@ -5502,6 +5505,8 @@
 				C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */,
 				C2EBE31F1D09CD90009D9C96 /* TGGifPreviewModalView.h */,
 				C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */,
+				C20A8ACB1D2FCECD00C70134 /* TGJoinModalView.h */,
+				C20A8ACC1D2FCECD00C70134 /* TGJoinModalView.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";
@@ -7367,6 +7372,7 @@
 				C22A2A091C218AF000678172 /* TGCompressVideoItem.m in Sources */,
 				C20D75861D22A4D000A32E7A /* TGMessagesNavigationEditView.m in Sources */,
 				0A9EDC5A1897BA0E0037E1BC /* RBLResizableImage.m in Sources */,
+				C20A8ACD1D2FCECD00C70134 /* TGJoinModalView.m in Sources */,
 				C21D483519ADD1E3000F06E1 /* StandartViewController.m in Sources */,
 				0A697E831914F505003469CB /* TMTextLayer.m in Sources */,
 				0A6D098719535E8500A9AC64 /* CALayerCategory.m in Sources */,

@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.07.16.
+//  Auto created by Mikhail Filimonov on 11.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -456,6 +456,9 @@
 @interface TLmessages_FeaturedStickers : TLObject
 @end
 	
+@interface TLmessages_RecentStickers : TLObject
+@end
+	
 @interface TLAudio : TLObject
 @end
 	
@@ -726,6 +729,7 @@
 @property long secret;
 @property long n_id;
 @property long access_hash;
+@property int version;
 @end
 
 @interface TL_inputFileLocation : TLInputFileLocation<NSCoding>
@@ -735,7 +739,7 @@
 +(TL_inputEncryptedFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
 @end
 @interface TL_inputDocumentFileLocation : TLInputFileLocation<NSCoding>
-+(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash;
++(TL_inputDocumentFileLocation*)createWithN_id:(long)n_id access_hash:(long)access_hash version:(int)version;
 @end
 	
 @interface TLInputPhotoCrop()
@@ -1826,6 +1830,9 @@
 @interface TL_updateReadFeaturedStickers : TLUpdate<NSCoding>
 +(TL_updateReadFeaturedStickers*)create;
 @end
+@interface TL_updateRecentStickers : TLUpdate<NSCoding>
++(TL_updateRecentStickers*)create;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -2149,6 +2156,7 @@
 @property int size;
 @property (nonatomic, strong) TLPhotoSize* thumb;
 @property int dc_id;
+@property int version;
 @property (nonatomic, strong) NSMutableArray* attributes;
 @property (nonatomic, strong) NSString* external_url;
 @property (nonatomic, strong) NSString* search_q;
@@ -2161,13 +2169,16 @@
 +(TL_documentEmpty*)createWithN_id:(long)n_id;
 @end
 @interface TL_document : TLDocument<NSCoding>
-+(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
++(TL_document*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id version:(int)version attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_contextBotSender : TLDocument<NSCoding>
 +(TL_contextBotSender*)createWithN_id:(long)n_id date:(int)date mime_type:(NSString*)mime_type thumb:(TLPhotoSize*)thumb external_url:(NSString*)external_url search_q:(NSString*)search_q perform_date:(int)perform_date external_webpage:(TLWebPage*)external_webpage attributes:(NSMutableArray*)attributes;
 @end
 @interface TL_compressDocument : TLDocument<NSCoding>
 +(TL_compressDocument*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes compressor:(NSData*)compressor;
+@end
+@interface TL_document_old53 : TLDocument<NSCoding>
++(TL_document_old53*)createWithN_id:(long)n_id access_hash:(long)access_hash date:(int)date mime_type:(NSString*)mime_type size:(int)size thumb:(TLPhotoSize*)thumb dc_id:(int)dc_id attributes:(NSMutableArray*)attributes;
 @end
 	
 @interface TLhelp_Support()
@@ -2338,7 +2349,6 @@
 @property (nonatomic, strong) NSString* performer;
 @property (nonatomic, strong) NSData* waveform;
 @property (nonatomic, strong) NSString* file_name;
-@property int version;
 @property (nonatomic, strong) NSString* file_path;
 @end
 
@@ -2359,9 +2369,6 @@
 @end
 @interface TL_documentAttributeFilename : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeFilename*)createWithFile_name:(NSString*)file_name;
-@end
-@interface TL_documentAttributeVersion : TLDocumentAttribute<NSCoding>
-+(TL_documentAttributeVersion*)createWithVersion:(int)version;
 @end
 @interface TL_documentAttributeAudio_old31 : TLDocumentAttribute<NSCoding>
 +(TL_documentAttributeAudio_old31*)createWithDuration:(int)duration;
@@ -2573,13 +2580,16 @@
 @property (nonatomic,assign,readonly) BOOL isPublic;
 @property (nonatomic,assign,readonly) BOOL isMegagroup;
 @property (nonatomic, strong) NSString* title;
+@property (nonatomic, strong) TLChatPhoto* photo;
+@property int participants_count;
+@property (nonatomic, strong) NSMutableArray* participants;
 @end
 
 @interface TL_chatInviteAlready : TLChatInvite<NSCoding>
 +(TL_chatInviteAlready*)createWithChat:(TLChat*)chat;
 @end
 @interface TL_chatInvite : TLChatInvite<NSCoding>
-+(TL_chatInvite*)createWithFlags:(int)flags     title:(NSString*)title;
++(TL_chatInvite*)createWithFlags:(int)flags     title:(NSString*)title photo:(TLChatPhoto*)photo participants_count:(int)participants_count participants:(NSMutableArray*)participants;
 @end
 	
 @interface TLInputStickerSet()
@@ -3271,6 +3281,18 @@
 @end
 @interface TL_messages_featuredStickers : TLmessages_FeaturedStickers<NSCoding>
 +(TL_messages_featuredStickers*)createWithN_hash:(int)n_hash sets:(NSMutableArray*)sets unread:(NSMutableArray*)unread;
+@end
+	
+@interface TLmessages_RecentStickers()
+@property int n_hash;
+@property (nonatomic, strong) NSMutableArray* stickers;
+@end
+
+@interface TL_messages_recentStickersNotModified : TLmessages_RecentStickers<NSCoding>
++(TL_messages_recentStickersNotModified*)create;
+@end
+@interface TL_messages_recentStickers : TLmessages_RecentStickers<NSCoding>
++(TL_messages_recentStickers*)createWithN_hash:(int)n_hash stickers:(NSMutableArray*)stickers;
 @end
 	
 @interface TLAudio()

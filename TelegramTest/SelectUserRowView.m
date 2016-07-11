@@ -314,7 +314,6 @@
 
 - (void)drawRect:(NSRect)dirtyRect
 {
-	[super drawRect:dirtyRect];
     [DIALOG_BORDER_COLOR setFill];
     
     NSRectFill(NSMakeRect(NSMinX(self.titleTextField.frame), 0, NSWidth(self.frame) -  NSMinX(self.titleTextField.frame), 1));

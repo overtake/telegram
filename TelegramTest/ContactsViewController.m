@@ -142,18 +142,6 @@
     return _color != nil ? _color : NSColorFromRGB(0xffffff);
 }
 
-//-(void)mouseDown:(NSEvent *)theEvent {
-//    [super mouseDown:theEvent];
-//    
-//    self.color = NSColorFromRGB(0xfafafa);
-//    
-//    [self setNeedsDisplay:YES];
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        self.color = NSColorFromRGB(0xffffff);
-//        [self setNeedsDisplay:YES];
-//    });
-//}
 
 
 -(void)redrawRow {
@@ -190,8 +178,6 @@
 @property (nonatomic,strong) ContactFirstItem *firstItem;
 @property (nonatomic,strong) ContactFirstView *firstView;
 
-@property (nonatomic,strong) AddContactViewController *addContactViewController;
-
 @end
 
 @implementation ContactsViewController
@@ -203,11 +189,7 @@
     int topOffset = 48;
     
     self.searchViewController.type = TGModernSearchTypeDialogs | TGModernSearchTypeGlobalUsers;
-    
-    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:NSMakeRect(0, 0, 300, 200)];
-    
-    self.addContactViewController.rbl = [[RBLPopover alloc] initWithContentViewController:self.addContactViewController];
-    self.addContactViewController.rbl.canBecomeKey = YES;
+
     
     self.tableView = [[TGConversationsTableView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame), NSHeight(self.view.frame) - topOffset)];
     self.tableView.tm_delegate = self;

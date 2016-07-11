@@ -554,7 +554,7 @@
                    return;
                 
                 TGMessageHole *longHole;
-                
+                BOOL dispatched = NO;
                 
                 if([response isKindOfClass:[TL_updates_channelDifferenceEmpty class]]) {
                     
@@ -632,11 +632,22 @@
                         [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
                         
                         
- 
                         
                         // insert holes
                         {
-                            [[Storage manager] addHolesAroundMessage:topMsg];  
+                            dispatched = YES;
+                            
+                            [[Storage manager] addHolesAroundMessage:topMsg completionHandler:^(TGMessageHole *hole,BOOL next) {
+                                
+                                if(callback != nil)
+                                {
+                                    callback(response,hole);
+                                    
+                                }
+                                
+                            }];
+                            
+                            
                         }
                     }
                     
@@ -646,7 +657,7 @@
                 }
                 
                 
-                if(callback != nil)
+                if(callback != nil && !dispatched)
                 {
                     callback(response,longHole);
                 }

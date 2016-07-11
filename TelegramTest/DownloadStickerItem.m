@@ -27,7 +27,7 @@
     if(self.isEncrypted)
         return [TL_inputEncryptedFileLocation createWithN_id:document.n_id access_hash:document.access_hash];
     
-    return [TL_inputDocumentFileLocation createWithN_id:document.n_id access_hash:document.access_hash];
+    return [TL_inputDocumentFileLocation createWithN_id:document.n_id access_hash:document.access_hash version:document.version];
 }
 
 @end

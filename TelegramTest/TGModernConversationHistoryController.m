@@ -59,6 +59,7 @@
     if(_state == TGModernCHStateLocal)
     {
         
+        
         [[Storage manager] dialogsWithOffset:_offset limit:_offset > 0 ? 1000 : [self.delegate conversationsLoadingLimit] completeHandler:^(NSArray *d) {
             
             

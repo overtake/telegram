@@ -564,10 +564,6 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateSavedGifs class]]) {
             
-            //TODO
-            
-            int bp = 0;
-            
             return;
         }
         
@@ -767,9 +763,6 @@ static NSArray *channelUpdates;
             BOOL isContact = [contactLink.my_link isKindOfClass:[TL_contactLinkContact class]];
             
             
-            MTLog(@"%@ contact %d", isContact ? @"add" : @"delete", contactLink.user_id);
-            
-            
             TLUser *user = [[[UsersManager sharedManager] find:contactLink.user_id] copy];
             
             if([contactLink.my_link isKindOfClass:[TL_contactLinkContact class]]) {
@@ -894,15 +887,7 @@ static NSArray *channelUpdates;
         }
         
         if([update isKindOfClass:[TL_updateUserStatus class]]) {
-            
-            //        if(update.user_id == [UsersManager currentUserId]) {
-            //            [[Telegram sharedInstance] setIsOnline:NO];
-            //            [[Telegram sharedInstance] setAccountOnline];
-            //
-            //            return;
-            //        }
             [[UsersManager sharedManager] setUserStatus:[update status] forUid:update.user_id];
-            
             return;
         }
         
@@ -972,6 +957,9 @@ static NSArray *channelUpdates;
         }
         
         if([update isKindOfClass:[TL_updateContactRegistered class]]) {
+            
+            if(![SettingsArchiver checkMaskedSetting:NRegistredUsers])
+                return;
             
             TLUser *user = [[UsersManager sharedManager] find:[update user_id]];
             

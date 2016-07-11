@@ -123,8 +123,8 @@
     
     [self.searchViewController viewWillAppear:animated];
     
-    [self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
-    [self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
+    //[self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
+    //[self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
   //  dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
   //  });
@@ -262,6 +262,8 @@
                 [self.tableView setSelectedByHash:[self.selectedItem hash]];
             }
         }
+        
+
     }];
     
 }

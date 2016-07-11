@@ -2164,13 +2164,10 @@
                value = "dialog.last_marked_message">
             </PersistentString>
             <PersistentString
-               value = "self.isShownESGController">
+               value = "dialog.top_message">
             </PersistentString>
             <PersistentString
-               value = "self.conversation.canSendMessage">
-            </PersistentString>
-            <PersistentString
-               value = "self.canShownESGController">
+               value = "dialog.top_message - dialog.read_inbox_max_id">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -48,5 +48,5 @@ typedef void (^TapTMAvatarImageView)(void);
 
 
 -(void)updateWithConversation:(TL_conversation *)conversation;
-
+-(void)rebuild:(BOOL)animated;
 @end

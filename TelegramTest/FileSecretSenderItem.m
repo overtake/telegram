@@ -138,7 +138,7 @@
         [attrs addObject:[TL_documentAttributeFilename createWithFile_name:[filePath lastPathComponent]]];
         
         
-        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:@""];
+        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:rand_long() access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 version:0 attributes:attrs]  caption:@""];
     } else if(self.uploadType == UploadAudioType) {
         
         NSTimeInterval duration = [TGOpusAudioPlayerAU durationFile:filePath];
@@ -149,7 +149,7 @@
         
         [attrs addObject:[TL_documentAttributeAudio createWithFlags:(1 << 10) duration:duration title:nil performer:nil waveform:[waveform bitstream]]];
         
-        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 attributes:attrs] caption:@""];
+        media = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:0 access_hash:0 date:(int)[[MTNetwork instance] getTime] mime_type:@"audio/ogg" size:(int)fileSize(filePath) thumb:[TL_photoSizeEmpty createWithType:@"x"] dc_id:0 version:0 attributes:attrs] caption:@""];
         
     }
     

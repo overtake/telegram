@@ -36,8 +36,9 @@ typedef enum {
     IncludeMutedUnreadCount = 1 << 25,
     DisableAutoplayGifSetting = 1 << 26,
     TripleLayoutSettings = 1 << 27,
-    HandleMediaKeysSettings = 2 << 28,
-    ESGLayoutSettings = 2 << 29
+    HandleMediaKeysSettings = 1 << 28,
+    ESGLayoutSettings = 1 << 29,
+    NRegistredUsers = 1 << 30
 } SettingsMask;
 
 

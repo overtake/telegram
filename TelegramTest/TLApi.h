@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.07.16.
+//  Auto created by Mikhail Filimonov on 11.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1245,5 +1245,23 @@
 
 
 +(TLAPI_messages_readFeaturedStickers*)create;
+@end
+
+@interface TLAPI_messages_getRecentStickers : TLApiObject
+@property int n_hash;
+
++(TLAPI_messages_getRecentStickers*)createWithN_hash:(int)n_hash;
+@end
+
+@interface TLAPI_messages_clearRecentStickers : TLApiObject
+
+
++(TLAPI_messages_clearRecentStickers*)create;
+@end
+
+@interface TLAPI_messages_getUnusedStickers : TLApiObject
+@property int limit;
+
++(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit;
 @end
 

@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.07.16..
+//  Auto created by Mikhail Filimonov on 11.07.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2959,6 +2959,45 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:14818491];
 	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getRecentStickers
++(TLAPI_messages_getRecentStickers*)createWithN_hash:(int)n_hash {
+    TLAPI_messages_getRecentStickers* obj = [[TLAPI_messages_getRecentStickers alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1726383060];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_clearRecentStickers
++(TLAPI_messages_clearRecentStickers*)create {
+    TLAPI_messages_clearRecentStickers* obj = [[TLAPI_messages_clearRecentStickers alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1425873454];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getUnusedStickers
++(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit {
+    TLAPI_messages_getUnusedStickers* obj = [[TLAPI_messages_getUnusedStickers alloc] init];
+    obj.limit = limit;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1451699370];
+	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end

@@ -186,7 +186,7 @@
         
         [attrs addObject:fileAttr];
         
-        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 attributes:attrs] caption:caption];
+        TL_messageMediaDocument *document = [TL_messageMediaDocument createWithDocument:[TL_document createWithN_id:randomId access_hash:0 date:[[MTNetwork instance] getTime] mime_type:self.mimeType size:(int)fileSize(self.filePath) thumb:size dc_id:0 version:0 attributes:attrs] caption:caption];
         
         self.message = [MessageSender createOutMessage:@"" media:document conversation:conversation additionFlags:additionFlags];
         

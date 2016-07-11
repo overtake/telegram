@@ -209,7 +209,6 @@
         [subscriber putNext:items];
         [subscriber putCompletion];
         
-        
         return nil;
         
     }];
