@@ -90,6 +90,7 @@
 #import "TGModernESGViewController.h"
 #import "TGSplitView.h"
 #import "TGMessagesNavigationEditView.h"
+#import "TGModernMessagesBottomView.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 300
@@ -192,14 +193,12 @@
 
 @property (nonatomic,assign) BOOL needNextRequest;
 
-
-
 @property (nonatomic,strong) TGMessagesViewAlertHintView *messagesAlertHintView;
 
 @property (nonatomic,strong) TGModernESGViewController *esgViewController;
 
 
-
+@property (nonatomic,strong) TGModernMessagesBottomView *modernMessagesBottomView;
 
 @end
 
@@ -461,7 +460,11 @@
     [self.bottomView setAutoresizesSubviews:YES];
     [self.bottomView setAutoresizingMask:NSViewWidthSizable];
     [self bottomViewChangeSize:58 animated:NO];
-    [self.view addSubview:self.bottomView];
+   // [self.view addSubview:self.bottomView];
+    
+    _modernMessagesBottomView = [[TGModernMessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 58) messagesController:self];
+    
+    [self.view addSubview:_modernMessagesBottomView];
     
     
     [self.view addSubview:self.noMessagesView];
@@ -766,7 +769,7 @@ static NSMutableDictionary *savedScrolling;
             BOOL autoSave = _editTemplate.autoSave;
             _editTemplate = t;
             _editTemplate.autoSave = autoSave;
-            [self.bottomView setTemplate:_editTemplate checkElements:YES];
+            [_modernMessagesBottomView setInputTemplate:_editTemplate animated:YES];
         }
         
     }
@@ -1233,7 +1236,7 @@ static NSTextAttachment *headerMediaIcon() {
        
         TL_conversation *conversation = weakSelf.conversation;
         
-        [ASQueue dispatchOnStageQueue:^{
+        [ChatHistoryController dispatchOnChatQueue:^{
             
             [weakSelf sendStartBot:startParam forConversation:conversation bot:bot];
             
@@ -1256,7 +1259,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-     [ASQueue dispatchOnStageQueue:^{
+     [ChatHistoryController dispatchOnChatQueue:^{
          StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start"  forConversation:conversation bot:bot startParam:startParam];
          sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
          
@@ -1698,6 +1701,30 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(animated) {
         
+        [[NSAnimationContext currentContext] setDuration:0.2];
+        [[NSAnimationContext currentContext] setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+        //        int presentHeight = NSHeight(self.table.scrollView.frame);
+        //
+        //        CALayer *presentLayer = (CALayer *)[self.table.scrollView.layer presentationLayer];
+        //
+        //        if(presentLayer && [_sendControlView.layer animationForKey:@"bounds"]) {
+        //            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
+        //        }
+        //
+        //        CABasicAnimation *sAnim = [CABasicAnimation animationWithKeyPath:@"bounds"];
+        //        sAnim.duration = 0.2;
+        //        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        //        sAnim.removedOnCompletion = YES;
+        //        [sAnim setValue:@(CALayerOpacityAnimation) forKey:@"type"];
+        //
+        //        sAnim.fromValue = [NSValue valueWithRect:NSMakeRect(0, 0, NSWidth(self.frame), presentHeight)];
+        //        sAnim.toValue = [NSValue valueWithRect:NSMakeRect(0, 0, NSWidth(self.frame), layoutSize.height)];
+        //
+        //        [self.layer removeAnimationForKey:@"bounds"];
+        //        [self.layer addAnimation:sAnim forKey:@"bounds"];
+        //        
+        //        [self.layer setBounds:[sAnim.toValue rectValue]];
+
         [[self.table.scrollView animator] setFrame:newFrame];
         
         [[self.noMessagesView animator] setFrame:newFrame];
@@ -2320,6 +2347,24 @@ static NSTextAttachment *headerMediaIcon() {
         [cell.layer.superlayer removeAllAnimations];
         
         [cell.layer.superlayer addAnimation:animation forKey:@"position"];
+        
+        
+        
+        
+        
+        CABasicAnimation *oAnim = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        oAnim.duration = 0.2;
+        oAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        oAnim.removedOnCompletion = YES;
+        [oAnim setValue:@(CALayerOpacityAnimation) forKey:@"type"];
+        
+        float presentY = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
+        
+        oAnim.fromValue = @(presentY);
+        oAnim.toValue = @(1.0f);
+        
+        [cell.layer.superlayer addAnimation:oAnim forKey:@"opacity"];
+
     }
     
     //  [CATransaction commit];
@@ -2699,31 +2744,21 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 
-- (void)saveInputText {
-    if(!self.bottomView.inputMessageString) [self.bottomView setInputMessageString:@"" disableAnimations:YES];
+- (void)recommendStickers {
     
     if(!self.conversation || !self.conversation.cacheKey)
         return;
-    
-    
-    if(_editTemplate.text.length > 0 && self.bottomView.inputMessageString.length == 0) {
-        [_editTemplate updateTextAndSave:self.bottomView.inputMessageString];
-        [_editTemplate saveTemplateInCloudIfNeeded];
-    } else
-        [_editTemplate updateTextAndSave:self.bottomView.inputMessageString];
     
     
     
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
-    NSArray *emoji = [self.bottomView.inputMessageString getEmojiFromString:NO];
+    NSArray *emoji = [_editTemplate.text getEmojiFromString:NO];
     
-    
-    
-    if([self.bottomView.inputMessageString isEqualToString:[emoji lastObject]])
+    if([_editTemplate.text isEqualToString:[emoji lastObject]])
     {
-        emoji = [self.bottomView.inputMessageString getEmojiFromString:YES];
+        emoji = [_editTemplate.text getEmojiFromString:YES];
         
         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
@@ -2731,7 +2766,6 @@ static NSTextAttachment *headerMediaIcon() {
         [self.stickerPanel hide:YES];
     }
     
-  //  [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:_editTemplate,KEY_PEER_ID:@(_conversation.peer_id)}];
 }
 
 - (void)showMessage:(TL_localMessage *)message fromMsg:(TL_localMessage *)fromMsg flags:(int)flags {
@@ -3025,6 +3059,8 @@ static NSTextAttachment *headerMediaIcon() {
         [self.normalNavigationCenterView setDialog:dialog];
         
         [self.bottomView setDialog:dialog];
+        
+         
          
 
         
@@ -3040,7 +3076,7 @@ static NSTextAttachment *headerMediaIcon() {
          }
          
          
-        [self.bottomView setTemplate:_editTemplate];
+        [_modernMessagesBottomView setInputTemplate:_editTemplate animated:NO];
         
         [self unSelectAll:NO];
         
@@ -3050,7 +3086,7 @@ static NSTextAttachment *headerMediaIcon() {
   
          if(message != nil) {
             [self showMessage:message fromMsg:nil flags:ShowMessageTypeSearch];
-        } else if(dialog.read_inbox_max_id != -1 && dialog.read_inbox_max_id < dialog.top_message && dialog.top_message < TGMINFAKEID) {
+        } else if(dialog.read_inbox_max_id != -1 && dialog.read_inbox_max_id < dialog.top_message && dialog.top_message < TGMINFAKEID && dialog.unread_count > 0) {
             
             TL_localMessage *msg =  [[TL_localMessage alloc] init];
             
@@ -3121,7 +3157,7 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     if(currentTemplate != _editTemplate)
-        [self.bottomView setTemplate:_editTemplate checkElements:YES];
+        [_modernMessagesBottomView setInputTemplate:_editTemplate animated:YES];
 }
 
 -(void)forceSetEditSentMessage:(BOOL)rollback {
@@ -3795,10 +3831,12 @@ static NSTextAttachment *headerMediaIcon() {
     }
     
     _conversation = conversation;
+    
+
 }
 
-- (void)sendMessage {
-    NSString *message = [self.bottomView.inputMessageString trim];
+- (void)sendMessage:(NSString *)string {
+    NSString *message = [string trim];
     
     
     if(!self.conversation.canSendMessage)  {
@@ -3829,20 +3867,11 @@ static NSTextAttachment *headerMediaIcon() {
             
             BOOL nowebpage = _editTemplate.noWebpage;
             
-            
-            _editTemplate.autoSave = NO;
-            [_editTemplate updateTextAndSave:@""];
-            _editTemplate.autoSave = YES;
-            
-            [_editTemplate saveForce];
-            
-            
                         
             [self sendMessage:message forConversation:self.conversation nowebpage:nowebpage callback:^{
                 [_typingReservation removeAllObjects];
             }];
             
-            [_editTemplate performNotification];
 
         }
     }
@@ -3877,7 +3906,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self readHistory:0];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         
         Class cs = conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
@@ -3914,7 +3943,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [self performForward:self.conversation];
         
-    }];
+    } synchronous:YES];
 }
 
 
@@ -3924,7 +3953,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
@@ -3945,7 +3974,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         SenderItem *sender;
         
         if(!check_file_size(file_path)) {
@@ -3973,7 +4002,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         SenderItem *sender;
         sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem additionFlags:senderFlags];
@@ -3988,7 +4017,7 @@ static NSTextAttachment *headerMediaIcon() {
    
     int additionFlags = [self senderFlags];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         SenderItem *sender;
         if(conversation.type != DialogTypeSecretChat)
         sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
@@ -4035,7 +4064,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         if(!check_file_size(file_path)) {
             alert_bad_files(@[[file_path lastPathComponent]]);
@@ -4106,7 +4135,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         
         SenderItem *sender;
@@ -4132,7 +4161,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         if(!check_file_size(file_path)) {
             alert_bad_files(@[[file_path lastPathComponent]]);
@@ -4158,7 +4187,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         
         void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
@@ -4213,7 +4242,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation additionFlags:self.senderFlags];
         
@@ -4239,7 +4268,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     if(lastTTL == -1 || lastTTL != ttl ) {
         
-        [ASQueue dispatchOnStageQueue:^{
+        [ChatHistoryController dispatchOnChatQueue:^{
             
             SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:conversation ttl:ttl];
             
@@ -4266,7 +4295,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
@@ -4333,7 +4362,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         
         NSImage *originImage;
@@ -4397,7 +4426,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     int senderFlags = [self senderFlags];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [ChatHistoryController dispatchOnChatQueue:^{
         
         ExternalGifSenderItem *sender = [[ExternalGifSenderItem alloc] initWithMedia:media additionFlags:senderFlags forConversation:conversation];
         
@@ -4464,8 +4493,6 @@ static NSTextAttachment *headerMediaIcon() {
 
 -(void)checkWebpage:(NSString *)link {
     
-    
-   
     
     if(_editTemplate.noWebpage)
     {

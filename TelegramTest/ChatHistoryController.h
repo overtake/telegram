@@ -86,5 +86,11 @@ typedef void (^selectHandler)(NSArray *result, NSRange range, id controller);
 
 -(void)setProccessing:(BOOL)isProccessing;
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(ChatHistoryController *)controller;
+
++ (void)dispatchOnChatQueue:(dispatch_block_t)block;
++ (void)dispatchOnChatQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous;
++ (dispatch_queue_t)nativeQueue;
+
+
 @end
 

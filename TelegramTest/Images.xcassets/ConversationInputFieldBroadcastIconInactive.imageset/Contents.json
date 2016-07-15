@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Muted@1x.png",
+      "filename" : "ic_bell_act@1x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Muted@2x.png",
+      "filename" : "ic_bell_act@2x.png",
       "scale" : "2x"
     },
     {

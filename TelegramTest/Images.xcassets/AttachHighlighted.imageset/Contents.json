@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "AttachHighlighted.png"
+      "filename" : "ic_clip_act@1x.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "AttachHighlighted@2x.png"
+      "filename" : "ic_clip_act@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

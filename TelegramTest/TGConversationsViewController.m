@@ -73,6 +73,8 @@
     [Notification addObserver:self selector:@selector(notificationDialogRemove:) name:DIALOG_DELETE];
     [Notification addObserver:self selector:@selector(notificationDialogChangePosition:) name:DIALOG_MOVE_POSITION];
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
+    
+    [Notification addObserver:self selector:@selector(notificationFlushAndReloadDialogs:) name:DIALOGS_FLUSH_AND_RELOAD];
     [self addScrollEvent];
     
     
@@ -148,8 +150,6 @@
 -(void)initConversations {
     
     
-    
-   
     _initedNext = NO;
     
      [[MTNetwork instance] startNetwork];
@@ -161,6 +161,15 @@
     
 
     
+}
+
+-(void)notificationFlushAndReloadDialogs:(NSNotification *)notification {
+    [self.tableView removeAllItems:NO];
+    [self.tableView reloadData];
+    [_modernHistory clear];
+    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[[ASQueue alloc] initWithName:"c_h_queue"] delegate:self];
+    
+    [self loadhistory:30];
 }
 
 -(void)didLoadedStartedConversationNeedNext {

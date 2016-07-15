@@ -52,6 +52,8 @@ extern NSString *const TOP_PEERS;
 
 +(BOOL)isInitialized;
 
+-(SSignal *)runDestroyer;
+
 // START MESSAGE AND DIALOGS PROCEDURES!!!
 
 

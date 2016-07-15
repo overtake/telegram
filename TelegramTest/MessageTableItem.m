@@ -422,7 +422,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
 }
 
 - (void) setBlockSize:(NSSize)blockSize {
-    self->_blockSize = blockSize;
+    self->_blockSize = NSMakeSize(MAX(blockSize.width,100), blockSize.height);
     
     self.viewSize = NSMakeSize(blockSize.width, blockSize.height);
 }

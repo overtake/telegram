@@ -42,7 +42,7 @@
    
     
     if(self.backgroundColor) {
-        [self.backgroundColor setFill];
+        [[NSColor whiteColor] setFill];
         NSRectFill(dirtyRect);
     }
     

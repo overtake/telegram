@@ -10,9 +10,11 @@
 #import "SpacemanBlocks.h"
 #import "NSString+FindURLs.h"
 
+
 @implementation TGInputMessageTemplate
 {
     SMDelayedBlockHandle _futureblock;
+    NSString *_textContainer;
 }
 
 static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
@@ -20,7 +22,7 @@ static ASQueue *queue;
 static NSMutableDictionary *list;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
     if(self = [super init]) {
-        _text = [aDecoder decodeObjectForKey:@"text"];
+        _textContainer = [aDecoder decodeObjectForKey:@"text"];
         _originalText = [aDecoder decodeObjectForKey:@"originalText"];
         _postId = [aDecoder decodeInt32ForKey:@"postId"];
         _type = [aDecoder  decodeInt32ForKey:@"type"];
@@ -33,7 +35,9 @@ static NSMutableDictionary *list;
     return self;
 }
 
-
+-(NSString *)text {
+    return _textContainer ? _textContainer : @"";
+}
 
 +(void)initialize {
     static dispatch_once_t onceToken;
@@ -44,7 +48,7 @@ static NSMutableDictionary *list;
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_text forKey:@"text"];
+    [aCoder encodeObject:_textContainer forKey:@"text"];
     [aCoder encodeObject:_originalText forKey:@"originalText"];
     [aCoder encodeInt32:_type forKey:@"type"];
     [aCoder encodeInt32:_postId forKey:@"postId"];
@@ -65,14 +69,14 @@ static NSMutableDictionary *list;
 
 
 -(void)setText:(NSString *)text {
-    _text = text;
-    if(_text.length == 0)
+    _textContainer = text;
+    if(_textContainer.length == 0)
         _disabledWebpage = nil;
 }
 
 -(id)initWithType:(TGInputMessageTemplateType)type text:(NSString *)text peer_id:(int)peer_id {
     if(self = [super init]) {
-        _text = text;
+        _textContainer = text;
         _type = type;
         _peer_id = peer_id;
         _autoSave = YES;
@@ -100,7 +104,7 @@ static NSMutableDictionary *list;
 
 -(void)fillEntities:(NSArray *)entities {
     __block int rightOffset = 0;
-    __block int startOffset = (int)_text.length;
+    __block int startOffset = (int)_textContainer.length;
     
     [entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
@@ -108,22 +112,22 @@ static NSMutableDictionary *list;
         
         if([obj isKindOfClass:[TL_messageEntityMentionName class]]) {
             
-            NSString *value = [_text substringWithRange:range];
+            NSString *value = [_textContainer substringWithRange:range];
             NSString *userId = [NSString stringWithFormat:@"%d",obj.user_id];
             
-            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"@[%@|%@]",value,userId] options:0 range:range];
+            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"@[%@|%@]",value,userId] options:0 range:range];
             
             rightOffset+=4+userId.length;
             startOffset = MIN(startOffset,obj.offset);
             
         } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
-            NSString *value = [_text substringWithRange:range];
-            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"```%@```",value] options:0 range:range];
+            NSString *value = [_textContainer substringWithRange:range];
+            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"```%@```",value] options:0 range:range];
             rightOffset+=6;
             startOffset = MIN(startOffset,obj.offset);
         } else if([obj isKindOfClass:[TL_messageEntityCode class]]) {
-            NSString *value = [_text substringWithRange:range];
-            _text = [_text stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"`%@`",value] options:0 range:range];
+            NSString *value = [_textContainer substringWithRange:range];
+            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"`%@`",value] options:0 range:range];
             rightOffset+=2;
             startOffset = MIN(startOffset,obj.offset);
         }
@@ -257,11 +261,11 @@ static NSMutableDictionary *list;
         }
     };
     
-    _text = draft.message;
+    _textContainer = draft.message;
     [self fillEntities:draft.entities];
     
     if(draft.isNo_webpage) {
-        _disabledWebpage = [_text webpageLink];
+        _disabledWebpage = [_textContainer webpageLink];
     }
     
     
@@ -327,11 +331,11 @@ static NSMutableDictionary *list;
 
 -(void)updateTextAndSave:(NSString *)newText {
     
-    BOOL save = ![_text isEqualToString:newText];
+    BOOL save = ![_textContainer isEqualToString:newText];
     
 
 
-    _text = [newText trim];
+    _textContainer = [newText trim];
     
     if(_autoSave && save) {
         cancel_delayed_block(_futureblock);
@@ -343,8 +347,43 @@ static NSMutableDictionary *list;
     
 }
 
+
+-(SSignal *)updateSignalText:(NSString *)newText {
+    
+    
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        
+        BOOL save = ![_textContainer isEqualToString:newText];
+        BOOL changedWebpage = self.webpage != newText.webpageLink && ![self.webpage isEqualToString:[newText webpageLink]];
+        
+        if(changedWebpage && _disabledWebpage) {
+            _disabledWebpage = nil;
+        }
+        
+         _textContainer = [newText trim];
+        
+        if(_autoSave && save) {
+            
+            [self saveForce];
+            
+        }
+        
+        [subscriber putNext:@[@(save),@(changedWebpage)]];
+        [subscriber putCompletion];
+        
+        return nil;
+        
+    }];
+    
+    
+}
+
 -(BOOL)noWebpage {
     return [_disabledWebpage isEqualToString:[self.text webpageLink]];
+}
+
+-(NSString *)webpage {
+    return _textContainer.webpageLink;
 }
 
 -(void)setReplyMessage:(TL_localMessage *)replyMessage save:(BOOL)save {

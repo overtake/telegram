@@ -62,7 +62,7 @@ typedef enum {
 @property (nonatomic,copy) dispatch_block_t didUpdatedTable;
 
 - (void)sendTypingWithAction:(TLSendMessageAction *)action;
-- (void)sendMessage;
+
 - (void)setCellsEditButtonShow:(BOOL)show animated:(BOOL)animated;
 - (void)setSelectedMessage:(MessageTableItem *)item selected:(BOOL)selected;
 - (void)deleteSelectedMessages;
@@ -75,11 +75,14 @@ typedef enum {
 
 - (void)showForwardMessagesModalView;
 
+
+- (void)sendMessage:(NSString *)string;
+
 - (void)drop;
 
 //- (void)updateHeaderHeight:(BOOL)update animated:(BOOL)animated;
 - (void)jumpToLastMessages:(BOOL)force;
-- (void)saveInputText;
+- (void)recommendStickers;
 
 - (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message;
 - (void)setCurrentConversation:(TL_conversation *)dialog withMessageJump:(TL_localMessage *)message force:(BOOL)force;

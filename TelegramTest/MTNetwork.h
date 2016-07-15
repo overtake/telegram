@@ -71,7 +71,7 @@ typedef enum {
 id dispatch_in_time(int time, dispatch_block_t callback);
 void remove_global_dispatcher(id internalId);
 
-- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors;
+- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors queue:(ASQueue *)queue;
+- (SSignal *)requestSignal:(TLApiObject *)rpc queue:(ASQueue *)queue;
 - (SSignal *)requestSignal:(TLApiObject *)rpc;
-
 @end

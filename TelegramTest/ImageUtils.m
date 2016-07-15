@@ -269,6 +269,7 @@ CACHE_IMAGE(share_inline_bot);
 CACHE_IMAGE(draftIcon);
 CACHE_IMAGE(AudioPlayerVisibility);
 CACHE_IMAGE(AudioPlayerVisibilityActive);
+CACHE_IMAGE(ic_send);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

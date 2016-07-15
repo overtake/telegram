@@ -44,8 +44,6 @@
 @property (nonatomic, strong) TMView *normalView;
 @property (nonatomic, strong) TMView *secretInfoView;
 
-
-
 @property (nonatomic, strong) BTRButton *attachButton;
 @property (nonatomic, strong) BTRButton *smileButton;
 @property (nonatomic, strong) BTRButton *botKeyboardButton;
@@ -795,8 +793,7 @@ static RBLPopover *popover;
             }];
         }];
     });
-    
-    
+  
 }
 
 -(NSMenu *)attachMenu {
@@ -1373,12 +1370,12 @@ static RBLPopover *popover;
         return;
         
     if(self.template.type == TGInputMessageTemplateTypeEditMessage) {
-        [self.messagesViewController sendMessage];
+        [self.messagesViewController sendMessage:self.inputMessageString];
         return;
     }
     
     if(_recordedAudioPreview == nil)
-        [self.messagesViewController sendMessage];
+        [self.messagesViewController sendMessage:self.inputMessageString];
     else {
         [self.messagesViewController sendAudio:_recordedAudioPreview.audio_file forConversation:self.dialog waveforms:_recordedAudioPreview.audioAttr.waveform];
         [self updateStopRecordControls];
@@ -1422,8 +1419,8 @@ static RBLPopover *popover;
 
 - (void)TMGrowingTextViewTextDidChange:(id)textView {
     
-    if(textView)
-        [self.messagesViewController saveInputText];
+   // if(textView)
+     //   [self.messagesViewController saveInputText];
     
     
     if( (([self.inputMessageTextField.stringValue trim].length > 0 || self.template.type == TGInputMessageTemplateTypeEditMessage) || self.fwdContainer || _imageAttachmentsController.isShown || _recordedAudioPreview != nil)) {

@@ -216,6 +216,7 @@
     _remoteOffset = 0;
     _isLoading = NO;
     _delegate = nil;
+    _state = TGModernCHStateLocal;
 }
 
 

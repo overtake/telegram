@@ -1750,6 +1750,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__43-[TGModernMessagesBottomView saveInputText]_block_invoke:TGModernMessagesBottomView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[NotificationSettingsViewController insertAll:]:NotificationSettingsViewController.m">
       </ContextState>
       <ContextState
@@ -2731,6 +2734,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33+[TGBottomSignals webpageSignal:]_block_invoke.89:TGBottomSignals.m">
+      </ContextState>
+      <ContextState
          contextName = "__38-[TGAllStickerTableItemView redrawRow]_block_invoke_2:TGAllStickersTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -3600,6 +3606,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__32-[TGBottomActionsView resignal:]_block_invoke_2:TGBottomActionsView.m">
+      </ContextState>
+      <ContextState
          contextName = "__56-[DocumentHistoryFilter remoteRequest:peer_id:callback:]_block_invoke:DocumentHistoryFilter.m">
       </ContextState>
       <ContextState
@@ -3978,6 +3987,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__43-[TGInputMessageTemplate updateSignalText:]_block_invoke:TGInputMessageTemplate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.webpage">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__50-[TGAllStickersTableView loadSetsIfNeeded:n_hash:]_block_invoke266:TGAllStickersTableView.m">
       </ContextState>
       <ContextState
@@ -4343,6 +4360,14 @@
          <PersistentStrings>
             <PersistentString
                value = "sticker">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[TGBottomTextAttachment resignal:animateSignal:]_block_invoke_2:TGBottomTextAttachment.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "next">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5056,6 +5081,14 @@
          <PersistentStrings>
             <PersistentString
                value = "_controller.server_min_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__34+[TGBottomSignals textAttachment:]_block_invoke:TGBottomSignals.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "template.webpage">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

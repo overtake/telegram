@@ -861,17 +861,22 @@ void remove_global_dispatcher(id internalId) {
     }];
     
 }
-- (SSignal *)requestSignal:(TLApiObject *)rpc
-{
-    return [self requestSignal:rpc continueOnServerErrors:false];
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc {
+    return [self requestSignal:rpc queue:nil];
 }
 
-- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors
+- (SSignal *)requestSignal:(TLApiObject *)rpc queue:(ASQueue *)queue
 {
-    return [self requestSignal:rpc requestClass:continueOnServerErrors ? 0 : TGRequestClassFailOnServerErrors];
+    return [self requestSignal:rpc continueOnServerErrors:false queue:queue];
 }
 
-- (SSignal *)requestSignal:(TLApiObject *)rpc requestClass:(int)requestClass
+- (SSignal *)requestSignal:(TLApiObject *)rpc continueOnServerErrors:(bool)continueOnServerErrors queue:(ASQueue *)queue
+{
+    return [self requestSignal:rpc requestClass:continueOnServerErrors ? 0 : TGRequestClassFailOnServerErrors queue:queue];
+}
+
+- (SSignal *)requestSignal:(TLApiObject *)rpc requestClass:(int)requestClass queue:(ASQueue *)queue
 {
     
     static NSArray *noAuthClasses;
@@ -892,13 +897,23 @@ void remove_global_dispatcher(id internalId) {
                 request.body = rpc;
                 [request setCompleted:^(id result, __unused NSTimeInterval timestamp, id error)
                  {
-                     if (error == nil)
-                     {
-                         [subscriber putNext:result];
-                         [subscriber putCompletion];
-                     }
+                     
+                     dispatch_block_t block = ^{
+                         if (error == nil)
+                         {
+                             [subscriber putNext:result];
+                             [subscriber putCompletion];
+                         }
+                         else
+                             [subscriber putError:error];
+                     };
+                     
+                     if(queue)
+                         [queue dispatchOnQueue:block];
                      else
-                         [subscriber putError:error];
+                         dispatch_async(dispatch_get_main_queue(), block);
+                     
+                     
                  }];
                 
                 

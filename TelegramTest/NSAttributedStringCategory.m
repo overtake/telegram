@@ -75,9 +75,9 @@ static NSTextField *testTextField() {
         CGFloat leading;
         CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
         
-//        if(ceil(descent) != 3) {
-//            bounds.size.height-=3;
-//        }
+        if(ceil(descent) != 3) {
+            bounds.size.height-=3;
+        }
         
     }
     

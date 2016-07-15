@@ -18,7 +18,7 @@
     animation.duration = duration;
     animation.autoreverses = NO;
     animation.repeatCount = 0;
-    animation.timingFunction = [CAMediaTimingFunction functionWithName:fromValue > toValue ? kCAMediaTimingFunctionEaseOut : kCAMediaTimingFunctionEaseIn];
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     [animation setValue:@(CALayerOpacityAnimation) forKey:@"type"];
     return animation;
 }
@@ -37,9 +37,10 @@
     return animation;
 }
 
-+ (CAAnimation *)postionWithDuration:(float)duration fromValue:(CGPoint)fromValue toValue:(CGPoint)toValue {
++ (CABasicAnimation *)postionWithDuration:(float)duration fromValue:(CGPoint)fromValue toValue:(CGPoint)toValue {
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
-    
+    animation.removedOnCompletion = YES;
+    animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     animation.duration = duration;
     
     NSValue *fromValueValue = [NSValue value:&fromValue withObjCType:@encode(CGPoint)];

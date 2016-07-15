@@ -33,10 +33,13 @@ typedef enum {
 
 @property (nonatomic,assign) BOOL applyNextNotification;
 
+@property (nonatomic,strong) NSArray *forwardMessages;
+
 -(BOOL)noWebpage;
 
 -(void)setReplyMessage:(TL_localMessage *)replyMessage save:(BOOL)save;
 -(void)updateTextAndSave:(NSString *)newText;
+-(SSignal *)updateSignalText:(NSString *)newText;
 -(void)saveForce;
 -(NSString *)textWithEntities:(NSMutableArray *)entities;
 -(void)updateTemplateWithDraft:(TLDraftMessage *)draft;
@@ -49,5 +52,7 @@ typedef enum {
 
 +(TGInputMessageTemplate *)templateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id;
 -(void)performNotification;
+
+-(NSString *)webpage;
 
 @end

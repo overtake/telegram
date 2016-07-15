@@ -180,8 +180,20 @@ NSString *const tableMessagesMedia = @"messages_media_v1";
 NSString *const tableModernDialogs = @"modern_dialogs";
 
 
-
-
++(NSString *)dbpath {
+    
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    
+    NSInteger v =  [def integerForKey:@"dbdversion"];
+    
+    NSString *dname = v > 0 ? [NSString stringWithFormat:@"encrypted_%ld.sqlite",(long)v] : @"encrypted.sqlite";
+    
+#ifdef TGDEBUG 
+    dname = v > 0 ? [NSString stringWithFormat:@"encrypted6_%ld.sqlite",(long)v] : @"encrypted6.sqlite";;
+#endif
+    
+    return [[Storage path] stringByAppendingPathComponent:dname];
+}
 
 -(void)open:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
     
@@ -189,11 +201,10 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         dqueue = dispatch_get_current_queue();
     
 
-    NSString *dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+    NSString *dbPath = [Storage dbpath];
     
-#ifdef TGDEBUG 
-     dbPath = [[Storage path] stringByAppendingPathComponent:@"encrypted6.sqlite"];
-#endif
+    
+  
     
     if(!encryptionKey) {
         return;
@@ -209,6 +220,8 @@ NSString *const tableModernDialogs = @"modern_dialogs";
 
     
     [queue inDatabase:^(FMDatabase *db) {
+        
+       
         
         [db close];
         
@@ -446,7 +459,7 @@ static NSString *encryptionKey;
 //
 -(void) createAndCheckDatabase:(NSString *)dbName
 {
-    NSString *encryptedDatabasePath = [[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"];
+    NSString *encryptedDatabasePath = [Storage dbpath];
 
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -524,7 +537,7 @@ static NSString *encryptionKey;
 
 
 +(void)drop {
-    [[NSFileManager defaultManager] removeItemAtPath:[[Storage path] stringByAppendingPathComponent:@"encrypted.sqlite"] error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[Storage dbpath] error:nil];
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
         [transaction removeAllObjectsInAllCollections];
@@ -535,8 +548,21 @@ static NSString *encryptionKey;
     
     dispatch_async(dqueue, ^{
         [self->queue inDatabase:^(FMDatabase *db) {
-            [[NSFileManager defaultManager] removeItemAtPath:self->queue.path error:nil];
             
+            NSString *folder = [self->queue.path stringByDeletingLastPathComponent];
+            
+            NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:folder];
+            
+            [enumerator.allObjects enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if([obj hasPrefix:@"encrypted"]) {
+                    [[NSFileManager defaultManager] removeItemAtPath:[folder stringByAppendingPathComponent:obj] error:nil];
+                }
+                
+            }];
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"dbdversion"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
                 [transaction removeAllObjectsInAllCollections];
@@ -593,7 +619,38 @@ static NSString *encryptionKey;
     }];
 }
 
+-(SSignal *)runDestroyer {
+    
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        
+        [queue inDatabase:^(FMDatabase *db) {
+            
+            int v = (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"dbdversion"];
+            [[NSUserDefaults standardUserDefaults] setInteger:++v forKey:@"dbdversion"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            [self open:^{
+               
+                dispatch_async(dqueue, ^{
+                    [subscriber putNext:nil];
+                    [subscriber putCompletion];
+                });
+                
+            } queue:dispatch_get_current_queue()];
+            
+            
 
+            
+        }];
+        
+         return nil;
+        
+    }];
+    
+   
+}
 
 
 - (void)findFileInfoByPathHash:(NSString *)pathHash completeHandler:(void (^)(BOOL result, id file))completeHandler {
@@ -644,9 +701,7 @@ static NSString *encryptionKey;
 }
 
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash {
-    
-    int bp = 0;
-    
+        
     [queue inDatabase:^(FMDatabase *db) {
         [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO]];
     }];
@@ -2838,6 +2893,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 +(void)addWebpage:(TLWebPage *)webpage forLink:(NSString *)link {
+    
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         

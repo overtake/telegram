@@ -64,7 +64,7 @@
         weak();
         
         [_deleteImageView setCallback:^{
-            TGInputMessageTemplate *cpy = [weakSelf.inputTemplate copy];
+            TGInputMessageTemplate *cpy = weakSelf.inputTemplate;
             cpy.disabledWebpage = weakSelf.link;
             [cpy saveForce];
             [cpy performNotification];
@@ -108,10 +108,12 @@
     
     TLWebPage *webpage = notify.userInfo[KEY_WEBPAGE];
     
-    [Storage addWebpage:webpage forLink:_link];
     
     if(_webpage.n_id == webpage.n_id)
     {
+        
+        [Storage addWebpage:webpage forLink:display_url(_link)];
+        
         _webpage = webpage;
         
         [self updateLayout];
@@ -123,8 +125,8 @@
     [_titleField setStringValue:[_webpage isKindOfClass:[TL_webPagePending class]] ? NSLocalizedString(@"Webpage.GettingLinkInfo", nil) : (_webpage.site_name ? _webpage.site_name : @"Link Preview")];
     
     if([_webpage isKindOfClass:[TL_webPageEmpty class]]) {
-        
-        [[_inputTemplate copy] performNotification];
+                
+        [_inputTemplate performNotification];
         
         return;
     }

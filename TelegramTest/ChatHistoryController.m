@@ -61,7 +61,7 @@ static ChatHistoryController *observer;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
-            queue = [ASQueue globalQueue];
+            queue = [[ASQueue alloc] initWithName:"chatqueue"];
             
             listeners = [[NSMutableArray alloc] init];
             
@@ -863,7 +863,7 @@ static const int maxCacheCount = 30;
                     callback();
             }];
             
-        }];
+        } synchronous:YES];
     };
     
     
@@ -925,7 +925,7 @@ static const int maxCacheCount = 30;
                 
             }
             
-        }];
+        } synchronous:YES];
 
     };
     
@@ -1048,5 +1048,16 @@ static const int maxCacheCount = 30;
     } synchronous:YES];
 }
 
+
++ (void)dispatchOnChatQueue:(dispatch_block_t)block {
+    [queue dispatchOnQueue:block];
+}
++ (void)dispatchOnChatQueue:(dispatch_block_t)block synchronous:(BOOL)synchronous {
+    [queue dispatchOnQueue:block synchronous:synchronous];
+}
+
++ (dispatch_queue_t)nativeQueue {
+    return queue.nativeQueue;
+}
 
 @end

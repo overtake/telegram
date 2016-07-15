@@ -43,6 +43,9 @@ extern NSString *const DIALOG_DELETE; // надо поднять диалог н
 extern NSString *const SWAP_DIALOG;
 extern NSString *const DIALOG_MOVE_POSITION; // сменить позацию диалога
 
+extern NSString *const DIALOGS_FLUSH_AND_RELOAD; // сменить позацию диалога
+
+
 extern NSString *const DIALOGS_NEED_FULL_RESORT; // надо полностью обновить список всех диалогов (многое изменилось)
 extern NSString *const DIALOG_CREATE_NEW; // создан новй диалог, надо его отобразить сверху
 extern NSString *const DIALOGS_NEED_SHOW; // можно показать диалоги K

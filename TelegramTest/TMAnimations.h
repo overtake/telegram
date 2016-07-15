@@ -12,7 +12,7 @@
 
 + (CAAnimation *)fadeWithDuration:(float)duration fromValue:(float)fromValue toValue:(float)toValue;
 + (CAAnimation *)shakeWithDuration:(float)duration fromValue:(CGPoint)fromValue toValue:(CGPoint)toValue;
-+ (CAAnimation *)postionWithDuration:(float)duration fromValue:(CGPoint)fromValue toValue:(CGPoint)toValue;
++ (CABasicAnimation *)postionWithDuration:(float)duration fromValue:(CGPoint)fromValue toValue:(CGPoint)toValue;
 
 + (CAAnimation *)resizeLayer:(CALayer*)layer to:(CGSize)size;
 

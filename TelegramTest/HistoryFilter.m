@@ -423,7 +423,7 @@
             callback(nil,ChatHistoryStateFull);
         }
         
-    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
+    } timeout:0 queue:[ChatHistoryController nativeQueue]];
     
 }
 
