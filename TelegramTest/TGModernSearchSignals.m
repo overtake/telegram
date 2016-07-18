@@ -85,9 +85,13 @@
             
             NSArray *acceptChats = [response.chats filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"NOT(self.n_id IN %@)",chatIds]];
             
-            [[UsersManager sharedManager] add:acceptUsers];
+            [[[UsersManager sharedManager] add:acceptUsers autoStart:NO] startWithNext:^(id next) {
+                [[Storage manager] insertUsers:next];
+            }];
             
-            [[ChatsManager sharedManager] add:acceptChats];
+            [[[ChatsManager sharedManager] add:acceptChats autoStart:NO] startWithNext:^(id next) {
+                [[ChatsManager sharedManager] add:next];
+            }];
             
             NSArray *merge = [acceptUsers arrayByAddingObjectsFromArray:acceptChats];
             

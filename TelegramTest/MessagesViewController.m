@@ -91,6 +91,7 @@
 #import "TGSplitView.h"
 #import "TGMessagesNavigationEditView.h"
 #import "TGModernMessagesBottomView.h"
+#import "TGAnimationBlockDelegate.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 300
@@ -1703,28 +1704,47 @@ static NSTextAttachment *headerMediaIcon() {
         
         [[NSAnimationContext currentContext] setDuration:0.2];
         [[NSAnimationContext currentContext] setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-        //        int presentHeight = NSHeight(self.table.scrollView.frame);
-        //
-        //        CALayer *presentLayer = (CALayer *)[self.table.scrollView.layer presentationLayer];
-        //
-        //        if(presentLayer && [_sendControlView.layer animationForKey:@"bounds"]) {
-        //            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
-        //        }
-        //
-        //        CABasicAnimation *sAnim = [CABasicAnimation animationWithKeyPath:@"bounds"];
-        //        sAnim.duration = 0.2;
-        //        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        //        sAnim.removedOnCompletion = YES;
-        //        [sAnim setValue:@(CALayerOpacityAnimation) forKey:@"type"];
-        //
-        //        sAnim.fromValue = [NSValue valueWithRect:NSMakeRect(0, 0, NSWidth(self.frame), presentHeight)];
-        //        sAnim.toValue = [NSValue valueWithRect:NSMakeRect(0, 0, NSWidth(self.frame), layoutSize.height)];
-        //
-        //        [self.layer removeAnimationForKey:@"bounds"];
-        //        [self.layer addAnimation:sAnim forKey:@"bounds"];
-        //        
-        //        [self.layer setBounds:[sAnim.toValue rectValue]];
-
+       
+//        int presentHeight = NSHeight(self.table.scrollView.frame);
+//        int presentY = NSMinY(self.table.scrollView.frame);
+//        CALayer *presentLayer = (CALayer *)[self.table.scrollView.layer presentationLayer];
+//        
+//        if(presentLayer && [self.table.scrollView.layer animationForKey:@"height"]) {
+//            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
+//        }
+//        
+//        if(presentLayer && [self.table.scrollView.layer animationForKey:@"position"]) {
+//            presentY = [[presentLayer valueForKeyPath:@"position.y"] floatValue];
+//        }
+//        
+//        CABasicAnimation *sAnim = [CABasicAnimation animationWithKeyPath:@"frame.size.height"];
+//        sAnim.duration = 0.2;
+//        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        sAnim.removedOnCompletion = YES;
+//        
+//        sAnim.fromValue = @(presentHeight);
+//        sAnim.toValue = @(NSHeight(newFrame));
+//        [self.table.scrollView.layer removeAnimationForKey:@"height"];
+//        [self.table.scrollView.layer addAnimation:sAnim forKey:@"height"];
+//        
+//        
+//        sAnim = [CABasicAnimation animationWithKeyPath:@"position"];
+//        sAnim.duration = 0.2;
+//        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+//        sAnim.removedOnCompletion = YES;
+//        
+//        sAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(NSMinX(self.table.scrollView.frame), presentY)];
+//        sAnim.toValue = [NSValue valueWithPoint:NSMakePoint(NSMinX(self.table.scrollView.frame), NSMinY(newFrame))];
+//        
+//        
+//        
+//        
+//        [self.table.scrollView setFrame:newFrame];
+//        
+//        [self.table.scrollView.layer removeAnimationForKey:@"position"];
+//        [self.table.scrollView.layer addAnimation:sAnim forKey:@"position"];
+//        
+        
         [[self.table.scrollView animator] setFrame:newFrame];
         
         [[self.noMessagesView animator] setFrame:newFrame];

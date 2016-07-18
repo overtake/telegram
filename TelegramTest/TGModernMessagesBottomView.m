@@ -12,15 +12,16 @@
 #import "TGModernBottomAttachView.h"
 #import "TGBottomActionsView.h"
 #import "TGBottomTextAttachment.h"
-
+#import "TGBottomKeyboardContainerView.h"
 
 @interface TGModernMessagesBottomView () <TGModernGrowingDelegate> {
     TMView *_ts;
-    
+   
+    id<SDisposable> _attachDispose;
 }
 
-//requests
-@property (nonatomic,strong) id<SDisposable> attachDispose;;
+@property (nonatomic,strong) TLUser *inlineBot;
+
 
 @property (nonatomic,weak) MessagesViewController *messagesController;
 
@@ -30,13 +31,16 @@
 @property (nonatomic,strong) TGBottomActionsView *actionsView;
 
 @property (nonatomic,strong) TGBottomTextAttachment *attachment;
-
+@property (nonatomic,strong) TGBottomKeyboardContainerView *botkeyboard;
 
 @property (nonatomic,strong) TMView *attachmentsContainerView;
 @property (nonatomic,strong) TMView *textContainerView;
 
-@property (nonatomic,assign) int attachmentsHeight;
 
+@property (nonatomic,strong) TMView *topContainerView;
+
+@property (nonatomic,assign) int attachmentsHeight;
+@property (nonatomic,assign) int bottomHeight;
 
 
 @end
@@ -51,6 +55,7 @@ const float defYOffset = 12;
     if(self = [super initWithFrame:frameRect]) {
         
         _attachmentsHeight = -1;
+        _bottomHeight = 0;
         
         _animates = YES;
         self.wantsLayer = YES;
@@ -59,14 +64,23 @@ const float defYOffset = 12;
         
         self.autoresizingMask = NSViewWidthSizable;
         
+        
+        _topContainerView = [[TMView alloc] initWithFrame:self.bounds];
+        _topContainerView.wantsLayer = YES;
+      //  _topContainerView.layer.backgroundColor = [NSColor blueColor].CGColor;
+        [self addSubview:_topContainerView];
+        
+        
+        
+        
         _attachmentsContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect), NSWidth(frameRect), 50)];
         _attachmentsContainerView.wantsLayer = YES;
         //_attachmentsContainerView.layer.backgroundColor = [NSColor redColor].CGColor;
-        [self addSubview:_attachmentsContainerView];
+        [_topContainerView addSubview:_attachmentsContainerView];
         
         _textContainerView = [[TMView alloc] initWithFrame:self.bounds];
         _textContainerView.wantsLayer = YES;
-        [self addSubview:_textContainerView];
+        [_topContainerView addSubview:_textContainerView];
         
         _messagesController = messagesController;
 
@@ -89,7 +103,7 @@ const float defYOffset = 12;
         _attachView.wantsLayer = YES;
         
         
-        _actionsView = [[TGBottomActionsView alloc] initWithFrame:NSMakeRect(0, 0, 0, NSHeight(_textContainerView.frame)) messagesController:messagesController];
+        _actionsView = [[TGBottomActionsView alloc] initWithFrame:NSMakeRect(0, 0, 0, NSHeight(_textContainerView.frame)) messagesController:messagesController bottomController:self];
         _actionsView.wantsLayer = YES;
         
         
@@ -100,9 +114,13 @@ const float defYOffset = 12;
         [_textContainerView addSubview:_textView];
         [_textContainerView addSubview:_actionsView];
         [_textContainerView addSubview:_sendControlView];
-//        _sendControlView.backgroundColor = [NSColor greenColor];
-//        _actionsView.backgroundColor = [NSColor yellowColor];
-//        _attachView.backgroundColor = [NSColor orangeColor];
+        
+        
+        _botkeyboard = [[TGBottomKeyboardContainerView alloc] initWithFrame:NSZeroRect];
+        _botkeyboard.wantsLayer = YES;
+       // _botkeyboard.layer.backgroundColor = [NSColor redColor].CGColor;
+        [self addSubview:_botkeyboard];
+    
         
     }
     
@@ -209,165 +227,23 @@ const float defYOffset = 12;
     
     
     
-    NSSize layoutSize = NSMakeSize(NSWidth(self.frame), _attachmentsHeight > 0 ? height + _attachmentsHeight : height);
+    NSSize topSize = NSMakeSize(NSWidth(self.frame), _attachmentsHeight > 0 ? height + _attachmentsHeight : height);
     
-    [CATransaction begin];
-    if(animated) {
-        float presentHeight = NSHeight(self.frame);
-        
-        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
-        
-        if(presentLayer && [self.layer animationForKey:@"bounds"]) {
-            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
-        }
-        
-        CABasicAnimation *sAnim = [CABasicAnimation animationWithKeyPath:@"bounds.size.height"];
-        sAnim.duration = 0.2;
-        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        sAnim.removedOnCompletion = YES;
-        
-        sAnim.fromValue = @(presentHeight);
-        sAnim.toValue = @(layoutSize.height);
-        
-        [self.layer removeAnimationForKey:@"bounds"];
-        [self.layer addAnimation:sAnim forKey:@"bounds"];
-        
-        [self.layer setFrame:NSMakeRect(0, 0, NSWidth(self.frame), layoutSize.height)];
-        
-        
-        presentHeight = NSHeight(_textContainerView.frame);
-        
-        presentLayer = (CALayer *)[_textContainerView.layer presentationLayer];
-        
-        if(presentLayer && [_textContainerView.layer animationForKey:@"bounds"]) {
-            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
-        }
-        
-        sAnim = [CABasicAnimation animationWithKeyPath:@"bounds.size.height"];
-        sAnim.duration = 0.2;
-        sAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-        sAnim.removedOnCompletion = YES;
-        
-        sAnim.fromValue = @(presentHeight);
-        sAnim.toValue = @(height);
-        
-        [_textContainerView.layer removeAnimationForKey:@"bounds"];
-        [_textContainerView.layer addAnimation:sAnim forKey:@"bounds"];
-        
-        [_textContainerView.layer setFrame:NSMakeRect(0, 0, NSWidth(self.frame), height)];
-        
-        
-        
-        float presentY = NSMinY(_ts.frame);
-        
-        presentLayer = (CALayer *)[_ts.layer presentationLayer];
-        
-        if(presentLayer && [_ts.layer animationForKey:@"position"]) {
-            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
-        }
-        
-        CABasicAnimation *pAttachAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(NSMinX(_ts.frame), presentY) toValue:NSMakePoint(NSMinX(_ts.frame),layoutSize.height - NSHeight(_ts.frame))];
-        
-        [_ts.layer removeAnimationForKey:@"position"];
-        [_ts.layer addAnimation:pAttachAnim forKey:@"position"];
-        
-        [_ts.layer setPosition:[pAttachAnim.toValue pointValue]];
-        
-        
-        
-        presentY = NSMinY(_attachmentsContainerView.frame);
-        
-        presentLayer = (CALayer *)[_attachmentsContainerView.layer presentationLayer];
-        
-        if(presentLayer && [_attachmentsContainerView.layer animationForKey:@"position"]) {
-            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
-        }
-        
-        pAttachAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(NSMinX(_attachmentsContainerView.frame), presentY) toValue:NSMakePoint(NSMinX(_attachmentsContainerView.frame),layoutSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f)];
-        
-        [_attachmentsContainerView.layer removeAnimationForKey:@"position"];
-        [_attachmentsContainerView.layer addAnimation:pAttachAnim forKey:@"position"];
-        
-        [_attachmentsContainerView.layer setPosition:[pAttachAnim.toValue pointValue]];
-        
-    }
+    NSSize bottomSize = NSMakeSize(NSWidth(self.frame), MAX(_bottomHeight,0));
+    NSSize fullSize = NSMakeSize(NSWidth(self.frame), topSize.height + bottomSize.height);
     
-    [CATransaction commit];
-    
-    [self animateControls:height animated:animated];
-    
-    [_textContainerView setFrame:NSMakeRect(0, 0, NSWidth(self.frame), height)];
-    [self setFrame:NSMakeRect(0, 0, NSWidth(self.frame), layoutSize.height)];
-    [_ts setFrameOrigin:NSMakePoint(NSMinX(_ts.frame),layoutSize.height - NSHeight(_ts.frame))];
-    
-    [_attachmentsContainerView setFrameOrigin:NSMakePoint(NSMaxX(_attachView.frame),layoutSize.height - NSHeight(_attachmentsContainerView.frame) - defYOffset/2.0f)];
+    [self heightWithCAAnimation:NSMakeRect(0,0,NSWidth(self.frame), fullSize.height) animated:animated];
+    [_textContainerView heightWithCAAnimation:NSMakeRect(0,0,NSWidth(self.frame), height) animated:animated];
+    [_ts moveWithCAAnimation:NSMakePoint(NSMinX(_ts.frame),fullSize.height - NSHeight(_ts.frame)) animated:animated];
+    [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(NSMaxX(_attachView.frame),topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
+    [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
+    [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
+    [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), bottomSize.height) animated:animated];
     
     
-    [_messagesController bottomViewChangeSize:layoutSize.height animated:animated];
+    [_messagesController bottomViewChangeSize:fullSize.height animated:animated];
     
-    
-}
 
-
--(void)animateControls:(int)height animated:(BOOL)animated {
-    
-    
-    if(animated) {
-        float presentY = NSMinY(_attachView.frame);
-        
-        CALayer *presentLayer = (CALayer *)[_attachView.layer presentationLayer];
-        
-        if(presentLayer && [_attachView.layer animationForKey:@"position"]) {
-            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
-        }
-        
-        CABasicAnimation *pAttachAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(NSMinX(_attachView.frame), presentY) toValue:NSMakePoint(NSMinX(_attachView.frame),height - NSHeight(_attachView.frame))];
-        
-        [_attachView.layer removeAnimationForKey:@"position"];
-        [_attachView.layer addAnimation:pAttachAnim forKey:@"position"];
-        
-        [_attachView.layer setPosition:[pAttachAnim.toValue pointValue]];
-        
-        
-        presentY = NSMinY(_sendControlView.frame);
-        
-        presentLayer = (CALayer *)[_sendControlView.layer presentationLayer];
-        
-        if(presentLayer && [_sendControlView.layer animationForKey:@"position"]) {
-            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
-        }
-        
-        CABasicAnimation *pSendAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(NSMinX(_sendControlView.frame), presentY) toValue:NSMakePoint(NSMinX(_sendControlView.frame),height - NSHeight(_sendControlView.frame))];
-        
-        
-        [_sendControlView.layer removeAnimationForKey:@"position"];
-        [_sendControlView.layer addAnimation:pSendAnim forKey:@"position"];
-        
-        [_sendControlView.layer setPosition:[pSendAnim.toValue pointValue]];
-        
-        
-        
-        presentY = NSMinY(_actionsView.frame);
-        float presentX = NSMinX(_actionsView.frame);
-        presentLayer = (CALayer *)[_actionsView.layer presentationLayer];
-        
-        if(presentLayer && [_actionsView.layer animationForKey:@"position"]) {
-            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
-            presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
-        }
-        
-        CABasicAnimation *pActionsAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width, presentY) toValue:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width,height - NSHeight(_actionsView.frame))];
-        
-        [_actionsView.layer removeAnimationForKey:@"position"];
-        [_actionsView.layer addAnimation:pActionsAnim forKey:@"position"];
-        
-        [_actionsView.layer setPosition:[pActionsAnim.toValue pointValue]];
-    }
-    [_actionsView setFrameOrigin:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width,height - NSHeight(_actionsView.frame))];
-    [_sendControlView setFrameOrigin:NSMakePoint(NSMinX(_sendControlView.frame),height - NSHeight(_sendControlView.frame))];
-    [_attachView setFrameOrigin:NSMakePoint(NSMinX(_attachView.frame),height - NSHeight(_attachView.frame))];
-   
-    
 }
 
 - (BOOL) textViewEnterPressed:(TGModernGrowingTextView *)textView {
@@ -385,6 +261,8 @@ const float defYOffset = 12;
     [_messagesController recommendStickers];
     
     [self resignalActions];
+    
+    [self checkMentionsOrTags];
 }
 
 
@@ -420,18 +298,17 @@ const float defYOffset = 12;
     self.animates = animated;
     
     
+    [self resignalBotKeyboard:NO changeState:NO resignalAttachments:YES resignalKeyboard:YES];
     
-    
-    [self resignalTextAttachments];
+    [Notification removeObserver:self];
+    [Notification addObserver:self selector:@selector(_showOrHideBotKeyboardAction:) name:[Notification cAction:_messagesController.conversation action:@"botKeyboard"]];
     
     [_textView setString:inputTemplate.text];
     
-    
-    
     if(inputTemplate.type == TGInputMessageTemplateTypeSimpleText) {
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        [attr appendString:_messagesController.conversation.chat.isChannel ? NSLocalizedString(@"Message.SendBroadcast", nil) : NSLocalizedString(@"Message.SendPlaceholder", nil) withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(15) forRange:attr.range];
+        [attr appendString:_messagesController.conversation.chat.isChannel && !_messagesController.conversation.chat.isMegagroup ? NSLocalizedString(@"Message.SendBroadcast", nil) : NSLocalizedString(@"Message.SendPlaceholder", nil) withColor:GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) forRange:attr.range];
         
         [_textView setPlaceholderAttributedString:attr];
     }
@@ -442,33 +319,203 @@ const float defYOffset = 12;
 
 
 -(void)resignalTextAttachments {
+    [self resignalBotKeyboard:NO changeState:NO resignalAttachments:YES resignalKeyboard:NO];
+}
+
+
+-(void)resignalBotKeyboard:(BOOL)forceShow changeState:(BOOL)changeState resignalAttachments:(BOOL)resignalAttachments resignalKeyboard:(BOOL)resignalKeyboard {
+    
     
     [_attachDispose dispose];
     
-    _attachDispose = [[_attachment resignal:_messagesController.conversation animateSignal:[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+    SSignal *attachSignal = [_attachment resignal:_messagesController.conversation animateSignal:[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
         [subscriber putNext:@(self.animates)];
         
         return nil;
         
-    }]] startWithNext:^(id next) {
+    }]];
+    
+    SSignal *botSignal = [_botkeyboard resignalKeyboard:_messagesController forceShow:forceShow changeState:changeState];
+
+    
+    NSMutableArray *signals = [NSMutableArray array];
+    
+    if(resignalAttachments)
+        [signals addObject:attachSignal];
+    if(resignalKeyboard)
+        [signals addObject:botSignal];
+    
+    
+    _attachDispose = [[SSignal combineSignals:signals] startWithNext:^(id next) {
         
-        if(_attachmentsHeight != [next intValue]) {
-            _attachmentsHeight = [next intValue];
-            
-            if(_animates) {
-                CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:_attachmentsHeight > 0  ? 0.0f : 1.0f toValue:_attachmentsHeight > 0  ? 1.0f : 0.0f];
+        BOOL changed = NO;
+        
+        if(resignalAttachments) {
+            if(_attachmentsHeight != [next[0] intValue]) {
+                _attachmentsHeight = [next[0] intValue];
+                changed = YES;
                 
-                [_attachmentsContainerView.layer addAnimation:animation forKey:@"opacity"];
+                if(_animates) {
+                    CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:_attachmentsHeight > 0  ? 0.0f : 1.0f toValue:_attachmentsHeight > 0  ? 1.0f : 0.0f];
+                    
+                    [_attachmentsContainerView.layer addAnimation:animation forKey:@"opacity"];
+                    
+                }
+                
+                _attachmentsContainerView.layer.opacity = _attachmentsHeight > 0 ? 1.0f : 0.0f;
                 
             }
-            
-            _attachmentsContainerView.layer.opacity = _attachmentsHeight > 0 ? 1.0f : 0.0f;
-            
-            [self textViewHeightChanged:_textView height:NSHeight(_textView.frame) animated:_animates];
         }
         
+        
+        
+        if(resignalKeyboard) {
+            if(_bottomHeight != [next[[next count] == 1 ? 0 : 1] intValue]) {
+                _bottomHeight = [next[[next count] == 1 ? 0 : 1] intValue];
+                changed = YES;
+                
+                [_actionsView setActiveKeyboardButton:_bottomHeight > 0];
+                
+            }
+        }
+        
+
+        if(changed)
+            [self textViewHeightChanged:_textView height:NSHeight(_textView.frame) animated:_animates];
+
+        
     }];
+
+}
+
+
+-(void)checkMentionsOrTags {
+    
+    
+    @try {
+        NSString *search = nil;
+        NSString *string = _textView.string;
+        NSRange selectedRange = _textView.selectedRange;
+        
+        TGHintViewShowType type = [TGMessagesHintView needShowHint:string selectedRange:selectedRange completeString:&string searchString:&search];
+        
+        
+        if(_textView.string.length > 0 && [_textView.string hasPrefix:@"@"] && type != 0) {
+            NSRange split = [_textView.string rangeOfString:@" "];
+            if(split.location != NSNotFound && split.location != 1) {
+                
+                NSString *bot = [_textView.string substringWithRange:NSMakeRange(1,split.location-1)];
+                
+                TLUser *user = [UsersManager findUserByName:bot];
+                
+                if(user.isBot && user.isBotInlinePlaceholder) {
+                    search = nil;
+                }
+            }
+            
+            
+        }
+        
+        _inlineBot = nil;
+        [_messagesController.hintView cancel];
+        
+        
+        
+        if(search != nil && ![string hasPrefix:@" "]) {
+            
+            
+            NSString *check = [_textView.string substringWithRange:NSMakeRange(MAX((int)(selectedRange.location - 2),0),1)];
+            
+            
+            void (^callback)(NSString *name, id object) = ^(NSString *name,id object) {
+               
+                NSRange range = NSMakeRange(selectedRange.location - search.length, search.length);
+                if(![object isKindOfClass:[TLUser class]]) {
+                    [_textView insertText:[name stringByAppendingString:@" "] replacementRange:range];
+                } else {
+                    TLUser *user = object;
+                    [_textView replaceMention:user.username.length > 0 ? user.username : user.first_name username:user.username.length > 0 userId:user.n_id];
+                }
+                
+                
+                
+            };
+            
+            
+            
+            if(type == TGHintViewShowMentionType) {
+                [_messagesController.hintView showMentionPopupWithQuery:search conversation:_messagesController.conversation chat:_messagesController.conversation.chat allowInlineBot:[_textView.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
+                
+            } else if(type == TGHintViewShowHashtagType && [check isEqualToString:@" "]) {
+                
+                [_messagesController.hintView showHashtagHintsWithQuery:search conversation:_messagesController.conversation peer_id:_messagesController.conversation.peer_id choiceHandler:callback];
+                
+            } else if(type == TGHintViewShowBotCommandType && [_textView.string rangeOfString:@"/"].location == 0) {
+                if([_messagesController.conversation.user isBot] || _messagesController.conversation.fullChat.bot_info != nil) {
+                    
+                    // [_messagesController.hintView showCommandsHintsWithQuery:search conversation:_messagesController.conversation botInfo:_userFull ? @[_userFull.bot_info] : _messagesController.conversation.fullChat.bot_info choiceHandler:^(NSString *command) {
+                    //     callback(command);
+                    //      [self sendButtonAction];
+                    //   }];
+                    
+                }
+            } else {
+                [_messagesController.hintView hide];
+            }
+            
+            
+        } else if([_textView.string hasPrefix:@"@"] && _messagesController.conversation.type != DialogTypeSecretChat) {
+            
+            [_messagesController.hintView hide];
+            
+            
+            
+            
+            NSString *value = _textView.string;
+            
+            NSRange split = [value rangeOfString:@" "];
+            
+            
+            if(split.location != NSNotFound && split.location != 1) {
+                NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
+                NSString *query = [value substringFromIndex:split.location];
+                
+                if([bot rangeOfString:@"\n"].location == NSNotFound) {
+                    weak();
+                    
+                    [_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
+                        // [weakSelf.textView setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
+                        // weakSelf.inlineBot = user;
+                        // [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+                    }];
+                } else {
+                    //[self checkAndDisableSendingWithInlineBot:nil animated:YES];
+                }
+                
+                
+            } else {
+                //  [self checkAndDisableSendingWithInlineBot:nil animated:YES];
+            }
+            
+            
+        } else {
+            [_messagesController.hintView hide];
+            // [self setProgress:NO];
+        }
+    } @catch (NSException *exception) {
+        int bp = 0;
+    }
+   
+}
+
+-(void)_showOrHideBotKeyboardAction:(NSNotification *)notify {
+    [self resignalBotKeyboard:NO changeState:notify == nil resignalAttachments:NO resignalKeyboard:YES];
+}
+
+
+-(void)dealloc {
+    [Notification removeObserver:self];
 }
 
 @end

@@ -252,6 +252,8 @@
 		C20A8ADD1D368BBE00C70134 /* TGBottomSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8ADC1D368BBE00C70134 /* TGBottomSignals.m */; };
 		C20A8AE01D36953600C70134 /* TGBottomActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8ADF1D36953600C70134 /* TGBottomActionsView.m */; };
 		C20A8AE31D37A61600C70134 /* TGBottomTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AE21D37A61600C70134 /* TGBottomTextAttachment.m */; };
+		C20A8AE61D39387F00C70134 /* TGInputTextTag.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AE51D39387F00C70134 /* TGInputTextTag.m */; };
+		C20A8AE91D3A2CA100C70134 /* TGBottomKeyboardContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AE81D3A2CA100C70134 /* TGBottomKeyboardContainerView.m */; };
 		C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */; };
 		C20AEF411C1F347D001BAAA0 /* TGThumbnailObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C20AEF401C1F347D001BAAA0 /* TGThumbnailObject.m */; };
 		C20B228818E971D0007BCCD6 /* bitwise.c in Sources */ = {isa = PBXBuildFile; fileRef = C20B228418E971D0007BCCD6 /* bitwise.c */; };
@@ -929,6 +931,8 @@
 		C2F429C51B00C88B00C2CE4E /* TGStickersSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429C41B00C88B00C2CE4E /* TGStickersSettingsViewController.m */; };
 		C2F429D21B04D37C00C2CE4E /* TGUIMainThreadGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */; };
 		C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */; };
+		C2F5C5411D3D603300F47F8F /* TGCAActions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5401D3D603300F47F8F /* TGCAActions.m */; };
+		C2F5C54E1D3D654800F47F8F /* CAAnimateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C54D1D3D654800F47F8F /* CAAnimateLayer.m */; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
 		C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */; };
 		C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78DA192379C3001A9D1B /* HistoryFilter.m */; };
@@ -1578,6 +1582,10 @@
 		C20A8ADF1D36953600C70134 /* TGBottomActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomActionsView.m; sourceTree = "<group>"; };
 		C20A8AE11D37A61600C70134 /* TGBottomTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBottomTextAttachment.h; sourceTree = "<group>"; };
 		C20A8AE21D37A61600C70134 /* TGBottomTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomTextAttachment.m; sourceTree = "<group>"; };
+		C20A8AE41D39387F00C70134 /* TGInputTextTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGInputTextTag.h; sourceTree = "<group>"; };
+		C20A8AE51D39387F00C70134 /* TGInputTextTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGInputTextTag.m; sourceTree = "<group>"; };
+		C20A8AE71D3A2CA100C70134 /* TGBottomKeyboardContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBottomKeyboardContainerView.h; sourceTree = "<group>"; };
+		C20A8AE81D3A2CA100C70134 /* TGBottomKeyboardContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomKeyboardContainerView.m; sourceTree = "<group>"; };
 		C20AEF3C1C1F2953001BAAA0 /* TGBlurImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBlurImageObject.h; sourceTree = "<group>"; };
 		C20AEF3D1C1F2953001BAAA0 /* TGBlurImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBlurImageObject.m; sourceTree = "<group>"; };
 		C20AEF3F1C1F347D001BAAA0 /* TGThumbnailObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGThumbnailObject.h; sourceTree = "<group>"; };
@@ -2799,6 +2807,10 @@
 		C2F429D11B04D37C00C2CE4E /* TGUIMainThreadGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGUIMainThreadGuard.m; sourceTree = "<group>"; };
 		C2F429D61B04E33F00C2CE4E /* TGProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGProgressIndicator.h; sourceTree = "<group>"; };
 		C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGProgressIndicator.m; sourceTree = "<group>"; };
+		C2F5C53F1D3D603300F47F8F /* TGCAActions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGCAActions.h; sourceTree = "<group>"; };
+		C2F5C5401D3D603300F47F8F /* TGCAActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCAActions.m; sourceTree = "<group>"; };
+		C2F5C54C1D3D654800F47F8F /* CAAnimateLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAnimateLayer.h; sourceTree = "<group>"; };
+		C2F5C54D1D3D654800F47F8F /* CAAnimateLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAAnimateLayer.m; sourceTree = "<group>"; };
 		C2FA78CA191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewCollectionPhotoItem.h; sourceTree = "<group>"; };
 		C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewCollectionPhotoItem.m; sourceTree = "<group>"; };
 		C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCollectionPageController.h; sourceTree = "<group>"; };
@@ -3599,6 +3611,8 @@
 				C2078E3C1CB596720037B1B2 /* TGMessagesNavigationController.m */,
 				C20A8AD11D352EA800C70134 /* TGModernGrowingTextView.h */,
 				C20A8AD21D352EA800C70134 /* TGModernGrowingTextView.m */,
+				C20A8AE41D39387F00C70134 /* TGInputTextTag.h */,
+				C20A8AE51D39387F00C70134 /* TGInputTextTag.m */,
 			);
 			name = elements;
 			sourceTree = "<group>";
@@ -3785,6 +3799,8 @@
 				C20A8ADF1D36953600C70134 /* TGBottomActionsView.m */,
 				C20A8AE11D37A61600C70134 /* TGBottomTextAttachment.h */,
 				C20A8AE21D37A61600C70134 /* TGBottomTextAttachment.m */,
+				C20A8AE71D3A2CA100C70134 /* TGBottomKeyboardContainerView.h */,
+				C20A8AE81D3A2CA100C70134 /* TGBottomKeyboardContainerView.m */,
 			);
 			name = bottom;
 			sourceTree = "<group>";
@@ -5384,6 +5400,10 @@
 				C2CB5CEB1B467D5A00CD61DF /* TGView.m */,
 				C2CB5CEC1B467D5A00CD61DF /* TGViewController.h */,
 				C2CB5CED1B467D5A00CD61DF /* TGViewController.m */,
+				C2F5C53F1D3D603300F47F8F /* TGCAActions.h */,
+				C2F5C5401D3D603300F47F8F /* TGCAActions.m */,
+				C2F5C54C1D3D654800F47F8F /* CAAnimateLayer.h */,
+				C2F5C54D1D3D654800F47F8F /* CAAnimateLayer.m */,
 			);
 			name = uikit;
 			sourceTree = "<group>";
@@ -7008,6 +7028,7 @@
 				C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */,
 				C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */,
 				C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */,
+				C2F5C54E1D3D654800F47F8F /* CAAnimateLayer.m in Sources */,
 				C2ED75381C2AA81100002ACF /* TGExternalImageObject.m in Sources */,
 				C26F7EA81A56BEFE001D1AE2 /* SecretLayer20.m in Sources */,
 				C2967B491AA9BF90003759B2 /* TGKeychain.m in Sources */,
@@ -7054,6 +7075,7 @@
 				0ACDB14118D09CC0009FE910 /* LoginButtonAndErrorView.m in Sources */,
 				C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */,
 				C2ED75411C2BFECA00002ACF /* DownloadExternalItem.m in Sources */,
+				C20A8AE91D3A2CA100C70134 /* TGBottomKeyboardContainerView.m in Sources */,
 				C268C18B19F0519C007F836A /* POPAnimator.mm in Sources */,
 				C271525719B6344100841C8A /* ComposeBroadcastListViewController.m in Sources */,
 				C2CBF3D51AF38F6F006BF90A /* TGTLSerialization.mm in Sources */,
@@ -7173,6 +7195,7 @@
 				CECBC15618008B3300AD98E6 /* CMath.c in Sources */,
 				C20A5EF01B8CD8CB007F4B49 /* TMBlueInputTextField.m in Sources */,
 				C2E5A0731BAC75C200C1BCA1 /* TGMessageViewSender.m in Sources */,
+				C20A8AE61D39387F00C70134 /* TGInputTextTag.m in Sources */,
 				0AB4789818E304B100DF283B /* ChatAvatarImageView.m in Sources */,
 				C281C1781917D9C2007B160F /* DraggingControllerView.m in Sources */,
 				C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */,
@@ -7303,6 +7326,7 @@
 				C29A40261C48173700AE4B71 /* VideoView.m in Sources */,
 				C26F7EAF1A56E5A1001D1AE2 /* AcceptKeySecretSenderItem.m in Sources */,
 				C20AEF3E1C1F2953001BAAA0 /* TGBlurImageObject.m in Sources */,
+				C2F5C5411D3D603300F47F8F /* TGCAActions.m in Sources */,
 				C267527D1A1B68F500152D9A /* TGPVImageObject.m in Sources */,
 				C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */,
 				C2CB5CF91B4AB41700CD61DF /* TGPVVideoContainer.m in Sources */,

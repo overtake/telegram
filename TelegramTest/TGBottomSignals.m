@@ -16,11 +16,8 @@
 }
 
 +(SSignal *)botKeyboardSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
-    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
-        [subscriber putNext:@(NO)];
-        [subscriber putCompletion];
-        return nil;
-        
+    return [[self botKeyboardSignal:conversation] map:^id(id next) {
+        return @(next != nil);
     }];
 }
 
@@ -29,7 +26,6 @@
         
         [subscriber putNext:@(NO)];
 
-        [subscriber putCompletion];
         return nil;
         
     }];
@@ -73,6 +69,25 @@
         
     }];
     
+}
+
++(SSignal *)botKeyboardSignal:(TL_conversation *)conversation {
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        
+        __block TL_localMessage *keyboard;
+        
+        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * __nonnull transaction) {
+            
+            keyboard = [transaction objectForKey:conversation.cacheKey inCollection:BOT_COMMANDS];
+            
+        }];
+        
+        [subscriber putNext:keyboard];
+        
+        
+        return nil;
+    }];
 }
 
 +(SSignal *)textAttachment:(TL_conversation *)conversation  {

@@ -8,8 +8,16 @@
 
 #import "TGBottomActionsView.h"
 #import "TGBottomSignals.h"
+#import "TGModernMessagesBottomView.h"
+@interface TGModernMessagesBottomView ()
+
+-(void)_showOrHideBotKeyboardAction:(id)notify;
+
+@end
+
 @interface TGBottomActionsView ()
 @property (nonatomic,weak) MessagesViewController *messagesController;
+@property (nonatomic,weak) TGModernMessagesBottomView *controller;
 
 @property (nonatomic, strong) BTRButton *silentMode;
 @property (nonatomic, strong) BTRButton *botCommand;
@@ -22,10 +30,11 @@
 
 @implementation TGBottomActionsView
 
--(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController {
+-(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController bottomController:(TGModernMessagesBottomView *)bottomControler {
     if(self = [super initWithFrame:frameRect]) {
         _messagesController = messagesController;
         _animates = YES;
+        _controller = bottomControler;
         
         
         
@@ -39,9 +48,8 @@
         
         
         _botKeyboard = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_botKeyboard().size.width, image_botKeyboard().size.height)];
-        [_botKeyboard setBackgroundImage:image_botKeyboard() forControlState:BTRControlStateNormal];
-        
-        
+      //  [_botKeyboard setImage:image_botKeyboardActive() forControlState:BTRControlStateSelected];
+        [_botKeyboard setImage:image_botKeyboard() forControlState:BTRControlStateNormal];
         
         
         _botCommand = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_botCommand().size.width, image_botCommand().size.height)];
@@ -82,6 +90,19 @@
     }
     
     return self;
+}
+
+-(void)botKeyboardAction:(BTRButton *)button {
+    
+    [_controller _showOrHideBotKeyboardAction:nil];
+    
+    
+}
+
+-(void)setActiveKeyboardButton:(BOOL)active {
+    [_botKeyboard setSelected:active];
+    [_botKeyboard setImage:active ? image_botKeyboardActive() : image_botKeyboard() forControlState:BTRControlStateNormal];
+
 }
 
 -(SSignal *)resignal:(TGModernSendControlType)actionType {

@@ -22,6 +22,8 @@
 +(SSignal *)botCommandSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType;
 +(SSignal *)botKeyboardSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType;
 
++(SSignal *)botKeyboardSignal:(TL_conversation *)conversation;
+
 
 +(SSignal *)textAttachment:(TL_conversation *)conversation;
 

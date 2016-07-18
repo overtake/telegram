@@ -50,7 +50,7 @@
     
 }
 
-
+static ASQueue *queue;
 
 -(void)orderOut:(id)sender {
     
@@ -99,6 +99,13 @@
 }
 
 static const int controlsHeight = 75;
+
++(void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = [[ASQueue alloc] initWithName:"photoviewerQueue"];
+    });
+}
 
 - (void)initialize {
     
@@ -169,7 +176,7 @@ static const int controlsHeight = 75;
     TLUser *user = notification.userInfo[KEY_USER];
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         if(todelete) {
             
@@ -222,7 +229,7 @@ static const int controlsHeight = 75;
     if(!_isVisibility)
     return;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         NSArray *peer_update_data = notification.userInfo[KEY_DATA];
         
@@ -259,7 +266,7 @@ static const int controlsHeight = 75;
     return;
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         [_list addObjectsFromArray:[self.behavior convertObjects:@[previewObject]]];
         
         [self resort];
@@ -276,7 +283,7 @@ static const int controlsHeight = 75;
 
 -(void)resort {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         [_list sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"previewObject.date" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"previewObject.msg_id" ascending:NO]]];
         
@@ -287,14 +294,14 @@ static const int controlsHeight = 75;
             self.currentItemId = index;
         }];
         
-    } synchronous:YES];
+    } ];
 }
 
 
 -(void)deleteItem:(TGPhotoViewerItem *)item {
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         
         NSInteger index = [self indexOfObject:item.previewObject];
@@ -362,7 +369,7 @@ static TGPhotoViewer *viewer;
     
     __block NSInteger idx = NSNotFound;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         [self.list enumerateObjectsUsingBlock:^(TGPhotoViewerItem *obj, NSUInteger index, BOOL *stop) {
             
             if(obj.previewObject.msg_id == item.msg_id && obj.previewObject.peerId == item.peerId) {
@@ -380,7 +387,7 @@ static TGPhotoViewer *viewer;
 -(TGPhotoViewerItem *)itemAtIndex:(NSUInteger)index {
     __block TGPhotoViewerItem *item;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         @try {
             item = _list[index];
         } @catch (NSException *exception) {
@@ -428,7 +435,7 @@ static TGPhotoViewer *viewer;
     
     _behavior = [[TGPVDocumentsBehavior alloc] initWithConversation:_conversation commonItem:item];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
         [self insertObjects:@[item]];
@@ -476,12 +483,8 @@ static TGPhotoViewer *viewer;
     _behavior = [[TGPVMediaBehavior alloc]  initWithConversation:_conversation commonItem:item];
     [_behavior setConversation:_conversation];
     
-    [ASQueue dispatchOnStageQueue:^{
-        
-        self.list = [[NSMutableArray alloc] init];
-        [self insertObjects:@[item]];
-        
-    } synchronous:YES];
+    self.list = [[NSMutableArray alloc] init];
+    [self insertObjects:@[item]];
     
     [self makeKeyAndOrderFront:self];
     
@@ -518,7 +521,7 @@ static TGPhotoViewer *viewer;
     
     _isReversed = YES;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
         [self insertObjects:@[item]];
@@ -541,7 +544,7 @@ static TGPhotoViewer *viewer;
     
     _isReversed = YES;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
         [self insertObjects:@[item]];
@@ -563,7 +566,7 @@ static TGPhotoViewer *viewer;
     
     _behavior = [[TGPVEmptyBehavior alloc] initWithConversation:_conversation commonItem:item];
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         self.list = [[NSMutableArray alloc] init];
         [self insertObjects:@[item]];
@@ -605,7 +608,7 @@ static TGPhotoViewer *viewer;
     
     __block NSUInteger count;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         count = self.list.count;
         
@@ -712,7 +715,7 @@ static TGPhotoViewer *viewer;
     }
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         
         NSInteger max = MIN(_currentItemId + 5, [self listCount]-1);
@@ -735,7 +738,7 @@ static TGPhotoViewer *viewer;
 
 -(void)insertObjects:(NSArray *)previewObjects {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         [self.list addObjectsFromArray:[self.behavior convertObjects:previewObjects]];
         
         [self resort];

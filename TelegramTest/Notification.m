@@ -178,6 +178,10 @@ NSString *const STICKERS_ALL_CHANGED = @"stickers_all_changed";
     return [NSString stringWithFormat:@"%@_%d_%d", action, dialog.type, dialog.peer_id];
 }
 
++ (NSString *) cAction:(TL_conversation *)convesation action:(NSString *) action {
+    return [self notificationNameByDialog:convesation action:action];
+}
+
 + (NSString *)notificationForUser:(TLUser *)user action:(NSString *)action {
      return [NSString stringWithFormat:@"user_%@_%d", action, user.n_id];
 }

@@ -10,8 +10,10 @@
 
 typedef enum {
     CALayerOpacityAnimation = 1,
-    CALayerPositionAnimation = 2
+    CALayerPositionAnimation = 2,
+    CALayerHeightAnimation = 3
 } CALayerAnimations;
+
 
 
 @interface NSView (Category)
@@ -24,6 +26,10 @@ typedef enum {
 - (void)prepareForAnimation;
 
 - (void)setAnimation:(CAAnimation *)anim forKey:(NSString *)key;
+-(void)removeFromSuperviewWithAnimation;
+-(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated;
+-(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
+-(void)widthWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 
 -(void)performShake:(dispatch_block_t)completeBlock;
 - (void)removeAllSubviews;

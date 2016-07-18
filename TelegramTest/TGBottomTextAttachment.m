@@ -41,6 +41,8 @@
                 animated = [next boolValue];
             }];
             
+            NSLog(@"%@",next);
+            
             if(self.subviews.count > 0) {
                 
                 TMView *view = [self.subviews lastObject];
@@ -67,32 +69,9 @@
                     }
                 }
 
-               // if(animated) {
-                    
-//                    [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull view, NSUInteger idx, BOOL * _Nonnull stop) {
-//                        view.wantsLayer = YES;
-//                        
-//                        TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:view.layer];
-//                        
-//                        [delegate setCompletion:^(BOOL completed) {
-//                            [view removeFromSuperview];
-//                        }];
-//                        
-//                        
-//                        
-//                        CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0 toValue:0.0];
-//                        
-//                        animation.delegate = delegate;
-//                        
-//                        [view.layer addAnimation:animation forKey:@"opacity"];
-//                    }];
-                    
-                    
-                    
-             //   } else {
+                if(next) {
                     [self removeAllSubviews];
-              //  }
-                
+                }
                 
             }
             

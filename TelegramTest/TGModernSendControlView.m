@@ -107,42 +107,6 @@
             [[_voice animator] setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];
             
             
-//            if(_voice.layer.anchorPoint.x != 0.5) {
-//                CGPoint point = _voice.layer.position;
-//                
-//                point.x += roundf(NSWidth(_voice.frame) / 2.0f);
-//                point.y += roundf(NSHeight(_voice.frame) / 2.0f);
-//                
-//                _voice.layer.position = point;
-//                _voice.layer.anchorPoint = CGPointMake(0.5, 0.5);
-//                
-//
-//            }
-            
-//            CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"transform"];
-//            anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//            anim.duration = 0.125;
-//            anim.repeatCount = 1;
-//            anim.autoreverses = YES;
-//            anim.removedOnCompletion = YES;
-//            anim.toValue = [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1, 1.1, 1.0)];
-//            [_voice.layer addAnimation:anim forKey:@"bounce"];
-//            
-//            _voice.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
-            
-         //
-         //   _voice.layer.anchorPoint = NSMakePoint(0.5, 0.5);
-
-            
-            
-            
-//            POPSpringAnimation *sprintAnimation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerScaleXY];
-//            sprintAnimation.toValue = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
-//            sprintAnimation.velocity = [NSValue valueWithCGPoint:CGPointMake(1.0, 1.0)];
-//            
-//            sprintAnimation.springBounciness = 4.0f;
-//            [_voice.layer pop_addAnimation:sprintAnimation forKey:@"springAnimation"];
-            
         }
     
         [_animates ? [_voice animator] : _voice setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];

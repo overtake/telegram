@@ -9,7 +9,11 @@
 #import "TGModernGrowingTextView.h"
 #import "TGTextLabel.h"
 #import "TGAnimationBlockDelegate.h"
-@interface TGGrowingTextView : NSTextView
+#import "TGInputTextTag.h"
+#import "SpacemanBlocks.h"
+@interface TGGrowingTextView : NSTextView {
+    SMDelayedBlockHandle _handle;
+}
 @property (nonatomic,weak) id <TGModernGrowingDelegate> weakd;
 @end
 
@@ -50,7 +54,7 @@
         BOOL result = isEnterAccess(theEvent) && self.string.trim.length > 0 && [_weakd textViewEnterPressed:self];
         
         if(!result) {
-            [self insertNewline:self];
+             [self insertNewline:self];
         }
         return;
     }   else if(theEvent.keyCode == 53 && [_weakd respondsToSelector:@selector(textViewNeedClose:)]) {
@@ -66,9 +70,8 @@
     [super setFrameSize:newSize];
 }
 
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-}
+
+
 
 @end
 
@@ -85,11 +88,13 @@
 @implementation TGModernGrowingTextView
 
 
+static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
+
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
         _min_height = 33;
-        _max_height = 250;
+        _max_height = 200;
         _animates = YES;
         
 
@@ -205,6 +210,11 @@
     if(_last_height != newSize.height) {
         
         dispatch_block_t future = ^ {
+            
+            if(_last_height > newSize.height) {
+                int bp = 0;
+            }
+            
             _last_height = newSize.height;
             [_delegate textViewHeightChanged:self height:newSize.height animated:animated];
         };
@@ -217,6 +227,8 @@
         
         
         if(animated) {
+            
+            [CATransaction begin];
             
             float presentHeight = NSHeight(self.frame);
             
@@ -258,9 +270,11 @@
             
             
             [self setFrameSize:layoutSize];
-            
+            [_scrollView setFrameSize:layoutSize];
         
             future();
+            
+            [CATransaction commit];
 
             
         } else {
@@ -319,6 +333,8 @@
     
     [self.delegate textViewTextDidChange:self];
     
+    [self refreshAttributes];
+    
 }
 
 -(void)setFrameSize:(NSSize)newSize {
@@ -362,7 +378,190 @@
 }
 
 
+- (void)refreshAttributes {
+    
+    @try {
+        NSAttributedString *string = _textView.attributedString;
+        if (string.length == 0) {
+            return;
+        }
+        
+        
+        //NSMutableAttributedString *mutableString = [[NSMutableAttributedString alloc] initWithAttributedString:string];
+        //[mutableString removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0, string.length)];
+        [_textView.textStorage addAttribute:NSForegroundColorAttributeName value:TEXT_COLOR range:NSMakeRange(0, string.length)];
+        
+        
+        
+        __block NSMutableArray<TGInputTextTagAndRange *> *inputTextTags = [[NSMutableArray alloc] init];
+        [string enumerateAttribute:TGMentionUidAttributeName inRange:NSMakeRange(0, string.length) options:0 usingBlock:^(__unused id value, NSRange range, __unused BOOL *stop) {
+            if ([value isKindOfClass:[TGInputTextTag class]]) {
+                [inputTextTags addObject:[[TGInputTextTagAndRange alloc] initWithTag:value range:range]];
+            }
+        }];
+        
+        if (inputTextTags != nil) {
+            /*if (mutableString == nil) {
+             mutableString = [[NSMutableAttributedString alloc] initWithAttributedString:string];
+             }*/
+            
+            static NSCharacterSet *alphanumericSet = nil;
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                alphanumericSet = [NSCharacterSet alphanumericCharacterSet];
+            });
+            
+            NSMutableSet<NSNumber *> *removeTags = [[NSMutableSet alloc] init];
+            for (NSInteger i = 0; i < ((NSInteger)inputTextTags.count); i++) {
+                TGInputTextTagAndRange *tagAndRange = inputTextTags[i];
+                if ([removeTags containsObject:@(tagAndRange.tag.uniqueId)]) {
+                    [inputTextTags removeObjectAtIndex:i];
+                    //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                    [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                    
+                    i--;
+                } else {
+                    NSInteger j = tagAndRange.range.location;
+                    while (j < (NSInteger)(tagAndRange.range.location + tagAndRange.range.length)) {
+                        unichar c = [string.string characterAtIndex:j];
+                        if (c != ' ') {
+                            break;
+                        }
+                        j++;
+                    }
+                    
+                    if (j != (NSInteger)tagAndRange.range.location) {
+                        NSRange updatedRange = NSMakeRange(j, tagAndRange.range.location + tagAndRange.range.length - j);
+                        //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                        [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                        
+                        //[mutableString addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                        [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                        
+                        inputTextTags[i] = [[TGInputTextTagAndRange alloc] initWithTag:tagAndRange.tag range:updatedRange];
+                        
+                        i--;
+                    } else {
+                        NSInteger j = tagAndRange.range.location;
+                        while (j >= 0) {
+                            
+                            unichar c = [string.string characterAtIndex:j];
+                            if (![alphanumericSet characterIsMember:c]) {
+                                break;
+                            }
+                            j--;
+                        }
+                        j++;
+                        
+                        if (j < ((NSInteger)tagAndRange.range.location)) {
+                            NSRange updatedRange = NSMakeRange(j, tagAndRange.range.location + tagAndRange.range.length - j);
+                            //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                            [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                            
+                            //[mutableString addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                            [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                            
+                            inputTextTags[i] = [[TGInputTextTagAndRange alloc] initWithTag:tagAndRange.tag range:updatedRange];
+                            
+                            i--;
+                        } else {
+                            TGInputTextTagAndRange *nextTagAndRange = nil;
+                            if (i != ((NSInteger)inputTextTags.count) - 1) {
+                                nextTagAndRange = inputTextTags[i + 1];
+                            }
+                            
+                            if (nextTagAndRange == nil || nextTagAndRange.tag.uniqueId != tagAndRange.tag.uniqueId) {
+                                NSInteger candidateStart = tagAndRange.range.location + tagAndRange.range.length;
+                                NSInteger candidateEnd = nextTagAndRange == nil ? string.length : nextTagAndRange.range.location;
+                                NSInteger j = candidateStart;
+                                while (j < candidateEnd) {
+                                    unichar c = [string.string characterAtIndex:j];
+                                    static NSCharacterSet *alphanumericSet = nil;
+                                    static dispatch_once_t onceToken;
+                                    dispatch_once(&onceToken, ^{
+                                        alphanumericSet = [NSCharacterSet alphanumericCharacterSet];
+                                    });
+                                    if (![alphanumericSet characterIsMember:c]) {
+                                        break;
+                                    }
+                                    j++;
+                                }
+                                
+                                if (j == candidateStart) {
+                                    [removeTags addObject:@(tagAndRange.tag.uniqueId)];
+                                    //[mutableString addAttribute:NSForegroundColorAttributeName value:TGAccentColor() range:tagAndRange.range];
+                                    [_textView.textStorage addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:tagAndRange.range];
+                                } else {
+                                    //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    
+                                    NSRange updatedRange = NSMakeRange(tagAndRange.range.location, j - tagAndRange.range.location);
+                                    //[mutableString addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    inputTextTags[i] = [[TGInputTextTagAndRange alloc] initWithTag:tagAndRange.tag range:updatedRange];
+                                    
+                                    i--;
+                                }
+                            } else {
+                                
+                                
+                                NSInteger candidateStart = tagAndRange.range.location + tagAndRange.range.length;
+                                NSInteger candidateEnd = nextTagAndRange.range.location;
+                                NSInteger j = candidateStart;
+                                while (j < candidateEnd) {
+                                    unichar c = [string.string characterAtIndex:j];
+                                    if (![alphanumericSet characterIsMember:c] && c != ' ') {
+                                        break;
+                                    }
+                                    j++;
+                                }
+                                
+                                if (j == candidateEnd) {
+                                    //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    
+                                    //[mutableString removeAttribute:TGMentionUidAttributeName range:nextTagAndRange.range];
+                                    [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:nextTagAndRange.range];
+                                    
+                                    NSRange updatedRange = NSMakeRange(tagAndRange.range.location, nextTagAndRange.range.location + nextTagAndRange.range.length - tagAndRange.range.location);
+                                    
+                                    //[mutableString addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    
+                                    inputTextTags[i] = [[TGInputTextTagAndRange alloc] initWithTag:tagAndRange.tag range:updatedRange];
+                                    [inputTextTags removeObjectAtIndex:i + 1];
+                                    
+                                    i--;
+                                } else if (j != candidateStart) {
+                                    //[mutableString removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    [_textView.textStorage removeAttribute:TGMentionUidAttributeName range:tagAndRange.range];
+                                    
+                                    NSRange updatedRange = NSMakeRange(tagAndRange.range.location, j - tagAndRange.range.location);
+                                    //[mutableString addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tagAndRange.tag range:updatedRange];
+                                    
+                                    inputTextTags[i] = [[TGInputTextTagAndRange alloc] initWithTag:tagAndRange.tag range:updatedRange];
+                                    
+                                    i--;
+                                } else {
+                                    [removeTags addObject:@(tagAndRange.tag.uniqueId)];
+                                    //[mutableString addAttribute:NSForegroundColorAttributeName value:TGAccentColor() range:tagAndRange.range];
+                                    [_textView.textStorage addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:tagAndRange.range];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+    } @catch (NSException *exception) {
+        int bp = 0;
+    }
+    
+    
+
+}
 
 
 -(NSString *)string {
@@ -376,5 +575,67 @@
     return _textView.selectedRange;
 }
 
+-(void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
+    [_textView insertText:aString replacementRange:replacementRange];
+}
+
+-(void)addInputTextTag:(TGInputTextTag *)tag range:(NSRange)range {
+    [_textView.textStorage addAttribute:TGMentionUidAttributeName value:tag range:range];
+}
+
+
+- (void)replaceMention:(NSString *)mention username:(bool)username userId:(int32_t)userId
+{
+    NSString *replacementText = [mention stringByAppendingString:@" "];
+    
+    NSMutableAttributedString *text = _textView.attributedString == nil ? [[NSMutableAttributedString alloc] init] : [[NSMutableAttributedString alloc] initWithAttributedString:_textView.attributedString];
+    
+    NSRange selRange = _textView.selectedRange;
+    NSUInteger selStartPos = selRange.location;
+    
+    NSInteger idx = selStartPos;
+    idx--;
+    
+    NSRange candidateMentionRange = NSMakeRange(NSNotFound, 0);
+    
+    if (idx >= 0 && idx < (int)text.length)
+    {
+        for (NSInteger i = idx; i >= 0; i--)
+        {
+            unichar c = [text.string characterAtIndex:i];
+            if (c == '@')
+            {
+                if (i == idx)
+                    candidateMentionRange = NSMakeRange(i + 1, 0);
+                else
+                    candidateMentionRange = NSMakeRange(i + 1, idx - i);
+                break;
+            }
+            
+            if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'))
+                break;
+        }
+    }
+    
+    if (candidateMentionRange.location != NSNotFound)
+    {
+        if (!username) {
+            candidateMentionRange.location -= 1;
+            candidateMentionRange.length += 1;
+            
+            [text replaceCharactersInRange:candidateMentionRange withString:replacementText];
+            
+            static int64_t nextId = 0;
+            nextId++;
+            [text addAttributes:@{TGMentionUidAttributeName: [[TGInputTextTag alloc] initWithUniqueId:nextId left:true attachment:@(userId)]} range:NSMakeRange(candidateMentionRange.location, replacementText.length - 1)];
+        } else {
+            [text replaceCharactersInRange:candidateMentionRange withString:replacementText];
+        }
+        
+        [_textView.textStorage setAttributedString:text];
+    }
+    
+    [self update];
+}
 
 @end

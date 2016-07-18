@@ -25,6 +25,7 @@
     
 }
 
+
 - (void)setNormalContentScale {
     self.contentsScale = [[NSScreen mainScreen] backingScaleFactor];
 }

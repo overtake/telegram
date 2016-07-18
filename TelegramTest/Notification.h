@@ -150,6 +150,7 @@ extern NSString *const STICKERS_ALL_CHANGED;
 + (void)removeObserver:(id)target;
 
 + (NSString *) notificationNameByDialog:(TL_conversation *)dialog action:(NSString *) action;
++ (NSString *) cAction:(TL_conversation *)convesation action:(NSString *) action;
 
 + (NSString *)notificationForUser:(TLUser *)user action:(NSString *)action;
 //+ (NSString *) notificationNameForStatusUserId:(int)user_id;

@@ -8,6 +8,7 @@
 
 #import "NSViewCategory.h"
 #import "TMAnimations.h"
+#import "TGAnimationBlockDelegate.h"
 @interface CALAyerAnimationInstance : NSObject
 @end
 
@@ -83,6 +84,96 @@
     anim.delegate = instance();
     [anim setValue:self forKey:@"view"];
     [self.layer addAnimation:anim forKey:key];
+}
+
+-(void)removeFromSuperviewWithAnimation {
+    CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0f toValue:1.0f];
+    
+    TGAnimationBlockDelegate *block = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
+    
+    block.completion = ^(BOOL completed){
+        
+        [self removeFromSuperview];
+        
+    };
+    
+    animation.delegate = block;
+    
+    [self.layer addAnimation:animation forKey:@"remove"];
+    
+}
+
+-(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
+    
+    if(animated) {
+        int presentX = NSMinX(self.frame);
+        int presentY = NSMinY(self.frame);
+        
+        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
+        
+        if(presentLayer && [self.layer animationForKey:@"position"]) {
+            presentY = [[presentLayer valueForKeyPath:@"frame.origin.y"] floatValue];
+            presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
+        }
+        
+        CABasicAnimation *anim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, presentY) toValue:position];
+        
+        
+        [self.layer removeAnimationForKey:@"position"];
+        [self.layer addAnimation:anim forKey:@"position"];
+        [self.layer setPosition:position];
+
+    }
+
+    
+    
+    [self setFrameOrigin:position];
+}
+
+-(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated {
+    if(animated) {
+        int presentHeight = NSHeight(self.frame);
+        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
+        if(presentLayer && [self.layer animationForKey:@"bounds"]) {
+            presentHeight = [[presentLayer valueForKeyPath:@"bounds.size.height"] floatValue];
+        }
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.height"];
+        animation.duration = 0.2;
+        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        animation.removedOnCompletion = YES;
+        animation.fromValue = @(presentHeight);
+        animation.toValue = @(NSHeight(rect));
+        [self.layer removeAnimationForKey:@"bounds"];
+        [self.layer addAnimation:animation forKey:@"bounds"];
+        [self.layer setFrame:rect];
+    }
+    
+    
+    [self setFrame:rect];
+}
+
+
+
+-(void)widthWithCAAnimation:(NSRect)rect animated:(BOOL)animated {
+    if(animated) {
+        int presentWidth = NSWidth(self.frame);
+        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
+        if(presentLayer && [self.layer animationForKey:@"bounds"]) {
+            presentWidth = [[presentLayer valueForKeyPath:@"bounds.size.width"] floatValue];
+        }
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
+        animation.duration = 0.2;
+        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        animation.removedOnCompletion = YES;
+        animation.fromValue = @(presentWidth);
+        animation.toValue = @(NSWidth(rect));
+        [self.layer removeAnimationForKey:@"bounds"];
+        [self.layer addAnimation:animation forKey:@"bounds"];
+        [self.layer setFrame:rect];
+    }
+   
+    
+    [self setFrame:rect];
 }
 
 static CALAyerAnimationInstance *instance() {

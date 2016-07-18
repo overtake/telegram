@@ -1502,7 +1502,7 @@ static RBLPopover *popover;
         
        
         
-        void (^callback)(NSString *fullUserName) = ^(NSString *fullUserName) {
+        void (^callback)(NSString *fullUserName, id object) = ^(NSString *fullUserName,id object) {
             NSMutableString *insert = [[self.inputMessageTextField string] mutableCopy];
             
             [insert insertString:fullUserName atIndex:selectedRange.location - search.length];
@@ -1521,8 +1521,8 @@ static RBLPopover *popover;
         } else if(type == TGHintViewShowBotCommandType && [self.inputMessageTextField.string rangeOfString:@"/"].location == 0) {
             if([_dialog.user isBot] || _dialog.fullChat.bot_info != nil) {
                 
-                [self.messagesViewController.hintView showCommandsHintsWithQuery:search conversation:self.dialog botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command) {
-                    callback(command);
+                [self.messagesViewController.hintView showCommandsHintsWithQuery:search conversation:self.dialog botInfo:_userFull ? @[_userFull.bot_info] : _dialog.fullChat.bot_info choiceHandler:^(NSString *command, id object) {
+                    callback(command,object);
                     [self sendButtonAction];
                 }];
                 

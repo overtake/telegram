@@ -351,7 +351,7 @@
     
     NSUInteger height = f.count * itemHeight + ((f.count -1) * 3 ) + (_fillToSize ? 0 : 0);
     
-    NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) + 6 + (itemHeight/2));
+    NSUInteger maxHeight = _fillToSize ? height : MIN(height,3 * itemHeight + ((3 -1) * 3 ) );
     
     
     [_scrollView setFrameSize:NSMakeSize(NSWidth(self.frame), maxHeight)];

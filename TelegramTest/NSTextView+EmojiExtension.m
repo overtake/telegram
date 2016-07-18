@@ -72,7 +72,7 @@ DYNAMIC_PROPERTY(EmojiPopover)
         
         [TGPopoverHint close];
         
-        [[TGPopoverHint hintView] showMentionPopupWithQuery:search conversation:conversation chat:conversation.chat allowInlineBot:NO allowUsernameless:NO choiceHandler:^(NSString *result) {
+        [[TGPopoverHint hintView] showMentionPopupWithQuery:search conversation:conversation chat:conversation.chat allowInlineBot:NO allowUsernameless:NO choiceHandler:^(NSString *result,id object) {
             [self insertText:[result stringByAppendingString:@" "] replacementRange:NSMakeRange(selectedRange.location - search.length, search.length)];
             
             [TGPopoverHint close];

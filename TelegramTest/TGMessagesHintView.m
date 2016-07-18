@@ -47,6 +47,8 @@ DYNAMIC_PROPERTY(DUser);
 
 @property (nonatomic,strong) NSString *result;
 
+@property (nonatomic,strong) id object;
+
 
 @end
 
@@ -194,7 +196,7 @@ DYNAMIC_PROPERTY(DUser);
     RPCRequest *_contextRequest;
 }
 @property (nonatomic,strong) TMTableView *tableView;
-@property (nonatomic,copy) void (^choiceHandler)(NSString *result);
+@property (nonatomic,copy) void (^choiceHandler)(NSString *result,id object);
 @property (nonatomic,strong) TMView *separator;
 @property (nonatomic,strong) TGContextBotTableView *contextTableView;
 
@@ -303,7 +305,7 @@ DYNAMIC_PROPERTY(DUser);
 }
 
 
--(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result))choiceHandler  {
+-(void)showCommandsHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation botInfo:(NSArray *)botInfo choiceHandler:(void (^)(NSString *result,id object))choiceHandler  {
     
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
@@ -349,6 +351,7 @@ DYNAMIC_PROPERTY(DUser);
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj.user text:obj.command desc:obj.n_description];
         
         item.result = obj.command;
+        item.object = obj;
         
         [items addObject:item];
     }];
@@ -366,7 +369,7 @@ DYNAMIC_PROPERTY(DUser);
     
 }
 
--(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showHashtagHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation peer_id:(int)peer_id choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
     
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
@@ -411,6 +414,7 @@ DYNAMIC_PROPERTY(DUser);
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:nil text:[NSString stringWithFormat:@"#%@",obj[@"tag"]]desc:nil];
         
         item.result = obj[@"tag"];
+        item.object = obj;
         
         [items addObject:item];
         
@@ -429,7 +433,7 @@ DYNAMIC_PROPERTY(DUser);
     
 }
 
--(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
     
     _choiceHandler = choiceHandler;
     cancel_delayed_block(_handle);
@@ -551,6 +555,7 @@ DYNAMIC_PROPERTY(DUser);
         TGMessagesHintRowItem *item = [[TGMessagesHintRowItem alloc] initWithImageObject:obj text:obj.fullName desc:obj.username.length > 0 ? [NSString stringWithFormat:@"@%@",obj.username] : @""];
         
         item.result = obj.username.length > 0 ? obj.username : [NSString stringWithFormat:@"[%@|%d]",obj.first_name,obj.n_id];
+        item.object = obj;
         
         [items addObject:item];
     }];
@@ -569,7 +574,7 @@ DYNAMIC_PROPERTY(DUser);
         [self hide];
 }
 
--(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result))choiceHandler {
+-(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
     [self showMentionPopupWithQuery:query conversation:conversation chat:chat allowInlineBot:allowInlineBot allowUsernameless:YES choiceHandler:choiceHandler];
 }
 
@@ -982,7 +987,7 @@ static NSMutableDictionary *inlineBotsExceptions;
         TGMessagesHintRowItem *item = (TGMessagesHintRowItem *) _tableView.selectedItem;
         
         if(item != nil) {
-            _choiceHandler(item.result);
+            _choiceHandler(item.result,item.object);
         }
     } else if(_currentTableView == _contextTableView) {
         
@@ -1075,7 +1080,6 @@ static NSMutableDictionary *inlineBotsExceptions;
         [_tableView.containerView setHidden:_currentTableView != _tableView];
         [_mediaContextTableView.containerView setHidden:_currentTableView != _mediaContextTableView];
     }
-    
     
 }
 

@@ -8,13 +8,18 @@
 
 #import "TMView.h"
 #import "TGModernSendControlView.h"
+
+@class TGModernMessagesBottomView;
+
 @interface TGBottomActionsView : TMView
--(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController;
+-(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController bottomController:(TGModernMessagesBottomView *)bottomControler;
 
 @property (nonatomic,assign) BOOL animates;
 
+
 -(SSignal *)resignal:(TGModernSendControlType)actionType;
 
+-(void)setActiveKeyboardButton:(BOOL)active;
 
 
 - (instancetype)init __attribute__((unavailable("init not available, call initWithFrame:messagesController:")));

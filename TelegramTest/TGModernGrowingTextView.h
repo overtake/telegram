@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
+#import "TGInputTextTag.h"
 @protocol TGModernGrowingDelegate <NSObject>
 
 -(void) textViewHeightChanged:(id)textView height:(int)height animated:(BOOL)animated;
@@ -39,5 +39,9 @@
 -(NSString *)string;
 -(void)setString:(NSString *)string;
 -(NSRange)selectedRange;
+-(void)insertText:(id)aString replacementRange:(NSRange)replacementRange;
+-(void)addInputTextTag:(TGInputTextTag *)tag range:(NSRange)range;
+
+- (void)replaceMention:(NSString *)mention username:(bool)username userId:(int32_t)userId ;
 
 @end

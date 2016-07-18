@@ -625,25 +625,18 @@ static NSString *encryptionKey;
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        [queue inDatabase:^(FMDatabase *db) {
+        int v = (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"dbdversion"];
+        [[NSUserDefaults standardUserDefaults] setInteger:++v forKey:@"dbdversion"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [self open:^{
             
-            int v = (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"dbdversion"];
-            [[NSUserDefaults standardUserDefaults] setInteger:++v forKey:@"dbdversion"];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            dispatch_async(dqueue, ^{
+                [subscriber putNext:nil];
+                [subscriber putCompletion];
+            });
             
-            [self open:^{
-               
-                dispatch_async(dqueue, ^{
-                    [subscriber putNext:nil];
-                    [subscriber putCompletion];
-                });
-                
-            } queue:dispatch_get_current_queue()];
-            
-            
-
-            
-        }];
+        } queue:dispatch_get_current_queue()];
         
          return nil;
         

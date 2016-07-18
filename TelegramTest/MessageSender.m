@@ -259,18 +259,16 @@
         outMessage.replyMessage = replyMessage;
     }
     
-    template.autoSave = NO;
+    
     [template setReplyMessage:nil save:NO];
-    
-    if(message.length > 0) {
-        [template updateTextAndSave:@""];
-    }
-    
-    [template saveForce];
-    [template saveTemplateInCloudIfNeeded];
-    [template performNotification];
-    template.autoSave = YES;
 
+    [[template updateSignalText:@""] startWithNext:^(id next) {
+        if([next[0] boolValue]) {
+            [template saveTemplateInCloudIfNeeded];
+            [template performNotification];
+        }
+    }];
+    
     
     return  outMessage;
 }
