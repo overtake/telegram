@@ -41,29 +41,28 @@
                 animated = [next boolValue];
             }];
             
-            NSLog(@"%@",next);
             
             if(self.subviews.count > 0) {
                 
                 TMView *view = [self.subviews lastObject];
                 
-                if([view isKindOfClass:[MessageReplyContainer class]] && [next isKindOfClass:[TL_localMessage class]]) {
+                if([view isKindOfClass:[MessageReplyContainer class]] && [next isKindOfClass:[TGReplyObject class]]) {
                     
                     MessageReplyContainer *replyContainer = (MessageReplyContainer *)view;
                     
                     if(replyContainer.replyObject.replyMessage.channelMsgId == template.replyMessage.n_id) {
-                        [subscriber putNext:@(view ? 50 : 0)];
+                        [subscriber putNext:@(view ? NSHeight(self.frame) : 0)];
                         
                         return;
                     }
                     
-                } else if([view isKindOfClass:[TGForwardContainer class]] && [next isKindOfClass:[NSArray class]]) {
+                } else if([view isKindOfClass:[TGForwardContainer class]] && [next isKindOfClass:[TGForwardObject class]]) {
                     
                 } else if([view isKindOfClass:[TGWebpageAttach class]] && [next isKindOfClass:[TLWebPage class]]) {
                     TGWebpageAttach *webpage = (TGWebpageAttach *)view;
                     
                     if(webpage.webpage.n_id == [(TLWebPage *)next n_id]) {
-                        [subscriber putNext:@(view ? 50 : 0)];
+                        [subscriber putNext:@(view ? NSHeight(self.frame) : 0)];
                         
                         return;
                     }
@@ -75,12 +74,10 @@
                 
             }
             
-            if([next isKindOfClass:[TL_localMessage class]]) { // reply
+            if([next isKindOfClass:[TGReplyObject class]]) { // reply
                 
                 
-                TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:next fromMessage:nil tableItem:nil];
-                
-                MessageReplyContainer *replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(0, 0 , NSWidth(self.frame), replyObject.containerHeight)];
+                MessageReplyContainer *replyContainer = [[MessageReplyContainer alloc] initWithFrame:NSMakeRect(0, 0 , NSWidth(self.frame), ((TGReplyObject *)next).containerHeight)];
                 
                 replyContainer.deleteHandler = ^{
                     
@@ -89,12 +86,24 @@
                     
                 };
                 
-                [replyContainer setReplyObject:replyObject];
+                [replyContainer setReplyObject:next];
                 
                 
                 currentView = replyContainer;
                 
-            } else if([next isKindOfClass:[NSArray class]]) { // forward
+            } else if([next isKindOfClass:[TGForwardObject class]]) { // forward
+                
+                TGForwardContainer *container = [[TGForwardContainer alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), 30)];
+                
+                [container setDeleteHandler:^{
+                    [template setForwardMessages:nil];
+                    [template performNotification];
+                }];
+                
+                [container setFwdObject:next];
+                
+                
+                currentView = container;
                 
             } else if([next isKindOfClass:[TL_webPage class]] || [next isKindOfClass:[TL_webPagePending class]]) { // webpage
                 TGWebpageAttach *webpage = [[TGWebpageAttach alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), 30) webpage:next link:template.webpage inputTemplate:template];
@@ -104,6 +113,9 @@
             }
             
             if(currentView) {
+                
+                [self setFrameSize:NSMakeSize(NSWidth(self.frame), NSHeight(currentView.frame) + 10)];
+                
                 currentView.backgroundColor = self.backgroundColor;
                 currentView.autoresizingMask = NSViewWidthSizable;
                 
@@ -121,7 +133,7 @@
             }
             
             
-            [subscriber putNext:@(currentView ? 50 : 0)];
+            [subscriber putNext:@(currentView ? NSHeight(self.frame) : 0)];
             
         }];
         

@@ -536,29 +536,29 @@ void exceptionHandler(NSException * exception)
             
             if(![TMViewController isModalActive]) {
                 
-                BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
-                
-                if(!res) {
-                    
-                    if([[TMAudioRecorder sharedInstance] isRecording]) {
-                        [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
-                        return incomingEvent;
-                        
-                    }
-                    
-                    if(![appWindow().navigationController.currentController proccessEscAction]) {
-                        if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
-                            return incomingEvent;
-                        } else {
-                            
-                            [appWindow().navigationController goBackWithAnimation:YES];
-                            
-                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
-                        }
-                    }
-                    
-                    
-                }
+//                BOOL res = [appWindow().navigationController.messagesViewController.bottomView removeQuickRecord];
+//                
+//                if(!res) {
+//                    
+//                    if([[TMAudioRecorder sharedInstance] isRecording]) {
+//                        [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+//                        return incomingEvent;
+//                        
+//                    }
+//                    
+//                    if(![appWindow().navigationController.currentController proccessEscAction]) {
+//                        if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
+//                            return incomingEvent;
+//                        } else {
+//                            
+//                            [appWindow().navigationController goBackWithAnimation:YES];
+//                            
+//                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+//                        }
+//                    }
+//                    
+//                    
+//                }
                 
                 
             
@@ -757,6 +757,12 @@ void exceptionHandler(NSException * exception)
                 
             }
             
+            
+            if(result.type == NSLeftMouseUp) {
+                int bp = 0;
+                
+                [result.window.firstResponder mouseUp:result];
+            }
             
             if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
                 

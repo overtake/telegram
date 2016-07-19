@@ -42,6 +42,7 @@
 -(void)insertText:(id)aString replacementRange:(NSRange)replacementRange;
 -(void)addInputTextTag:(TGInputTextTag *)tag range:(NSRange)range;
 
-- (void)replaceMention:(NSString *)mention username:(bool)username userId:(int32_t)userId ;
+-(void)replaceMention:(NSString *)mention username:(bool)username userId:(int32_t)userId;
+
 
 @end

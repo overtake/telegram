@@ -9,10 +9,17 @@
 #import "TMView.h"
 #import "TGModernSendControlView.h"
 
-@class TGModernMessagesBottomView;
+@protocol TGBottomActionDelegate <NSObject>
+
+-(void)_showOrHideBotKeyboardAction:(id)sender;
+
+@end
+
 
 @interface TGBottomActionsView : TMView
--(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController bottomController:(TGModernMessagesBottomView *)bottomControler;
+-(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController;
+
+@property (nonatomic,weak) id <TGBottomActionDelegate> delegate;
 
 @property (nonatomic,assign) BOOL animates;
 

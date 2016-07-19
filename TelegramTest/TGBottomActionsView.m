@@ -17,7 +17,6 @@
 
 @interface TGBottomActionsView ()
 @property (nonatomic,weak) MessagesViewController *messagesController;
-@property (nonatomic,weak) TGModernMessagesBottomView *controller;
 
 @property (nonatomic, strong) BTRButton *silentMode;
 @property (nonatomic, strong) BTRButton *botCommand;
@@ -30,11 +29,10 @@
 
 @implementation TGBottomActionsView
 
--(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController bottomController:(TGModernMessagesBottomView *)bottomControler {
+-(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController {
     if(self = [super initWithFrame:frameRect]) {
         _messagesController = messagesController;
         _animates = YES;
-        _controller = bottomControler;
         
         
         
@@ -94,7 +92,7 @@
 
 -(void)botKeyboardAction:(BTRButton *)button {
     
-    [_controller _showOrHideBotKeyboardAction:nil];
+    [_delegate _showOrHideBotKeyboardAction:nil];
     
     
 }

@@ -913,6 +913,8 @@ static RBLPopover *popover;
     }
 }
 
+
+
 - (void)setRecordHelperStringValue:(NSString *)string {
     self.recordHelpLayer.string = string;
    

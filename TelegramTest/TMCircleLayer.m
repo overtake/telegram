@@ -10,16 +10,16 @@
 
 @implementation TMCircleLayer
 
-+ (BOOL)needsDisplayForKey:(NSString *)key {
-    if ([key isEqualToString:@"radius"]
-        || [key isEqualToString:@"lineWidth"]
-        || [key isEqualToString:@"strokeColor"]
-        || [key isEqualToString:@"fillColor"]
-        || [key isEqualToString:@"opacity"]) {
-        return YES;
-    }
-    return [super needsDisplayForKey:key];
-}
+//+ (BOOL)needsDisplayForKey:(NSString *)key {
+//    if ([key isEqualToString:@"radius"]
+//        || [key isEqualToString:@"lineWidth"]
+//        || [key isEqualToString:@"strokeColor"]
+//        || [key isEqualToString:@"fillColor"]
+//        || [key isEqualToString:@"opacity"]) {
+//        return YES;
+//    }
+//    return [super needsDisplayForKey:key];
+//}
 
 - (id)init {
     self = [super init];

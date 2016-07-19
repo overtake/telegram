@@ -41,6 +41,10 @@
     return self;
 }
 
+-(void)setTruncateInTheMiddle:(BOOL)middle {
+    _truncateInTheMiddle = middle;
+}
+
 - (void)dealloc
 {
     if (_line != NULL)

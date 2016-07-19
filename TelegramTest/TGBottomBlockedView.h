@@ -8,6 +8,8 @@
 
 #import "TMView.h"
 
-@interface TGBottomBlockedView : TMView
+@interface TGBottomBlockedView : BTRControl
+
+-(void)setBlockedText:(NSString *)text;
 
 @end

@@ -16,8 +16,7 @@
     animation.fromValue = [NSNumber numberWithFloat:fromValue];
     animation.toValue = [NSNumber numberWithFloat:toValue];
     animation.duration = duration;
-    animation.autoreverses = NO;
-    animation.repeatCount = 0;
+    animation.removedOnCompletion = YES;
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     [animation setValue:@(CALayerOpacityAnimation) forKey:@"type"];
     return animation;
@@ -28,7 +27,7 @@
     animation.duration = duration;
     animation.repeatCount = 4;
     animation.autoreverses = YES;
-    
+    animation.removedOnCompletion = YES;
     NSValue *fromValueValue = [NSValue value:&fromValue withObjCType:@encode(CGPoint)];
     NSValue *toValueValue = [NSValue value:&toValue withObjCType:@encode(CGPoint)];
 

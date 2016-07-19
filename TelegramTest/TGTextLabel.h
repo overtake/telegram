@@ -15,6 +15,7 @@
 - (instancetype)initWithText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth truncateInTheMiddle:(bool)truncateInTheMiddle;
 
 
+-(void)setTruncateInTheMiddle:(BOOL)middle;
 
 - (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth;
 - (void)setText:(NSAttributedString *)text maxWidth:(CGFloat)maxWidth needsContentUpdate:(bool *)needsContentUpdate;

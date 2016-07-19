@@ -86,22 +86,32 @@
     [self.layer addAnimation:anim forKey:key];
 }
 
--(void)removeFromSuperviewWithAnimation {
-    CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0f toValue:1.0f];
+-(void)removeFromSuperview:(BOOL)animated {
     
-    TGAnimationBlockDelegate *block = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
-    
-    block.completion = ^(BOOL completed){
+    if(animated) {
+        CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0f toValue:0.0];
         
+        TGAnimationBlockDelegate *block = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
+        
+        block.completion = ^(BOOL completed){
+            if(completed)
+                [self removeFromSuperview];
+        };
+        
+        animation.delegate = block;
+        
+        [self.layer removeAnimationForKey:@"opacity"];
+        
+        [self.layer addAnimation:animation forKey:@"opacity"];
+        
+        self.layer.opacity = 0.0f;
+
+    } else {
         [self removeFromSuperview];
-        
-    };
-    
-    animation.delegate = block;
-    
-    [self.layer addAnimation:animation forKey:@"remove"];
+    }
     
 }
+
 
 -(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
     
@@ -174,6 +184,44 @@
    
     
     [self setFrame:rect];
+}
+
+-(void)performCAFade:(BOOL)animated {
+    
+    if(animated)  {
+        float presentOpacity = 1.0;
+        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
+        if(presentLayer && [self.layer animationForKey:@"opacity"]) {
+            presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
+        }
+        
+        [self.layer removeAnimationForKey:@"opacity"];
+        [self.layer addAnimation:[TMAnimations fadeWithDuration:0.2f fromValue:presentOpacity toValue:0.0f] forKey:@"opacity"];
+    } else {
+        [self.layer removeAnimationForKey:@"opacity"];
+
+    }
+    
+    
+    self.layer.opacity = 0.0;
+    
+}
+-(void)performCAShow:(BOOL)animated {
+    if(animated) {
+        float presentOpacity = 0;
+        CALayer *presentLayer = (CALayer *)[self.layer presentationLayer];
+        if(presentLayer && [self.layer animationForKey:@"opacity"]) {
+            presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
+        }
+        [self.layer removeAnimationForKey:@"opacity"];
+
+        [self.layer addAnimation:[TMAnimations fadeWithDuration:0.2f fromValue:presentOpacity toValue:1.0f] forKey:@"opacity"];
+
+    } else {
+        [self.layer removeAnimationForKey:@"opacity"];
+    }
+    
+    self.layer.opacity = 1.0f;
 }
 
 static CALAyerAnimationInstance *instance() {

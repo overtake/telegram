@@ -182,7 +182,6 @@
 @property (nonatomic,strong) StickersPanelView *stickerPanel;
 @property (nonatomic,strong) TGContextBotsPanelView *contextBotsPanelView;
 
-@property (nonatomic,strong) NSMutableDictionary *fwdCache;
 
 @property (nonatomic,strong) NSMutableArray *replyMsgsStack;
 
@@ -207,21 +206,16 @@
 
 - (id)init {
     self = [super init];
-    [self initialize];
     return self;
 }
 
 
 - (id)initWithFrame:(NSRect)frame {
     self = [super initWithFrame:frame];
-    [self initialize];
     return self;
 }
 
 
-- (void)initialize {
-    self.fwdCache = [[NSMutableDictionary alloc] init];
-}
 
 - (NoMessagesView *)noMessagesView {
     if(self->_noMessagesView)
@@ -1124,16 +1118,13 @@ static NSMutableDictionary *savedScrolling;
         [self setEditableMessage:nil];
     }
     
-   // if(self.bottomView.stateBottom == MessagesBottomViewNormalState || self.bottomView.stateBottom == MessagesBottomViewActionsState)
-  //  {
-        [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
-        for(int i = 0; i < self.messages.count; i++) {
-            TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:i];
-            if([cell isKindOfClass:[TGModernMessageCellContainerView class]] && [cell canEdit]) {
-                [cell setEditable:self.state == MessagesViewControllerStateEditable animated:animated];
-            }
+    [self setState: show ? MessagesViewControllerStateEditable : MessagesViewControllerStateNone animated:animated];
+    for(int i = 0; i < self.messages.count; i++) {
+        TGModernMessageCellContainerView *cell = (TGModernMessageCellContainerView *)[self cellForRow:i];
+        if([cell isKindOfClass:[TGModernMessageCellContainerView class]] && [cell canEdit]) {
+            [cell setEditable:self.state == MessagesViewControllerStateEditable animated:animated];
         }
-  //  }
+    }
 
     
 }
@@ -1171,7 +1162,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         if((self.conversation.user.isBot && ( (self.historyController.nextState == ChatHistoryStateFull &&  (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))))) {
           
-            [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
+            [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewBlockChat];
             
             if(self.bottomView.onClickToLockedView == nil) {
                 weak();
@@ -1179,17 +1170,17 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.bottomView setOnClickToLockedView:^{
                     [weakSelf sendMessage:@"/start" forConversation:weakSelf.conversation];
                     [weakSelf.bottomView setOnClickToLockedView:nil];
-                    [weakSelf.bottomView setStateBottom:weakSelf.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState];
+                    [weakSelf.modernMessagesBottomView setActionState:weakSelf.state == MessagesViewControllerStateEditable ? TGModernMessagesBottomViewActionsState : TGModernMessagesBottomViewNormalState];
                 }];
             }
 
         } else if(self.bottomView.onClickToLockedView == nil || self.bottomView.botStartParam.length == 0) {
             
-            MessagesBottomViewState nState = self.state == MessagesViewControllerStateEditable ? MessagesBottomViewActionsState : MessagesBottomViewNormalState;
+            TGModernMessagesBottomViewState nState = self.state == MessagesViewControllerStateEditable ? TGModernMessagesBottomViewActionsState : TGModernMessagesBottomViewNormalState;
             
-            if(nState != self.bottomView.stateBottom) {
-                [self.bottomView setStateBottom:nState];
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
+            if(nState != _modernMessagesBottomView.actionState) {
+                [self.modernMessagesBottomView setActionState:nState];
+                [_modernMessagesBottomView setSectedMessagesCount:self.selectedMessages.count deleteEnable:[self canDeleteMessages] forwardEnable:_conversation.type != DialogTypeSecretChat];
             }
             
             
@@ -1222,7 +1213,7 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 -(void)showBotStartButton:(NSString *)startParam bot:(TLUser *)bot {
-    [self.bottomView setStateBottom:MessagesBottomViewBlockChat];
+    [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewBlockChat];
     self.bottomView.botStartParam = startParam;
     
     
@@ -1239,7 +1230,7 @@ static NSTextAttachment *headerMediaIcon() {
             [ASQueue dispatchOnMainQueue:^{
                 
                 [weakSelf.bottomView setOnClickToLockedView:nil];
-                [weakSelf.bottomView setStateBottom:MessagesBottomViewNormalState];
+                [weakSelf.modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState];
                 
             }];
        
@@ -1269,7 +1260,7 @@ static NSTextAttachment *headerMediaIcon() {
     TLChat *chat = [notify.userInfo objectForKey:KEY_CHAT];
     
     if(self.conversation.type == DialogTypeChat && self.conversation.peer.chat_id == chat.n_id) {
-        [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+        [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState];
     }
 }
 
@@ -1300,7 +1291,7 @@ static NSTextAttachment *headerMediaIcon() {
         rightView = [self standartRightBarView];
         leftView = [self standartLeftBarView];
         
-        [self.bottomView setState:MessagesBottomViewNormalState animated:animated];
+        [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState animated:animated];
         
     } else if(state == MessagesViewControllerStateFiltred) {
         rightView = self.filtredNavigationLeftView;
@@ -1313,7 +1304,7 @@ static NSTextAttachment *headerMediaIcon() {
     } else if(state == MessagesViewControllerStateEditable) {
         rightView = self.editableNavigationRightView;
         leftView = self.conversation.type == DialogTypeChannel ? [self standartLeftBarView]  : self.editableNavigationLeftView;
-        [self.bottomView setState:MessagesBottomViewActionsState animated:animated];
+        [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewActionsState animated:animated];
     } else if(state == MessagesViewControllerStateEditMessage) {
         leftView = self.editableMessageNavigationLeftView;
         rightView = self.normalNavigationRightView;
@@ -1493,26 +1484,26 @@ static NSTextAttachment *headerMediaIcon() {
 
 
 -(NSArray *)fwdMessages:(TL_conversation *)conversation {
-    return self.fwdCache[@(conversation.peer_id)];
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
+    return template.forwardMessages;
 }
 
 
 -(void)clearFwdMessages:(TL_conversation *)conversation {
-    [self.fwdCache removeObjectForKey:@(conversation.peer_id)];
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
     
-    if(self.conversation.peer_id == conversation.peer_id)
-    {
-        [self.bottomView updateFwdMessage:YES animated:YES];
-    }
+    template.forwardMessages = nil;
+    
+    [template performNotification];
 }
 
 -(void)setFwdMessages:(NSArray *)fwdMessages forConversation:(TL_conversation *)conversation {
-    self.fwdCache[@(conversation.peer_id)] = fwdMessages;
     
-    if(self.conversation.peer_id == conversation.peer_id)
-    {
-        [self.bottomView updateFwdMessage:YES animated:NO];
-    }
+    TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
+    
+    template.forwardMessages = fwdMessages;
+    
+    [template performNotification];
     
 }
 
@@ -1579,7 +1570,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     [self setState:self.state];
     if(self.state == MessagesViewControllerStateEditable)
-        [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
+        [_modernMessagesBottomView setSectedMessagesCount:self.selectedMessages.count deleteEnable:[self canDeleteMessages] forwardEnable:_conversation.type != DialogTypeSecretChat];
     
     [self checkUserActivity];
     
@@ -2645,9 +2636,9 @@ static NSTextAttachment *headerMediaIcon() {
         
         if(count != self.selectedMessages.count) {
             if(self.selectedMessages.count)
-                [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
+                [_modernMessagesBottomView setSectedMessagesCount:self.selectedMessages.count deleteEnable:[self canDeleteMessages] forwardEnable:_conversation.type != DialogTypeSecretChat];
             else
-                [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+                [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState];
         }
     }
     
@@ -2719,7 +2710,7 @@ static NSTextAttachment *headerMediaIcon() {
         [self.selectedMessages removeObject:item];
     }
     
-    [self.bottomView setSectedMessagesCount:self.selectedMessages.count enable:[self canDeleteMessages]];
+    [_modernMessagesBottomView setSectedMessagesCount:self.selectedMessages.count deleteEnable:[self canDeleteMessages] forwardEnable:_conversation.type != DialogTypeSecretChat];
 }
 
 -(void)unSelectAll {
@@ -3349,7 +3340,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
         [self showBotStartButton:@"start" bot:self.conversation.user];
     } else if(self.conversation.user.isBot) {
-        [self.bottomView setStateBottom:MessagesBottomViewNormalState];
+        [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState];
     }
     
     BOOL isHaveMessages = NO;

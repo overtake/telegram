@@ -8,9 +8,14 @@
 
 #import "TGModernSendControlView.h"
 #import "POPLayerExtras.h"
+#import "TGModernMessagesBottomView.h"
+
+
+
 @interface TGModernSendControlView ()
 @property (nonatomic,strong) BTRButton *send;
 @property (nonatomic,strong) BTRButton *voice;
+
 
 @end
 
@@ -37,24 +42,23 @@
         _voice = [[BTRButton alloc] initWithFrame:NSZeroRect];
         _voice.wantsLayer = YES;
         _voice.layer.anchorPoint = NSMakePoint(0.5, 0.5);
-        [_voice setImage:image_VoiceMic() forControlState:BTRControlStateNormal];
-        [_voice setImage:image_VoiceMicHighlighted() forControlState:BTRControlStateHighlighted];
-        [_voice setImage:image_VoiceMicHighlighted() forControlState:BTRControlStateSelected];
-        [_voice setImage:image_VoiceMicHighlighted() forControlState:BTRControlStateSelected | BTRControlStateHover];
         [_voice setFrameSize:image_VoiceMic().size];
+        [self setVoiceSelected:NO];
         [_voice setCenterByView:self];
         
         [_voice addTarget:self action:@selector(startRecord:) forControlEvents:BTRControlEventMouseDownInside];
-        [_voice addTarget:self action:@selector(stopRecordInside:) forControlEvents:BTRControlEventMouseUpInside];
-        [_voice addTarget:self action:@selector(stopRecordOutside:) forControlEvents:BTRControlEventMouseUpOutside];
         
-        
-        
-        [self addSubview:_voice];
+        [self addTarget:self action:@selector(sendAction:) forControlEvents:BTRControlEventClick];
+        [_send addTarget:self action:@selector(sendAction:) forControlEvents:BTRControlEventClick];
         
     }
     
     return self;
+}
+
+-(void)sendAction:(BTRButton *)sender {
+    if(_type == TGModernSendControlSendType)
+        [_delegate _performSendAction];
 }
 
 -(int)csx {
@@ -68,52 +72,46 @@
     _type = type;
 
 
-    //dispatch_async(dispatch_get_main_queue(), ^{
-        if(_animates) {
-            
-            [_send.layer removeAnimationForKey:@"position"];
-            
-            CABasicAnimation *pAnim = [CABasicAnimation animationWithKeyPath:@"position"];
-            pAnim.duration = 0.2;
-            pAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            pAnim.removedOnCompletion = YES;
-            [pAnim setValue:@(CALayerPositionAnimation) forKey:@"type"];
+    if(_animates) {
+        
+        [_send.layer removeAnimationForKey:@"position"];
+        
+        CABasicAnimation *pAnim = [CABasicAnimation animationWithKeyPath:@"position"];
+        pAnim.duration = 0.2;
+        pAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        pAnim.removedOnCompletion = YES;
+        [pAnim setValue:@(CALayerPositionAnimation) forKey:@"type"];
+        
+        
+        int presentX = self.presentSendX;
+        
+        
+        pAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(presentX, NSMinY(_send.frame))];
+        pAnim.toValue = [NSValue valueWithPoint:NSMakePoint(self.csx , NSMinY(_send.frame))];
+        
+        
+        
+        [_send.layer addAnimation:pAnim forKey:@"position"];
 
-            
-            int presentX = self.presentSendX;
-
-            
-            pAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(presentX, NSMinY(_send.frame))];
-            pAnim.toValue = [NSValue valueWithPoint:NSMakePoint(self.csx , NSMinY(_send.frame))];
-            
-            
-            
-            CABasicAnimation *oAnim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-            oAnim.duration = 0.2;
-            oAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-            oAnim.removedOnCompletion = YES;
-            [oAnim setValue:@(CALayerOpacityAnimation) forKey:@"type"];
-            
-            
-            oAnim.fromValue = @(type != TGModernSendControlSendType ? 1.0f : 0.0f);
-            oAnim.toValue = @(type == TGModernSendControlSendType ? 1.0f : 0.0f);
-            
-            
-            [_send.layer addAnimation:pAnim forKey:@"position"];
-            [_send.layer addAnimation:oAnim forKey:@"opacity"];
-            
-            
-
-            [[_voice animator] setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];
-            
-            
-        }
+        
+    }
     
-        [_animates ? [_voice animator] : _voice setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];
-        _send.layer.opacity = type == TGModernSendControlSendType ? 1.0f : 0.0f;
-        _send.layer.position = NSMakePoint(type != TGModernSendControlSendType ? -NSWidth(_send.frame) : self.csx, NSMinY(_send.frame));
-        [_send setFrameOrigin:_send.layer.position];
     
+    if(type != TGModernSendControlRecordType) {
+        [_voice removeFromSuperview:_animates];
+        [_send performCAShow:_animates];
+    } else {
+        [_voice performCAShow:_animates];
+        [_send performCAFade:_animates];
+        [self addSubview:_voice];
+    }
+    
+    
+    [_animates ? [_voice animator] : _voice setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];
+    _send.layer.opacity = type == TGModernSendControlSendType ? 1.0f : 0.0f;
+    _send.layer.position = NSMakePoint(type != TGModernSendControlSendType ? -NSWidth(_send.frame) : self.csx, NSMinY(_send.frame));
+    [_send setFrameOrigin:_send.layer.position];
+
 }
 
 -(float)presentSendX {
@@ -151,15 +149,16 @@
 }
 
 -(void)startRecord:(id)button {
-    
+    [self setVoiceSelected:YES];
+    [_delegate _startAudioRecord];
 }
 
--(void)stopRecordInside:(id)button {
-    
-}
 
--(void)stopRecordOutside:(id)button {
-    
+
+-(void)setVoiceSelected:(BOOL)selected {
+    [_voice setSelected:selected];
+    [_voice setImage:_voice.isSelected ? image_VoiceMicHighlighted() : image_VoiceMic() forControlState:BTRControlStateNormal];
+
 }
 
 @end

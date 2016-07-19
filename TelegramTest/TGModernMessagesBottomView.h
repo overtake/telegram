@@ -10,13 +10,24 @@
 
 @interface TGModernMessagesBottomView : BTRControl
 
+
+typedef enum {
+    TGModernMessagesBottomViewNormalState,
+    TGModernMessagesBottomViewActionsState,
+    TGModernMessagesBottomViewBlockChat,
+    TGModernMessagesBottomViewRecordAudio
+} TGModernMessagesBottomViewState;
+
+
 -(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController;
 
-
-
+@property (nonatomic,assign,readonly) TGModernMessagesBottomViewState actionState;
 @property (nonatomic,strong,readonly) TGInputMessageTemplate *inputTemplate;
 
+-(void)setActionState:(TGModernMessagesBottomViewState)actionState;
+-(void)setActionState:(TGModernMessagesBottomViewState)actionState animated:(BOOL)animated;
 -(void)setInputTemplate:(TGInputMessageTemplate *)inputTemplate animated:(BOOL)animated;
+- (void)setSectedMessagesCount:(NSUInteger)count deleteEnable:(BOOL)deleteEnable forwardEnable:(BOOL)forwardEnable;
 
 @property (nonatomic,assign) BOOL animates;
 

@@ -13,8 +13,10 @@
 #import "TGBottomActionsView.h"
 #import "TGBottomTextAttachment.h"
 #import "TGBottomKeyboardContainerView.h"
-
-@interface TGModernMessagesBottomView () <TGModernGrowingDelegate> {
+#import "TGBottomMessageActionsView.h"
+#import "TGBottomBlockedView.h"
+#import "TGBottomAudioRecordView.h"
+@interface TGModernMessagesBottomView () <TGModernGrowingDelegate,TGBottomActionDelegate,TGModernSendControlDelegate> {
     TMView *_ts;
    
     id<SDisposable> _attachDispose;
@@ -43,12 +45,14 @@
 @property (nonatomic,assign) int bottomHeight;
 
 
+@property (nonatomic,strong) TGBottomMessageActionsView *messageActionsView;
+@property (nonatomic,strong) TGBottomBlockedView *blockChatView;
+@property (nonatomic,strong) TGBottomAudioRecordView *audioRecordView;
 @end
 
 @implementation TGModernMessagesBottomView
 
-- (void)drawRect:(NSRect)dirtyRect {
-}
+
 const float defYOffset = 12;
 
 -(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController {
@@ -56,6 +60,7 @@ const float defYOffset = 12;
         
         _attachmentsHeight = -1;
         _bottomHeight = 0;
+        _actionState = -1;
         
         _animates = YES;
         self.wantsLayer = YES;
@@ -85,17 +90,14 @@ const float defYOffset = 12;
         _messagesController = messagesController;
 
         
-        _ts = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
-        _ts.wantsLayer = YES;
-        _ts.backgroundColor = DIALOG_BORDER_COLOR;
-        
-        [self addSubview:_ts];
+       
         
         _attachment = [[TGBottomTextAttachment alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(_textContainerView.frame), 50)];
         [_attachmentsContainerView addSubview:_attachment];
        
         
         _sendControlView = [[TGModernSendControlView alloc] initWithFrame:NSMakeRect(NSWidth(_textContainerView.frame) - 60, 0, 60, NSHeight(_textContainerView.frame))];
+        _sendControlView.delegate = self;
         _sendControlView.wantsLayer = YES;
         
         
@@ -103,7 +105,8 @@ const float defYOffset = 12;
         _attachView.wantsLayer = YES;
         
         
-        _actionsView = [[TGBottomActionsView alloc] initWithFrame:NSMakeRect(0, 0, 0, NSHeight(_textContainerView.frame)) messagesController:messagesController bottomController:self];
+        _actionsView = [[TGBottomActionsView alloc] initWithFrame:NSMakeRect(0, 0, 0, NSHeight(_textContainerView.frame)) messagesController:messagesController];
+        _actionsView.delegate = self;
         _actionsView.wantsLayer = YES;
         
         
@@ -122,6 +125,27 @@ const float defYOffset = 12;
         [self addSubview:_botkeyboard];
     
         
+        
+        _messageActionsView = [[TGBottomMessageActionsView alloc] initWithFrame:self.bounds messagesController:messagesController];
+        _messageActionsView.wantsLayer = YES;
+        
+        _blockChatView = [[TGBottomBlockedView alloc] initWithFrame:self.bounds];
+        _blockChatView.wantsLayer = YES;
+        
+        _audioRecordView = [[TGBottomAudioRecordView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame) - NSWidth(_sendControlView.frame), NSHeight(frameRect)) messagesController:messagesController];
+        
+        [self addTarget:self action:@selector(recordAudioMouseEntered:) forControlEvents:BTRControlEventMouseEntered];
+        [self addTarget:self action:@selector(recordAudioMouseExited:) forControlEvents:BTRControlEventMouseExited];
+     
+        [_audioRecordView addTarget:self action:@selector(mouseUpInside:) forControlEvents:BTRControlEventMouseUpInside];
+        [_audioRecordView addTarget:self action:@selector(mouseUpOutside:) forControlEvents:BTRControlEventMouseUpOutside];
+
+        _ts = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
+        _ts.wantsLayer = YES;
+        _ts.backgroundColor = DIALOG_BORDER_COLOR;
+        
+        [self addSubview:_ts];
+        
     }
     
     return self;
@@ -131,17 +155,26 @@ const float defYOffset = 12;
     [super setFrameSize:newSize];
     
     [_textContainerView setFrameSize:NSMakeSize(newSize.width, NSHeight(_textContainerView.frame))];
-    [_attachmentsContainerView setFrameSize:NSMakeSize(newSize.width - NSMaxX(_attachView.frame) - 20, NSHeight(_attachmentsContainerView.frame))];
+    [_attachmentsContainerView setFrameSize:NSMakeSize(newSize.width - 40, NSHeight(_attachmentsContainerView.frame))];
     [_attachment setFrameSize:NSMakeSize(NSWidth(_attachmentsContainerView.frame), NSHeight(_attachment.frame))];
     [_ts setFrameSize:NSMakeSize(newSize.width, NSHeight(_ts.frame))];
 }
 
 -(void)performSendMessage {
-    
-    [_messagesController sendMessage:_textView.string];
+    NSString *text = _textView.string;
+    //[self cleanTextView];
+    [_messagesController sendMessage:text];
 
     [_sendControlView performSendAnimation];
     
+}
+
+-(void)cleanTextView {
+    BOOL o = _textView.animates;
+    _textView.animates = NO;
+    [_textView setString:@""];
+    _textView.animates = o;
+
 }
 
 
@@ -151,52 +184,15 @@ const float defYOffset = 12;
         if([next boolValue]) {
             [self updateTextViewSize];
             
+            [_actionsView moveWithCAAnimation:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width, NSMinY(_actionsView.frame)) animated:_actionsView.animates];
+            
             
             if(_actionsView.animates) {
                 
-                
-                CABasicAnimation *pAnim = [CABasicAnimation animationWithKeyPath:@"position"];
-                pAnim.duration = 0.2;
-                pAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-                pAnim.removedOnCompletion = YES;
-                [pAnim setValue:@(CALayerPositionAnimation) forKey:@"type"];
-                
-                
-                float presentX = NSMaxX(self.textView.frame);
-                
-                CALayer *presentLayer = (CALayer *)[_actionsView.layer presentationLayer];
-                
-                if(presentLayer && [_actionsView.layer animationForKey:@"position"]) {
-                    presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
-                }
-                
-                pAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(presentX, NSMinY(_actionsView.frame))];
-                pAnim.toValue = [NSValue valueWithPoint:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width , NSMinY(_actionsView.frame))];
-                
-                
-                CABasicAnimation *oAnim = [CABasicAnimation animationWithKeyPath:@"opacity"];
-                oAnim.duration = 0.2;
-                oAnim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-                oAnim.removedOnCompletion = YES;
-                [oAnim setValue:@(CALayerOpacityAnimation) forKey:@"type"];
-                
-                
-                oAnim.fromValue = @(0.0f);
-                oAnim.toValue = @(1.0f);
-                
-                [_actionsView.layer removeAnimationForKey:@"position"];
-                
-                [_actionsView.layer addAnimation:pAnim forKey:@"position"];
-                [_actionsView.layer addAnimation:oAnim forKey:@"opacity"];
-                
-                [_actionsView.layer setOpacity:1.0f];
-                [_actionsView.layer setPosition:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width, self.defTextViewHeight - NSHeight(_actionsView.frame))];
-                
-                [_actionsView.animator setFrameOrigin:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width, NSMinY(_actionsView.frame))];
-                
+                _actionsView.layer.opacity = 0.0f;
+                [_actionsView performCAShow:YES];
                 
             }
-            [_actionsView setFrameOrigin:NSMakePoint(NSMinX(_textView.frame) + self.textViewSize.width, NSMinY(_actionsView.frame))];
 
         }
         
@@ -222,26 +218,29 @@ const float defYOffset = 12;
 
 - (void) textViewHeightChanged:(id)textView height:(int)height animated:(BOOL)animated {
     
-    
     height = self.defTextViewHeight;
     
+    NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 58);
     
-    
-    NSSize topSize = NSMakeSize(NSWidth(self.frame), _attachmentsHeight > 0 ? height + _attachmentsHeight : height);
-    
-    NSSize bottomSize = NSMakeSize(NSWidth(self.frame), MAX(_bottomHeight,0));
+    NSSize bottomSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? MAX(_bottomHeight,0) : 0);
     NSSize fullSize = NSMakeSize(NSWidth(self.frame), topSize.height + bottomSize.height);
     
     [self heightWithCAAnimation:NSMakeRect(0,0,NSWidth(self.frame), fullSize.height) animated:animated];
     [_textContainerView heightWithCAAnimation:NSMakeRect(0,0,NSWidth(self.frame), height) animated:animated];
     [_ts moveWithCAAnimation:NSMakePoint(NSMinX(_ts.frame),fullSize.height - NSHeight(_ts.frame)) animated:animated];
-    [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(NSMaxX(_attachView.frame),topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
+    [_attachmentsContainerView heightWithCAAnimation:NSMakeRect(NSMinX(_attachmentsContainerView.frame), NSMinY(_attachmentsContainerView.frame), NSWidth(_attachmentsContainerView.frame), _attachmentsHeight) animated:animated];
+    [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
     [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), bottomSize.height) animated:animated];
     
+    if(_audioRecordView.superview) {
+        [_audioRecordView moveWithCAAnimation:NSMakePoint(0, bottomSize.height) animated:animated];
+    }
+    
     
     [_messagesController bottomViewChangeSize:fullSize.height animated:animated];
+    
     
 
 }
@@ -254,7 +253,7 @@ const float defYOffset = 12;
 }
 
 - (void) textViewTextDidChange:(TGModernGrowingTextView *)textView {
-    [_sendControlView setType:textView.string.length > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType];
+    [_sendControlView setType:textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType];
     
     [self saveInputText];
     
@@ -278,6 +277,77 @@ const float defYOffset = 12;
         }
         
     }];
+}
+
+-(void)setActionState:(TGModernMessagesBottomViewState)actionState {
+    [self setActionState:actionState animated:NO];
+}
+
+-(void)setActionState:(TGModernMessagesBottomViewState)state animated:(BOOL)animated {
+    
+    if(state == TGModernMessagesBottomViewNormalState) {
+        if(_messagesController.conversation.type == DialogTypeSecretChat) {
+            EncryptedParams *params = _messagesController.conversation.encryptedChat.encryptedParams;
+            if(params.state != EncryptedAllowed) {
+                state = TGModernMessagesBottomViewBlockChat;
+            }
+        }
+        
+        if(!_messagesController.conversation.canSendMessage || _messagesController.conversation.isInvisibleChannel)
+            state = TGModernMessagesBottomViewBlockChat;
+        
+        [_blockChatView setBlockedText:_messagesController.conversation.blockedText];
+    }
+
+    
+    TGModernMessagesBottomViewState ostate = _actionState;
+    
+    if(_actionState == state)
+        return;
+    
+    _actionState = state;
+    
+    if(state == TGModernMessagesBottomViewActionsState) {
+        [self addSubview:_messageActionsView positioned:NSWindowBelow relativeTo:_ts];
+        [_messageActionsView performCAShow:animated];
+    } else if(state == TGModernMessagesBottomViewBlockChat) {
+        [self addSubview:_blockChatView positioned:NSWindowBelow relativeTo:_ts];
+         [_blockChatView performCAShow:animated];
+    } else if(state == TGModernMessagesBottomViewRecordAudio) {
+        [self addSubview:_audioRecordView positioned:NSWindowBelow relativeTo:_ts];
+        [_audioRecordView performCAShow:animated];
+        
+    }
+    
+    [_attachView setHidden:state == TGModernMessagesBottomViewRecordAudio];
+
+    
+
+    if(state != TGModernMessagesBottomViewNormalState && state != TGModernMessagesBottomViewRecordAudio)
+        [_topContainerView removeFromSuperview:animated];
+    else if(!_topContainerView.superview) {
+        [self addSubview:_topContainerView positioned:NSWindowBelow relativeTo:_ts];
+        [_topContainerView performCAShow:animated];
+    }
+    
+    
+    if(ostate == TGModernMessagesBottomViewActionsState) {
+        [_messageActionsView removeFromSuperview:animated];
+    }
+    
+    if(ostate == TGModernMessagesBottomViewBlockChat) {
+        [_blockChatView removeFromSuperview:animated];
+    }
+    
+    if(ostate == TGModernMessagesBottomViewRecordAudio) {
+        [_audioRecordView removeFromSuperview:animated];
+    }
+    
+    [self textViewHeightChanged:_textView height:_textView.height animated:animated];
+}
+
+- (void)setSectedMessagesCount:(NSUInteger)count deleteEnable:(BOOL)deleteEnable forwardEnable:(BOOL)forwardEnable {
+    [_messageActionsView setSectedMessagesCount:count deleteEnable:deleteEnable forwardEnable:forwardEnable];
 }
 
 
@@ -314,6 +384,8 @@ const float defYOffset = 12;
     }
     
     self.animates = oa;
+    
+    [self setActionState:_actionState animated:animated];
     
 }
 
@@ -511,6 +583,57 @@ const float defYOffset = 12;
 
 -(void)_showOrHideBotKeyboardAction:(NSNotification *)notify {
     [self resignalBotKeyboard:NO changeState:notify == nil resignalAttachments:NO resignalKeyboard:YES];
+}
+
+-(void)_performSendAction {
+    [self performSendMessage];
+}
+
+-(void)_startAudioRecord {
+    [_audioRecordView setFrameOrigin:NSMakePoint(0, NSMinY(_topContainerView.frame))];
+    [self setActionState:TGModernMessagesBottomViewRecordAudio animated:YES];
+    [self.window makeFirstResponder:self];
+    
+    [_audioRecordView startRecord];
+}
+-(void)_stopAudioRecord  {
+    [self setActionState:TGModernMessagesBottomViewNormalState animated:YES];
+    [_audioRecordView stopRecord:NO];
+    [_sendControlView setVoiceSelected:NO];
+}
+
+-(void)_sendAudioRecord {
+    [self setActionState:TGModernMessagesBottomViewNormalState animated:YES];
+    [_audioRecordView stopRecord:YES];
+    [_sendControlView setVoiceSelected:NO];
+}
+
+-(void)recordAudioMouseEntered:(id)sender {
+    if(_actionState == TGModernMessagesBottomViewRecordAudio) {
+        [_audioRecordView updateDesc:YES];
+        [_sendControlView setVoiceSelected:YES];
+    }
+    
+}
+
+-(void)recordAudioMouseExited:(id)sender {
+    if(_actionState == TGModernMessagesBottomViewRecordAudio) {
+        [_audioRecordView updateDesc:NO];
+        [_sendControlView setVoiceSelected:NO];
+    }
+}
+
+
+-(void)mouseUp:(NSEvent *)theEvent {
+    
+    if(_actionState == TGModernMessagesBottomViewRecordAudio) {
+        if([self mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame]) {
+            [self _sendAudioRecord];
+        } else {
+           [self _stopAudioRecord];
+        }
+    }
+    
 }
 
 

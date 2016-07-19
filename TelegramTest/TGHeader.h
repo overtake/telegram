@@ -108,6 +108,7 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 #define LINK_COLOR BLUE_UI_COLOR
 #define BLUE_SEPARATOR_COLOR NSColorFromRGB(0x66A7DB)
 #define MIN_IMG_SIZE NSMakeSize(320,40)
+#define RED_COLOR NSColorFromRGB(0xee6363)
 
 #define weak() __weak typeof(self) weakSelf = self;
 #define strongWeak() __block __typeof(&*self)strongSelf = weakSelf;

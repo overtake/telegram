@@ -26,11 +26,13 @@ typedef enum {
 - (void)prepareForAnimation;
 
 - (void)setAnimation:(CAAnimation *)anim forKey:(NSString *)key;
--(void)removeFromSuperviewWithAnimation;
+-(void)removeFromSuperview:(BOOL)animated;
 -(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated;
 -(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 -(void)widthWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 
+-(void)performCAFade:(BOOL)animated;
+-(void)performCAShow:(BOOL)animated;
 -(void)performShake:(dispatch_block_t)completeBlock;
 - (void)removeAllSubviews;
 - (id)superviewByClass:(NSString *)className;

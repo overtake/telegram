@@ -8,6 +8,8 @@
 
 #import "TGBottomSignals.h"
 #import "TGWebpageAttach.h"
+#import "TGForwardObject.h"
+#import "TGReplyObject.h"
 @implementation TGBottomSignals
 
 
@@ -104,10 +106,10 @@
         dispatch_block_t others = ^{
             if(template.forwardMessages.count > 0) {
                 
-                [subscriber putNext:template.forwardMessages];
+                [subscriber putNext:[[TGForwardObject alloc] initWithMessages:template.forwardMessages]];
                 
             } else if(template.replyMessage) {
-                [subscriber putNext:template.replyMessage];
+                [subscriber putNext:[[TGReplyObject alloc] initWithReplyMessage:template.replyMessage fromMessage:nil tableItem:nil]];
             } else {
                 [subscriber putNext:nil];
             }

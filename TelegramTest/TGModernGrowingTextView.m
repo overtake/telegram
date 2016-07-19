@@ -51,7 +51,7 @@
     
     if(isEnterEvent(theEvent)) {
         
-        BOOL result = isEnterAccess(theEvent) && self.string.trim.length > 0 && [_weakd textViewEnterPressed:self];
+        BOOL result = isEnterAccess(theEvent) && [_weakd textViewEnterPressed:self];
         
         if(!result) {
              [self insertNewline:self];
@@ -290,7 +290,7 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
     if(_placeholderAttributedString) {
         
         if(animated && ((self.string.length == 0 && _placeholder.layer.opacity < 1.0f) || (self.string.length > 0 && _placeholder.layer.opacity > 0.0f))) {
-            float presentX = self.needShowPlaceholder ? NSMinX(_placeholder.frame) + NSWidth(_placeholder.frame) : NSMinX(_scrollView.frame) + 6;
+            float presentX = self.needShowPlaceholder ? NSMinX(_placeholder.frame) + 30: NSMinX(_scrollView.frame) + 6;
             float presentOpacity = self.needShowPlaceholder ? 0.0f : 1.0f;
             
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
@@ -309,7 +309,7 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
             [_placeholder.layer removeAnimationForKey:@"opacity"];
             [_placeholder.layer addAnimation:oAnim forKey:@"opacity"];
             
-            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + NSWidth(_placeholder.frame), NSMinY(_placeholder.frame))];
+            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, NSMinY(_placeholder.frame))];
             
             
             [_placeholder.layer removeAnimationForKey:@"position"];
@@ -317,7 +317,7 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
             
          }
         
-        [_placeholder setFrameOrigin:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + NSWidth(_placeholder.frame), roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
+        [_placeholder setFrameOrigin:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
         
         _placeholder.layer.opacity = self.needShowPlaceholder ? 1.0f : 0.0f;
 
@@ -562,6 +562,7 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
     
 
 }
+
 
 
 -(NSString *)string {
