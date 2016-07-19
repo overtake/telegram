@@ -263,7 +263,7 @@
     [template setReplyMessage:nil save:NO];
 
     [[template updateSignalText:@""] startWithNext:^(id next) {
-        if([next[0] boolValue]) {
+        if([next[0] boolValue] || replyMessage) {
             [template saveTemplateInCloudIfNeeded];
             [template performNotification];
         }

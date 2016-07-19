@@ -456,12 +456,7 @@
     
     self.typingView = [[MessageTypingView alloc] initWithFrame:self.view.bounds];
     
-    self.bottomView = [[MessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 58)];
-    self.bottomView.messagesViewController = self;
-    [self.bottomView setAutoresizesSubviews:YES];
-    [self.bottomView setAutoresizingMask:NSViewWidthSizable];
-    [self bottomViewChangeSize:58 animated:NO];
-   // [self.view addSubview:self.bottomView];
+
     
     _modernMessagesBottomView = [[TGModernMessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 58) messagesController:self];
     

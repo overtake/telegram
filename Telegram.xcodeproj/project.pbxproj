@@ -933,6 +933,8 @@
 		C2F429D81B04E33F00C2CE4E /* TGProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F429D71B04E33F00C2CE4E /* TGProgressIndicator.m */; };
 		C2F5C5411D3D603300F47F8F /* TGCAActions.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5401D3D603300F47F8F /* TGCAActions.m */; };
 		C2F5C54E1D3D654800F47F8F /* CAAnimateLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C54D1D3D654800F47F8F /* CAAnimateLayer.m */; };
+		C2F5C5511D3E3CA900F47F8F /* TGBottomForwardContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5501D3E3CA900F47F8F /* TGBottomForwardContainerView.m */; };
+		C2F5C5541D3E3D2200F47F8F /* TGBottomBlockedView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5531D3E3D2200F47F8F /* TGBottomBlockedView.m */; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
 		C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */; };
 		C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78DA192379C3001A9D1B /* HistoryFilter.m */; };
@@ -2811,6 +2813,10 @@
 		C2F5C5401D3D603300F47F8F /* TGCAActions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGCAActions.m; sourceTree = "<group>"; };
 		C2F5C54C1D3D654800F47F8F /* CAAnimateLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAAnimateLayer.h; sourceTree = "<group>"; };
 		C2F5C54D1D3D654800F47F8F /* CAAnimateLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CAAnimateLayer.m; sourceTree = "<group>"; };
+		C2F5C54F1D3E3CA900F47F8F /* TGBottomActionsContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBottomActionsContainerView.h; sourceTree = "<group>"; };
+		C2F5C5501D3E3CA900F47F8F /* TGBottomForwardContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomForwardContainerView.m; sourceTree = "<group>"; };
+		C2F5C5521D3E3D2200F47F8F /* TGBottomBlockedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBottomBlockedView.h; sourceTree = "<group>"; };
+		C2F5C5531D3E3D2200F47F8F /* TGBottomBlockedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomBlockedView.m; sourceTree = "<group>"; };
 		C2FA78CA191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewCollectionPhotoItem.h; sourceTree = "<group>"; };
 		C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewCollectionPhotoItem.m; sourceTree = "<group>"; };
 		C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCollectionPageController.h; sourceTree = "<group>"; };
@@ -3801,6 +3807,10 @@
 				C20A8AE21D37A61600C70134 /* TGBottomTextAttachment.m */,
 				C20A8AE71D3A2CA100C70134 /* TGBottomKeyboardContainerView.h */,
 				C20A8AE81D3A2CA100C70134 /* TGBottomKeyboardContainerView.m */,
+				C2F5C54F1D3E3CA900F47F8F /* TGBottomActionsContainerView.h */,
+				C2F5C5501D3E3CA900F47F8F /* TGBottomForwardContainerView.m */,
+				C2F5C5521D3E3D2200F47F8F /* TGBottomBlockedView.h */,
+				C2F5C5531D3E3D2200F47F8F /* TGBottomBlockedView.m */,
 			);
 			name = bottom;
 			sourceTree = "<group>";
@@ -7091,6 +7101,7 @@
 				C268C13D19EEB580007F836A /* UserNameViewController.m in Sources */,
 				0ACDB13E18CF5535009FE910 /* СountriesManager.m in Sources */,
 				C20B228D18E98A2C007BCCD6 /* SettingsArchiver.m in Sources */,
+				C2F5C5511D3E3CA900F47F8F /* TGBottomForwardContainerView.m in Sources */,
 				C20B82B01BDA975500EF01AD /* TGShareContactModalView.m in Sources */,
 				C2CBF6981AFB7EFE006BF90A /* CFunctions.m in Sources */,
 				C2C85B731AE52E8D00FBEABD /* TGImageAttachmentsController.m in Sources */,
@@ -7475,6 +7486,7 @@
 				C2ACCE561ADD2A0600ABEE78 /* TGConversationsViewController.m in Sources */,
 				C2FA78EC1923CBA1001A9D1B /* PhotoHistoryFilter.m in Sources */,
 				C2FF82A31B99C7CE00DE2455 /* TGForceChannelUpdate.m in Sources */,
+				C2F5C5541D3E3D2200F47F8F /* TGBottomBlockedView.m in Sources */,
 				C2C1DC2C1A44942E00BBCC63 /* StickerSenderItem.m in Sources */,
 				C274C4221ACC09B0000DFDE4 /* XCDYouTubeVideoWebpage.m in Sources */,
 				C244358F1A1E1C6C00F9BB38 /* PrivacyUserListItem.m in Sources */,
