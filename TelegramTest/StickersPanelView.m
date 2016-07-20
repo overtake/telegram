@@ -142,7 +142,7 @@ static NSImage *higlightedImage() {
                 [weakSelf.messagesViewController sendSticker:obj forConversation:self.messagesViewController.conversation addCompletionHandler:nil];
                 
                 TGInputMessageTemplate *template = self.messagesViewController.conversation.inputTemplate;
-                [template updateTextAndSave:@""];
+                [template updateTextAndSave:[[NSAttributedString alloc] init]];
                 [template performNotification];
                                 
                 

@@ -11,6 +11,6 @@
 #import "SenderItem.h"
 @interface MessageSenderItem : SenderItem
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags;
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation entities:(NSArray *)entities noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags;
 
 @end

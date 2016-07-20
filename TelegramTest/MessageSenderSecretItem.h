@@ -9,6 +9,6 @@
 #import <Cocoa/Cocoa.h>
 #import "SecretSenderItem.h"
 @interface MessageSenderSecretItem : SecretSenderItem
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags;
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation entities:(NSArray *)entities noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags;
 -(id)initWithBotContextResult:(TLBotInlineResult *)result via_bot_name:(NSString *)via_bot_name queryId:(long)queryId conversation:(TL_conversation *)conversation;
 @end

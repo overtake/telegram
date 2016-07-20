@@ -9,12 +9,12 @@
 #import "TGInputMessageTemplate.h"
 #import "SpacemanBlocks.h"
 #import "NSString+FindURLs.h"
-
+#import "TGInputTextTag.h"
 
 @implementation TGInputMessageTemplate
 {
     SMDelayedBlockHandle _futureblock;
-    NSString *_textContainer;
+    NSMutableAttributedString *_textContainer;
 }
 
 static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
@@ -22,8 +22,6 @@ static ASQueue *queue;
 static NSMutableDictionary *list;
 -(instancetype)initWithCoder:(NSCoder *)aDecoder {
     if(self = [super init]) {
-        _textContainer = [aDecoder decodeObjectForKey:@"text"];
-        _originalText = [aDecoder decodeObjectForKey:@"originalText"];
         _postId = [aDecoder decodeInt32ForKey:@"postId"];
         _type = [aDecoder  decodeInt32ForKey:@"type"];
         _peer_id = [aDecoder decodeInt32ForKey:@"peerId"];
@@ -31,12 +29,13 @@ static NSMutableDictionary *list;
         _editMessage = [aDecoder decodeObjectForKey:@"editMessage"];
         _replyMessage = [aDecoder decodeObjectForKey:@"replyMessage"];
         _disabledWebpage = [aDecoder decodeObjectForKey:@"disabledWebpage"];
+        _textContainer = [aDecoder decodeObjectForKey:@"attributedString"];
     }
     return self;
 }
 
--(NSString *)text {
-    return _textContainer ? _textContainer : @"";
+-(NSAttributedString *)attributedString {
+    return _textContainer ? _textContainer : [[NSAttributedString alloc] init];
 }
 
 +(void)initialize {
@@ -48,8 +47,7 @@ static NSMutableDictionary *list;
 }
 
 -(void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:_textContainer forKey:@"text"];
-    [aCoder encodeObject:_originalText forKey:@"originalText"];
+    [aCoder encodeObject:self.attributedString forKey:@"attributedString"];
     [aCoder encodeInt32:_type forKey:@"type"];
     [aCoder encodeInt32:_postId forKey:@"postId"];
     [aCoder encodeInt32:_peer_id forKey:@"peerId"];
@@ -60,27 +58,25 @@ static NSMutableDictionary *list;
         [aCoder encodeObject:_replyMessage forKey:@"replyMessage"];
     if(_disabledWebpage)
         [aCoder encodeObject:_disabledWebpage forKey:@"disabledWebpage"];
-    
 }
 
 -(void)setDisabledWebpage:(NSString *)disabledWebpage {
-        _disabledWebpage = disabledWebpage;
+    _disabledWebpage = disabledWebpage;
 }
 
 
--(void)setText:(NSString *)text {
-    _textContainer = text;
+-(void)setAttributedString:(NSAttributedString *)attributedString {
+    _textContainer = [attributedString mutableCopy];
     if(_textContainer.length == 0)
         _disabledWebpage = nil;
 }
 
--(id)initWithType:(TGInputMessageTemplateType)type text:(NSString *)text peer_id:(int)peer_id {
+-(id)initWithType:(TGInputMessageTemplateType)type text:(NSAttributedString *)attributedString peer_id:(int)peer_id {
     if(self = [super init]) {
-        _textContainer = text;
+        _textContainer = [attributedString mutableCopy];
         _type = type;
         _peer_id = peer_id;
         _autoSave = YES;
-        _originalText = text;
         
        
     }
@@ -88,8 +84,8 @@ static NSMutableDictionary *list;
     return self;
 }
 
--(id)initWithType:(TGInputMessageTemplateType)type text:(NSString *)text peer_id:(int)peer_id postId:(int)postId {
-    if(self = [self initWithType:type text:text peer_id:peer_id]) {
+-(id)initWithType:(TGInputMessageTemplateType)type text:(NSAttributedString *)attributedString peer_id:(int)peer_id postId:(int)postId {
+    if(self = [self initWithType:type text:attributedString peer_id:peer_id]) {
         _postId = postId;
     }
     
@@ -106,28 +102,26 @@ static NSMutableDictionary *list;
     __block int rightOffset = 0;
     __block int startOffset = (int)_textContainer.length;
     
+    _textContainer = [[NSMutableAttributedString alloc] initWithString:_textContainer.string];
+    
+    __block int uniqueId = 0;
+    
     [entities enumerateObjectsUsingBlock:^(TLMessageEntity *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         NSRange range = NSMakeRange(obj.offset > startOffset ? obj.offset + rightOffset : obj.offset, obj.length);
         
         if([obj isKindOfClass:[TL_messageEntityMentionName class]]) {
             
-            NSString *value = [_textContainer substringWithRange:range];
-            NSString *userId = [NSString stringWithFormat:@"%d",obj.user_id];
-            
-            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"@[%@|%@]",value,userId] options:0 range:range];
-            
-            rightOffset+=4+userId.length;
-            startOffset = MIN(startOffset,obj.offset);
+            [_textContainer addAttribute:TGMentionUidAttributeName value:[[TGInputTextTag alloc] initWithUniqueId:uniqueId left:true attachment:@(obj.user_id)] range:range];
             
         } else if([obj isKindOfClass:[TL_messageEntityPre class]]) {
-            NSString *value = [_textContainer substringWithRange:range];
-            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"```%@```",value] options:0 range:range];
+            NSString *value = [_textContainer.string substringWithRange:range];
+            [_textContainer replaceCharactersInRange:range withString:[NSString stringWithFormat:@"```%@```",value]];
             rightOffset+=6;
             startOffset = MIN(startOffset,obj.offset);
         } else if([obj isKindOfClass:[TL_messageEntityCode class]]) {
-            NSString *value = [_textContainer substringWithRange:range];
-            _textContainer = [_textContainer stringByReplacingOccurrencesOfString:value withString:[NSString stringWithFormat:@"`%@`",value] options:0 range:range];
+            NSString *value = [_textContainer.string substringWithRange:range];
+            [_textContainer replaceCharactersInRange:range withString:[NSString stringWithFormat:@"`%@`",value]];
             rightOffset+=2;
             startOffset = MIN(startOffset,obj.offset);
         }
@@ -136,10 +130,17 @@ static NSMutableDictionary *list;
 
 -(NSString *)textWithEntities:(NSMutableArray *)entities {
     
-    NSString *message = [self.text copy];
+    NSString *message = [_textContainer.string copy];
     
-    message = [MessageSender parseCustomMentions:message entities:entities];
-    
+    [_textContainer enumerateAttribute:TGMentionUidAttributeName inRange:NSMakeRange(0, _textContainer.length) options:0 usingBlock:^(__unused id value, NSRange range, __unused BOOL *stop) {
+        if ([value isKindOfClass:[TGInputTextTag class]]) {
+            TLUser *user = [[UsersManager sharedManager] find:[((TGInputTextTag *)value).attachment intValue]];
+            if(user) {
+                [entities addObject:[TL_inputMessageEntityMentionName createWithOffset:(int)range.location length:(int)range.length input_user_id:user.inputUser]];
+            }
+        }
+    }];
+
     message = [MessageSender parseEntities:message entities:entities backstrips:@"```" startIndex:0];
     
     message = [MessageSender parseEntities:message entities:entities backstrips:@"`" startIndex:0];
@@ -148,6 +149,7 @@ static NSMutableDictionary *list;
 }
 
 -(void)saveTemplateInCloudIfNeeded {
+    
     NSMutableArray *entities = [NSMutableArray array];
     
     NSString *text = [self textWithEntities:entities];
@@ -166,7 +168,7 @@ static NSMutableDictionary *list;
     
     TL_conversation *convesation = [[DialogsManager sharedManager] find:_peer_id];
     
-    if(convesation.type == DialogTypeSecretChat)
+    if(convesation.type == DialogTypeSecretChat || _type == TGInputMessageTemplateTypeEditMessage)
         return;
     
     TLDraftMessage *draftMessage = text.length == 0 && flags == 0 ? [TL_draftMessageEmpty create] : [TL_draftMessage createWithFlags:0 reply_to_msg_id:_replyMessage.n_id message:text entities:entities date:[[MTNetwork instance] getTime]];
@@ -265,14 +267,12 @@ static NSMutableDictionary *list;
         }
     };
     
-    _textContainer = draft.message;
+    _textContainer = [[NSMutableAttributedString alloc] initWithString:draft.message];
     [self fillEntities:draft.entities];
     
     if(draft.isNo_webpage) {
-        _disabledWebpage = [_textContainer webpageLink];
+        _disabledWebpage = [_textContainer.string webpageLink];
     }
-    
-    
     
     if(draft.reply_to_msg_id != 0) {
         
@@ -333,13 +333,13 @@ static NSMutableDictionary *list;
     }
 }
 
--(void)updateTextAndSave:(NSString *)newText {
+-(void)updateTextAndSave:(NSAttributedString *)newText {
     
-    BOOL save = ![_textContainer isEqualToString:newText];
+    BOOL save = ![_textContainer isEqualToAttributedString:newText];
     
 
 
-    _textContainer = newText;
+    _textContainer = [newText mutableCopy];
     
     if(_autoSave && save) {
         cancel_delayed_block(_futureblock);
@@ -352,24 +352,22 @@ static NSMutableDictionary *list;
 }
 
 
--(SSignal *)updateSignalText:(NSString *)newText {
+-(SSignal *)updateSignalText:(NSAttributedString *)newText {
     
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        BOOL save = ![_textContainer isEqualToString:newText];
-        BOOL changedWebpage = self.webpage != newText.webpageLink && ![self.webpage isEqualToString:[newText webpageLink]];
+        BOOL save = ![_textContainer isEqualToAttributedString:newText];
+        BOOL changedWebpage = self.webpage != newText.string.webpageLink && ![self.webpage isEqualToString:[newText.string webpageLink]];
+        
+        _textContainer = [newText mutableCopy];
         
         if(changedWebpage && _disabledWebpage) {
             _disabledWebpage = nil;
         }
         
-         _textContainer = [newText trim];
-        
         if(_autoSave && save) {
-            
             [self saveForce];
-            
         }
         
         [subscriber putNext:@[@(save),@(changedWebpage)]];
@@ -383,11 +381,11 @@ static NSMutableDictionary *list;
 }
 
 -(BOOL)noWebpage {
-    return [_disabledWebpage isEqualToString:[self.text webpageLink]];
+    return [_disabledWebpage isEqualToString:[self.attributedString.string webpageLink]];
 }
 
 -(NSString *)webpage {
-    return _textContainer.webpageLink;
+    return self.attributedString.string.webpageLink;
 }
 
 -(void)setReplyMessage:(TL_localMessage *)replyMessage save:(BOOL)save {
@@ -432,7 +430,7 @@ static NSMutableDictionary *list;
     }
     
     if(!template) {
-        template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:peer_id];
+        template = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:[[NSAttributedString alloc] init] peer_id:peer_id];
         n = YES;
         
         list[key] = template;
@@ -447,7 +445,7 @@ static NSMutableDictionary *list;
         
         TL_conversation *conversation = [[DialogsManager sharedManager] find:peer_id];
         
-        if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.text]) {
+        if([conversation.draft isKindOfClass:[TL_draftMessage class]] && ![conversation.draft.message isEqualToString:template.attributedString.string]) {
             [template fillDraft:conversation.draft conversation:conversation save:NO];
         }
     }
@@ -464,7 +462,7 @@ static NSMutableDictionary *list;
 
 -(id)copy {
     
-    TGInputMessageTemplate *template = [[[self class] alloc] initWithType:self.type text:self.text peer_id:self.peer_id postId:self.postId];;
+    TGInputMessageTemplate *template = [[[self class] alloc] initWithType:self.type text:self.attributedString peer_id:self.peer_id postId:self.postId];;
     [template setReplyMessage:_replyMessage save:NO];
     [template setEditMessage:_editMessage];
     [template setDisabledWebpage:_disabledWebpage];

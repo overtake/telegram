@@ -867,7 +867,7 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
             if([command isEqualToString:@"viabot"]) {
                 TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:navigationController.messagesViewController.conversation.peer_id];
                 
-                [template updateTextAndSave:[NSString stringWithFormat:@"%@ ",vars[@"username"]]];
+                [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ",vars[@"username"]]]];
                 [template performNotification];
                 return;
             }

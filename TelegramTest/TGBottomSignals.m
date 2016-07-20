@@ -27,7 +27,7 @@
 
 +(SSignal *)botKeyboardSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
     return [[self botKeyboardSignal:conversation] map:^id(id next) {
-        return @(next != nil && actionType != TGModernSendControlInlineRequestType);
+        return @(next != nil && actionType != TGModernSendControlInlineRequestType && actionType != TGModernSendControlEditType);
     }];
 }
 
@@ -44,7 +44,7 @@
 +(SSignal *)silentModeSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        if(actionType == TGModernSendControlSendType)
+        if(actionType == TGModernSendControlSendType || actionType == TGModernSendControlEditType)
             [subscriber putNext:@(NO)];
         else
             [subscriber putNext:@(conversation.type == DialogTypeChannel && !conversation.chat.isMegagroup)];

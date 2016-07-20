@@ -26,15 +26,10 @@
     
     NSMutableArray *entities = [NSMutableArray array];
     
-    NSString *message = [_inputTemplate.text copy];
+    NSString *message = [_inputTemplate textWithEntities:entities];
     
-    message = [MessageSender parseCustomMentions:message entities:entities];
     
-    message = [MessageSender parseEntities:message entities:entities backstrips:@"```" startIndex:0];
-    
-    message = [MessageSender parseEntities:message entities:entities backstrips:@"`" startIndex:0];
-    
-    if(entities.count > 0)
+     if(entities.count > 0)
         flags |= (1 << 3);
     
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces])

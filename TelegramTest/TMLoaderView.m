@@ -44,6 +44,8 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         
+        self.backgroundColor = [NSColor clearColor];
+        
         self.wantsLayer = YES;
         self.imageView = [[NSImageView alloc] initWithFrame:self.bounds];
         

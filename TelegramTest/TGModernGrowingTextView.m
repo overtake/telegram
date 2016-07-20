@@ -9,7 +9,7 @@
 #import "TGModernGrowingTextView.h"
 #import "TGTextLabel.h"
 #import "TGAnimationBlockDelegate.h"
-
+#import "NSAttributedStringCategory.h"
 
 @implementation TGGrowingTextView
 
@@ -88,7 +88,7 @@
 @implementation TGModernGrowingTextView
 
 
-static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
+
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
@@ -182,6 +182,14 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    if([SettingsArchiver checkMaskedSetting:EmojiReplaces]) {
+        NSString *replace = [self.string replaceSmilesToEmoji];
+
+        if(![self.string isEqualToString:replace]) {
+            [self setString:replace];
+            return;
+        }
+    }
     
     
     _textView.font = TGSystemFont(13);
@@ -291,20 +299,21 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
             
             if(presentLayer && [_placeholder.layer animationForKey:@"position"]) {
-                presentX = MIN([[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue],NSMinX(_scrollView.frame)  + 30);
+                presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
             }
             if(presentLayer && [_placeholder.layer animationForKey:@"opacity"]) {
                 presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
             }
-            
-            
+            if(self.needShowPlaceholder)
+                [_placeholder setHidden:NO];
             
             CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self.needShowPlaceholder ? 1.0f : 0.0f];
             
             TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:_placeholder.layer];
             
             [delegate setCompletion:^(BOOL completed) {
-                [_placeholder setHidden:!self.needShowPlaceholder];
+                if(completed)
+                    [_placeholder setHidden:!self.needShowPlaceholder];
             }];
             
             oAnim.delegate = delegate;
@@ -575,6 +584,16 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
 -(NSString *)string {
     return [_textView.string copy];
 }
+
+-(NSAttributedString *)attributedString {
+    return _textView.attributedString;
+}
+
+-(void)setAttributedString:(NSAttributedString *)attributedString {
+    [_textView.textStorage setAttributedString:attributedString];
+    [self update];
+}
+
 -(void)setString:(NSString *)string {
     [_textView setString:string];
     [self update];

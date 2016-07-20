@@ -741,7 +741,7 @@ static NSMutableDictionary *inlineBotsExceptions;
                                 } else {
                                     [strongSelf.messagesViewController sendContextBotResult:botResult via_bot_id:user.n_id via_bot_name:user.username queryId:botResult.queryId forConversation:conversation];
                                     
-                                    [conversation.inputTemplate updateTextAndSave:@""];
+                                    [conversation.inputTemplate updateTextAndSave:[[NSAttributedString alloc] init]];
                                     [conversation.inputTemplate performNotification];
                                     
                                 }
@@ -1003,7 +1003,7 @@ static NSMutableDictionary *inlineBotsExceptions;
         TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
         
         template.autoSave = NO;
-        [template updateTextAndSave:@""];
+        [template updateTextAndSave:[[NSAttributedString alloc] init]];
         template.autoSave = YES;
         [template saveForce];
         

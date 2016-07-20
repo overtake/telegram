@@ -2736,11 +2736,11 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
-    NSArray *emoji = [_editTemplate.text getEmojiFromString:NO];
+    NSArray *emoji = [_editTemplate.attributedString.string getEmojiFromString:NO];
     
-    if([_editTemplate.text isEqualToString:[emoji lastObject]])
+    if([_editTemplate.attributedString.string isEqualToString:[emoji lastObject]])
     {
-        emoji = [_editTemplate.text getEmojiFromString:YES];
+        emoji = [_editTemplate.attributedString.string getEmojiFromString:YES];
         
         [self.stickerPanel showAndSearch:[emoji lastObject] animated:YES];
     } else
@@ -3053,7 +3053,7 @@ static NSTextAttachment *headerMediaIcon() {
          _editTemplate = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
          
          if(self.class != [MessagesViewController class]) {
-             _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:@"" peer_id:rand_int()];
+             _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:[[NSAttributedString alloc] init] peer_id:rand_int()];
          }
          
          
@@ -3127,7 +3127,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(message) {
         [self setState:MessagesViewControllerStateEditMessage];
         
-        _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:message.message.length > 0 ? message.message : message.media.caption peer_id:message.peer_id postId:message.n_id];
+        _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:[[NSAttributedString alloc] initWithString:message.message.length > 0 ? message.message : message.media.caption] peer_id:message.peer_id postId:message.n_id];
         _editTemplate.editMessage = message;
         
         [_editTemplate setAutoSave:NO];
@@ -3816,67 +3816,58 @@ static NSTextAttachment *headerMediaIcon() {
 
 }
 
-- (void)sendMessage:(NSString *)string {
-    NSString *message = [string trim];
-    
+- (void)sendMessage {
     
     if(!self.conversation.canSendMessage)  {
         NSBeep();
         return;
     }
-    
-    if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage) {
-        
-        TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_editTemplate conversation:_conversation];
-        
-        BOOL noWebpage = _editTemplate.noWebpage;
-        
-        [editSender performEdit:noWebpage ? 2 : 0];
-        
-        [self setEditableMessage:nil];
-        
-    } else {
-        
-        NSCharacterSet *set = [NSCharacterSet whitespaceCharacterSet];
-        if ([[message stringByTrimmingCharactersInSet: set] length] == 0) {
-            return;
-        } else if([message stringByReplacingOccurrencesOfString:@"\n" withString:@""].length == 0) {
-            return;
-        }
-       
-        if(message.length > 0) {
+
+    if(_editTemplate.attributedString.length > 0) {
+        if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage) {
+            
+            TGMessageEditSender *editSender = [[TGMessageEditSender alloc] initWithTemplate:_editTemplate conversation:_conversation];
+            
+            BOOL noWebpage = _editTemplate.noWebpage;
+            
+            [editSender performEdit:noWebpage ? 2 : 0];
+            
+            [self setEditableMessage:nil];
+            
+        } else {
             
             BOOL nowebpage = _editTemplate.noWebpage;
             
-                        
-            [self sendMessage:message forConversation:self.conversation nowebpage:nowebpage callback:^{
+            NSMutableArray *entities = [NSMutableArray array];
+            
+            NSString *message = [_editTemplate textWithEntities:entities];
+            
+            [self sendMessage:message forConversation:self.conversation entities:entities nowebpage:nowebpage callback:^{
                 [_typingReservation removeAllObjects];
             }];
-            
-
         }
     }
+    
+    
+    
+   
     
     
 }
 
 -(void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation {
-    [self sendMessage:message forConversation:conversation nowebpage:NO callback:nil];
+    [self sendMessage:message forConversation:conversation entities:nil nowebpage:NO callback:nil];
 }
 
 
 
-- (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation nowebpage:(BOOL)noWebpage callback:(dispatch_block_t)callback {
+- (void)sendMessage:(NSString *)message forConversation:(TL_conversation *)conversation entities:(NSArray *)entities nowebpage:(BOOL)noWebpage callback:(dispatch_block_t)callback {
     
     if(!conversation.canSendMessage)
         return;
     
-    
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     
-    
-    if([SettingsArchiver checkMaskedSetting:EmojiReplaces])
-        message = [message replaceSmilesToEmoji];
     
     NSArray *array = [message getEmojiFromString:YES];
     if(array.count > 0) {
@@ -3896,7 +3887,7 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
-            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation noWebpage:noWebpage additionFlags:self.senderFlags];
+            MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation  entities:entities noWebpage:noWebpage additionFlags:self.senderFlags];
             sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
             [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
             
@@ -3909,7 +3900,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
                 if (substring.length != 0) {
                     
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation noWebpage:noWebpage  additionFlags:self.senderFlags];
+                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation entities:entities noWebpage:noWebpage  additionFlags:self.senderFlags];
                     sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                     
                     [preparedItems insertObject:sender.tableItem atIndex:0];

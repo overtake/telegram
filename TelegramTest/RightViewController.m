@@ -344,7 +344,7 @@
         [appWindow().navigationController showMessagesViewController:dialog];
         
         TGInputMessageTemplate *template = dialog.inputTemplate;
-        [template updateTextAndSave:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
+        [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]]];
         
         [template performNotification];
         
@@ -359,7 +359,7 @@
         [appWindow().navigationController showMessagesViewController:dialog];
         
         TGInputMessageTemplate *template = [[TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id] copy];
-        [template updateTextAndSave:text];
+        [template updateTextAndSave:[[NSAttributedString alloc] initWithString:text]];
         [template performNotification];
                 
         [self hideModalView:YES animation:YES];

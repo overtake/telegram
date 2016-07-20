@@ -115,7 +115,7 @@
                 
                 TGInputMessageTemplate *template = item.message.conversation.inputTemplate;
                 
-                [template updateTextAndSave:result];
+                [template updateTextAndSave:[[NSAttributedString alloc] initWithString:result]];
                 [template performNotification];
                 
                 [item.table.viewController becomeFirstResponder];

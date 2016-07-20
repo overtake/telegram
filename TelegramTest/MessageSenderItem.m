@@ -16,7 +16,7 @@
 @implementation MessageSenderItem
 
 
--(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags {
+-(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation entities:(NSArray *)entities noWebpage:(BOOL)noWebpage additionFlags:(int)additionFlags {
     
     if(self = [super initWithConversation:conversation]) {
         
@@ -24,15 +24,8 @@
         
         self.message = [MessageSender createOutMessage:message media:[TL_messageMediaEmpty create] conversation:conversation additionFlags:additionFlags];
         
-        NSMutableArray *entities = [NSMutableArray array];
-        
-        self.message.message = [MessageSender parseCustomMentions:self.message.message entities:entities];
-        
-        self.message.message = [MessageSender parseEntities:self.message.message entities:entities backstrips:@"```" startIndex:0];
-        
-        self.message.message = [MessageSender parseEntities:self.message.message entities:entities backstrips:@"`" startIndex:0];
-        
-        self.message.entities = entities;
+
+        self.message.entities = [entities mutableCopy];
         
 
         
@@ -47,7 +40,7 @@
 }
 
 -(id)initWithMessage:(NSString *)message forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags {
-    if(self = [self initWithMessage:message forConversation:conversation noWebpage:YES additionFlags:additionFlags]) {
+    if(self = [self initWithMessage:message forConversation:conversation  entities:nil noWebpage:YES additionFlags:additionFlags]) {
         
     }
     

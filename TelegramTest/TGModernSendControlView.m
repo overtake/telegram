@@ -81,7 +81,7 @@
     
     TGModernSendControlType otype = _type;
     
-    if(type == _type)
+    if(type == _type || (otype == TGModernSendControlSendType && type == TGModernSendControlEditType))
         return;
     _type = type;
 
@@ -110,7 +110,7 @@
         
     }
     
-    if(type == TGModernSendControlSendType) {
+    if(type == TGModernSendControlSendType || type == TGModernSendControlEditType) {
         [_voice removeFromSuperview:_animates];
         [_send performCAShow:_animates];
     } else if(type == TGModernSendControlRecordType) {
@@ -129,8 +129,8 @@
     }
     
     
-    _send.layer.opacity = type == TGModernSendControlSendType ? 1.0f : 0.0f;
-    _send.layer.position = NSMakePoint(type != TGModernSendControlSendType ? -NSWidth(_send.frame) : self.csx, NSMinY(_send.frame));
+    _send.layer.opacity = type == TGModernSendControlSendType || type == TGModernSendControlEditType ? 1.0f : 0.0f;
+    _send.layer.position = NSMakePoint(type != TGModernSendControlSendType && type != TGModernSendControlEditType ? -NSWidth(_send.frame) : self.csx, NSMinY(_send.frame));
     [_send setFrameOrigin:_send.layer.position];
 
 }
@@ -144,7 +144,7 @@
         return presentX;
     }
     
-    return _type == TGModernSendControlSendType ? -NSWidth(_send.frame) : self.csx;
+    return _type == TGModernSendControlSendType || _type == TGModernSendControlEditType ? -NSWidth(_send.frame) : self.csx;
 }
 
 -(void)performSendAnimation {

@@ -74,7 +74,7 @@ typedef enum {
 - (void)showForwardMessagesModalView;
 
 
-- (void)sendMessage:(NSString *)string;
+- (void)sendMessage;
 
 - (void)drop;
 

@@ -24,6 +24,7 @@ static NSTextField *testTextField() {
 }
 
 
+ NSString *const TGMentionUidAttributeName = @"TGMentionUidAttributeName";
 
 - (NSSize)sizeForTextFieldForWidth:(int)width {
     

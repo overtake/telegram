@@ -14,6 +14,8 @@ typedef enum {
     CoreTextSizeExpectEmojiType = 2
 } CoreTextSizeExpectType;
 
+extern NSString *const TGMentionUidAttributeName;
+
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width;
 - (NSSize)coreTextSizeForTextFieldForWidth:(int)width withPaths:(NSArray *)paths;

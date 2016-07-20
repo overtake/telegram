@@ -47,6 +47,8 @@
 
 -(void)update;
 
+-(NSAttributedString *)attributedString;
+-(void)setAttributedString:(NSAttributedString *)attributedString;
 -(NSString *)string;
 -(void)setString:(NSString *)string;
 -(NSRange)selectedRange;

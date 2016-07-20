@@ -164,9 +164,8 @@ const float defYOffset = 12;
 }
 
 -(void)performSendMessage {
-    NSString *text = _textView.string;
-    //[self cleanTextView];
-    [_messagesController sendMessage:text];
+
+    [_messagesController sendMessage];
 
     [_sendControlView performSendAnimation];
     
@@ -235,6 +234,10 @@ const float defYOffset = 12;
     [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
+    
+    
+    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
+
     [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), bottomSize.height) animated:animated];
     
     if(_audioRecordView.superview) {
@@ -256,7 +259,7 @@ const float defYOffset = 12;
 }
 
 -(void)updateTextType {
-    [_sendControlView setType:_textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType];
+    [_sendControlView setType:_inputTemplate.type == TGInputMessageTemplateTypeEditMessage ? TGModernSendControlEditType :( _textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType)];
 }
 
 - (void) textViewTextDidChange:(TGModernGrowingTextView *)textView {
@@ -274,7 +277,7 @@ const float defYOffset = 12;
 
 
 -(void)saveInputText {
-    [[_inputTemplate updateSignalText:_textView.string] startWithNext:^(NSArray *next){
+    [[_inputTemplate updateSignalText:_textView.attributedString] startWithNext:^(NSArray *next){
         
         if(next.count == 2) {
             
@@ -375,14 +378,13 @@ const float defYOffset = 12;
     
     self.animates = animated;
     
-    
+    [_textView setAttributedString:inputTemplate.attributedString];
+
     [self resignalBotKeyboard:NO changeState:NO resignalAttachments:YES resignalKeyboard:YES];
     
-   
-    
     [self checkSecretChatState];
+    [self refreshObservers];
     
-    [_textView setString:inputTemplate.text];
     
     if(inputTemplate.type == TGInputMessageTemplateTypeSimpleText) {
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
@@ -453,7 +455,19 @@ const float defYOffset = 12;
         [signals addObject:botSignal];
     
     
-    _attachDispose = [[SSignal combineSignals:signals] startWithNext:^(id next) {
+    
+    
+    _attachDispose = [[[SSignal combineSignals:signals] map:^id(NSArray *next) {
+        
+        if(resignalKeyboard && _sendControlView.type == TGModernSendControlEditType) {
+            if(next.count == 1) {
+                return @[@(0)];
+            } else
+                return @[next[0],@(0)];
+        }
+        
+        return next;
+    }] startWithNext:^(id next) {
         
         BOOL changed = NO;
         
@@ -478,7 +492,13 @@ const float defYOffset = 12;
         
         if(resignalKeyboard) {
             if(_bottomHeight != [next[[next count] == 1 ? 0 : 1] intValue]) {
-                _bottomHeight = [next[[next count] == 1 ? 0 : 1] intValue];
+                
+                int nextHeight = [next[[next count] == 1 ? 0 : 1] intValue];
+                [_botkeyboard setFrame:NSMakeRect(0, nextHeight > 0 && _bottomHeight == 0 ? -nextHeight : nextHeight > _bottomHeight ? (_bottomHeight - nextHeight) : 0, NSWidth(self.frame), nextHeight < _bottomHeight > 0 ? _bottomHeight : nextHeight)];
+                
+                _bottomHeight = nextHeight;
+                
+
                 changed = YES;
                 
                 [_actionsView setActiveKeyboardButton:_bottomHeight > 0];
@@ -652,7 +672,7 @@ const float defYOffset = 12;
 }
 
 -(void)_insertEmoji:(NSString *)emoji {
-    [_textView insertText:emoji replacementRange:_textView.selectedRange];
+    [_textView insertText:emoji replacementRange:NSMakeRange(_textView.selectedRange.location, emoji.length + _textView.selectedRange.length)];
 }
 
 -(void)_updateNotifySettings:(NSNotification *)notify {
@@ -678,7 +698,7 @@ const float defYOffset = 12;
     if(_sendControlView.type == TGModernSendControlSendType)
         [self performSendMessage];
     else if(_sendControlView.type == TGModernSendControlInlineRequestType)
-        [_textView setString:@""];
+        [_textView setAttributedString:[[NSAttributedString alloc] init]];
 }
 
 -(void)_startAudioRecord {

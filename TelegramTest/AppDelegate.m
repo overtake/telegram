@@ -1165,7 +1165,7 @@ continueUserActivity: (id)userActivity
             
             TGInputMessageTemplate *template = conversation.inputTemplate;
             
-            [template updateTextAndSave:text];
+            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:text]];
             [template performNotification];
             
             BOOL didSetText = YES;

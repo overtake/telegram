@@ -1372,12 +1372,12 @@ static RBLPopover *popover;
         return;
         
     if(self.template.type == TGInputMessageTemplateTypeEditMessage) {
-        [self.messagesViewController sendMessage:self.inputMessageString];
+        [self.messagesViewController sendMessage];
         return;
     }
     
     if(_recordedAudioPreview == nil)
-        [self.messagesViewController sendMessage:self.inputMessageString];
+        [self.messagesViewController sendMessage];
     else {
         [self.messagesViewController sendAudio:_recordedAudioPreview.audio_file forConversation:self.dialog waveforms:_recordedAudioPreview.audioAttr.waveform];
         [self updateStopRecordControls];
@@ -2112,7 +2112,7 @@ static RBLPopover *popover;
     if(checkElements) {
         [self removeQuickRecord];
         
-        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
+       // [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:NO];
         
         if(_template.type == TGInputMessageTemplateTypeSimpleText) {
             [_imageAttachmentsController show:_dialog animated:YES];
@@ -2127,7 +2127,7 @@ static RBLPopover *popover;
         
         
     } else {
-        [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:YES];
+      //  [self setInputMessageString:_template.text ? _template.text : @"" disableAnimations:YES];
     }
     
     

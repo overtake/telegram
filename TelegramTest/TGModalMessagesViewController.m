@@ -52,7 +52,7 @@
     TL_conversation *parentConversation = _action.reservedObject3;
     
     TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:parentConversation.peer_id];
-    [template updateTextAndSave:[NSString stringWithFormat:@"@%@ %@",user.username,keyboard.query]];
+    [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@ %@",user.username,keyboard.query]]];
 
     [template performNotification];
     
