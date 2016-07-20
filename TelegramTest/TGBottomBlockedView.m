@@ -30,19 +30,6 @@
     return self;
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
-    
-}
-
--(void)mouseMoved:(NSEvent *)theEvent {
-    
-}
-
--(void)mouseDown:(NSEvent *)theEvent {
-    
-}
-
-
 
 
 -(void)setFrameSize:(NSSize)newSize {

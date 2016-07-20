@@ -660,15 +660,20 @@ void exceptionHandler(NSException * exception)
         }
         
         if((![responder isKindOfClass:[NSTextView class]] || ![responder isEditable]) && [SelectTextManager count] == 0  && ![responder isKindOfClass:[TGCTextView class]] && ![responder isKindOfClass:[TGModalView class]]) {
-            if([appWindow().navigationController becomeFirstResponder]) {
-                
-                if(result.keyCode == 9 && (result.modifierFlags & NSCommandKeyMask) > 0) {
-                    if([appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]]) {
-                        [appWindow().navigationController.messagesViewController paste:nil];
+            if(![TMViewController isModalActive]) {
+                if([appWindow().navigationController becomeFirstResponder]) {
+                    
+                    if(result.keyCode == 9 && (result.modifierFlags & NSCommandKeyMask) > 0) {
+                        if([appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]]) {
+                            [appWindow().navigationController.messagesViewController paste:nil];
+                        }
                     }
+                    
                 }
-
+            } else {
+                 [TMViewController becomeFirstResponderToModalView];
             }
+            
             
         }
         

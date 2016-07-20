@@ -15,7 +15,6 @@
 @interface TGImageAttachmentsController ()
 @property (nonatomic,strong) TGTransformScrollView *scrollView;
 @property (nonatomic,strong) TMView *containerView;
-@property (nonatomic,strong) TL_conversation *conversation;
 @end
 
 @implementation TGImageAttachmentsController
@@ -57,12 +56,15 @@
     return self;
 }
 
+-(void)setBackgroundColor:(NSColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    _containerView.backgroundColor = backgroundColor;
+}
+
 -(void)show:(TL_conversation *)conversation animated:(BOOL)animated {
     
     
-    
-    
-    self.conversation = conversation;
+     self.conversation = conversation;
     
     [_containerView removeAllSubviews];
     [self updateContainer];
@@ -137,7 +139,9 @@
             [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
             
         }];
-    } 
+    }
+    
+    _conversation = nil;
 
 }
 
@@ -295,7 +299,7 @@
             prev = _containerView.subviews[idx -1];
         }
         
-        [obj setFrameOrigin:NSMakePoint(NSMaxX(prev.frame) + 10, 1)];
+        [obj setFrameOrigin:NSMakePoint(NSMaxX(prev.frame) + 10, NSHeight(_containerView.frame) - NSHeight(obj.frame))];
         
     }];
     
@@ -343,7 +347,7 @@
         TGImageAttachment *lastAttach = [_containerView.subviews lastObject];
         
         
-        [obj setFrameOrigin:NSMakePoint(NSMaxX(lastAttach.frame) + 10, 1)];
+        [obj setFrameOrigin:NSMakePoint(NSMaxX(lastAttach.frame) + 10, NSHeight(_containerView.frame) - NSHeight(obj.frame))];
         
         [obj setDeleteAccept:YES];
         

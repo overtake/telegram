@@ -256,6 +256,17 @@
     [alert show];
 }
 
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    if(menuItem.action == @selector(changeLayoutOrientation:)) {
+        return NO;
+    }
+    
+    if(menuItem.action == @selector(paste:))
+        return YES;
+    
+    
+    return [super validateMenuItem:menuItem];
+}
 
 -(void)keyDown:(NSEvent *)theEvent {
     
@@ -299,8 +310,7 @@
 }
 
 -(BOOL)becomeFirstResponder {
-    if([TMViewController isModalActive])
-        return NO;
+    
     return [super becomeFirstResponder];
 }
 

@@ -3769,6 +3769,9 @@
          contextName = "__36-[StartBotSenderItem performRequest]_block_invoke:StartBotSenderItem.m">
       </ContextState>
       <ContextState
+         contextName = "__99-[TGModernMessagesBottomView resignalBotKeyboard:changeState:resignalAttachments:resignalKeyboard:]_block_invoke.234:TGModernMessagesBottomView.m">
+      </ContextState>
+      <ContextState
          contextName = "__49-[TGMediaContextTableView makeRow:isLastRowItem:]_block_invoke_2:TGMediaContextTableView.m">
          <PersistentStrings>
             <PersistentString
@@ -4624,6 +4627,14 @@
       </ContextState>
       <ContextState
          contextName = "__add_sticker_pack_by_name_block_invoke:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "__99-[TGModernMessagesBottomView resignalBotKeyboard:changeState:resignalAttachments:resignalKeyboard:]_block_invoke.246:TGModernMessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_imageAttachmentsController.isShown">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TMGrowingTextView textDidChange:]:TMGrowingTextView.m">
@@ -5653,6 +5664,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessagesViewController setEditableMessage:]:MessagesViewController.m">
+      </ContextState>
+      <ContextState
          contextName = "__28-[ChatInfoHeaderView reload]_block_invoke:ChatInfoHeaderView.m">
          <PersistentStrings>
             <PersistentString
@@ -6406,6 +6420,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TMCollectionPageController imageObjectWithPreview:]:TMCollectionPageController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__34+[TGBottomSignals textAttachment:]_block_invoke_3:TGBottomSignals.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPVImageView setObject:]:TGPVImageView.m">

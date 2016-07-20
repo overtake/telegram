@@ -358,7 +358,7 @@
         
         [appWindow().navigationController showMessagesViewController:dialog];
         
-        TGInputMessageTemplate *template = [[TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id] copy];
+        TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
         [template updateTextAndSave:[[NSAttributedString alloc] initWithString:text]];
         [template performNotification];
                 

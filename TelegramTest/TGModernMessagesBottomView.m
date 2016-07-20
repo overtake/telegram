@@ -18,7 +18,8 @@
 #import "TGBottomAudioRecordView.h"
 #import "FullUsersManager.h"
 #import "ChatFullManager.h"
-@interface TGModernMessagesBottomView () <TGModernGrowingDelegate,TGBottomActionDelegate,TGModernSendControlDelegate> {
+#import "TGImageAttachmentsController.h"
+@interface TGModernMessagesBottomView () <TGModernGrowingDelegate,TGBottomActionDelegate,TGModernSendControlDelegate,TGImageAttachmentsControllerDelegate> {
     TMView *_ts;
    
     id<SDisposable> _attachDispose;
@@ -37,7 +38,7 @@
 
 @property (nonatomic,strong) TGBottomTextAttachment *attachment;
 @property (nonatomic,strong) TGBottomKeyboardContainerView *botkeyboard;
-
+@property (nonatomic,strong) TGImageAttachmentsController *imageAttachmentsController;
 @property (nonatomic,strong) TMView *attachmentsContainerView;
 @property (nonatomic,strong) TMView *textContainerView;
 
@@ -126,6 +127,12 @@ const float defYOffset = 12;
         _botkeyboard.wantsLayer = YES;
        // _botkeyboard.layer.backgroundColor = [NSColor redColor].CGColor;
         [self addSubview:_botkeyboard];
+        
+        _imageAttachmentsController = [[TGImageAttachmentsController alloc] initWithFrame:NSMakeRect(10, 0, NSWidth(self.frame) - 20, 78)];
+        _imageAttachmentsController.backgroundColor = [NSColor whiteColor];
+        _imageAttachmentsController.delegate = self;
+        
+        [self addSubview:_imageAttachmentsController];
     
         
         
@@ -137,17 +144,14 @@ const float defYOffset = 12;
         
         _audioRecordView = [[TGBottomAudioRecordView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame) - NSWidth(_sendControlView.frame), NSHeight(frameRect)) messagesController:messagesController];
         
-     //   [self addTarget:self action:@selector(recordAudioMouseEntered:) forControlEvents:BTRControlEventMouseEntered];
-     //   [self addTarget:self action:@selector(recordAudioMouseExited:) forControlEvents:BTRControlEventMouseExited];
-     
-    //    [_audioRecordView addTarget:self action:@selector(mouseUpInside:) forControlEvents:BTRControlEventMouseUpInside];
-    //    [_audioRecordView addTarget:self action:@selector(mouseUpOutside:) forControlEvents:BTRControlEventMouseUpOutside];
-
         _ts = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
         _ts.wantsLayer = YES;
         _ts.backgroundColor = DIALOG_BORDER_COLOR;
         
         [self addSubview:_ts];
+        
+        
+        [_blockChatView addTarget:self action:@selector(_didClickedOnBlockedView:) forControlEvents:BTRControlEventClick];
         
     }
     
@@ -158,17 +162,44 @@ const float defYOffset = 12;
     [super setFrameSize:newSize];
     
     [_textContainerView setFrameSize:NSMakeSize(newSize.width, NSHeight(_textContainerView.frame))];
+    [_textView setFrameSize:self.textViewSize];
+    [_topContainerView setFrameSize:NSMakeSize(newSize.width, NSHeight(_topContainerView.frame))];
     [_attachmentsContainerView setFrameSize:NSMakeSize(newSize.width - 40, NSHeight(_attachmentsContainerView.frame))];
     [_attachment setFrameSize:NSMakeSize(NSWidth(_attachmentsContainerView.frame), NSHeight(_attachment.frame))];
     [_ts setFrameSize:NSMakeSize(newSize.width, NSHeight(_ts.frame))];
+    [_imageAttachmentsController setFrameSize:NSMakeSize(newSize.width - 20, NSHeight(_imageAttachmentsController.frame))];
+    [_actionsView setFrameOrigin:NSMakePoint(newSize.width - NSWidth(_sendControlView.frame) - NSWidth(_actionsView.frame), NSMinY(_actionsView.frame))];
+    [_sendControlView setFrameOrigin:NSMakePoint(NSMaxX(_actionsView.frame), NSMinY(_sendControlView.frame))];
+    [_botkeyboard setFrameSize:NSMakeSize(newSize.width, NSHeight(_botkeyboard.frame))];
+    [_audioRecordView setFrameSize:NSMakeSize(newSize.width - NSWidth(_sendControlView.frame), NSHeight(_sendControlView.frame))];
+    [_messageActionsView setFrameSize:NSMakeSize(newSize.width, NSHeight(_messageActionsView.frame))];
+    [_blockChatView setFrameSize:NSMakeSize(newSize.width, NSHeight(_blockChatView.frame))];
 }
 
 -(void)performSendMessage {
-
-    [_messagesController sendMessage];
-
+    
+    if(_inputTemplate.attributedString.length == 0) {
+        [_messagesController performForward:_messagesController.conversation];
+    } else
+        [_messagesController sendMessage];
+    
+    
+    
+    if(_sendControlView.type == TGModernSendControlSendType) {
+        [_messagesController sendAttachments:[_imageAttachmentsController attachments] forConversation:_messagesController.conversation addCompletionHandler:nil];
+        
+        if(_imageAttachmentsController.isShown) {
+            [_imageAttachmentsController hide:YES deleteItems:YES];
+        }
+    }
+   
     [_sendControlView performSendAnimation];
     
+}
+
+-(void)refreshHeight:(BOOL)animated {
+    [self textViewHeightChanged:_textView height:_textView.height animated:animated];
+
 }
 
 -(void)cleanTextView {
@@ -224,7 +255,7 @@ const float defYOffset = 12;
     
     NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 58);
     
-    NSSize bottomSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? MAX(_bottomHeight,0) : 0);
+    NSSize bottomSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? MAX(_bottomHeight,0) + (_imageAttachmentsController.isShown && _sendControlView.type != TGModernSendControlEditType ? NSHeight(_imageAttachmentsController.frame) : 0) : 0);
     NSSize fullSize = NSMakeSize(NSWidth(self.frame), topSize.height + bottomSize.height);
     
     [self heightWithCAAnimation:NSMakeRect(0,0,NSWidth(self.frame), fullSize.height) animated:animated];
@@ -234,11 +265,12 @@ const float defYOffset = 12;
     [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
-    
-    
-    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
+     [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
 
-    [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), bottomSize.height) animated:animated];
+
+    [_imageAttachmentsController moveWithCAAnimation:NSMakePoint(NSMinX(_imageAttachmentsController.frame), _imageAttachmentsController.isShown ? _bottomHeight : _bottomHeight - NSHeight(_imageAttachmentsController.frame)) animated:animated];
+    
+    [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), _bottomHeight) animated:animated];
     
     if(_audioRecordView.superview) {
         [_audioRecordView moveWithCAAnimation:NSMakePoint(0, bottomSize.height) animated:animated];
@@ -354,7 +386,7 @@ const float defYOffset = 12;
         [_audioRecordView removeFromSuperview:animated];
     }
     
-    [self textViewHeightChanged:_textView height:_textView.height animated:animated];
+    [self refreshHeight:animated];
 }
 
 - (void)setSectedMessagesCount:(NSUInteger)count deleteEnable:(BOOL)deleteEnable forwardEnable:(BOOL)forwardEnable {
@@ -370,6 +402,10 @@ const float defYOffset = 12;
 }
 
 -(void)setInputTemplate:(TGInputMessageTemplate *)inputTemplate animated:(BOOL)animated {
+    
+    if(_inputTemplate.peer_id != inputTemplate.peer_id)
+        [self setOnClickToLockedView:nil];
+    
     _inputTemplate = inputTemplate;
     
     
@@ -406,6 +442,8 @@ const float defYOffset = 12;
     [Notification removeObserver:self];
     [Notification addObserver:self selector:@selector(_showOrHideBotKeyboardAction:) name:[Notification cAction:_messagesController.conversation action:@"botKeyboard"]];
     [Notification addObserver:self selector:@selector(_updateNotifySettings:) name:[Notification cAction:_messagesController.conversation action:@"notification"]];
+    [Notification addObserver:self selector:@selector(_didChangeBlockedUser:) name:USER_BLOCK];
+    [Notification addObserver:self selector:@selector(_didChannelUpdatedFlags:) name:CHAT_FLAGS_UPDATED];
 }
 
 -(void)checkSecretChatState {
@@ -446,32 +484,65 @@ const float defYOffset = 12;
     
     SSignal *botSignal = [_botkeyboard resignalKeyboard:_messagesController forceShow:forceShow changeState:changeState];
 
+    SSignal *imageAttachSignal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        
+        BOOL isShown = _imageAttachmentsController.isShown;
+        
+        if(_imageAttachmentsController.conversation != _messagesController.conversation)
+            [_imageAttachmentsController show:_messagesController.conversation animated:_animates];
+        
+        if(_imageAttachmentsController.isShown && _sendControlView.type == TGModernSendControlEditType) {
+            [_imageAttachmentsController hide:_animates deleteItems:NO];
+        } 
+        
+        [subscriber putNext:@(isShown != _imageAttachmentsController.isShown)];
+        
+        return nil;
+    }];
     
     NSMutableArray *signals = [NSMutableArray array];
+    NSMutableArray *caps = [NSMutableArray array];
     
-    if(resignalAttachments)
+    if(resignalAttachments) {
         [signals addObject:attachSignal];
-    if(resignalKeyboard)
-        [signals addObject:botSignal];
+        [caps addObject:attachSignal];
+    }else
+        [caps addObject:[NSNull null]];
     
+    if(resignalKeyboard) {
+        [signals addObject:botSignal];
+        [caps addObject:botSignal];
+    } else
+        [caps addObject:[NSNull null]];
+    
+    [caps addObject:imageAttachSignal];
+    [signals addObject:imageAttachSignal];
     
     
     
     _attachDispose = [[[SSignal combineSignals:signals] map:^id(NSArray *next) {
         
         if(resignalKeyboard && _sendControlView.type == TGModernSendControlEditType) {
-            if(next.count == 1) {
-                return @[@(0)];
-            } else
-                return @[next[0],@(0)];
+            return @[next[0],@(0),[NSNull null]];
         }
         
-        return next;
+        NSMutableArray *result = [NSMutableArray array];
+        
+        __block int i = 0;
+        
+        [caps enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[SSignal class]])
+                [result addObject:next[i++]];
+            else
+                [result addObject:obj];
+        }];
+        
+        return result;
     }] startWithNext:^(id next) {
         
         BOOL changed = NO;
         
-        if(resignalAttachments) {
+        if(resignalAttachments && next[0] != [NSNull null]) {
             if(_attachmentsHeight != [next[0] intValue]) {
                 _attachmentsHeight = [next[0] intValue];
                 changed = YES;
@@ -488,12 +559,10 @@ const float defYOffset = 12;
             }
         }
         
-        
-        
-        if(resignalKeyboard) {
-            if(_bottomHeight != [next[[next count] == 1 ? 0 : 1] intValue]) {
+        if(resignalKeyboard  && next[1] != [NSNull null]) {
+            if(_bottomHeight != [next[1] intValue]) {
                 
-                int nextHeight = [next[[next count] == 1 ? 0 : 1] intValue];
+                int nextHeight = [next[1] intValue];
                 [_botkeyboard setFrame:NSMakeRect(0, nextHeight > 0 && _bottomHeight == 0 ? -nextHeight : nextHeight > _bottomHeight ? (_bottomHeight - nextHeight) : 0, NSWidth(self.frame), nextHeight < _bottomHeight > 0 ? _bottomHeight : nextHeight)];
                 
                 _bottomHeight = nextHeight;
@@ -506,9 +575,17 @@ const float defYOffset = 12;
             }
         }
         
+        if(next[2] != [NSNull null]) {
+            BOOL c = [next[2] boolValue];
+            changed = changed || [next[2] boolValue];
+            
+            [_botkeyboard setFrame:NSMakeRect(10, c && _imageAttachmentsController.isShown ? _bottomHeight - NSHeight(_imageAttachmentsController.frame) : 0, NSWidth(self.frame) - 20, NSHeight(_imageAttachmentsController.frame))];
+        }
+        
 
         if(changed)
-            [self textViewHeightChanged:_textView height:NSHeight(_textView.frame) animated:_animates];
+            [self refreshHeight:_animates];
+
 
         
     }];
@@ -630,19 +707,19 @@ const float defYOffset = 12;
                     
                     [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
                         // [weakSelf.textView setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
-                         [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+                         [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
                     }] startWithNext:^(id next) {
                         
                         [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
                         
                     }];
                 } else {
-                    [self checkAndDisableSendingWithInlineBot:nil animated:YES];
+                    [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
                 }
                 
                 
             } else {
-                  [self checkAndDisableSendingWithInlineBot:nil animated:YES];
+                  [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
             }
             
             
@@ -655,8 +732,6 @@ const float defYOffset = 12;
    
 }
 
-
-
 -(void)checkAndDisableSendingWithInlineBot:(TLUser *)user animated:(BOOL)animated {
     
     if(user)
@@ -665,6 +740,99 @@ const float defYOffset = 12;
         [self updateTextType];
     
     [self resignalActions];
+}
+
+
+-(void)didChangeAttachmentsCount:(int)futureCount {
+    
+    if(futureCount == 0 && _imageAttachmentsController.isShown) {
+        [_imageAttachmentsController hide:YES deleteItems:NO];
+        [self refreshHeight:_animates];
+        
+    } else if(futureCount > 0 && !_imageAttachmentsController.isShown) {
+        [_imageAttachmentsController show:_messagesController.conversation animated:_animates];
+        [self refreshHeight:_animates];
+    }
+}
+
+-(void)_didClickedOnBlockedView:(id)sender {
+    if(_messagesController.conversation.isInvisibleChannel) {
+        
+        [_messagesController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_channels_joinChannel createWithChannel:_messagesController.conversation.chat.inputPeer] successHandler:^(RPCRequest *request, TLUpdates *response) {
+            
+            if(response.updates.count == 0) {
+                TL_localMessage *msg = [TL_localMessageService createWithFlags:TGMENTIONMESSAGE | (1 << 14) n_id:[MessageSender getFakeMessageId] from_id:[UsersManager currentUserId] to_id:_messagesController.conversation.peer reply_to_msg_id:0 date:[[MTNetwork instance] getTime] action:([TL_messageActionChatAddUser createWithUsers:[@[@([UsersManager currentUserId])] mutableCopy]]) fakeId:[MessageSender getFakeMessageId] randomId:rand_long() dstate:DeliveryStateNormal];
+                
+                [MessagesManager addAndUpdateMessage:msg];
+            }
+            
+            
+            _messagesController.conversation.invisibleChannel = NO;
+            
+            [_messagesController.conversation save];
+            
+            [[DialogsManager sharedManager] updateLastMessageForDialog:_messagesController.conversation];
+            
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [_messagesController setState:MessagesViewControllerStateNone];
+                [_messagesController tryRead];
+                [_messagesController hideModalProgressWithSuccess];
+            }];
+            
+            
+        } errorHandler:^(RPCRequest *request, RpcError *error) {
+            
+            [ASQueue dispatchOnMainQueue:^{
+                [_messagesController hideModalProgress];
+            }];
+            
+            
+        } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
+        
+        
+    } else if(_messagesController.conversation.chat.isBroadcast  && !(_messagesController.conversation.chat.isLeft || _messagesController.conversation.chat.isKicked)) {
+        
+        
+        [_messagesController.conversation muteOrUnmute:^{
+            
+            [self setActionState:TGModernMessagesBottomViewNormalState animated:_animates];
+            
+        } until:_messagesController.conversation.isMute ? 0 : 365*24*60*60];
+        
+        
+    } else if(_messagesController.conversation.type == DialogTypeChannel && (_messagesController.conversation.chat.isLeft || _messagesController.conversation.chat.isKicked || _messagesController.conversation.chat.type == TLChatTypeForbidden)) {
+        [[DialogsManager sharedManager] deleteDialog:_messagesController.conversation completeHandler:nil];
+        
+    } else if(!_messagesController.conversation.canSendMessage && _messagesController.conversation.user.isBot && _onClickToLockedView == nil) {
+        
+        [_messagesController showModalProgress];
+        
+        [[BlockedUsersManager sharedManager] unblock:_messagesController.conversation.user.n_id completeHandler:^(BOOL response){
+            
+            [TMViewController hideModalProgress];
+            
+            [_messagesController sendMessage:@"/start" forConversation:_messagesController.conversation];
+            
+            [self setActionState:TGModernMessagesBottomViewNormalState animated:_animates];
+        }];
+        
+        
+        
+        return;
+    } else if(_messagesController.conversation.type == DialogTypeUser && _messagesController.conversation.user.isBlocked) {
+        
+        [[BlockedUsersManager sharedManager] unblock:_messagesController.conversation.user.n_id completeHandler:^(BOOL response){
+            [self setActionState:TGModernMessagesBottomViewNormalState animated:_animates];
+        }];
+    }
+    if(_onClickToLockedView != nil)
+    {
+        _onClickToLockedView();
+    }
+
 }
 
 -(void)_showOrHideBotKeyboardAction:(NSNotification *)notify {
@@ -677,6 +845,28 @@ const float defYOffset = 12;
 
 -(void)_updateNotifySettings:(NSNotification *)notify {
     [_actionsView setActiveSilentMode:!_messagesController.conversation.notify_settings.isSilent];
+}
+
+- (void)_didChangeBlockedUser:(NSNotification *)notification {
+    
+    TL_contactBlocked *contact = notification.userInfo[KEY_USER];
+    
+    if(_messagesController.conversation.user.n_id != contact.user_id || _messagesController.conversation.user.isBot)
+        return;
+    
+    if(_messagesController.conversation && _messagesController.conversation.type == DialogTypeUser) {
+        [self setActionState:_actionState animated:YES];
+    }
+}
+
+-(void)_didChannelUpdatedFlags:(NSNotification *)notification {
+    TLChat *chat = notification.userInfo[KEY_CHAT];
+    
+    if(chat.n_id == _messagesController.conversation.chat.n_id) {
+        
+        [self setActionState:_actionState animated:YES];
+        
+    }
 }
 
 -(void)_changeSilentMode:(id)sender {
@@ -695,7 +885,7 @@ const float defYOffset = 12;
 }
 
 -(void)_performSendAction {
-    if(_sendControlView.type == TGModernSendControlSendType)
+    if(_sendControlView.type == TGModernSendControlSendType || _sendControlView.type == TGModernSendControlEditType)
         [self performSendMessage];
     else if(_sendControlView.type == TGModernSendControlInlineRequestType)
         [_textView setAttributedString:[[NSAttributedString alloc] init]];
@@ -788,7 +978,10 @@ const float defYOffset = 12;
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
+    [_imageAttachmentsController addItems:@[attachment] animated:YES];
     
+    
+    [self refreshHeight:YES];
 }
 
 @end

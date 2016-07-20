@@ -35,6 +35,10 @@
     
 }
 
+-(BOOL)becomeFirstResponder {
+    return [_messagesViewController becomeFirstResponder];
+}
+
 
 -(void)modalViewDidShow {
     [self setContainerFrameSize:NSMakeSize(MAX(300,MIN(450,NSWidth(self.frame) - 60)), MAX(330,MIN(555,NSHeight(self.frame) - 60)))];
@@ -43,6 +47,7 @@
         TL_inlineBotSwitchPM *pm = _action.reservedObject1;
         [_messagesViewController sendStartBot:pm.start_param forConversation:_action.object bot:_action.reservedObject2];
     }
+    [_messagesViewController becomeFirstResponder];
 }
 
 

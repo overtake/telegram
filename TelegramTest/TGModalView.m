@@ -198,8 +198,7 @@
         TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
         
         [delegate setCompletion:^(BOOL completed) {
-            if(completed)
-                [weakSelf modalViewDidShow];
+            [weakSelf modalViewDidShow];
         }];
         
         anim.delegate = delegate;
@@ -263,11 +262,8 @@
             TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
             
             [delegate setCompletion:^(BOOL completed) {
-                if(completed)
-                {
-                    [weakSelf removeFromSuperview];
-                    [weakSelf modalViewDidHide];
-                }
+                [weakSelf removeFromSuperview];
+                [weakSelf modalViewDidHide];
             }];
             
             anim.delegate = delegate;
@@ -277,13 +273,8 @@
             
             self.animationContainerView.layer.opacity = self.backgroundView.layer.opacity = 0.0f;
             
-//            weak();
-//            
-//            [anim setCompletionBlock:^(POPAnimation *anim, BOOL success) {
-//                [weakSelf removeFromSuperview];
-//                [weakSelf modalViewDidHide];
-//            }];
-//            
+            
+//
 //            [self.layer pop_addAnimation:anim forKey:@"fade"];
             
             
