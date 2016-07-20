@@ -14,12 +14,20 @@
 
 
 +(SSignal *)actions:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
-    return [SSignal combineSignals:@[[self silentModeSignal:conversation actionType:actionType],[self botCommandSignal:conversation actionType:actionType],[self botKeyboardSignal:conversation actionType:actionType],[self scretTimerSignal:conversation actionType:actionType],[self emojiSignal:conversation actionType:actionType]]];
+    
+    SSignal *inlineSignal = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+        [subscriber putNext:@(actionType == TGModernSendControlInlineRequestType)];
+        
+        return nil;
+    }];
+    
+    return [SSignal combineSignals:@[[self silentModeSignal:conversation actionType:actionType],[self botCommandSignal:conversation actionType:actionType],[self botKeyboardSignal:conversation actionType:actionType],[self scretTimerSignal:conversation actionType:actionType],[self emojiSignal:conversation actionType:actionType],inlineSignal]];
 }
 
 +(SSignal *)botKeyboardSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
     return [[self botKeyboardSignal:conversation] map:^id(id next) {
-        return @(next != nil);
+        return @(next != nil && actionType != TGModernSendControlInlineRequestType);
     }];
 }
 
@@ -36,7 +44,7 @@
 +(SSignal *)silentModeSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        if(actionType != TGModernSendControlRecordType)
+        if(actionType == TGModernSendControlSendType)
             [subscriber putNext:@(NO)];
         else
             [subscriber putNext:@(conversation.type == DialogTypeChannel && !conversation.chat.isMegagroup)];
@@ -63,7 +71,7 @@
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        [subscriber putNext:@(actionType == TGModernSendControlSendType || actionType == TGModernSendControlRecordType)];
+        [subscriber putNext:@(actionType == TGModernSendControlSendType || actionType == TGModernSendControlRecordType || actionType == TGModernSendControlInlineRequestType)];
         
         [subscriber putCompletion];
         
@@ -92,12 +100,11 @@
     }];
 }
 
-+(SSignal *)textAttachment:(TL_conversation *)conversation  {
++(SSignal *)textAttachment:(TL_conversation *)conversation template:(TGInputMessageTemplate *)template {
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
         
         //priority - webpage - forward - reply
         
-        TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
         
         id <SDisposable> disposable = [[SBlockDisposable alloc] initWithBlock:^{
             
@@ -110,7 +117,9 @@
                 
             } else if(template.replyMessage) {
                 [subscriber putNext:[[TGReplyObject alloc] initWithReplyMessage:template.replyMessage fromMessage:nil tableItem:nil]];
-            } else {
+            } else if(template.editMessage) {
+                [subscriber putNext:[[TGReplyObject alloc] initWithReplyMessage:template.editMessage fromMessage:nil tableItem:nil editMessage:YES]];
+            } else  {
                 [subscriber putNext:nil];
             }
         };

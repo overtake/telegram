@@ -24,7 +24,8 @@
 typedef enum {
     TGModernSendControlSendType,
     TGModernSendControlEditType,
-    TGModernSendControlRecordType
+    TGModernSendControlRecordType,
+    TGModernSendControlInlineRequestType
 } TGModernSendControlType;
 
 

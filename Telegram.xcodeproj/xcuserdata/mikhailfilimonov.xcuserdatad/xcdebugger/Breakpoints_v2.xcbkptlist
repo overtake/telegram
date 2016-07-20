@@ -202,12 +202,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TelegramTest/TGModernGrowingTextView.m"
-            timestampString = "490363146.903692"
+            timestampString = "490722038.225481"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "559"
-            endingLineNumber = "559"
-            landmarkName = "-refreshAttributes"
+            startingLineNumber = "591"
+            endingLineNumber = "591"
+            landmarkName = "-addInputTextTag:range:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

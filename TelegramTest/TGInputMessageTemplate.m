@@ -212,8 +212,12 @@ static NSMutableDictionary *list;
 }
 
 -(void)performNotification {
+    [self performNotification:NO];
+}
+
+-(void)performNotification:(BOOL)swap {
     _applyNextNotification = YES;
-    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:self,KEY_PEER_ID:@(_peer_id)}];
+    [Notification perform:UPDATE_MESSAGE_TEMPLATE data:@{KEY_TEMPLATE:self,KEY_PEER_ID:@(_peer_id),KEY_DATA:@(swap)}];
 }
 
 -(void)updateTemplateWithDraft:(TLDraftMessage *)draft {
@@ -335,7 +339,7 @@ static NSMutableDictionary *list;
     
 
 
-    _textContainer = [newText trim];
+    _textContainer = newText;
     
     if(_autoSave && save) {
         cancel_delayed_block(_futureblock);

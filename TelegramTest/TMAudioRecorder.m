@@ -169,7 +169,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
             
             if(askConfirm) {
                 TL_documentAttributeAudio *audioAttr = [TL_documentAttributeAudio createWithFlags:0 duration:duration title:nil performer:nil waveform:[waveform bitstream]];
-                [self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
+                //[self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
             } else
                 [self.messagesViewController sendAudio:opusPath forConversation:conversation waveforms:[waveform bitstream]];
         }];

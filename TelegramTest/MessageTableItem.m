@@ -70,7 +70,7 @@ static NSCache *cItems;
         self.message = object;
         
         
-        if(self.message.media.caption.length > 0 || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0)) {
+        if(self.message.media.caption.length > 0 || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0 && self.message.media.bot_result == nil)) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
             NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;

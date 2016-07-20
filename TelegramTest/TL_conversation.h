@@ -10,6 +10,8 @@
 #import "TL_broadcast.h"
 
 
+@class TGInputMessageTemplate;
+
 @protocol TLConversationDelegate <NSObject>
 
 @required
@@ -100,4 +102,6 @@ typedef enum {
 -(BOOL)canSendChannelMessageAsUser;
 
 -(BOOL)needRemoveFromIdBeforeSend;
+
+-(TGInputMessageTemplate *)inputTemplate;
 @end

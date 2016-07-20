@@ -936,6 +936,7 @@
 		C2F5C5541D3E3D2200F47F8F /* TGBottomBlockedView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5531D3E3D2200F47F8F /* TGBottomBlockedView.m */; };
 		C2F5C5571D3E3DE000F47F8F /* TGBottomMessageActionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5561D3E3DE000F47F8F /* TGBottomMessageActionsView.m */; };
 		C2F5C55A1D3E67DC00F47F8F /* TGBottomAudioRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C5591D3E67DC00F47F8F /* TGBottomAudioRecordView.m */; };
+		C2F5C55D1D3F98C400F47F8F /* TGMessagesGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2F5C55C1D3F98C400F47F8F /* TGMessagesGrowingTextView.m */; };
 		C2FA78CC191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */; };
 		C2FA78D61922641D001A9D1B /* TMCollectionPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78D51922641D001A9D1B /* TMCollectionPageController.m */; };
 		C2FA78DB192379C3001A9D1B /* HistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FA78DA192379C3001A9D1B /* HistoryFilter.m */; };
@@ -2820,6 +2821,8 @@
 		C2F5C5561D3E3DE000F47F8F /* TGBottomMessageActionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomMessageActionsView.m; sourceTree = "<group>"; };
 		C2F5C5581D3E67DC00F47F8F /* TGBottomAudioRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGBottomAudioRecordView.h; sourceTree = "<group>"; };
 		C2F5C5591D3E67DC00F47F8F /* TGBottomAudioRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGBottomAudioRecordView.m; sourceTree = "<group>"; };
+		C2F5C55B1D3F98C400F47F8F /* TGMessagesGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGMessagesGrowingTextView.h; sourceTree = "<group>"; };
+		C2F5C55C1D3F98C400F47F8F /* TGMessagesGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGMessagesGrowingTextView.m; sourceTree = "<group>"; };
 		C2FA78CA191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPreviewCollectionPhotoItem.h; sourceTree = "<group>"; };
 		C2FA78CB191BEA29001A9D1B /* TMPreviewCollectionPhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPreviewCollectionPhotoItem.m; sourceTree = "<group>"; };
 		C2FA78D41922641D001A9D1B /* TMCollectionPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMCollectionPageController.h; sourceTree = "<group>"; };
@@ -3816,6 +3819,8 @@
 				C2F5C5561D3E3DE000F47F8F /* TGBottomMessageActionsView.m */,
 				C2F5C5581D3E67DC00F47F8F /* TGBottomAudioRecordView.h */,
 				C2F5C5591D3E67DC00F47F8F /* TGBottomAudioRecordView.m */,
+				C2F5C55B1D3F98C400F47F8F /* TGMessagesGrowingTextView.h */,
+				C2F5C55C1D3F98C400F47F8F /* TGMessagesGrowingTextView.m */,
 			);
 			name = bottom;
 			sourceTree = "<group>";
@@ -6886,6 +6891,7 @@
 				C248F3E319BE08A800BF658E /* flac.c in Sources */,
 				C2D777301BAEA30B00D451FD /* TGChannelTypeSettingViewController.m in Sources */,
 				0AB8501E1875AC38001A796C /* TMRowItem.m in Sources */,
+				C2F5C55D1D3F98C400F47F8F /* TGMessagesGrowingTextView.m in Sources */,
 				C21D482E19ACB7CD000F06E1 /* AccountSettingsViewController.m in Sources */,
 				C2C1DC1D1A443CCB00BBCC63 /* StickersPanelView.m in Sources */,
 				C2078E3D1CB596720037B1B2 /* TGMessagesNavigationController.m in Sources */,

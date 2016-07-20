@@ -18,7 +18,7 @@ typedef enum {
     float min;// default = 0;
     float max;// default = 100;
     BOOL reversed;// default = no;
-    float duration;
+    @public float duration;
     float fps;
 }
 

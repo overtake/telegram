@@ -7,7 +7,7 @@
 //
 
 #import "TGModernMessagesBottomView.h"
-#import "TGModernGrowingTextView.h"
+#import "TGMessagesGrowingTextView.h"
 #import "TGModernSendControlView.h"
 #import "TGModernBottomAttachView.h"
 #import "TGBottomActionsView.h"
@@ -16,10 +16,13 @@
 #import "TGBottomMessageActionsView.h"
 #import "TGBottomBlockedView.h"
 #import "TGBottomAudioRecordView.h"
+#import "FullUsersManager.h"
+#import "ChatFullManager.h"
 @interface TGModernMessagesBottomView () <TGModernGrowingDelegate,TGBottomActionDelegate,TGModernSendControlDelegate> {
     TMView *_ts;
    
     id<SDisposable> _attachDispose;
+    NSTrackingArea *_trackingArea;
 }
 
 @property (nonatomic,strong) TLUser *inlineBot;
@@ -27,7 +30,7 @@
 
 @property (nonatomic,weak) MessagesViewController *messagesController;
 
-@property (nonatomic,strong) TGModernGrowingTextView *textView;
+@property (nonatomic,strong) TGMessagesGrowingTextView *textView;
 @property (nonatomic,strong) TGModernSendControlView *sendControlView;
 @property (nonatomic,strong) TGModernBottomAttachView *attachView;
 @property (nonatomic,strong) TGBottomActionsView *actionsView;
@@ -110,7 +113,7 @@ const float defYOffset = 12;
         _actionsView.wantsLayer = YES;
         
         
-        _textView = [[TGModernGrowingTextView alloc] initWithFrame:NSMakeRect(NSWidth(_attachView.frame) , defYOffset, NSWidth(_textContainerView.frame)  - NSWidth(_attachView.frame) - NSWidth(_sendControlView.frame), NSHeight(_textContainerView.frame) - defYOffset*2)];
+        _textView = [[TGMessagesGrowingTextView alloc] initWithFrame:NSMakeRect(NSWidth(_attachView.frame) , defYOffset, NSWidth(_textContainerView.frame)  - NSWidth(_attachView.frame) - NSWidth(_sendControlView.frame), NSHeight(_textContainerView.frame) - defYOffset*2) ];
         _textView.delegate = self;
         
         [_textContainerView addSubview:_attachView];
@@ -134,11 +137,11 @@ const float defYOffset = 12;
         
         _audioRecordView = [[TGBottomAudioRecordView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame) - NSWidth(_sendControlView.frame), NSHeight(frameRect)) messagesController:messagesController];
         
-        [self addTarget:self action:@selector(recordAudioMouseEntered:) forControlEvents:BTRControlEventMouseEntered];
-        [self addTarget:self action:@selector(recordAudioMouseExited:) forControlEvents:BTRControlEventMouseExited];
+     //   [self addTarget:self action:@selector(recordAudioMouseEntered:) forControlEvents:BTRControlEventMouseEntered];
+     //   [self addTarget:self action:@selector(recordAudioMouseExited:) forControlEvents:BTRControlEventMouseExited];
      
-        [_audioRecordView addTarget:self action:@selector(mouseUpInside:) forControlEvents:BTRControlEventMouseUpInside];
-        [_audioRecordView addTarget:self action:@selector(mouseUpOutside:) forControlEvents:BTRControlEventMouseUpOutside];
+    //    [_audioRecordView addTarget:self action:@selector(mouseUpInside:) forControlEvents:BTRControlEventMouseUpInside];
+    //    [_audioRecordView addTarget:self action:@selector(mouseUpOutside:) forControlEvents:BTRControlEventMouseUpOutside];
 
         _ts = [[TMView alloc] initWithFrame:NSMakeRect(0, NSHeight(frameRect) - DIALOG_BORDER_WIDTH, NSWidth(frameRect), DIALOG_BORDER_WIDTH)];
         _ts.wantsLayer = YES;
@@ -252,8 +255,13 @@ const float defYOffset = 12;
     return YES;
 }
 
+-(void)updateTextType {
+    [_sendControlView setType:_textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType];
+}
+
 - (void) textViewTextDidChange:(TGModernGrowingTextView *)textView {
-    [_sendControlView setType:textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType];
+    
+    [self updateTextType];
     
     [self saveInputText];
     
@@ -370,8 +378,9 @@ const float defYOffset = 12;
     
     [self resignalBotKeyboard:NO changeState:NO resignalAttachments:YES resignalKeyboard:YES];
     
-    [Notification removeObserver:self];
-    [Notification addObserver:self selector:@selector(_showOrHideBotKeyboardAction:) name:[Notification cAction:_messagesController.conversation action:@"botKeyboard"]];
+   
+    
+    [self checkSecretChatState];
     
     [_textView setString:inputTemplate.text];
     
@@ -387,6 +396,31 @@ const float defYOffset = 12;
     
     [self setActionState:_actionState animated:animated];
     
+    [self becomeFirstResponder];
+    
+}
+
+-(void)refreshObservers {
+    [Notification removeObserver:self];
+    [Notification addObserver:self selector:@selector(_showOrHideBotKeyboardAction:) name:[Notification cAction:_messagesController.conversation action:@"botKeyboard"]];
+    [Notification addObserver:self selector:@selector(_updateNotifySettings:) name:[Notification cAction:_messagesController.conversation action:@"notification"]];
+}
+
+-(void)checkSecretChatState {
+    
+    if(_messagesController.conversation.type == DialogTypeSecretChat) {
+        NSUInteger dialogHash = _messagesController.conversation.cacheHash;
+        EncryptedParams *params = _messagesController.conversation.encryptedChat.encryptedParams;
+        stateHandler handler = ^(EncryptedState state) {
+            if(dialogHash != _messagesController.conversation.cacheHash)
+                return;
+            
+            [self setActionState:TGModernMessagesBottomViewNormalState animated:YES];
+        };
+        
+        [params setStateHandler:handler];
+    }
+
 }
 
 
@@ -406,7 +440,7 @@ const float defYOffset = 12;
         
         return nil;
         
-    }]];
+    }] template:_inputTemplate];
     
     SSignal *botSignal = [_botkeyboard resignalKeyboard:_messagesController forceShow:forceShow changeState:changeState];
 
@@ -489,9 +523,7 @@ const float defYOffset = 12;
             
         }
         
-        _inlineBot = nil;
         [_messagesController.hintView cancel];
-        
         
         
         if(search != nil && ![string hasPrefix:@" "]) {
@@ -509,11 +541,8 @@ const float defYOffset = 12;
                     TLUser *user = object;
                     [_textView replaceMention:user.username.length > 0 ? user.username : user.first_name username:user.username.length > 0 userId:user.n_id];
                 }
-                
-                
-                
+           
             };
-            
             
             
             if(type == TGHintViewShowMentionType) {
@@ -526,11 +555,37 @@ const float defYOffset = 12;
             } else if(type == TGHintViewShowBotCommandType && [_textView.string rangeOfString:@"/"].location == 0) {
                 if([_messagesController.conversation.user isBot] || _messagesController.conversation.fullChat.bot_info != nil) {
                     
-                    // [_messagesController.hintView showCommandsHintsWithQuery:search conversation:_messagesController.conversation botInfo:_userFull ? @[_userFull.bot_info] : _messagesController.conversation.fullChat.bot_info choiceHandler:^(NSString *command) {
-                    //     callback(command);
-                    //      [self sendButtonAction];
-                    //   }];
                     
+                    TL_conversation *conversation = _messagesController.conversation;
+                    
+                   __block  NSArray *info = @[];
+                    
+                    dispatch_block_t perform = ^{
+                        if(_messagesController.conversation == conversation) {
+                            [_messagesController.hintView showCommandsHintsWithQuery:search conversation:_messagesController.conversation botInfo:info choiceHandler:^(NSString *command, id object) {
+                                callback(command, object);
+                                [self performSendMessage];
+                            }];
+                        }
+                    };
+                    
+                    if([_messagesController.conversation.user isBot]) {
+                        
+                        [[FullUsersManager sharedManager] requestUserFull:_messagesController.conversation.user withCallback:^(TLUserFull *userFull) {
+                            if(userFull) {
+                                info = @[userFull.bot_info];
+                                perform();
+                            }
+                        }];
+                    } else if(_messagesController.conversation.chat) {
+                        [[ChatFullManager sharedManager] requestChatFull:_messagesController.conversation.chat.n_id withCallback:^(TLChatFull *chatFull) {
+                            if(chatFull.bot_info) {
+                                info = chatFull.bot_info;
+                                perform();
+                            }
+                        }];
+                    }
+ 
                 }
             } else {
                 [_messagesController.hintView hide];
@@ -540,9 +595,6 @@ const float defYOffset = 12;
         } else if([_textView.string hasPrefix:@"@"] && _messagesController.conversation.type != DialogTypeSecretChat) {
             
             [_messagesController.hintView hide];
-            
-            
-            
             
             NSString *value = _textView.string;
             
@@ -556,24 +608,26 @@ const float defYOffset = 12;
                 if([bot rangeOfString:@"\n"].location == NSNotFound) {
                     weak();
                     
-                    [_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
+                    [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
                         // [weakSelf.textView setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
-                        // weakSelf.inlineBot = user;
-                        // [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+                         [weakSelf checkAndDisableSendingWithInlineBot:user animated:YES];
+                    }] startWithNext:^(id next) {
+                        
+                        [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
+                        
                     }];
                 } else {
-                    //[self checkAndDisableSendingWithInlineBot:nil animated:YES];
+                    [self checkAndDisableSendingWithInlineBot:nil animated:YES];
                 }
                 
                 
             } else {
-                //  [self checkAndDisableSendingWithInlineBot:nil animated:YES];
+                  [self checkAndDisableSendingWithInlineBot:nil animated:YES];
             }
             
             
         } else {
             [_messagesController.hintView hide];
-            // [self setProgress:NO];
         }
     } @catch (NSException *exception) {
         int bp = 0;
@@ -581,12 +635,50 @@ const float defYOffset = 12;
    
 }
 
+
+
+-(void)checkAndDisableSendingWithInlineBot:(TLUser *)user animated:(BOOL)animated {
+    
+    if(user)
+        [_sendControlView setType:TGModernSendControlInlineRequestType];
+    else
+        [self updateTextType];
+    
+    [self resignalActions];
+}
+
 -(void)_showOrHideBotKeyboardAction:(NSNotification *)notify {
     [self resignalBotKeyboard:NO changeState:notify == nil resignalAttachments:NO resignalKeyboard:YES];
 }
 
+-(void)_insertEmoji:(NSString *)emoji {
+    [_textView insertText:emoji replacementRange:_textView.selectedRange];
+}
+
+-(void)_updateNotifySettings:(NSNotification *)notify {
+    [_actionsView setActiveSilentMode:!_messagesController.conversation.notify_settings.isSilent];
+}
+
+-(void)_changeSilentMode:(id)sender {
+    int flags = _messagesController.conversation.notify_settings.flags;
+    
+    if(flags & PushEventMaskDisableChannelMessageNotification)
+        flags &= ~PushEventMaskDisableChannelMessageNotification;
+    else
+        flags |= PushEventMaskDisableChannelMessageNotification;
+    
+    
+    [_messagesController.conversation updateNotifySettings:[TL_peerNotifySettings createWithFlags:flags mute_until:_messagesController.conversation.notify_settings.mute_until sound:_messagesController.conversation.notify_settings.sound] serverSave:YES];
+    
+    [self _updateNotifySettings:nil];
+    
+}
+
 -(void)_performSendAction {
-    [self performSendMessage];
+    if(_sendControlView.type == TGModernSendControlSendType)
+        [self performSendMessage];
+    else if(_sendControlView.type == TGModernSendControlInlineRequestType)
+        [_textView setString:@""];
 }
 
 -(void)_startAudioRecord {
@@ -608,21 +700,6 @@ const float defYOffset = 12;
     [_sendControlView setVoiceSelected:NO];
 }
 
--(void)recordAudioMouseEntered:(id)sender {
-    if(_actionState == TGModernMessagesBottomViewRecordAudio) {
-        [_audioRecordView updateDesc:YES];
-        [_sendControlView setVoiceSelected:YES];
-    }
-    
-}
-
--(void)recordAudioMouseExited:(id)sender {
-    if(_actionState == TGModernMessagesBottomViewRecordAudio) {
-        [_audioRecordView updateDesc:NO];
-        [_sendControlView setVoiceSelected:NO];
-    }
-}
-
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
@@ -635,10 +712,63 @@ const float defYOffset = 12;
     }
     
 }
+- (void)updateTrackingAreas {
 
+    if (_trackingArea) {
+        [self removeTrackingArea:_trackingArea];
+        _trackingArea = nil;
+    }
+    
+    NSUInteger options = (NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingMouseMoved);
+    _trackingArea = [[NSTrackingArea alloc] initWithRect:self.bounds
+                                                     options:options
+                                                       owner:self userInfo:nil];
+    [self addTrackingArea:_trackingArea];
+}
+
+
+
+-(void)mouseDragged:(NSEvent *)theEvent {
+    
+     if(_actionState == TGModernMessagesBottomViewRecordAudio) {
+        
+        if([self mouse:[self.superview convertPoint:[theEvent locationInWindow] fromView:nil] inRect:self.frame]) {
+            [_audioRecordView updateDesc:YES];
+            [_sendControlView setVoiceSelected:YES];
+        } else {
+            [_audioRecordView updateDesc:NO];
+            [_sendControlView setVoiceSelected:NO];
+        }
+    }
+}
+
+
+-(BOOL)becomeFirstResponder {
+    return [_textView becomeFirstResponder];
+}
 
 -(void)dealloc {
     [Notification removeObserver:self];
+}
+
+-(void)paste:(id)sender {
+    [_textView paste:sender];
+}
+
+-(void)selectInputTextByText:(NSString *)text {
+    [_textView setSelectedRange:[_textView.string rangeOfString:text]];
+}
+
+-(void)setActiveEmoji:(BOOL)active {
+    [_actionsView setActiveEmoji:active];
+}
+
+-(int)attachmentsCount {
+    return 0;
+}
+
+-(void)addAttachment:(TGImageAttachment *)attachment {
+    
 }
 
 @end

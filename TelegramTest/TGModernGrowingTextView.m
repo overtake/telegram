@@ -9,13 +9,7 @@
 #import "TGModernGrowingTextView.h"
 #import "TGTextLabel.h"
 #import "TGAnimationBlockDelegate.h"
-#import "TGInputTextTag.h"
-#import "SpacemanBlocks.h"
-@interface TGGrowingTextView : NSTextView {
-    SMDelayedBlockHandle _handle;
-}
-@property (nonatomic,weak) id <TGModernGrowingDelegate> weakd;
-@end
+
 
 @implementation TGGrowingTextView
 
@@ -72,6 +66,12 @@
 
 
 
+-(BOOL)resignFirstResponder {
+   return [super resignFirstResponder];
+}
+
+
+
 
 @end
 
@@ -98,7 +98,7 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
         _animates = YES;
         
 
-        _textView = [[TGGrowingTextView alloc] initWithFrame:self.bounds];
+        _textView = [[[self _textViewClass] alloc] initWithFrame:self.bounds];
         
         _textView.backgroundColor = [NSColor clearColor];
         
@@ -126,17 +126,6 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
         [self addSubview:_placeholder];
         
         
-        
-        
-        
-//        _animates = NO;
-//        [self textDidChange:[NSNotification notificationWithName:NSTextDidChangeNotification object:_textView]];
-//        _animates = YES;
-        
-//        self.backgroundColor = [NSColor blueColor];
-//        _textView.backgroundColor = [NSColor redColor];
-        
-        
     }
     
     return self;
@@ -150,7 +139,17 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
 }
 
 -(BOOL)becomeFirstResponder {
-    return [_textView becomeFirstResponder];
+   // if(self.window.firstResponder != _textView) {
+        [self.window makeFirstResponder:_textView];
+   // }
+    
+
+    
+    return YES;
+}
+
+-(BOOL)resignFirstResponder {
+    return [_textView resignFirstResponder];
 }
 
 -(int)height {
@@ -210,10 +209,6 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
     if(_last_height != newSize.height) {
         
         dispatch_block_t future = ^ {
-            
-            if(_last_height > newSize.height) {
-                int bp = 0;
-            }
             
             _last_height = newSize.height;
             [_delegate textViewHeightChanged:self height:newSize.height animated:animated];
@@ -290,13 +285,13 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
     if(_placeholderAttributedString) {
         
         if(animated && ((self.string.length == 0 && _placeholder.layer.opacity < 1.0f) || (self.string.length > 0 && _placeholder.layer.opacity > 0.0f))) {
-            float presentX = self.needShowPlaceholder ? NSMinX(_placeholder.frame) + 30: NSMinX(_scrollView.frame) + 6;
+            float presentX = self.needShowPlaceholder ?NSMinX(_scrollView.frame) + 30: NSMinX(_scrollView.frame) + 6;
             float presentOpacity = self.needShowPlaceholder ? 0.0f : 1.0f;
             
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
             
             if(presentLayer && [_placeholder.layer animationForKey:@"position"]) {
-                presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
+                presentX = MIN([[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue],NSMinX(_scrollView.frame)  + 30);
             }
             if(presentLayer && [_placeholder.layer animationForKey:@"opacity"]) {
                 presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
@@ -306,16 +301,28 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
             
             CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self.needShowPlaceholder ? 1.0f : 0.0f];
             
+            TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:_placeholder.layer];
+            
+            [delegate setCompletion:^(BOOL completed) {
+                [_placeholder setHidden:!self.needShowPlaceholder];
+            }];
+            
+            oAnim.delegate = delegate;
+            
             [_placeholder.layer removeAnimationForKey:@"opacity"];
             [_placeholder.layer addAnimation:oAnim forKey:@"opacity"];
             
-            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, NSMinY(_placeholder.frame))];
+            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_scrollView.frame) + 30, NSMinY(_placeholder.frame))];
             
             
             [_placeholder.layer removeAnimationForKey:@"position"];
             [_placeholder.layer addAnimation:pAnim forKey:@"position"];
             
-         }
+            
+            
+        } else {
+            [_placeholder setHidden:!self.needShowPlaceholder];
+        }
         
         [_placeholder setFrameOrigin:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
         
@@ -637,6 +644,19 @@ static NSString *TGMentionUidAttributeName = @"TGMentionUidAttributeName";
     }
     
     [self update];
+}
+
+-(void)paste:(id)sender {
+    [_textView paste:sender];
+}
+
+-(void)setSelectedRange:(NSRange)range {
+    if(range.location != NSNotFound)
+        [_textView setSelectedRange:range];
+}
+
+-(Class)_textViewClass {
+    return [TGGrowingTextView class];
 }
 
 @end

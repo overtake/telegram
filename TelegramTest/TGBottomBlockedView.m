@@ -52,12 +52,15 @@
 }
 
 -(void)setBlockedText:(NSString *)text {
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-    [attr appendString:text withColor:BLUE_UI_COLOR];
-    [attr setFont:TGSystemFont(14) forRange:attr.range];
+    if(text) {
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        [attr appendString:text withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:attr.range];
+        
+        [_textLabel setText:attr maxWidth:NSWidth(self.frame) - 40];
+        [_textLabel setCenterByView:self];
+    }
     
-    [_textLabel setText:attr maxWidth:NSWidth(self.frame) - 40];
-    [_textLabel setCenterByView:self];
 }
 
 @end

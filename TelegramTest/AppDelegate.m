@@ -546,7 +546,10 @@ void exceptionHandler(NSException * exception)
 //                        
 //                    }
 //                    
-//                    if(![appWindow().navigationController.currentController proccessEscAction]) {
+                    if(![appWindow().navigationController.currentController proccessEscAction]) {
+                        
+                        [appWindow().navigationController goBackWithAnimation:YES];
+                        
 //                        if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
 //                            return incomingEvent;
 //                        } else {
@@ -555,8 +558,8 @@ void exceptionHandler(NSException * exception)
 //                            
 //                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
 //                        }
-//                    }
-//                    
+                    }
+//
 //                    
 //                }
                 
@@ -680,10 +683,7 @@ void exceptionHandler(NSException * exception)
         
         if(result.keyCode == 48) {
           //  NSTextView *textView = responder;
-            if([responder isKindOfClass:[MessageInputGrowingTextView class]] ) {
-                [appWindow().navigationController.messagesViewController.bottomView smileButtonClick:nil];
-                
-            }
+            
             
             return [[NSEvent alloc]init];
         }
@@ -703,10 +703,10 @@ void exceptionHandler(NSException * exception)
                 
                  return [[NSEvent alloc]init];
             } else if(result.keyCode == 15) { // cmd+r for audio record
-                if(buttonRecordIsUp) {
-                    buttonRecordIsUp = NO;
-                    [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
-                }
+//                if(buttonRecordIsUp) {
+//                    buttonRecordIsUp = NO;
+//                    [appWindow().navigationController.messagesViewController.bottomView startOrStopQuickRecord];
+//                }
                 return [[NSEvent alloc]init];
                 
             }
@@ -1163,9 +1163,12 @@ continueUserActivity: (id)userActivity
             
             [self.mainWindow.navigationController showMessagesViewController:conversation];
             
-            [[Telegram rightViewController].messagesViewController setStringValueToTextField:text];
+            TGInputMessageTemplate *template = conversation.inputTemplate;
             
-            BOOL didSetText = [[Telegram rightViewController].messagesViewController.inputText isEqualToString:text];
+            [template updateTextAndSave:text];
+            [template performNotification];
+            
+            BOOL didSetText = YES;
             
             
             if (didSetText)

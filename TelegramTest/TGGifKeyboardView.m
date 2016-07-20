@@ -4,6 +4,7 @@
 #import "TGMediaContextTableView.h"
 #import "MessagesBottomView.h"
 #import "TGModernStickRowItem.h"
+#import "TGModernESGViewController.h"
 @interface TGGifKeyboardView () <TMSearchTextFieldDelegate> {
     __block SMDelayedBlockHandle _delayedBlockHandle;
 }
@@ -55,8 +56,7 @@
         
         if(strongSelf != nil) {
             
-            [strongSelf.messagesViewController.bottomView closeEmoji];
-            
+            [[TGModernESGViewController controller] close];
             
             dispatch_after_seconds(0.1, ^{
                 

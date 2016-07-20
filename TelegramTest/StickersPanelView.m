@@ -141,8 +141,10 @@ static NSImage *higlightedImage() {
                 
                 [weakSelf.messagesViewController sendSticker:obj forConversation:self.messagesViewController.conversation addCompletionHandler:nil];
                 
-                [weakSelf.messagesViewController setStringValueToTextField:@""];
-                
+                TGInputMessageTemplate *template = self.messagesViewController.conversation.inputTemplate;
+                [template updateTextAndSave:@""];
+                [template performNotification];
+                                
                 
             } forControlEvents:BTRControlEventMouseUpInside];
             

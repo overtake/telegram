@@ -18,7 +18,6 @@
 #import "TGMessagesHintView.h"
 #import "TGCompressItem.h"
 #import "TGInputMessageTemplate.h"
-@class MessagesBottomView;
 
 @interface SearchSelectItem : NSObject
 @property (nonatomic,assign) BOOL isCurrent;
@@ -41,7 +40,6 @@ typedef enum {
 
 @property (nonatomic, strong) NSMutableArray *selectedMessages;
 @property (nonatomic, strong,readonly) MessagesTableView *table;
-@property (nonatomic, strong) MessagesBottomView *bottomView;
 @property (nonatomic,strong,readonly) TGInputMessageTemplate * editTemplate;
 
 
@@ -70,8 +68,8 @@ typedef enum {
 - (void)cancelSelectionAndScrollToBottom:(BOOL)scrollToBottom;
 - (void)unSelectAll:(BOOL)animated;
 - (void)bottomViewChangeSize:(int)height animated:(BOOL)animated;
-- (void)setStringValueToTextField:(NSString *)stringValue;
-- (NSString *)inputText;
+
+- (int)attachmentsCount;
 
 - (void)showForwardMessagesModalView;
 

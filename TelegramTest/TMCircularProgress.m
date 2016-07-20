@@ -48,7 +48,7 @@
     if (self) {
         self->min = 0;
         self->max = 100;
-        self->duration = 0.1;
+        self->duration = 0.2;
         self->fps = 60;
         self->reversed = NO;
         self.currentProgress = 0;
@@ -125,6 +125,13 @@ float ease(float t, float b, float c, float d) {
 
 - (void)drawRect:(NSRect)dirtyRect
 {
+    
+    if(self.backgroundColor) {
+        [self.backgroundColor set];
+        NSBezierPath *p = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(0, 0, NSWidth(dirtyRect), NSHeight(dirtyRect))];
+        [p fill];
+    }
+    
     if(self.isHidden || self.window == nil) {
         [self pop_removeAllAnimations];
         [_timer invalidate];
@@ -271,7 +278,7 @@ float ease(float t, float b, float c, float d) {
     
     animation.toValue = @(_currentProgress);
     
-    animation.duration = 0.2;
+    animation.duration = self->duration;
     
     animation.removedOnCompletion = YES;
     
@@ -307,7 +314,7 @@ float ease(float t, float b, float c, float d) {
         }];
         
         
-        rotate.fromValue = @(0);
+        rotate.fromValue = @(self->rotateAngel);
         
         rotate.toValue = @(360);
         

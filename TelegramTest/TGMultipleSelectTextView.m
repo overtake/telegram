@@ -113,7 +113,11 @@
                 
                 MessageTableItem *item = self.owner;
                 
-                [item.table.viewController setStringValueToTextField:result];
+                TGInputMessageTemplate *template = item.message.conversation.inputTemplate;
+                
+                [template updateTextAndSave:result];
+                [template performNotification];
+                
                 [item.table.viewController becomeFirstResponder];
             }
             

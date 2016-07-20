@@ -12,7 +12,8 @@
 @protocol TGBottomActionDelegate <NSObject>
 
 -(void)_showOrHideBotKeyboardAction:(id)sender;
-
+-(void)_changeSilentMode:(id)sender;
+-(void)_insertEmoji:(NSString *)emoji;
 @end
 
 
@@ -27,7 +28,9 @@
 -(SSignal *)resignal:(TGModernSendControlType)actionType;
 
 -(void)setActiveKeyboardButton:(BOOL)active;
-
+-(void)setActiveSilentMode:(BOOL)active;
+-(void)setActiveEmoji:(BOOL)active;
+-(void)setInlineProgress:(int)progress;
 
 - (instancetype)init __attribute__((unavailable("init not available, call initWithFrame:messagesController:")));
 - (instancetype)initWithFrame:(NSRect)frameRect __attribute__((unavailable("initWithFrame: not available, call initWithFrame:messagesController:")));

@@ -11,6 +11,6 @@
 @interface TGBottomTextAttachment : TMView
 
 
--(SSignal *)resignal:(TL_conversation *)conversation animateSignal:(SSignal *)animateSignal;
+-(SSignal *)resignal:(TL_conversation *)conversation animateSignal:(SSignal *)animateSignal template:(TGInputMessageTemplate *)template;
 
 @end

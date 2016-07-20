@@ -7,7 +7,7 @@
 //
 
 #import "TMView.h"
-
+#import "TGImageAttachment.h"
 @interface TGModernMessagesBottomView : BTRControl
 
 
@@ -24,10 +24,24 @@ typedef enum {
 @property (nonatomic,assign,readonly) TGModernMessagesBottomViewState actionState;
 @property (nonatomic,strong,readonly) TGInputMessageTemplate *inputTemplate;
 
+@property (nonatomic,copy) dispatch_block_t onClickToLockedView;
+@property (nonatomic,strong) NSString *bot_start_var;
+
 -(void)setActionState:(TGModernMessagesBottomViewState)actionState;
 -(void)setActionState:(TGModernMessagesBottomViewState)actionState animated:(BOOL)animated;
 -(void)setInputTemplate:(TGInputMessageTemplate *)inputTemplate animated:(BOOL)animated;
 - (void)setSectedMessagesCount:(NSUInteger)count deleteEnable:(BOOL)deleteEnable forwardEnable:(BOOL)forwardEnable;
+
+-(void)paste:(id)sender;
+-(void)selectInputTextByText:(NSString *)text;
+-(void)setActiveEmoji:(BOOL)active;
+
+
+-(int)attachmentsCount;
+-(void)addAttachment:(TGImageAttachment *)attachment;
+
+
+-(void)_insertEmoji:(NSString *)emoji;
 
 @property (nonatomic,assign) BOOL animates;
 

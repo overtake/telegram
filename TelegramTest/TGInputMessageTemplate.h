@@ -52,7 +52,7 @@ typedef enum {
 
 +(TGInputMessageTemplate *)templateWithType:(TGInputMessageTemplateType)type ofPeerId:(int)peer_id;
 -(void)performNotification;
-
+-(void)performNotification:(BOOL)swap;
 -(NSString *)webpage;
 
 @end

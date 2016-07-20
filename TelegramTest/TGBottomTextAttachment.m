@@ -25,15 +25,14 @@
     return self;
 }
 
--(SSignal *)resignal:(TL_conversation *)conversation animateSignal:(SSignal *)animateSignal {
+-(SSignal *)resignal:(TL_conversation *)conversation animateSignal:(SSignal *)animateSignal template:(TGInputMessageTemplate *)template {
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        return [[TGBottomSignals textAttachment:conversation] startWithNext:^(id next) {
+        return [[TGBottomSignals textAttachment:conversation template:template] startWithNext:^(id next) {
             
             
             TMView *currentView = nil;
-            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
 
             __block BOOL animated = NO;
             
@@ -81,8 +80,14 @@
                 
                 replyContainer.deleteHandler = ^{
                     
-                    [template setReplyMessage:nil save:YES];
-                    [template performNotification];
+                    if(template.type == TGInputMessageTemplateTypeSimpleText) {
+                        [template setReplyMessage:nil save:YES];
+                        [template performNotification];
+                    } else {
+                        [template setEditMessage:nil];
+                        [template saveForce];
+                        [template performNotification:YES];
+                    }
                     
                 };
                 

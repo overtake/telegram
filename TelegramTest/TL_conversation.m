@@ -10,7 +10,7 @@
 #import "TLPeer+Extensions.h"
 #import "TGPasslock.h"
 #import "TL_localMessage.h"
-
+#import "TGInputMessageTemplate.h"
 @interface TL_conversation ()
 @property (nonatomic,strong,readonly) TLUser *p_user;
 @property (nonatomic,strong,readonly) TLChat *p_chat;
@@ -489,6 +489,10 @@ static void *kType;
 
 -(void)setPts:(int)pts {
     [super setPts:pts];
+}
+
+-(TGInputMessageTemplate *)inputTemplate {
+    return [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.peer_id];
 }
 
 @end

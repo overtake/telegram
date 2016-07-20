@@ -277,6 +277,8 @@
 
 -(void)checkAndMakeBotKeyboard:(MessageTableItem *)item {
     
+    
+    
     if([item.message.reply_markup isKindOfClass:[TL_replyInlineMarkup class]]) {
         
         if(!_keyboard) {

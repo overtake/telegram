@@ -343,7 +343,10 @@
         
         [appWindow().navigationController showMessagesViewController:dialog];
         
-        [appWindow().navigationController.messagesViewController setStringValueToTextField:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
+        TGInputMessageTemplate *template = dialog.inputTemplate;
+        [template updateTextAndSave:[NSString stringWithFormat:@"%@\n%@",obj[@"url"],obj[@"text"]]];
+        
+        [template performNotification];
         
         [appWindow().navigationController.messagesViewController selectInputTextByText:obj[@"text"]];
         

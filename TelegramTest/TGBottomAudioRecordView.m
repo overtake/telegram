@@ -74,6 +74,7 @@
 
 
 -(void)stopRecord:(BOOL)send {
+    [_timer invalidate];
     [[TMAudioRecorder sharedInstance] stopRecord:send];
 }
 

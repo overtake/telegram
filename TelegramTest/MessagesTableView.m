@@ -301,22 +301,23 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    NSPoint tablePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSUInteger row = [self rowAtPoint:tablePoint ];
-    
-    if(row == NSUIntegerMax && tablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
-        row = [self.viewController messagesCount] - 1;
+    if(theEvent.clickCount == 1) {
+        NSPoint tablePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        
+        NSUInteger row = [self rowAtPoint:tablePoint ];
+        
+        if(row == NSUIntegerMax && tablePoint.y > 0 && NSHeight(self.frame) == NSHeight(self.scrollView.frame)) {
+            row = [self.viewController messagesCount] - 1;
+        }
+        
+        self.firstSelectItem = [self.viewController messageList][row];
+        
+        
+        [SelectTextManager clear];
+        [SelectTextManager becomeFirstResponder];
+        [SelectTextManager setCurrentTableView:self];
+        _startSelectPosition = tablePoint;
     }
-    
-    self.firstSelectItem = [self.viewController messageList][row];
-    
-    
-    [SelectTextManager clear];
-    [SelectTextManager becomeFirstResponder];
-    [SelectTextManager setCurrentTableView:self];
-    _startSelectPosition = tablePoint;
-    
     
 }
 

@@ -73,25 +73,7 @@
 
 
 
--(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
-    
-    NSPasteboard *pst = [sender draggingPasteboard];
-    
-    if([pst.types containsObject:NSStringPboardType]) {
-        NSString *text = [pst stringForType:NSStringPboardType];
-        
-        [self insertText:text];
-        
-        return YES;
-        
-    } else {
-        
-        return [MessageSender sendDraggedFiles:sender dialog:self.controller.conversation asDocument:NO messagesViewController:self.controller];
-    
-    }
-    
-    return NO;
-}
+
 
 -(void)insertText:(id)insertString {
     //lol. MessagesBottomView
@@ -119,6 +101,26 @@
         
     }
    
+}
+
+-(BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
+    
+    NSPasteboard *pst = [sender draggingPasteboard];
+    
+    if([pst.types containsObject:NSStringPboardType]) {
+        NSString *text = [pst stringForType:NSStringPboardType];
+        
+        [self insertText:text];
+        
+        return YES;
+        
+    } else {
+        
+        return [MessageSender sendDraggedFiles:sender dialog:self.controller.conversation asDocument:NO messagesViewController:self.controller];
+        
+    }
+    
+    return NO;
 }
 
 
@@ -266,7 +268,7 @@
                     }
                 }];
             } else {
-                if(self.controller.bottomView.attachmentsCount == 0)
+                if(_controller.attachmentsCount == 0)
                     modal_caption_block();
                 else
                     [self.controller sendImage:@"image" forConversation:self.controller.conversation file_data:[image TIFFRepresentation]];

@@ -15,6 +15,8 @@
 @interface TGModernSendControlView ()
 @property (nonatomic,strong) BTRButton *send;
 @property (nonatomic,strong) BTRButton *voice;
+@property (nonatomic,strong) BTRButton *inlineDispose;
+
 
 
 @end
@@ -51,14 +53,24 @@
         [self addTarget:self action:@selector(sendAction:) forControlEvents:BTRControlEventClick];
         [_send addTarget:self action:@selector(sendAction:) forControlEvents:BTRControlEventClick];
         
+        _inlineDispose = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_LoadCancelGrayIcon().size.width, image_LoadCancelGrayIcon().size.height)];
+        [_inlineDispose setImage:image_LoadCancelGrayIcon() forControlState:BTRControlStateNormal];
+        
+        [_inlineDispose setCenterByView:self];
+        
+        [_inlineDispose addTarget:self action:@selector(sendAction:) forControlEvents:BTRControlEventClick];
+        
     }
     
     return self;
 }
 
 -(void)sendAction:(BTRButton *)sender {
-    if(_type == TGModernSendControlSendType)
-        [_delegate _performSendAction];
+    [_delegate _performSendAction];
+}
+
+-(void)inlineDisposeAction:(id)sender {
+    
 }
 
 -(int)csx {
@@ -66,6 +78,8 @@
 }
 
 -(void)setType:(TGModernSendControlType)type {
+    
+    TGModernSendControlType otype = _type;
     
     if(type == _type)
         return;
@@ -83,7 +97,7 @@
         [pAnim setValue:@(CALayerPositionAnimation) forKey:@"type"];
         
         
-        int presentX = self.presentSendX;
+        int presentX = otype == TGModernSendControlInlineRequestType ? self.csx : self.presentSendX;
         
         
         pAnim.fromValue = [NSValue valueWithPoint:NSMakePoint(presentX, NSMinY(_send.frame))];
@@ -96,18 +110,25 @@
         
     }
     
-    
-    if(type != TGModernSendControlRecordType) {
+    if(type == TGModernSendControlSendType) {
         [_voice removeFromSuperview:_animates];
         [_send performCAShow:_animates];
-    } else {
+    } else if(type == TGModernSendControlRecordType) {
         [_voice performCAShow:_animates];
         [_send performCAFade:_animates];
         [self addSubview:_voice];
+    } else if(type == TGModernSendControlInlineRequestType) {
+        [_voice removeFromSuperview:_animates];
+        [_send performCAFade:_animates];
+        [_inlineDispose performCAShow:_animates];
+        [self addSubview:_inlineDispose];
+    }
+    
+    if(otype == TGModernSendControlInlineRequestType) {
+        [_inlineDispose removeFromSuperview:_animates];
     }
     
     
-    [_animates ? [_voice animator] : _voice setAlphaValue:type != TGModernSendControlRecordType ? 0.0f : 1.0f];
     _send.layer.opacity = type == TGModernSendControlSendType ? 1.0f : 0.0f;
     _send.layer.position = NSMakePoint(type != TGModernSendControlSendType ? -NSWidth(_send.frame) : self.csx, NSMinY(_send.frame));
     [_send setFrameOrigin:_send.layer.position];
