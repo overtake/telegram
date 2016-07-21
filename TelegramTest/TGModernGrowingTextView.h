@@ -45,7 +45,7 @@
 -(int)height;
 
 
--(void)update;
+-(void)update:(BOOL)notify;
 
 -(NSAttributedString *)attributedString;
 -(void)setAttributedString:(NSAttributedString *)attributedString;
@@ -61,7 +61,9 @@
 
 -(void)setSelectedRange:(NSRange)range;
 
--(Class)_textViewClass;
 
+-(Class)_textViewClass;
+-(int)_startXPlaceholder;
+-(BOOL)_needShowPlaceholder;
 
 @end

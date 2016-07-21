@@ -1595,8 +1595,6 @@ static RBLPopover *popover;
     [attr setFont:TGSystemFont(13) forRange:attr.range];
     
     return attr;
-    
-    
 }
 
 

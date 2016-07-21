@@ -161,8 +161,8 @@
 }
 
 
--(void)update {
-    [self textDidChange:[NSNotification notificationWithName:NSTextDidChangeNotification object:_textView]];
+-(void)update:(BOOL)notify {
+    [self textDidChange:[NSNotification notificationWithName:NSTextDidChangeNotification object:notify ? _textView : nil]];
 }
 
 
@@ -288,13 +288,13 @@
     }
     
     
- //   if(self.needShowPlaceholder) {
+ //   if(self._needShowPlaceholder) {
     
     if(_placeholderAttributedString) {
         
         if(animated && ((self.string.length == 0 && _placeholder.layer.opacity < 1.0f) || (self.string.length > 0 && _placeholder.layer.opacity > 0.0f))) {
-            float presentX = self.needShowPlaceholder ?NSMinX(_scrollView.frame) + 30: NSMinX(_scrollView.frame) + 6;
-            float presentOpacity = self.needShowPlaceholder ? 0.0f : 1.0f;
+            float presentX = self._needShowPlaceholder ? self._endXPlaceholder : self._startXPlaceholder;
+            float presentOpacity = self._needShowPlaceholder ? 0.0f : 1.0f;
             
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
             
@@ -304,16 +304,16 @@
             if(presentLayer && [_placeholder.layer animationForKey:@"opacity"]) {
                 presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
             }
-            if(self.needShowPlaceholder)
+            if(self._needShowPlaceholder)
                 [_placeholder setHidden:NO];
             
-            CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self.needShowPlaceholder ? 1.0f : 0.0f];
+            CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self._needShowPlaceholder ? 1.0f : 0.0f];
             
             TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:_placeholder.layer];
             
             [delegate setCompletion:^(BOOL completed) {
                 if(completed)
-                    [_placeholder setHidden:!self.needShowPlaceholder];
+                    [_placeholder setHidden:!self._needShowPlaceholder];
             }];
             
             oAnim.delegate = delegate;
@@ -321,7 +321,7 @@
             [_placeholder.layer removeAnimationForKey:@"opacity"];
             [_placeholder.layer addAnimation:oAnim forKey:@"opacity"];
             
-            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_scrollView.frame) + 30, NSMinY(_placeholder.frame))];
+            CAAnimation *pAnim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, NSMinY(_placeholder.frame)) toValue:self._needShowPlaceholder ? NSMakePoint(self._startXPlaceholder, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(self._endXPlaceholder, NSMinY(_placeholder.frame))];
             
             
             [_placeholder.layer removeAnimationForKey:@"position"];
@@ -330,12 +330,12 @@
             
             
         } else {
-            [_placeholder setHidden:!self.needShowPlaceholder];
+            [_placeholder setHidden:!self._needShowPlaceholder];
         }
         
-        [_placeholder setFrameOrigin:self.needShowPlaceholder ? NSMakePoint(NSMinX(_scrollView.frame) + 6, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
+        [_placeholder setFrameOrigin:self._needShowPlaceholder ? NSMakePoint(self._startXPlaceholder, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
         
-        _placeholder.layer.opacity = self.needShowPlaceholder ? 1.0f : 0.0f;
+        _placeholder.layer.opacity = self._needShowPlaceholder ? 1.0f : 0.0f;
 
     }
     
@@ -346,8 +346,8 @@
     
     [self setNeedsDisplay:YES];
     
-    
-    [self.delegate textViewTextDidChange:self];
+    if(notification.object)
+        [self.delegate textViewTextDidChange:self];
     
     [self refreshAttributes];
     
@@ -359,7 +359,7 @@
     [_textView setFrameSize:NSMakeSize(NSWidth(_scrollView.frame), NSHeight(_textView.frame))];
 }
 
--(BOOL)needShowPlaceholder {
+-(BOOL)_needShowPlaceholder {
     return _textView.string.length == 0 && _placeholderAttributedString;
 }
 
@@ -373,7 +373,7 @@
     
     BOOL animates = _animates;
     _animates = NO;
-    [self update];
+    [self update:NO];
     _animates = animates;
 
 }
@@ -591,12 +591,12 @@
 
 -(void)setAttributedString:(NSAttributedString *)attributedString {
     [_textView.textStorage setAttributedString:attributedString];
-    [self update];
+    [self update:YES];
 }
 
 -(void)setString:(NSString *)string {
     [_textView setString:string];
-    [self update];
+    [self update:YES];
 }
 -(NSRange)selectedRange {
     return _textView.selectedRange;
@@ -662,7 +662,7 @@
         [_textView.textStorage setAttributedString:text];
     }
     
-    [self update];
+    [self update:NO];
 }
 
 -(void)paste:(id)sender {
@@ -676,6 +676,14 @@
 
 -(Class)_textViewClass {
     return [TGGrowingTextView class];
+}
+
+-(int)_startXPlaceholder {
+    return NSMinX(_scrollView.frame) + 6;
+}
+
+-(int)_endXPlaceholder {
+    return self._startXPlaceholder + 30;
 }
 
 @end

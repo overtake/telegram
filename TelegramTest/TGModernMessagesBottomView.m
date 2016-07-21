@@ -414,7 +414,11 @@ const float defYOffset = 12;
     
     self.animates = animated;
     
+    [_textView setPlaceholderAttributedString:self.placeholder];
+
+    
     [_textView setAttributedString:inputTemplate.attributedString];
+    
 
     [self resignalBotKeyboard:NO changeState:NO resignalAttachments:YES resignalKeyboard:YES];
     
@@ -422,13 +426,6 @@ const float defYOffset = 12;
     [self refreshObservers];
     
     
-    if(inputTemplate.type == TGInputMessageTemplateTypeSimpleText) {
-        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        [attr appendString:_messagesController.conversation.chat.isChannel && !_messagesController.conversation.chat.isMegagroup ? NSLocalizedString(@"Message.SendBroadcast", nil) : NSLocalizedString(@"Message.SendPlaceholder", nil) withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13) forRange:attr.range];
-        
-        [_textView setPlaceholderAttributedString:attr];
-    }
     
     self.animates = oa;
     
@@ -436,6 +433,18 @@ const float defYOffset = 12;
     
     [self becomeFirstResponder];
     
+}
+
+-(NSAttributedString *)placeholder {
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+
+    if(_inputTemplate.type == TGInputMessageTemplateTypeSimpleText) {
+        [attr appendString:_messagesController.conversation.chat.isChannel && !_messagesController.conversation.chat.isMegagroup ? NSLocalizedString(@"Message.SendBroadcast", nil) : NSLocalizedString(@"Message.SendPlaceholder", nil) withColor:GRAY_TEXT_COLOR];
+    } else {
+        [attr appendString:NSLocalizedString(@"Placeholder.EditMessage", nil) withColor:GRAY_TEXT_COLOR];
+    }
+    [attr setFont:[SettingsArchiver font] forRange:attr.range];
+    return attr;
 }
 
 -(void)refreshObservers {
@@ -594,6 +603,8 @@ const float defYOffset = 12;
     
     
     @try {
+        
+        
         NSString *search = nil;
         NSString *string = _textView.string;
         NSRange selectedRange = _textView.selectedRange;
@@ -683,6 +694,7 @@ const float defYOffset = 12;
                 }
             } else {
                 [_messagesController.hintView hide];
+                [_textView setInline:NO placeHolder:self.placeholder];
             }
             
             
@@ -703,7 +715,7 @@ const float defYOffset = 12;
                     weak();
                     
                     [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
-                        // [weakSelf.textView setInline_placeholder:![query isEqualToString:@" "] ? nil : [weakSelf inline_placeholder:user]];
+                        [weakSelf.textView setInline:[query isEqualToString:@" "] placeHolder:[query isEqualToString:@" "] ? [weakSelf inline_placeholder:user] : [self placeholder]];
                          [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
                     }] startWithNext:^(id next) {
                         
@@ -722,9 +734,10 @@ const float defYOffset = 12;
             
         } else {
             [_messagesController.hintView hide];
+            [_textView setInline:NO placeHolder:self.placeholder];
         }
     } @catch (NSException *exception) {
-        int bp = 0;
+        
     }
    
 }
@@ -737,6 +750,16 @@ const float defYOffset = 12;
         [self updateTextType];
     
     [self resignalActions];
+}
+
+-(NSAttributedString *)inline_placeholder:(TLUser *)bot {
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:bot.bot_inline_placeholder withColor:GRAY_TEXT_COLOR];
+    
+    [attr setFont:[SettingsArchiver font] forRange:attr.range];
+    
+    return attr;
 }
 
 

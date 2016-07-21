@@ -191,6 +191,10 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     return dp;
 }
 
++(NSFont *)font {
+    return [SettingsArchiver checkMaskedSetting:BigFontSetting] ? TGSystemFont(15) : TGSystemFont(13);
+}
+
 + (BOOL)setDocumentsFolder:(NSString *)folder {
    
     NSError *error;

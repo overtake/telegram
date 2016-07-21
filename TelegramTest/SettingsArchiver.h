@@ -80,7 +80,7 @@ extern NSString *const kPermissionInlineBotLocationRequest;
 
 + (int)contain:(int)mask;
 
-
++(NSFont *)font;
 
 + (void)addEventListener:(id<SettingsListener>)listener;
 + (void)removeEventListener:(id<SettingsListener>)listener;

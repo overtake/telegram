@@ -330,4 +330,18 @@
     return [TGMessagesTextView class];
 }
 
+-(void)setInline:(BOOL)isInline placeHolder:(NSAttributedString *)placeholder {
+    _isInline = isInline;
+    self.placeholderAttributedString = placeholder;
+}
+
+-(int)_startXPlaceholder {
+    return _isInline ? [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)].width  : [super _startXPlaceholder];
+}
+
+-(BOOL)_needShowPlaceholder {
+    return _isInline || [super _needShowPlaceholder];
+}
+
+
 @end
