@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 11.07.16..
+//  Auto created by Mikhail Filimonov on 21.07.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1864,16 +1864,16 @@
 @end
 
 @implementation TLAPI_messages_installStickerSet
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled {
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset archived:(Boolean)archived {
     TLAPI_messages_installStickerSet* obj = [[TLAPI_messages_installStickerSet alloc] init];
     obj.stickerset = stickerset;
-	obj.disabled = disabled;
+	obj.archived = archived;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:2066793382];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-946871200];
 	[ClassStore TLSerialize:self.stickerset stream:stream];
-	[stream writeBool:self.disabled];
+	[stream writeBool:self.archived];
 	return [stream getOutput];
 }
 @end
@@ -2804,10 +2804,9 @@
 @end
 
 @implementation TLAPI_messages_setBotCallbackAnswer
-+(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags   query_id:(long)query_id message:(NSString*)message url:(NSString*)url {
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url {
     TLAPI_messages_setBotCallbackAnswer* obj = [[TLAPI_messages_setBotCallbackAnswer alloc] init];
     obj.flags = flags;
-	
 	
 	obj.query_id = query_id;
 	obj.message = message;
@@ -2817,7 +2816,6 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1893470115];
 	[stream writeInt:self.flags];
-	
 	
 	[stream writeLong:self.query_id];
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
@@ -2976,6 +2974,21 @@
 }
 @end
 
+@implementation TLAPI_messages_saveRecentSticker
++(TLAPI_messages_saveRecentSticker*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave {
+    TLAPI_messages_saveRecentSticker* obj = [[TLAPI_messages_saveRecentSticker alloc] init];
+    obj.n_id = n_id;
+	obj.unsave = unsave;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:881736127];
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[stream writeBool:self.unsave];
+	return [stream getOutput];
+}
+@end
+
 @implementation TLAPI_messages_clearRecentStickers
 +(TLAPI_messages_clearRecentStickers*)create {
     TLAPI_messages_clearRecentStickers* obj = [[TLAPI_messages_clearRecentStickers alloc] init];
@@ -2997,6 +3010,21 @@
 }
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1451699370];
+	[stream writeInt:self.limit];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getArchivedStickers
++(TLAPI_messages_getArchivedStickers*)createWithOffset_id:(long)offset_id limit:(int)limit {
+    TLAPI_messages_getArchivedStickers* obj = [[TLAPI_messages_getArchivedStickers alloc] init];
+    obj.offset_id = offset_id;
+	obj.limit = limit;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1871829985];
+	[stream writeLong:self.offset_id];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
 }

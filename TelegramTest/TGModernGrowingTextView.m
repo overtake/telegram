@@ -99,7 +99,8 @@
         
 
         _textView = [[[self _textViewClass] alloc] initWithFrame:self.bounds];
-        
+        [_textView setRichText:NO];
+        [_textView setImportsGraphics:NO];
         _textView.backgroundColor = [NSColor clearColor];
         
         [_textView setAllowsUndo:YES];
@@ -640,7 +641,7 @@
             if (c == '@')
             {
                 if (i == idx)
-                    candidateMentionRange = NSMakeRange(i + 1, 0);
+                    candidateMentionRange = NSMakeRange(i + 1, selRange.length);
                 else
                     candidateMentionRange = NSMakeRange(i + 1, idx - i);
                 break;

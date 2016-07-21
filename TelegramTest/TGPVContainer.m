@@ -151,8 +151,12 @@
 
 -(void)mouseUp:(NSEvent *)theEvent {
     
-    if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_imageContainerView.frame])
+    NSPoint point = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    
+    if([self mouse:point inRect:_imageContainerView.frame])
         [TGPhotoViewer nextItem];
+    else if(point.x < 0)
+        [TGPhotoViewer prevItem];
     else
         [[TGPhotoViewer viewer] hide];
 }

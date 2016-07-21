@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 11.07.16.
+//  Auto created by Mikhail Filimonov on 21.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -457,6 +457,12 @@
 @end
 	
 @interface TLmessages_RecentStickers : TLObject
+@end
+	
+@interface TLmessages_ArchivedStickers : TLObject
+@end
+	
+@interface TLmessages_StickerSetInstallResult : TLObject
 @end
 	
 @interface TLAudio : TLObject
@@ -1984,11 +1990,12 @@
 @property int saved_gifs_limit;
 @property int edit_time_limit;
 @property int rating_e_decay;
+@property int stickers_recent_limit;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay stickers_recent_limit:(int)stickers_recent_limit disabled_features:(NSMutableArray*)disabled_features;
 @end
 	
 @interface TLNearestDc()
@@ -2611,7 +2618,7 @@
 @interface TLStickerSet()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isInstalled;
-@property (nonatomic,assign,readonly) BOOL isDisabled;
+@property (nonatomic,assign,readonly) BOOL isArchived;
 @property (nonatomic,assign,readonly) BOOL isOfficial;
 @property long n_id;
 @property long access_hash;
@@ -3153,13 +3160,12 @@
 @interface TLmessages_BotCallbackAnswer()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isAlert;
-@property (nonatomic,assign,readonly) BOOL isAllow_pip;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSString* url;
 @end
 
 @interface TL_messages_botCallbackAnswer : TLmessages_BotCallbackAnswer<NSCoding>
-+(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags   message:(NSString*)message url:(NSString*)url;
++(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags  message:(NSString*)message url:(NSString*)url;
 @end
 	
 @interface TLmessages_MessageEditData()
@@ -3293,6 +3299,26 @@
 @end
 @interface TL_messages_recentStickers : TLmessages_RecentStickers<NSCoding>
 +(TL_messages_recentStickers*)createWithN_hash:(int)n_hash stickers:(NSMutableArray*)stickers;
+@end
+	
+@interface TLmessages_ArchivedStickers()
+@property int n_count;
+@property (nonatomic, strong) NSMutableArray* sets;
+@end
+
+@interface TL_messages_archivedStickers : TLmessages_ArchivedStickers<NSCoding>
++(TL_messages_archivedStickers*)createWithN_count:(int)n_count sets:(NSMutableArray*)sets;
+@end
+	
+@interface TLmessages_StickerSetInstallResult()
+@property (nonatomic, strong) NSMutableArray* sets;
+@end
+
+@interface TL_messages_stickerSetInstallResultSuccess : TLmessages_StickerSetInstallResult<NSCoding>
++(TL_messages_stickerSetInstallResultSuccess*)create;
+@end
+@interface TL_messages_stickerSetInstallResultArchive : TLmessages_StickerSetInstallResult<NSCoding>
++(TL_messages_stickerSetInstallResultArchive*)createWithSets:(NSMutableArray*)sets;
 @end
 	
 @interface TLAudio()

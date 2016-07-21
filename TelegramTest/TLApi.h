@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 11.07.16.
+//  Auto created by Mikhail Filimonov on 21.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -790,9 +790,9 @@
 
 @interface TLAPI_messages_installStickerSet : TLApiObject
 @property (nonatomic, strong) TLInputStickerSet* stickerset;
-@property Boolean disabled;
+@property Boolean archived;
 
-+(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset disabled:(Boolean)disabled;
++(TLAPI_messages_installStickerSet*)createWithStickerset:(TLInputStickerSet*)stickerset archived:(Boolean)archived;
 @end
 
 @interface TLAPI_messages_uninstallStickerSet : TLApiObject
@@ -1183,12 +1183,11 @@
 @interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isAlert;
-@property (nonatomic,assign,readonly) BOOL isAllow_pip;
 @property long query_id;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSString* url;
 
-+(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags   query_id:(long)query_id message:(NSString*)message url:(NSString*)url;
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url;
 @end
 
 @interface TLAPI_contacts_getTopPeers : TLApiObject
@@ -1253,6 +1252,13 @@
 +(TLAPI_messages_getRecentStickers*)createWithN_hash:(int)n_hash;
 @end
 
+@interface TLAPI_messages_saveRecentSticker : TLApiObject
+@property (nonatomic, strong) TLInputDocument* n_id;
+@property Boolean unsave;
+
++(TLAPI_messages_saveRecentSticker*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
+@end
+
 @interface TLAPI_messages_clearRecentStickers : TLApiObject
 
 
@@ -1263,5 +1269,12 @@
 @property int limit;
 
 +(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit;
+@end
+
+@interface TLAPI_messages_getArchivedStickers : TLApiObject
+@property long offset_id;
+@property int limit;
+
++(TLAPI_messages_getArchivedStickers*)createWithOffset_id:(long)offset_id limit:(int)limit;
 @end
 

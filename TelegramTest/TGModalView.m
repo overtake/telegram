@@ -207,11 +207,7 @@
         
         self.containerView.layer.opacity = 1.0f;
         
-     //
-        
-//        [anim setCompletionBlock:^(POPAnimation *pop, BOOL anim) {
-//            [weakSelf modalViewDidShow];
-//        }];
+
         
         
         CABasicAnimation *slide = [CABasicAnimation animationWithKeyPath:kPOPLayerPosition];
@@ -227,9 +223,7 @@
         [self.animationContainerView.layer setPosition:NSMakePoint(NSMinX(_animationContainerView.frame), roundf((NSHeight(self.frame) - NSHeight(self.animationContainerView.frame))/2))];
         [self.animationContainerView setFrameOrigin:NSMakePoint(NSMinX(_animationContainerView.frame), roundf((NSHeight(self.frame) - NSHeight(self.animationContainerView.frame))/2))];
 
-//        [slide setCompletionBlock:^(POPAnimation *pop, BOOL anim) {
-//          
-//        }];
+
 
         
         
@@ -245,7 +239,7 @@
 
 -(void)close:(BOOL)animated {
     
-    if(self.window) {
+    if(self.window && self.animationContainerView.layer.opacity > 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:NSWindowDidBecomeKeyNotification object:self.window];
         
         if(animated) {

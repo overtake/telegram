@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 11.07.16.
+    //  Created by keepcoder on 21.07.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -298,7 +298,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
    [cs_classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
    [cs_classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:98092748]];
-   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:-918482040]];
+   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:-201218881]];
    [cs_classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
    [cs_classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
    [cs_classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];
@@ -572,6 +572,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_recentStickersNotModified class] forKey:[NSNumber numberWithInt:186120336]];
    [cs_classes setObject:[TL_messages_recentStickers class] forKey:[NSNumber numberWithInt:1558317424]];
    [cs_classes setObject:[TL_updateRecentStickers class] forKey:[NSNumber numberWithInt:-1706939360]];
+   [cs_classes setObject:[TL_messages_archivedStickers class] forKey:[NSNumber numberWithInt:-213427188]];
+   [cs_classes setObject:[TL_messages_stickerSetInstallResultSuccess class] forKey:[NSNumber numberWithInt:946083368]];
+   [cs_classes setObject:[TL_messages_stickerSetInstallResultArchive class] forKey:[NSNumber numberWithInt:422349390]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

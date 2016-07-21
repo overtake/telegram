@@ -855,6 +855,7 @@
 		C2D4B9281AFCEA1D0035B4E4 /* YapDatabaseExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C01AFCEA1D0035B4E4 /* YapDatabaseExtension.m */; };
 		C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */; };
 		C2D4B92A1AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */; };
+		C2D4CA2A1D410390003118AE /* TGModalArchivedPacks.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */; };
 		C2D51B981B179D91009327C0 /* FullUsersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B971B179D91009327C0 /* FullUsersManager.m */; };
 		C2D51B9F1B17A6BD009327C0 /* TGHelpPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B9E1B17A6BD009327C0 /* TGHelpPopup.m */; };
 		C2D51BA31B17AA14009327C0 /* TGBotCommandsPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BA21B17AA14009327C0 /* TGBotCommandsPopup.m */; };
@@ -2680,6 +2681,8 @@
 		C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseExtensionConnection.m; sourceTree = "<group>"; };
 		C2D4B8C31AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapDatabaseExtensionTransaction.h; sourceTree = "<group>"; };
 		C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseExtensionTransaction.m; sourceTree = "<group>"; };
+		C2D4CA281D410390003118AE /* TGModalArchivedPacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalArchivedPacks.h; sourceTree = "<group>"; };
+		C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalArchivedPacks.m; sourceTree = "<group>"; };
 		C2D51B961B179D91009327C0 /* FullUsersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullUsersManager.h; sourceTree = "<group>"; };
 		C2D51B971B179D91009327C0 /* FullUsersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullUsersManager.m; sourceTree = "<group>"; };
 		C2D51B9D1B17A6BD009327C0 /* TGHelpPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHelpPopup.h; sourceTree = "<group>"; };
@@ -5590,6 +5593,8 @@
 				C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */,
 				C20A8ACB1D2FCECD00C70134 /* TGJoinModalView.h */,
 				C20A8ACC1D2FCECD00C70134 /* TGJoinModalView.m */,
+				C2D4CA281D410390003118AE /* TGModalArchivedPacks.h */,
+				C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";
@@ -7123,6 +7128,7 @@
 				C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */,
 				C22C7F2C18B2163F007C4D17 /* MTNetwork.m in Sources */,
 				C2078E2E1CB53CD00037B1B2 /* TGModalMessagesViewController.m in Sources */,
+				C2D4CA2A1D410390003118AE /* TGModalArchivedPacks.m in Sources */,
 				C26F7EB51A56E5C4001D1AE2 /* CommitKeySecretSenderItem.m in Sources */,
 				0A4A1A2B18A295F100D756CD /* TMInAppLinks.m in Sources */,
 				C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */,

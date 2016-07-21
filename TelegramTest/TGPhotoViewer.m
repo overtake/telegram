@@ -742,7 +742,7 @@ static TGPhotoViewer *viewer;
         [self.list addObjectsFromArray:[self.behavior convertObjects:previewObjects]];
         
         [self resort];
-    }];
+    } synchronous:YES];
 }
 
 

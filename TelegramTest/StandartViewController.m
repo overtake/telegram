@@ -72,9 +72,7 @@
 
 -(void)loadView {
     
-    
-    
-    ExtendView *exView = [[ExtendView alloc] initWithFrame: self.frameInit];
+   ExtendView *exView = [[ExtendView alloc] initWithFrame: self.frameInit];
     
     
     self.view = exView;

@@ -83,7 +83,7 @@
     __block NSString *path = nil;
     
     NSString *url = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.file-url"];
-    NSString *caption = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.plain-text"];
+    NSString *caption = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.utf8-plain-text"];
     if (url != nil) {
         path = [[NSURL URLWithString:url] path];
         

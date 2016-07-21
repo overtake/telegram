@@ -89,7 +89,7 @@
     [TMViewController showModalProgress];
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:item.set.n_id access_hash:item.set.access_hash] disabled:NO] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:item.set.n_id access_hash:item.set.access_hash] archived:NO] successHandler:^(id request, id response) {
         
         if([response isKindOfClass:[TL_boolTrue class]]) {
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {

@@ -640,6 +640,9 @@ const float defYOffset = 12;
             void (^callback)(NSString *name, id object) = ^(NSString *name,id object) {
                
                 NSRange range = NSMakeRange(selectedRange.location - search.length, search.length);
+                
+                [_textView setSelectedRange:range];
+                
                 if(![object isKindOfClass:[TLUser class]]) {
                     [_textView insertText:[name stringByAppendingString:@" "] replacementRange:range];
                     
