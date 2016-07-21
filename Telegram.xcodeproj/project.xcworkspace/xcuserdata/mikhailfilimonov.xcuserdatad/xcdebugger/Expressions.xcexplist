@@ -1113,6 +1113,9 @@
          contextName = "-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]:Storage.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesTextView validateMenuItem:]:TGMessagesGrowingTextView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ChannelInfoViewController reloadParticipants]:ChannelInfoViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -7559,6 +7562,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.message.message">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__72-[TGBottomKeyboardContainerView resignalKeyboard:forceShow:changeState:]_block_invoke_2:TGBottomKeyboardContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "changeState">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

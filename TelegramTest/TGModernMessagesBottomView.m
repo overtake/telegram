@@ -265,12 +265,12 @@ const float defYOffset = 12;
     [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
-     [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
+    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
 
 
     [_imageAttachmentsController moveWithCAAnimation:NSMakePoint(NSMinX(_imageAttachmentsController.frame), _imageAttachmentsController.isShown ? _bottomHeight : _bottomHeight - NSHeight(_imageAttachmentsController.frame)) animated:animated];
     
-    [_botkeyboard heightWithCAAnimation:NSMakeRect(0, 0, NSWidth(self.frame), _bottomHeight) animated:animated];
+    [_botkeyboard heightWithCAAnimation:NSMakeRect(NSMinX(_botkeyboard.frame), NSMinY(_botkeyboard.frame), NSWidth(self.frame), _bottomHeight) animated:animated];
     
     if(_audioRecordView.superview) {
         [_audioRecordView moveWithCAAnimation:NSMakePoint(0, bottomSize.height) animated:animated];
@@ -576,10 +576,7 @@ const float defYOffset = 12;
         }
         
         if(next[2] != [NSNull null]) {
-            BOOL c = [next[2] boolValue];
             changed = changed || [next[2] boolValue];
-            
-            [_botkeyboard setFrame:NSMakeRect(10, c && _imageAttachmentsController.isShown ? _bottomHeight - NSHeight(_imageAttachmentsController.frame) : 0, NSWidth(self.frame) - 20, NSHeight(_imageAttachmentsController.frame))];
         }
         
 
@@ -836,7 +833,7 @@ const float defYOffset = 12;
 }
 
 -(void)_showOrHideBotKeyboardAction:(NSNotification *)notify {
-    [self resignalBotKeyboard:NO changeState:notify == nil resignalAttachments:NO resignalKeyboard:YES];
+    [self resignalBotKeyboard:notify == nil changeState:notify == nil resignalAttachments:NO resignalKeyboard:YES];
 }
 
 -(void)_insertEmoji:(NSString *)emoji {
