@@ -304,8 +304,7 @@
             if(presentLayer && [_placeholder.layer animationForKey:@"opacity"]) {
                 presentOpacity = [[presentLayer valueForKeyPath:@"opacity"] floatValue];
             }
-            if(self._needShowPlaceholder)
-                [_placeholder setHidden:NO];
+            [_placeholder setHidden:NO];
             
             CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self._needShowPlaceholder ? 1.0f : 0.0f];
             
@@ -363,19 +362,27 @@
     return _textView.string.length == 0 && _placeholderAttributedString;
 }
 
-
--(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString {
+-(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString update:(BOOL)update {
+    
+    if([_placeholderAttributedString isEqualToAttributedString:placeholderAttributedString])
+        return;
+    
     _placeholderAttributedString = placeholderAttributedString;
     [_placeholder setAttributedString:_placeholderAttributedString];
+    
     [_placeholder sizeToFit];
     
-    [_placeholder setFrameSize:NSMakeSize(MIN(NSWidth(_textView.frame) - 20,NSWidth(_placeholder.frame)), NSHeight(_placeholder.frame))];
+    [_placeholder setFrameSize:NSMakeSize(MIN(NSWidth(_textView.frame) - self._startXPlaceholder - 10,NSWidth(_placeholder.frame)), NSHeight(_placeholder.frame))];
     
     BOOL animates = _animates;
     _animates = NO;
     [self update:NO];
     _animates = animates;
 
+}
+
+-(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString {
+    [self setPlaceholderAttributedString:placeholderAttributedString update:YES];
 }
 
 -(NSParagraphStyle *)defaultParagraphStyle {
@@ -662,7 +669,7 @@
         [_textView.textStorage setAttributedString:text];
     }
     
-    [self update:NO];
+    [self update:YES];
 }
 
 -(void)paste:(id)sender {

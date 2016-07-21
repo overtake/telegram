@@ -624,9 +624,9 @@ const float defYOffset = 12;
                     search = nil;
                 }
             }
-            
-            
         }
+        
+        [_textView setInline:NO placeHolder:self.placeholder];
         
         [_messagesController.hintView cancel];
         
@@ -642,6 +642,7 @@ const float defYOffset = 12;
                 NSRange range = NSMakeRange(selectedRange.location - search.length, search.length);
                 if(![object isKindOfClass:[TLUser class]]) {
                     [_textView insertText:[name stringByAppendingString:@" "] replacementRange:range];
+                    
                 } else {
                     TLUser *user = object;
                     [_textView replaceMention:user.username.length > 0 ? user.username : user.first_name username:user.username.length > 0 userId:user.n_id];
@@ -694,7 +695,6 @@ const float defYOffset = 12;
                 }
             } else {
                 [_messagesController.hintView hide];
-                [_textView setInline:NO placeHolder:self.placeholder];
             }
             
             
@@ -715,7 +715,7 @@ const float defYOffset = 12;
                     weak();
                     
                     [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
-                        [weakSelf.textView setInline:[query isEqualToString:@" "] placeHolder:[query isEqualToString:@" "] ? [weakSelf inline_placeholder:user] : [self placeholder]];
+                        [weakSelf.textView setInline:[query isEqualToString:@" "] placeHolder:[weakSelf inline_placeholder:user]];
                          [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
                     }] startWithNext:^(id next) {
                         
@@ -734,7 +734,6 @@ const float defYOffset = 12;
             
         } else {
             [_messagesController.hintView hide];
-            [_textView setInline:NO placeHolder:self.placeholder];
         }
     } @catch (NSException *exception) {
         

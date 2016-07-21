@@ -332,7 +332,7 @@
 
 -(void)setInline:(BOOL)isInline placeHolder:(NSAttributedString *)placeholder {
     _isInline = isInline;
-    self.placeholderAttributedString = placeholder;
+    [self setPlaceholderAttributedString:placeholder update:NO];
 }
 
 -(int)_startXPlaceholder {

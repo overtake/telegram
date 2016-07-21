@@ -40,6 +40,8 @@
 
 @property (nonatomic,strong) NSAttributedString *placeholderAttributedString;
 
+-(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString update:(BOOL)update;
+
 @property (nonatomic,weak) id <TGModernGrowingDelegate> delegate;
 
 -(int)height;

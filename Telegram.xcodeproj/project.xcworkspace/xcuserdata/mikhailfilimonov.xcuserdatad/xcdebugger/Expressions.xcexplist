@@ -2938,6 +2938,9 @@
          contextName = "-[TGModernGrowingTextView textDidChange:]:TGModernGrowingTextView.m">
          <PersistentStrings>
             <PersistentString
+               value = "animated">
+            </PersistentString>
+            <PersistentString
                value = "presentX">
             </PersistentString>
          </PersistentStrings>
