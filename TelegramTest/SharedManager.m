@@ -31,11 +31,14 @@ static NSMutableArray *managers;
 
 
 +(void)drop {
-    [ASQueue dispatchOnStageQueue:^{
-        for (SharedManager *manager in managers) {
+    
+    int bp = 0;
+    
+    for (SharedManager *manager in managers) {
+        [manager.queue dispatchOnQueue:^{
             [manager drop];
-        }
-    }];
+        } synchronous:NO];
+    }
 }
 
 -(id)init {

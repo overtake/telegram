@@ -31,6 +31,8 @@
 #import "TGLocationRequest.h"
 #import "TGContextMessagesvViewController.h"
 #import "TGEmbedModalView.h"
+#import "TGModernESGViewController.h"
+#import "TGModalArchivedPacks.h"
 @implementation MessageSender
 
 
@@ -260,7 +262,7 @@
     }
     
     
-    [template setReplyMessage:nil save:NO];
+    [template setReplyMessage:nil save:YES];
 
     [[template updateSignalText:[[NSAttributedString alloc] init]] startWithNext:^(id next) {
         if([next[0] boolValue] || replyMessage) {
@@ -918,6 +920,104 @@ static TGLocationRequest *locationRequest;
     return nil;
 }
 
++(SSignal *)addStickerPack:(TL_messages_stickerSet *)pack {
+    
+    return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+        
+         RPCRequest *request = [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:pack.set.n_id access_hash:pack.set.access_hash] archived:NO] successHandler:^(id request, TLmessages_StickerSetInstallResult *response) {
+            
+            
+            NSMutableDictionary *documents = [NSMutableDictionary dictionaryWithCapacity:response.sets.count];
+             
+             NSMutableArray *copysets = [response.sets mutableCopy];
+            
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                
+                NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                
+                NSMutableDictionary *stickers = info[@"serialized"];
+                
+                
+                NSMutableArray *sets = info[@"sets"];
+                
+                [sets addObject:pack.set];
+                stickers[@(pack.set.n_id)] = pack.documents;
+                
+                
+                
+                
+                if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
+                    
+                    [response.sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        documents[@(obj.n_id)] = stickers[@(obj.n_id)];
+                        [stickers removeObjectForKey:@(obj.n_id)];
+                    }];
+                    
+                    NSMutableArray *removed = [NSMutableArray array];
+                    
+                    [sets enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        
+                        __block TL_stickerSet * changedSet = nil;
+                        
+                        [response.sets enumerateObjectsUsingBlock:^(TL_stickerSet * archived, NSUInteger idx, BOOL * _Nonnull stop) {
+                            if(obj.n_id == archived.n_id) {
+                            
+                                changedSet = archived;
+                                [removed addObject:obj];
+                            }
+                        }];
+                        
+                        if(changedSet) {
+                            [response.sets removeObject:changedSet];
+                            
+                            *stop = response.sets.count == 0;
+                        }
+                        
+                    }];
+                    
+                    [sets removeObjectsInArray:removed];
+                    
+                }
+                
+                [transaction setObject:info forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                
+            }];
+             
+             
+             if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
+                 
+                 [Notification perform:ARCHIVE_STICKERS_CHANGED data:@{KEY_STICKERSET:copysets,KEY_DATA:documents}];
+                 
+                 [TMViewController hideModalProgress];
+                 
+                 TGModalArchivedPacks *archived = [[TGModalArchivedPacks alloc] initWithFrame:NSZeroRect];
+                 [archived show:appWindow() animated:YES sets:copysets documents:documents];
+             } else {
+                 [TMViewController hideModalProgressWithSuccess];
+             }
+            
+            [TGModernESGViewController reloadStickers];
+            
+            
+            
+             
+             [subscriber putNext:@(YES)];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [TMViewController hideModalProgress];
+            
+            [subscriber putNext:@(NO)];
+        } timeout:10];
+        
+        
+        return [[SBlockDisposable alloc] initWithBlock:^{
+            [request cancelRequest];
+        }];
+    }];
+    
+    
+
+}
 
 
 +(void)drop {

@@ -580,7 +580,7 @@ const float defYOffset = 12;
                 changed = YES;
                 
                 [_actionsView setActiveKeyboardButton:_bottomHeight > 0];
-                
+                [self resignalActions];
             }
         }
         

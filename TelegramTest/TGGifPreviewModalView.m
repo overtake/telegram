@@ -38,7 +38,7 @@
     
     NSSize max = NSMakeSize(vAttr.w, vAttr.h);
     
-    return strongsize(max, MIN(NSWidth(self.frame),NSHeight(self.frame)) - 40);
+    return strongsize(max, MIN(NSWidth(appWindow().frame),NSHeight(appWindow().frame)) - 40);
     
 }
 

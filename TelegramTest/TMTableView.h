@@ -78,10 +78,10 @@
                      to:(NSUInteger)to
             tableRedraw:(BOOL)tableRedraw;
 
-- (NSObject *) itemByHash:(NSUInteger)hash;
+- (id) itemByHash:(NSUInteger)hash;
 - (id) itemAtPosition:(NSUInteger)positionOfItem;
 - (NSUInteger)indexOfItem:(NSObject *)item;
-- (NSObject *)selectedItem;
+- (id)selectedItem;
 - (BOOL) setSelectedByHash:(NSUInteger)hash;
 - (void) cancelSelection;
 - (void) cancelSelection:(NSObject*)object;

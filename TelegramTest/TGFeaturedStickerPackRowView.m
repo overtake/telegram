@@ -89,41 +89,12 @@
     [TMViewController showModalProgress];
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:item.set.n_id access_hash:item.set.access_hash] archived:NO] successHandler:^(id request, id response) {
+    [[MessageSender addStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]]] startWithNext:^(id next) {
         
-        if([response isKindOfClass:[TL_boolTrue class]]) {
-            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                
-                NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-                
-                NSMutableDictionary *stickers = info[@"serialized"];
-                
-                NSMutableArray *sets = info[@"sets"];
-                
-                [sets addObject:item.set];
-                stickers[@(item.set.n_id)] = item.stickers;
-                
-//                NSMutableArray *unread = [transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
-//                
-//                [unread removeObject:@(item.set.n_id)];
-//                [transaction setObject:unread forKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
-                [transaction setObject:info forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-                
-            }];
-        }
+        complete([next boolValue]);
         
-        
-        [TGModernESGViewController reloadStickers];
-        
-        dispatch_after_seconds(0.2, ^{
-            complete(YES);
-            [TMViewController hideModalProgressWithSuccess];
-        });
-        
-    } errorHandler:^(id request, RpcError *error) {
-        [TMViewController hideModalProgress];
-        complete(NO);
-    } timeout:10];
+    }];
+    
 
 }
 

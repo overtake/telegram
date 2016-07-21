@@ -10,4 +10,7 @@
 
 @interface TGModalArchivedPacks : TGModalView
 
+
+-(void)show:(NSWindow *)window animated:(BOOL)animated sets:(NSArray *)sets documents:(NSDictionary *)documents;
+
 @end

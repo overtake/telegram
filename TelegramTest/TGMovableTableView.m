@@ -161,6 +161,19 @@
         [self tile];
 }
 
+-(void)reloadItem:(TMRowItem *)item {
+    
+    NSUInteger index = [_items indexOfObject:item];
+    
+    if(index != NSNotFound) {
+        TMRowView *view = _containerView.subviews[index];
+        view.rowItem = item;
+        [view redrawRow];
+        [view setFrameSize:NSMakeSize(NSWidth(_containerView.frame), [_mdelegate rowHeight:index item:item])];
+    }
+    
+}
+
 
 - (void)removeItemAtIndex:(NSUInteger)index animated:(BOOL)animated {
     

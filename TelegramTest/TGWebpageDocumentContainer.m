@@ -63,6 +63,8 @@
     if([self mouse:[self convertPoint:[theEvent locationInWindow] fromView:nil] inRect:_cellView.containerView.frame]) {
         if([self.webpage.webpage.embed_type isEqualToString:@"iframe"] && theEvent.clickCount == 1) {
             [self showPhoto];
+        } else {
+            [_cellView mouseDown:theEvent];
         }
         
     } else {

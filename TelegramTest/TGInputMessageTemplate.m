@@ -25,11 +25,12 @@ static NSMutableDictionary *list;
         _postId = [aDecoder decodeInt32ForKey:@"postId"];
         _type = [aDecoder  decodeInt32ForKey:@"type"];
         _peer_id = [aDecoder decodeInt32ForKey:@"peerId"];
-        _autoSave = [aDecoder decodeBoolForKey:@"autoSave"];
         _editMessage = [aDecoder decodeObjectForKey:@"editMessage"];
         _replyMessage = [aDecoder decodeObjectForKey:@"replyMessage"];
         _disabledWebpage = [aDecoder decodeObjectForKey:@"disabledWebpage"];
         _textContainer = [aDecoder decodeObjectForKey:@"attributedString"];
+        
+        _autoSave = YES;
     }
     return self;
 }

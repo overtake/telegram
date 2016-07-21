@@ -210,7 +210,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         return;
     }
     
-    self->queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+    queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
 
     
     __block BOOL res = NO;

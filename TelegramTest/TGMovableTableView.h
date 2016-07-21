@@ -27,7 +27,7 @@
 
 -(NSUInteger)count;
 
-
+-(void)reloadItem:(TMRowItem *)item;
 - (void)insertItem:(TMRowItem *)item atIndex:(NSInteger)index;
 - (void)addItems:(NSArray *)items;
 - (void)removeItemAtIndex:(NSUInteger)index animated:(BOOL)animated;

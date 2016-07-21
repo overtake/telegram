@@ -339,7 +339,6 @@ static NSImage *higlightedImage() {
 -(void)load:(BOOL)force {
     
     [self loadFeatured:force];
-    
     if(_stickers.count == 0 || force) {
         
         _isCustomStickerPack = NO;
@@ -360,6 +359,9 @@ static NSImage *higlightedImage() {
         }];
         
         if(!isRemoteStickersLoaded() || force) {
+            
+            
+            
             [RPCRequest sendRequest:[TLAPI_messages_getAllStickers createWithN_hash:[self stickersHash:_sets]] successHandler:^(RPCRequest *request, TL_messages_allStickers *response) {
                 
                 if(![response isKindOfClass:[TL_messages_allStickersNotModified class]]) {
@@ -465,45 +467,30 @@ static NSImage *higlightedImage() {
 
 
 -(void)loadChangedSets:(NSMutableArray *)changed sets:(NSArray *)sets hash:(int)n_hash {
-    TL_stickerSet *set = changed[0];
     
-    [changed removeObjectAtIndex:0];
+     NSMutableArray *signals = [NSMutableArray array];
     
-    [_stickers[@(set.n_id)] removeAllObjects];
-    
-    [self performLoadSet:set allSets:sets hash:n_hash save:YES completeHandler:^{
-        if(changed.count > 0) {
-            dispatch_after_seconds(0.2, ^{
-                [self loadChangedSets:changed sets:sets hash:n_hash];
-            });
-        }
-        
+    [changed enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
+        [signals addObject:[[MTNetwork instance] requestSignal:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] queue:[ASQueue globalQueue]]];
     }];
-}
-
-
--(void)performLoadSet:(TL_stickerSet *)set allSets:(NSArray *)allSets hash:(int)n_hash save:(BOOL)save completeHandler:(dispatch_block_t)completeHandler {
     
     
-    [RPCRequest sendRequest:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]] successHandler:^(id request, TL_messages_stickerSet *response) {
+    [[SSignal combineSignals:signals] startWithNext:^(NSArray *next) {
         
-         _stickers[@(response.set.n_id)] = response.documents;
+        [next enumerateObjectsUsingBlock:^(TL_messages_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            _stickers[@(obj.set.n_id)] = obj.documents;
+        }];
         
         [self save:_sets stickers:_stickers n_hash:n_hash saveSets:YES];
-        
-        if(completeHandler != nil)
-            completeHandler();
         
         [ASQueue dispatchOnMainQueue:^{
             [self reloadData];
         }];
-        
-    } errorHandler:^(id request, RpcError *error) {
-        
-    } timeout:60 queue:[ASQueue globalQueue]._dispatch_queue];
-    
+    }];
     
 }
+
+
 
 -(NSDictionary *)allStickers {
     return _stickers;

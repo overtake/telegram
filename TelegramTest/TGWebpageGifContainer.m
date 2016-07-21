@@ -114,7 +114,6 @@
 
 
 
-
 -(void)updateDownloadState {
     
     weak();

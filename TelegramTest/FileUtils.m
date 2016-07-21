@@ -1658,7 +1658,7 @@ BOOL isEnterAccess(NSEvent *theEvent) {
     
     if((theEvent.keyCode == 36 || theEvent.keyCode == 76)) {
         
-        return [SettingsArchiver checkMaskedSetting:SendEnter] ? (theEvent.modifierFlags & NSCommandKeyMask) == 0 : (theEvent.modifierFlags & NSCommandKeyMask) > 0;
+        return [SettingsArchiver checkMaskedSetting:SendEnter] ? theEvent.modifierFlags == 256 : (theEvent.modifierFlags & NSCommandKeyMask) > 0;
 
     }
     

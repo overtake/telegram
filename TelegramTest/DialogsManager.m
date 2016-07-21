@@ -395,6 +395,10 @@
     [[Storage manager] deleteDialog:dialog completeHandler:^{
         [self.queue dispatchOnQueue:^{
             
+            [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [transaction removeObjectForKey:dialog.cacheKey inCollection:BOT_COMMANDS];
+            }];
+            
             [Notification perform:DIALOG_DELETE data:@{KEY_DIALOG:dialog}];
             
             [Notification perform:MESSAGE_FLUSH_HISTORY data:@{KEY_DIALOG:dialog}];

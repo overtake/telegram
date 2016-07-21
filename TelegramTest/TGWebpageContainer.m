@@ -11,6 +11,7 @@
 #import "TGPhotoViewer.h"
 #import "TGEmbedModalView.h"
 #import "TGWebpageGifContainer.h"
+#import "TGWebpageDocumentContainer.h"
 @interface TGWebpageContainer ()
 @property (nonatomic,strong,readonly) TMView *containerView;
 @end
@@ -27,7 +28,7 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
-    if(![self mouseInContainer:theEvent]) {
+    if(![self mouseInContainer:theEvent] || [self isKindOfClass:[TGWebpageDocumentContainer class]]) {
         [super mouseDown:theEvent];
     }
 }

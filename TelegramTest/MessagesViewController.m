@@ -764,9 +764,7 @@ static NSMutableDictionary *savedScrolling;
                 return;
             }
             
-            BOOL autoSave = _editTemplate.autoSave;
             _editTemplate = t;
-            _editTemplate.autoSave = autoSave;
             [_modernMessagesBottomView setInputTemplate:_editTemplate animated:YES];
             
         }

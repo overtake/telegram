@@ -1863,6 +1863,14 @@
          contextName = "-[ComposeBroadcastTableItemView redrawRow]:ComposeBroadcastListViewController.m">
       </ContextState>
       <ContextState
+         contextName = "__52-[TGAllStickersTableView loadChangedSets:sets:hash:]_block_invoke.354:TGAllStickersTableView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "changed">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__70+[StickersPanelView saveResponse:allSets:currentSet:documents:n_hash:]_block_invoke:StickersPanelView.m">
          <PersistentStrings>
             <PersistentString
@@ -4977,6 +4985,9 @@
                value = "_textLayer">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__40-[TGStickerPackModalView initWithFrame:]_block_invoke.64:TGStickerPackModalView.m">
       </ContextState>
       <ContextState
          contextName = "-[TGPhotoViewer show:]:TGPhotoViewer.m">

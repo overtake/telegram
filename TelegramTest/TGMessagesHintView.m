@@ -1002,10 +1002,8 @@ static NSMutableDictionary *inlineBotsExceptions;
         
         TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:self.messagesViewController.conversation.peer_id];
         
-        template.autoSave = NO;
         [template updateTextAndSave:[[NSAttributedString alloc] init]];
-        template.autoSave = YES;
-        [template saveForce];
+ 
         
         [template performNotification];
         

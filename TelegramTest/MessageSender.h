@@ -10,6 +10,7 @@
 #import "UploadOperation.h"
 #import "EncryptedParams.h"
 #import "MessagesViewController.h"
+#import <SSignalKit/SSignal.h>
 @interface MessageSender : NSObject
 
 typedef enum {
@@ -47,4 +48,5 @@ typedef enum {
 +(NSString *)parseCustomMentions:(NSString *)message entities:(NSMutableArray *)entities;
 +(void)addRatingForPeer:(TLPeer *)peer;
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler;
++(SSignal *)addStickerPack:(TL_messages_stickerSet *)pack;
 @end

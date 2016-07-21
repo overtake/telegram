@@ -17,7 +17,7 @@
 #import "TGModernESGViewController.h"
 #import "GeneralSettingsRowItem.h"
 #import "TGFeaturedStickersViewController.h"
-
+#import "TGArchivedStickersViewController.h"
 
 #import "TGStickerPackRowItem.h"
 #import "TGStickerPackRowView.h"
@@ -29,10 +29,6 @@
 
 
 @end
-
-
-
-
 
 
 
@@ -206,6 +202,38 @@
         } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
         
         
+        __block NSMutableArray *sets;
+        __block int totalCount = 0;
+        
+         TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
+        
+        GeneralSettingsRowItem *archived = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+            
+           
+            [weakSelf.navigationViewController pushViewController:featured animated:YES];
+            
+            [featured addSets:sets];
+            
+        } description:NSLocalizedString(@"Stickers.Archived", nil) subdesc:@"" height:42 stateback:nil];
+        
+        archived.locked = YES;
+        
+        [[featured loadNext:0] startWithNext:^(TL_messages_archivedStickers *next) {
+            
+            totalCount = next.n_count;
+            sets = next.sets;
+            archived.locked = NO;
+            [archived setSubdescString:totalCount > 0 ? [NSString stringWithFormat:@"%d",totalCount] : nil];
+            [_tableView reloadItem:archived];
+            
+        }];
+        
+        [items addObject:archived];
+        
+        
+
+        
+        
         [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
 
     }
@@ -234,25 +262,49 @@
 -(void)removeStickerPack:(TGStickerPackRowItem *)item {
     
     
+    NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Stickers.RemoveOrArchive", nil) block:^(id result) {
+        if([result intValue] == 1000)
+        {
+            [self showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
+                
+                
+                [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
+                
+                [TGModernESGViewController reloadStickers];
+                
+                [self hideModalProgress];
+                
+            } errorHandler:^(id request, RpcError *error) {
+                [self hideModalProgress];
+            } timeout:10];
+        }
+        else if([result intValue] == 1001) {
+            [self showModalProgress];
+            
+            [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:item.inputSet archived:YES] successHandler:^(id request, id response) {
+                
+                [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
+                
+                [TGModernESGViewController reloadStickers];
+                
+                [self hideModalProgress];
+                
+            } errorHandler:^(id request, RpcError *error) {
+                [self hideModalProgress];
+            } timeout:10];
+        } else {
+            
+        }
+            
+    }];
+    [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Remove", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Archive", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    [alert show];
+
     
-    confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Stickers.RemoveStickerAlert", nil),[item.pack[@"set"] title]], ^{
-        
-        [self showModalProgress];
-        
-        [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
-            
-            
-            [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
-            
-            [TGModernESGViewController reloadStickers];
-            
-            [self hideModalProgress];
-            
-        } errorHandler:^(id request, RpcError *error) {
-            [self hideModalProgress];
-        } timeout:10];
-        
-    }, nil);
     
 }
 

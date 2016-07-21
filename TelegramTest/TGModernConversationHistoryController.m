@@ -108,8 +108,6 @@
         [RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:conversation.lastMessage.n_id offset_peer:inputPeer limit:limit] successHandler:^(id request, TL_messages_dialogs *response) {
             
             
-            
-            
             [SharedManager proccessGlobalResponse:response];
             
             

@@ -130,19 +130,26 @@
         [super mouseDown:theEvent];
     } else {
         
-        if(self.item.isset) {
+        MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
+        
+        if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
+            
+            [_player setPath:_playImageView.isHidden ? nil : item.path];
+            
+            [_playImageView removeFromSuperview];
+            [self.playerContainer addSubview:_playImageView];
+            [_playImageView setHidden:!_playImageView.isHidden];
+        } else if(item.isset) {
             TGGifPreviewModalView *preview = [[TGGifPreviewModalView alloc] initWithFrame:self.window.contentView.frame];
             
             [preview setGif:self.item];
             
-            [preview show:self.window animated:YES];
-        }
-        
+            [preview show:appWindow() animated:YES];
+        } else {
+            [super mouseDown:theEvent];
+        }  
     }
-    
-    
-    
-    
+
 }
 
 
@@ -259,22 +266,7 @@
 }
 
 
--(void)mouseUp:(NSEvent *)theEvent {
-    
-    
-    MessageTableItemMpeg *item = (MessageTableItemMpeg *) self.item;
-    
-    if(item.isset && [SettingsArchiver checkMaskedSetting:DisableAutoplayGifSetting]) {
-        
-        [_player setPath:_playImageView.isHidden ? nil : item.path];
-        
-        [_playImageView removeFromSuperview];
-        [self.playerContainer addSubview:_playImageView];
-        [_playImageView setHidden:!_playImageView.isHidden];
-    } else {
-        [super mouseUp:theEvent];
-    }
-}
+
 
 -(void)viewDidMoveToSuperview {
     if(self.superview == nil) {

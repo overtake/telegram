@@ -856,6 +856,8 @@
 		C2D4B9291AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C21AFCEA1D0035B4E4 /* YapDatabaseExtensionConnection.m */; };
 		C2D4B92A1AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */; };
 		C2D4CA2A1D410390003118AE /* TGModalArchivedPacks.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */; };
+		C2D4CA371D411F64003118AE /* TLStickerSet+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4CA361D411F64003118AE /* TLStickerSet+Extension.m */; };
+		C2D4CA3A1D412D0C003118AE /* TGArchivedStickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D4CA391D412D0C003118AE /* TGArchivedStickersViewController.m */; };
 		C2D51B981B179D91009327C0 /* FullUsersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B971B179D91009327C0 /* FullUsersManager.m */; };
 		C2D51B9F1B17A6BD009327C0 /* TGHelpPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51B9E1B17A6BD009327C0 /* TGHelpPopup.m */; };
 		C2D51BA31B17AA14009327C0 /* TGBotCommandsPopup.m in Sources */ = {isa = PBXBuildFile; fileRef = C2D51BA21B17AA14009327C0 /* TGBotCommandsPopup.m */; };
@@ -2683,6 +2685,10 @@
 		C2D4B8C41AFCEA1D0035B4E4 /* YapDatabaseExtensionTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseExtensionTransaction.m; sourceTree = "<group>"; };
 		C2D4CA281D410390003118AE /* TGModalArchivedPacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGModalArchivedPacks.h; sourceTree = "<group>"; };
 		C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGModalArchivedPacks.m; sourceTree = "<group>"; };
+		C2D4CA351D411F64003118AE /* TLStickerSet+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLStickerSet+Extension.h"; sourceTree = "<group>"; };
+		C2D4CA361D411F64003118AE /* TLStickerSet+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLStickerSet+Extension.m"; sourceTree = "<group>"; };
+		C2D4CA381D412D0C003118AE /* TGArchivedStickersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGArchivedStickersViewController.h; sourceTree = "<group>"; };
+		C2D4CA391D412D0C003118AE /* TGArchivedStickersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGArchivedStickersViewController.m; sourceTree = "<group>"; };
 		C2D51B961B179D91009327C0 /* FullUsersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FullUsersManager.h; sourceTree = "<group>"; };
 		C2D51B971B179D91009327C0 /* FullUsersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FullUsersManager.m; sourceTree = "<group>"; };
 		C2D51B9D1B17A6BD009327C0 /* TGHelpPopup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHelpPopup.h; sourceTree = "<group>"; };
@@ -5892,6 +5898,8 @@
 				C2C5DCEF1D1D5CAD0070AC56 /* TGFeaturedStickerPackRowView.m */,
 				C2C5DCF11D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.h */,
 				C2C5DCF21D1D5CC20070AC56 /* TGFeaturedStickerPackRowItem.m */,
+				C2D4CA381D412D0C003118AE /* TGArchivedStickersViewController.h */,
+				C2D4CA391D412D0C003118AE /* TGArchivedStickersViewController.m */,
 			);
 			name = stickers;
 			sourceTree = "<group>";
@@ -5999,6 +6007,8 @@
 				C24136371C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m */,
 				C215BDDD1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.h */,
 				C215BDDE1C76273B00B4BF16 /* TLMessageFwdHeader+Extension.m */,
+				C2D4CA351D411F64003118AE /* TLStickerSet+Extension.h */,
+				C2D4CA361D411F64003118AE /* TLStickerSet+Extension.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -6957,6 +6967,7 @@
 				C21D482219ABC891000F06E1 /* TMTabViewController.m in Sources */,
 				CEC6A8F018C90A69002EC18F /* DatacenterArchiver.m in Sources */,
 				0ACDB12718CF1AC6009FE910 /* LoginWindow.m in Sources */,
+				C2D4CA3A1D412D0C003118AE /* TGArchivedStickersViewController.m in Sources */,
 				C2967B521AB05E9B003759B2 /* TGReplyObject.m in Sources */,
 				C226CC7F1B3422F80042C5D8 /* SelectChatRowView.m in Sources */,
 				0ACF9E3F19235FED001F9E1E /* SearchLoadMoreCell.m in Sources */,
@@ -7442,6 +7453,7 @@
 				0AC7F479185DBA0800F90558 /* TMView.m in Sources */,
 				C226CC821B3427390042C5D8 /* ComposeActionAddUserToGroupBehavior.m in Sources */,
 				0A59068118AA32C8002ED7BA /* BTRTextField.m in Sources */,
+				C2D4CA371D411F64003118AE /* TLStickerSet+Extension.m in Sources */,
 				C2C3A8901A2C7D57008C4C4A /* MTProto.m in Sources */,
 				C2CB5D031B4AF9C000CD61DF /* TGPVDocumentObject.m in Sources */,
 				C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */,

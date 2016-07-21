@@ -228,18 +228,18 @@ static TMTableView *tableStatic;
 	[self checkHover];
 }
 
-- (NSObject *) isItemInList:(NSObject*)item {
+- (id) isItemInList:(id)item {
     NSUInteger hash = [item hash];
     return [self itemByHash:hash];
 }
 
-- (NSObject *)selectedItem {
+- (id)selectedItem {
     if(self.listSelectedElementHash != NSNotFound)
         return [self itemByHash:self.listSelectedElementHash];
     return nil;
 }
 
-- (NSObject *) itemByHash:(NSUInteger)hash {
+- (id) itemByHash:(NSUInteger)hash {
     std::map<NSUInteger, id>::iterator it = self.listCacheHash->find(hash);
     if(it != self.listCacheHash->end())
         return it->second;

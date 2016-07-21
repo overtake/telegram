@@ -22,6 +22,7 @@
 #import "TMAudioRecorder.h"
 #import "MessagesBottomView.h"
 #import "TGModernESGViewController.h"
+#import "SpacemanBlocks.h"
 @interface TestView : TMView
 
 @end
@@ -34,12 +35,16 @@
 
 @end
 
-@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate,TGModernConversationHistoryControllerDelegate>
+@interface TGConversationsViewController ()<NSTableViewDataSource,NSTableViewDelegate,TMTableViewDelegate,TGModernConversationHistoryControllerDelegate> {
+    SMDelayedBlockHandle _handle;
+}
 @property (nonatomic, strong) TGModernConversationHistoryController *modernHistory;
 @property (nonatomic, strong) TGConversationsTableView *tableView;
 @property (nonatomic, strong) NSMutableArray *list;
 
 @property (nonatomic,assign) BOOL initedNext;
+
+
 
 @end
 
@@ -166,10 +171,9 @@
 -(void)notificationFlushAndReloadDialogs:(NSNotification *)notification {
     [self.tableView removeAllItems:NO];
     [self.tableView reloadData];
-    [_modernHistory clear];
-    _modernHistory = [[TGModernConversationHistoryController alloc] initWithQueue:[[ASQueue alloc] initWithName:"c_h_queue"] delegate:self];
     
-    [self loadhistory:30];
+    [self initialize];
+    
 }
 
 -(void)didLoadedStartedConversationNeedNext {
@@ -233,12 +237,16 @@
 
 -(void)loadhistory:(int)limit  {
     
+    cancel_delayed_block(_handle);
+    
     if(_modernHistory != nil) {
         [_modernHistory requestNextConversation];
         
-        dispatch_after_seconds(5, ^{
+        _handle = perform_block_after_delay(5.0, ^{
             [self loadhistory:limit];
         });
+        
+       
     }
     
 }
@@ -364,7 +372,7 @@
             [self.tableView insert:items startIndex:0 tableRedraw:NO];
             [self.tableView reloadData];
             
-            [self.tableView setSelectedByHash:self.tableView.selectedItem.hash];
+            [self.tableView setSelectedByHash:[self.tableView.selectedItem hash]];
             
         }];
     }];

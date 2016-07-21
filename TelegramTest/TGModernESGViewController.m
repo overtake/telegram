@@ -107,6 +107,8 @@ static NSMutableDictionary *stickers;
     return stickers;
 }
 
+
+
 +(NSArray *)allSets {
     
     //if(!sets) {

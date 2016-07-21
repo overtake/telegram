@@ -11,6 +11,8 @@
 #import "TGMessagesStickerImageObject.h"
 #import "TGImageView.h"
 #import "TGModernESGViewController.h"
+#import "TGModalArchivedPacks.h"
+#import "TLStickerSet+Extension.h"
 @interface TGStickerPackModalView ()<TMHyperlinkTextFieldDelegate>
 @property (nonatomic,strong) TGAllStickersTableView *tableView;
 
@@ -82,10 +84,6 @@ static NSImage * greenBackgroundImage(NSSize size) {
         [_addButton addBlock:^(BTRControlEvents events) {
             
             
-            strongWeak();
-            
-           
-            
             [weakSelf close:NO];
             
             if(weakSelf.addcallback != nil)
@@ -98,42 +96,10 @@ static NSImage * greenBackgroundImage(NSSize size) {
             [TMViewController showModalProgress];
             
             
-            [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:weakSelf.pack.set.n_id access_hash:weakSelf.pack.set.access_hash] archived:NO] successHandler:^(id request, id response) {
+            [[MessageSender addStickerPack:weakSelf.pack] startWithNext:^(id next) {
                 
-                
-                [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-                    
-                    NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-                    
-                    NSMutableDictionary *stickers = info[@"serialized"];
-                    
-                    
-                    NSMutableArray *sets = info[@"sets"];
-                    
-                    [sets addObject:strongSelf.pack.set];
-                    stickers[@(weakSelf.pack.set.n_id)] = strongSelf.pack.documents;
-                    
-                    [transaction setObject:info forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-                    
-                }];
-                
-                if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
-                    int bp = 0;
-
-                }
-                
-               
-                
-                [TGModernESGViewController reloadStickers];
-                
-                dispatch_after_seconds(0.2, ^{
-                    [TMViewController hideModalProgressWithSuccess];
-                });
-                
-            } errorHandler:^(id request, RpcError *error) {
-                [TMViewController hideModalProgress]; 
-            } timeout:10];
-            
+            }];
+                        
         } forControlEvents:BTRControlEventMouseDownInside];
         
         
