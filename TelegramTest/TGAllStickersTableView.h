@@ -32,4 +32,6 @@
 
 -(void)scrollToStickerPack:(long)packId completionHandler:(dispatch_block_t)completionHandler;
 
++(void)addRecentSticker:(TLDocument *)document;
+
 @end

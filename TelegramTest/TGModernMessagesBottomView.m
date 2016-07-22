@@ -375,7 +375,7 @@ const float defYOffset = 12;
         [_topContainerView removeFromSuperview:animated];
     else if(!_topContainerView.superview) {
         [self addSubview:_topContainerView positioned:NSWindowBelow relativeTo:_ts];
-        [_topContainerView performCAShow:animated];
+        [_topContainerView performCAShow:NO];
         
     }
     

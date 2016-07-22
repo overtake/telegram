@@ -49,4 +49,7 @@ typedef enum {
 +(void)addRatingForPeer:(TLPeer *)peer;
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler;
 +(SSignal *)addStickerPack:(TL_messages_stickerSet *)pack;
+
++(void)addRecentSticker:(TLDocument *)sticker ;
+
 @end

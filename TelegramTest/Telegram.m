@@ -113,6 +113,7 @@ static int max_chat_users = 199;
 static int max_broadcast_users = 100;
 static int megagroup_size_max = 5000;
 static int rating_e_decay_l = 2419200;
+static int stickers_recent_limit_l = 30;
 
 static int edit_time_limit_default = 2*24*60*60;
 
@@ -147,6 +148,13 @@ int maxBroadcastUsers() {
     return max_broadcast_users;
 }
 
+int stickers_recent_limit() {
+    return stickers_recent_limit_l;
+}
+
+void set_stickers_recent_limit(int limit) {
+    stickers_recent_limit_l = limit;
+}
 
 void setMegagroupSizeMax(int b) {
     megagroup_size_max = b;

@@ -228,7 +228,8 @@
             if(changed) {
                 assert(self.subviews.count == [next count]);
                 
-                const int offset = 10;
+                const int offset = 0;
+                const int itemXOffset = 5;
                 
                 __block int x = offset;
                 
@@ -241,14 +242,16 @@
                     if(show) {
                         [action setFrameOrigin:NSMakePoint(x, NSMinY(action.frame))];
                         if(![[next lastObject] boolValue] || idx != next.count - 2)
-                            x+=NSWidth(action.frame)+offset;
+                            x+=NSWidth(action.frame)+itemXOffset;
                     }
                     
                 }];
                 
+                x-=itemXOffset;
+                
                 changed = NSWidth(self.frame) != x;
                 
-                [self setFrameSize:NSMakeSize(x, NSHeight(self.frame))];
+                [self setFrameSize:NSMakeSize(MAX(0,x), NSHeight(self.frame))];
             }
             
             

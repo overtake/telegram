@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.07.16.
+//  Auto created by Mikhail Filimonov on 22.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -26091,13 +26091,13 @@
 	[stream writeInt:self.flags];
 	
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
-	if(self.flags & (1 << 3)) {[stream writeString:self.url];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.url];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
 	
 	if(self.flags & (1 << 0)) {super.message = [stream readString];}
-	if(self.flags & (1 << 3)) {super.url = [stream readString];}
+	if(self.flags & (1 << 2)) {super.url = [stream readString];}
 }
         
 -(TL_messages_botCallbackAnswer *)copy {
@@ -26140,7 +26140,7 @@
 {
    super.url = url;
                 
-    if(super.url == nil)  { super.flags&= ~ (1 << 3) ;} else { super.flags|= (1 << 3); }
+    if(super.url == nil)  { super.flags&= ~ (1 << 2) ;} else { super.flags|= (1 << 2); }
 }
         
 @end

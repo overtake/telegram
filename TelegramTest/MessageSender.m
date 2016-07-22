@@ -1019,6 +1019,73 @@ static TGLocationRequest *locationRequest;
 
 }
 
++(void)addRecentSticker:(TLDocument *)sticker {
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        NSMutableArray *sc = [transaction objectForKey:@"remoteRecentStickers" inCollection:STICKERS_COLLECTION];
+        
+        if(!sc) {
+            sc = [NSMutableArray array];
+        }
+        
+        __block TLDocument *hasSticker = sticker;
+        
+        [sc enumerateObjectsUsingBlock:^(TLDocument *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(obj.n_id == sticker.n_id) {
+                hasSticker = obj;
+                *stop = YES;
+            }
+        }];
+        
+        if([sc indexOfObject:hasSticker] != NSNotFound) {
+            [sc removeObject:hasSticker];
+        }
+        
+        [sc insertObject:hasSticker atIndex:0];
+        
+        [transaction setObject:sc forKey:@"remoteRecentStickers" inCollection:STICKERS_COLLECTION];
+        
+        [Notification perform:STICKERS_REORDER data:@{}];
+        
+        
+        //        NSMutableDictionary *sc = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+        //
+        //        if(!sc)
+        //        {
+        //            sc = [[NSMutableDictionary alloc] init];
+        //        }
+        //
+        //        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
+        //
+        //
+        //        if(!sc[@(attr.stickerset.n_id)]) {
+        //            sc[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
+        //        }
+        //
+        //        __block int max = 1;
+        //
+        //        [sc enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSMutableDictionary *obj, BOOL * _Nonnull stop) {
+        //
+        //            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *value, BOOL * _Nonnull stop) {
+        //
+        //                max = MAX(max,[value intValue]);
+        //
+        //            }];
+        //
+        //        }];
+        //
+        //        max++;
+        //
+        //
+        //        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @(max);
+        //
+        //        [transaction setObject:sc forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+        
+    }];
+    
+}
+
 
 +(void)drop {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"secret_message_id"];

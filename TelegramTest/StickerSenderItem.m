@@ -38,8 +38,17 @@
         request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:media];
     }
     
-    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates * response) {
+    NSMutableArray *signals = [NSMutableArray array];
+    
+    [signals addObject:[[MTNetwork instance] requestSignal:request queue:[ASQueue globalQueue]]];
+    [signals addObject:[[MTNetwork instance] requestSignal:[TLAPI_messages_saveRecentSticker createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] unsave:NO] queue:[ASQueue globalQueue]]];
+
+    
+    [[[SSignal combineSignals:signals] map:^id(NSArray *next) {
         
+        return next[0];
+        
+    }] startWithNext:^(TLUpdates * response) {
         
         [self updateMessageId:response];
         
@@ -59,12 +68,15 @@
         [self.message save:YES];
         
         self.state = MessageSendingStateSent;
+        
 
         
+    } error:^(id error) {
+        self.state = MessageSendingStateError;
+    } completed:^{
         
-    } errorHandler:^(RPCRequest *request, RpcError *error) {
-        
-    } timeout:0 queue:[ASQueue globalQueue]._dispatch_queue];
+    }];
+    
 }
 
 @end

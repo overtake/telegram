@@ -4060,42 +4060,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(self.conversation.type == DialogTypeSecretChat && self.conversation.encryptedChat.encryptedParams.layer < 23)
         return;
     
-    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        NSMutableDictionary *sc = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
-        
-        if(!sc)
-        {
-            sc = [[NSMutableDictionary alloc] init];
-        }
-        
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
-        
-        
-        if(!sc[@(attr.stickerset.n_id)]) {
-            sc[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
-        }
-        
-        __block int max = 1;
-        
-        [sc enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSMutableDictionary *obj, BOOL * _Nonnull stop) {
-            
-            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *value, BOOL * _Nonnull stop) {
-                
-                max = MAX(max,[value intValue]);
-                
-            }];
-            
-        }];
-        
-        max++;
-        
-        
-        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @(max);
-        
-        [transaction setObject:sc forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
-        
-    }];
+    [MessageSender addRecentSticker:sticker];
     
     [self setHistoryFilter:self.defHFClass force:self.historyController.prevState != ChatHistoryStateFull];
     

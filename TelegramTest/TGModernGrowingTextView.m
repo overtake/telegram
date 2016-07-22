@@ -689,7 +689,7 @@
 }
 
 -(int)_startXPlaceholder {
-    return NSMinX(_scrollView.frame) + 6;
+    return NSMinX(_scrollView.frame) + 4;
 }
 
 -(int)_endXPlaceholder {

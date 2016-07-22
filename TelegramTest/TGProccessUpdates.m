@@ -21,6 +21,7 @@
 #import "FullUsersManager.h"
 #import "TGUpdateChannels.h"
 #import "TGForceChannelUpdate.h"
+#import "TGModernESGViewController.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
@@ -925,6 +926,11 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateChatUserTyping class]] || [update isKindOfClass:[TL_updateUserTyping class]] || [update isKindOfClass:[TL_updateEncryptedChatTyping class]]) {
             [Notification perform:USER_TYPING data:@{KEY_SHORT_UPDATE:update}];
+            return;
+        }
+        
+        if([update isKindOfClass:[TL_updateRecentStickers class]]) {
+            [TGModernESGViewController reloadStickers];
             return;
         }
         

@@ -175,6 +175,7 @@
     setMegagroupSizeMax(config.megagroup_size_max);
     set_edit_time_limit(config.edit_time_limit);
     set_rating_e_decay(config.rating_e_decay);
+    set_stickers_recent_limit(config.stickers_recent_limit);
     
 #if TARGET_IPHONE_SIMULATOR
     NSMutableArray *dcOptions = [[NSMutableArray alloc] init];

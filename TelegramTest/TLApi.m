@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 21.07.16..
+//  Auto created by Mikhail Filimonov on 22.07.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2814,12 +2814,12 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1893470115];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-920136629];
 	[stream writeInt:self.flags];
 	
 	[stream writeLong:self.query_id];
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
-	if(self.flags & (1 << 3)) {[stream writeString:self.url];}
+	if(self.flags & (1 << 2)) {[stream writeString:self.url];}
 	return [stream getOutput];
 }
 @end

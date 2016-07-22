@@ -568,6 +568,9 @@
         
         [self checkAndProccessGifMessage:message];
         
+        if(message.isN_out && message.media.document.isSticker) {
+            [MessageSender addRecentSticker:message.media.document];
+        }
         
         [self updateTop:message needUpdate:YES update_real_date:update_real_date];
         
@@ -927,6 +930,10 @@
             [messages enumerateObjectsUsingBlock:^(TL_localMessage *message, NSUInteger idx, BOOL * _Nonnull stop) {
                 
                 [self checkAndProccessGifMessage:message];
+                
+                if(message.isN_out && message.media.document.isSticker) {
+                    [MessageSender addRecentSticker:message.media.document];
+                }
              
                 TL_conversation *dialog = message.conversation;
                 

@@ -369,9 +369,9 @@ static const int navigationOffset = 48;
         
         [newView setHidden:NO];
         
-        [newViewController viewWillAppear:NO];
         [self.containerView addSubview:newView positioned:NSWindowAbove relativeTo:oldView];
-        
+        [newViewController viewWillAppear:NO];
+
         
         [oldViewController viewDidDisappear:NO];
         [newViewController viewDidAppear:NO];
@@ -393,8 +393,6 @@ static const int navigationOffset = 48;
         
      
         
-        
-        
         [newView setHidden:NO];
         
         
@@ -405,7 +403,6 @@ static const int navigationOffset = 48;
     
         float duration = 0.25;
         
-        [newViewController viewWillAppear:NO];
         
         float animOldFrom,animOldTo,animNewTo,animNewFrom = 0;
         
@@ -446,7 +443,8 @@ static const int navigationOffset = 48;
             default:
                 break;
         }
-        
+        [newViewController viewWillAppear:YES];
+
         
         // bar animation
         

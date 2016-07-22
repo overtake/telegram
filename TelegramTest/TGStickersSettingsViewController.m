@@ -23,10 +23,14 @@
 #import "TGStickerPackRowView.h"
 
 @interface TGStickersSettingsViewController ()<TGMovableTableDelegate>
+{
+     NSMutableArray *_archivedSets;
+     int _archivedCount;
+}
 @property (nonatomic,strong) TGMovableTableView *tableView;
 @property (nonatomic,assign) BOOL needSaveOrder;
 
-
+@property (nonatomic,strong) GeneralSettingsRowItem *archivedItem;
 
 @end
 
@@ -203,33 +207,32 @@
         } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
         
         
-        __block NSMutableArray *sets;
-        __block int totalCount = 0;
+
         
          TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
         
-        GeneralSettingsRowItem *archived = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+        _archivedItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
            
             [weakSelf.navigationViewController pushViewController:featured animated:YES];
             
-            [featured addSets:sets];
+            [featured addSets:_archivedSets];
             
         } description:NSLocalizedString(@"Stickers.Archived", nil) subdesc:@"" height:42 stateback:nil];
         
-        archived.locked = YES;
+        _archivedItem.locked = YES;
         
         [[featured loadNext:0] startWithNext:^(TL_messages_archivedStickers *next) {
             
-            totalCount = next.n_count;
-            sets = next.sets;
-            archived.locked = NO;
-            [archived setSubdescString:totalCount > 0 ? [NSString stringWithFormat:@"%d",totalCount] : @""];
-            [_tableView reloadItem:archived];
+            _archivedCount = next.n_count;
+            _archivedSets = next.sets;
+            _archivedItem.locked = NO;
+            [_archivedItem setSubdescString:_archivedCount > 0 ? [NSString stringWithFormat:@"%d",_archivedCount] : @""];
+            [_tableView reloadItem:_archivedItem];
             
         }];
         
-        [items addObject:archived];
+        [items addObject:_archivedItem];
         
         
 
@@ -307,6 +310,11 @@
                 [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
                 
                 [TGModernESGViewController reloadStickers];
+                
+                [_archivedSets insertObject:item.set atIndex:0];
+                
+                [_archivedItem setSubdescString:++_archivedCount > 0 ? [NSString stringWithFormat:@"%d",_archivedCount] : @""];
+                [_tableView reloadItem:_archivedItem];
                 
                 [self hideModalProgress];
                 
