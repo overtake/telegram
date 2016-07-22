@@ -44,6 +44,7 @@
     
     _tableView = [[TGMovableTableView alloc] initWithFrame:self.view.bounds];
     
+    
     [self.view addSubview:_tableView];
     
     _tableView.mdelegate = self;
@@ -223,7 +224,7 @@
             totalCount = next.n_count;
             sets = next.sets;
             archived.locked = NO;
-            [archived setSubdescString:totalCount > 0 ? [NSString stringWithFormat:@"%d",totalCount] : nil];
+            [archived setSubdescString:totalCount > 0 ? [NSString stringWithFormat:@"%d",totalCount] : @""];
             [_tableView reloadItem:archived];
             
         }];
@@ -250,12 +251,30 @@
         
     }];
     
-    [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
-    [items addObject:[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.ArtistDesc", nil) flipped:YES]];
+    [self insertPart:items];
     
     
-    [_tableView addItems:items];
+}
+
+-(void)insertPart:(NSMutableArray *)packs {
     
+    NSArray *current = [packs subarrayWithRange:NSMakeRange(0, MIN(20,packs.count))];
+                                                        
+    [packs removeObjectsInArray:current];
+    
+    [_tableView addItems:current];
+    
+    if(packs.count == 0) {
+        [_tableView addItems:@[[[TGGeneralRowItem alloc] initWithHeight:20]]];
+        [_tableView addItems:@[[[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Stickers.ArtistDesc", nil) flipped:YES]]];
+
+    }
+    
+    if(packs.count > 0) {
+        dispatch_after_seconds(0.2, ^{
+            [self insertPart:packs];
+        });
+    }
     
 }
 

@@ -249,6 +249,10 @@ const float defYOffset = 12;
 }
 
 
+-(BOOL)textViewIsTypingEnabled {
+    return self.actionState == TGModernMessagesBottomViewNormalState;
+}
+
 - (void) textViewHeightChanged:(id)textView height:(int)height animated:(BOOL)animated {
     
     height = self.defTextViewHeight;
@@ -363,6 +367,7 @@ const float defYOffset = 12;
     }
     
     [_attachView setHidden:state == TGModernMessagesBottomViewRecordAudio];
+    [_actionsView setHidden:state == TGModernMessagesBottomViewRecordAudio];
 
     
 
@@ -371,6 +376,7 @@ const float defYOffset = 12;
     else if(!_topContainerView.superview) {
         [self addSubview:_topContainerView positioned:NSWindowBelow relativeTo:_ts];
         [_topContainerView performCAShow:animated];
+        
     }
     
     

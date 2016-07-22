@@ -194,7 +194,8 @@ static ChatHistoryController *observer;
     __block HistoryFilter *filter;
     
     [ASQueue dispatchOnStageQueue:^{
-        filter = _filters[index];
+        if(_filters.count > index)
+            filter = _filters[index];
     } synchronous:YES];
     
    return filter;

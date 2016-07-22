@@ -18,6 +18,7 @@
 -(void) textViewTextDidChange:(id)textView;
 -(MessagesViewController *)messagesController;
 -(NSSize)textViewSize;
+-(BOOL)textViewIsTypingEnabled;
 
 @optional
 - (void) textViewNeedClose:(id)textView;
@@ -37,6 +38,8 @@
 
 @property (nonatomic,assign) int min_height;
 @property (nonatomic,assign) int max_height;
+
+
 
 @property (nonatomic,strong) NSAttributedString *placeholderAttributedString;
 

@@ -336,7 +336,7 @@
 }
 
 -(int)_startXPlaceholder {
-    return _isInline ? [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)].width  : [super _startXPlaceholder];
+    return _isInline ? [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)].width - 2  : [super _startXPlaceholder];
 }
 
 -(BOOL)_needShowPlaceholder {

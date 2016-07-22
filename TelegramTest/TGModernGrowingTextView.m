@@ -42,22 +42,24 @@
 
 - (void) keyDown:(NSEvent *)theEvent {
     
-    
-    if(isEnterEvent(theEvent)) {
-        
-        BOOL result = isEnterAccess(theEvent) && [_weakd textViewEnterPressed:self];
-        
-        if(!result) {
-             [self insertNewline:self];
+    if(_weakd.textViewIsTypingEnabled) {
+        if(isEnterEvent(theEvent)) {
+            
+            BOOL result = isEnterAccess(theEvent) && [_weakd textViewEnterPressed:self];
+            
+            if(!result) {
+                [self insertNewline:self];
+            }
+            return;
+        }   else if(theEvent.keyCode == 53 && [_weakd respondsToSelector:@selector(textViewNeedClose:)]) {
+            [_weakd textViewNeedClose:self];
+            return;
         }
-        return;
-    }   else if(theEvent.keyCode == 53 && [_weakd respondsToSelector:@selector(textViewNeedClose:)]) {
-        [_weakd textViewNeedClose:self];
-        return;
+        
+        
+        [super keyDown:theEvent];
     }
     
-    
-    [super keyDown:theEvent];
 }
 
 -(void)setFrameSize:(NSSize)newSize {
