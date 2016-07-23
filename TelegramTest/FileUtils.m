@@ -671,8 +671,8 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
             TGStickerPackModalView *stickerModalView = [[TGStickerPackModalView alloc] init];
             
             stickerModalView.canSendSticker = YES;
-            [stickerModalView setStickerPack:response forMessagesViewController:appWindow().navigationController.messagesViewController];
-            [stickerModalView show:appWindow() animated:YES];
+            [stickerModalView show:appWindow() animated:YES stickerPack:response messagesController:appWindow().navigationController.messagesViewController];
+            
         });
         
         

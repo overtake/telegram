@@ -28,18 +28,23 @@
             
             strongWeak();
             
-            if(strongSelf == weakSelf) {
-                NSImage *image = previewImageForDocument(strongSelf.path);
+            @try {
+                if(strongSelf == weakSelf) {
+                    NSImage *image = previewImageForDocument(strongSelf.path);
+                    
+                    image = cropCenterWithSize(image,strongSelf.imageSize);
+                    
+                    [TGCache cacheImage:image forKey:strongSelf.cacheKey groups:@[IMGCACHE]];
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                        _inited = NO;
+                        [strongSelf.delegate didDownloadImage:image object:strongSelf];
+                    }];
+                }
+            } @catch (NSException *exception) {
                 
-                image = cropCenterWithSize(image,strongSelf.imageSize);
-                
-                [TGCache cacheImage:image forKey:strongSelf.cacheKey groups:@[IMGCACHE]];
-                
-                [ASQueue dispatchOnMainQueue:^{
-                    _inited = NO;
-                    [strongSelf.delegate didDownloadImage:image object:strongSelf];
-                }];
             }
+            
             
             
             

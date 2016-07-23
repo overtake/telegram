@@ -465,6 +465,9 @@
 @interface TLmessages_StickerSetInstallResult : TLObject
 @end
 	
+@interface TLStickerSetCovered : TLObject
+@end
+	
 @interface TLAudio : TLObject
 @end
 	
@@ -3319,6 +3322,15 @@
 @end
 @interface TL_messages_stickerSetInstallResultArchive : TLmessages_StickerSetInstallResult<NSCoding>
 +(TL_messages_stickerSetInstallResultArchive*)createWithSets:(NSMutableArray*)sets;
+@end
+	
+@interface TLStickerSetCovered()
+@property (nonatomic, strong) TLStickerSet* set;
+@property (nonatomic, strong) TLDocument* cover;
+@end
+
+@interface TL_stickerSetCovered : TLStickerSetCovered<NSCoding>
++(TL_stickerSetCovered*)createWithSet:(TLStickerSet*)set cover:(TLDocument*)cover;
 @end
 	
 @interface TLAudio()

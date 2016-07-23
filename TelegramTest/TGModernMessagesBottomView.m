@@ -351,6 +351,18 @@ const float defYOffset = 12;
     
     if(_actionState == state)
         return;
+    else {
+        if(state == TGModernMessagesBottomViewActionsState && !_messageActionsView.superview) {
+            [self addSubview:_messageActionsView positioned:NSWindowBelow relativeTo:_ts];
+            [_messageActionsView performCAShow:NO];
+        } else if(state == TGModernMessagesBottomViewBlockChat && !_blockChatView.superview) {
+            [self addSubview:_blockChatView positioned:NSWindowBelow relativeTo:_ts];
+            [_blockChatView performCAShow:NO];
+        } else if(state == TGModernMessagesBottomViewRecordAudio && !_audioRecordView.superview) {
+            [self addSubview:_audioRecordView positioned:NSWindowBelow relativeTo:_ts];
+            [_audioRecordView performCAShow:NO];
+        }
+    }
     
     _actionState = state;
     

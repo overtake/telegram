@@ -22,11 +22,18 @@
         [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
             
             strongWeak();
-            
-            if(strongSelf == weakSelf) {
-                [strongSelf proccessAndDispatchData:strongSelf.thumbData];
-            }
 
+            
+            @try {
+                if(strongSelf == weakSelf) {
+                    [strongSelf proccessAndDispatchData:strongSelf.thumbData];
+                }
+
+            } @catch (NSException *exception) {
+                
+            }
+            
+           
         }]];
     }
     

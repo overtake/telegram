@@ -27147,7 +27147,7 @@
 		NSInteger tl_count = [self.sets count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLStickerSet* obj = [self.sets objectAtIndex:i];
+            TLStickerSetCovered* obj = [self.sets objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -27174,8 +27174,8 @@
 			self.sets = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLStickerSet* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLStickerSet class]])
+			TLStickerSetCovered* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLStickerSetCovered class]])
                  [self.sets addObject:obj];
             else
                 break;
@@ -27355,7 +27355,7 @@
 		NSInteger tl_count = [self.sets count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLStickerSet* obj = [self.sets objectAtIndex:i];
+            TLStickerSetCovered* obj = [self.sets objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -27369,8 +27369,8 @@
 			self.sets = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLStickerSet* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLStickerSet class]])
+			TLStickerSetCovered* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLStickerSetCovered class]])
                  [self.sets addObject:obj];
             else
                 break;
@@ -27465,7 +27465,7 @@
 		NSInteger tl_count = [self.sets count];
 		[stream writeInt:(int)tl_count];
 		for(int i = 0; i < (int)tl_count; i++) {
-            TLStickerSet* obj = [self.sets objectAtIndex:i];
+            TLStickerSetCovered* obj = [self.sets objectAtIndex:i];
             [ClassStore TLSerialize:obj stream:stream];
 		}
 	}
@@ -27478,8 +27478,8 @@
 			self.sets = [[NSMutableArray alloc] init];
 		int count = [stream readInt];
 		for(int i = 0; i < count; i++) {
-			TLStickerSet* obj = [ClassStore TLDeserialize:stream];
-            if(obj != nil && [obj isKindOfClass:[TLStickerSet class]])
+			TLStickerSetCovered* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLStickerSetCovered class]])
                  [self.sets addObject:obj];
             else
                 break;
@@ -27492,6 +27492,55 @@
     TL_messages_stickerSetInstallResultArchive *objc = [[TL_messages_stickerSetInstallResultArchive alloc] init];
     
     objc.sets = [self.sets copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TLStickerSetCovered
+
+@end
+        
+@implementation TL_stickerSetCovered
++(TL_stickerSetCovered*)createWithSet:(TLStickerSet*)set cover:(TLDocument*)cover {
+	TL_stickerSetCovered* obj = [[TL_stickerSetCovered alloc] init];
+	obj.set = set;
+	obj.cover = cover;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.set stream:stream];
+	[ClassStore TLSerialize:self.cover stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.set = [ClassStore TLDeserialize:stream];
+	self.cover = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_stickerSetCovered *)copy {
+    
+    TL_stickerSetCovered *objc = [[TL_stickerSetCovered alloc] init];
+    
+    objc.set = [self.set copy];
+    objc.cover = [self.cover copy];
     
     return objc;
 }

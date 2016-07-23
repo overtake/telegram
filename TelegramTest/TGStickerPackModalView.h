@@ -14,7 +14,8 @@
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
 
--(void)setStickerPack:(TL_messages_stickerSet *)stickerPack forMessagesViewController:(MessagesViewController *)messagesViewController;
+-(void)show:(NSWindow *)window animated:(BOOL)animated stickerPack:(TL_messages_stickerSet *)pack messagesController:(MessagesViewController *)messagesViewController;
+
 
 @property (nonatomic,copy) dispatch_block_t addcallback;
 

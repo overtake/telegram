@@ -58,7 +58,15 @@
             self.message.entities = [entities mutableCopy];
         }
         
+        TGInputMessageTemplate *template = self.message.conversation.inputTemplate;
         
+        
+        [[template updateSignalText:[[NSAttributedString alloc] init]] startWithNext:^(id next) {
+            if([next[0] boolValue]) {
+                [template saveTemplateInCloudIfNeeded];
+                [template performNotification];
+            }
+        }];
         
         [self.message save:YES];
     }

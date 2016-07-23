@@ -222,7 +222,7 @@
         
         _archivedItem.locked = YES;
         
-        [[featured loadNext:0] startWithNext:^(TL_messages_archivedStickers *next) {
+        [[featured loadNext:0]  startWithNext:^(TL_messages_archivedStickers *next) {
             
             _archivedCount = next.n_count;
             _archivedSets = next.sets;
@@ -373,8 +373,7 @@
     
     if([item isKindOfClass:[TGStickerPackRowItem class]]) {
         TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-        [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]] forMessagesViewController:appWindow().navigationController.messagesViewController];
-        [modalView show:self.view.window animated:YES];
+        [modalView show:self.view.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]] messagesController:appWindow().navigationController.messagesViewController];
     }
     
 }

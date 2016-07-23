@@ -107,7 +107,7 @@
             TGFeaturedStickerPackRowItem *item = (TGFeaturedStickerPackRowItem *) self.rowItem;
             
             TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-            [modalView setStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]] forMessagesViewController:appWindow().navigationController.messagesViewController];
+            
             
             weak();
             
@@ -118,7 +118,7 @@
                 
             }];
             
-            [modalView show:self.window animated:YES];
+            [modalView show:self.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]] messagesController:appWindow().navigationController.messagesViewController];
         }
         
         

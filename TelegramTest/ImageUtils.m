@@ -328,7 +328,7 @@ NSImage *previewImageForDocument(NSString *path) {
 + (NSImage*)roundCorners:(NSImage *)image size:(NSSize)size
 {
     
-    if(!image)
+    if(!image || image.size.width == 0 || image.size.height == 0)
         return image;
     NSImage *existingImage = image;
     NSSize existingSize = [existingImage size];
@@ -355,6 +355,9 @@ NSImage *previewImageForDocument(NSString *path) {
 
 + (NSImage *)blurImage:(NSImage *)image blurRadius:(int)radius frameSize:(CGSize)size {
     CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef)[image TIFFRepresentation], NULL);
+    
+    if(image.size.width == 0 || image.size.height == 0)
+        return image;
     
     NSImage *newImage = nil;
     if(source != NULL) {
@@ -493,7 +496,7 @@ static int32_t get_bits(uint8_t const *bytes, unsigned int bitOffset, unsigned i
 
 NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize) {
     if(!image || cropSize.width == 0 || cropSize.height == 0)
-        return nil;
+        return image;
     
     NSImage *result = [[NSImage alloc] initWithSize:cropSize];
     
@@ -504,13 +507,16 @@ NSImage *cropCenterWithSize(NSImage *image, NSSize cropSize) {
     } else {
         cropedRect = NSMakeRect(0, ceil((image.size.height - image.size.width) / 2), image.size.width, image.size.width);
     }
+    if(!NSIsEmptyRect(cropedRect) && result.size.width > 0 && result.size.height > 0) {
+        [result lockFocus];
+        [image drawInRect:NSMakeRect(0, 0, result.size.width, result.size.height)
+                 fromRect:cropedRect
+                operation:NSCompositeCopy
+                 fraction:1.0];
+        [result unlockFocus];
+    }
     
-    [result lockFocus];
-    [image drawInRect:NSMakeRect(0, 0, result.size.width, result.size.height)
-             fromRect:cropedRect
-            operation:NSCompositeCopy
-             fraction:1.0];
-    [result unlockFocus];
+    
     return result;
 }
 
@@ -530,7 +536,8 @@ NSImage *imageFromFile(NSString *filePath) {
 
 NSImage *decompressedImage(NSImage *image) {
     
-    
+    if(image.size.width == 0 || image.size.height == 0)
+        return image;
     
     CGContextRef context = CGBitmapContextCreate(NULL/*data - pass NULL to let CG allocate the memory*/,
                                                  image.size.width,
@@ -785,6 +792,9 @@ NSSize strongsizeWithSizes(NSSize from, NSSize min, NSSize max) {
     NSImage *sourceImage = anImage;
     [sourceImage setScalesWhenResized:YES];
     
+    if(anImage.size.width == 0 || anImage.size.height == 0)
+        return anImage;
+    
     if (![sourceImage isValid]) {
         MTLog(@"Invalid Image");
     } else {
@@ -878,9 +888,10 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
     
     NSImage *image = nil;
     
+    if(!oldImage || oldImage.size.width == 0 || oldImage.size.height == 0)
+        return oldImage;
+    
     @autoreleasepool {
-        if(!oldImage)
-            return oldImage;
         
         static CALayer *layer;
         if(!layer) {
@@ -941,6 +952,10 @@ NSImage *renderedImage(NSImage * oldImage, NSSize size) {
 
 
 NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
+    
+    if(image.size.width == 0 || image.size.height == 0)
+        return image;
+    
     NSImage *source = image;
     NSImage *target = [[NSImage alloc]initWithSize:backSize];
     
@@ -956,7 +971,7 @@ NSImage *cropImage(NSImage *image,NSSize backSize, NSPoint difference) {
 
 NSImage *imageWithRoundCorners(NSImage *oldImage, int cornerRadius, NSSize size) {
     
-    if(!oldImage)
+    if(!oldImage || oldImage.size.width == 0 || oldImage.size.height == 0)
     return oldImage;
     
     CALayer *layer = [CALayer layer];
@@ -1152,7 +1167,7 @@ NSImage *video_play_image() {
 
 + (NSImage *)roundedImage:(NSImage *)oldImage size:(NSSize)size {
     
-    if(!oldImage)
+    if(!oldImage || oldImage.size.width == 0 || oldImage.size.height == 0)
         return oldImage;
     
     CALayer *layer = [CALayer layer];
@@ -1194,21 +1209,27 @@ NSImage *video_play_image() {
 
 
 + (NSImage *) roundedImageNew:(NSImage *)oldImage size:(NSSize)size {
-    NSImage *result = [[NSImage alloc] initWithSize:size];
-    [result lockFocus];
     
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, size.width, size.height)
-                                                         xRadius:size.width / 2
-                                                         yRadius:size.height / 2];
-    [path addClip];
+    if(oldImage.size.width > 0 && oldImage.size.height > 0) {
+        NSImage *result = [[NSImage alloc] initWithSize:size];
+        [result lockFocus];
+        
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, size.width, size.height)
+                                                             xRadius:size.width / 2
+                                                             yRadius:size.height / 2];
+        [path addClip];
+        
+        [oldImage drawInRect:NSMakeRect(0, 0, size.width, size.height)
+                    fromRect:NSZeroRect
+                   operation:NSCompositeSourceOver
+                    fraction:1.0];
+        
+        [result unlockFocus];
+        return result;
+    }
     
-    [oldImage drawInRect:NSMakeRect(0, 0, size.width, size.height)
-                fromRect:NSZeroRect
-               operation:NSCompositeSourceOver
-                fraction:1.0];
-    
-    [result unlockFocus];
-    return result;
+    return oldImage;
+   
 }
 
 static void addRoundedRectToPath(CGContextRef context, CGRect rect, float ovalWidth, float ovalHeight)

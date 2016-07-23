@@ -121,14 +121,16 @@
         
         SSignal *signal = [[MTNetwork instance] requestSignal:[TLAPI_messages_getArchivedStickers createWithOffset_id:offsetId limit:1000]];
         
-        return [signal startWithNext:^(TL_messages_archivedStickers *next) {
+        return [[signal map:^id(id response) {
+            return [response isKindOfClass:[TL_messages_archivedStickers class]] ? response : nil;
+        }] startWithNext:^(TL_messages_archivedStickers *next) {
             
             _totalCount = next.n_count;
             
             [subscriber putNext:next];
         }];
         
-    }];
+    }] ;
 }
 
 

@@ -899,7 +899,7 @@ void remove_global_dispatcher(id internalId) {
                  {
                      
                      dispatch_block_t block = ^{
-                         if (error == nil)
+                         if (error == nil && ![result isKindOfClass:[RpcError class]])
                          {
                              [subscriber putNext:result];
                              [subscriber putCompletion];

@@ -3009,7 +3009,7 @@
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1451699370];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1124718171];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
 }

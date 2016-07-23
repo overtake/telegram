@@ -44,11 +44,15 @@
             [TGImageObject.threadPool addTask:[[SThreadPoolTask alloc] initWithBlock:^(bool (^canceled)()) {
                 strongWeak();
                 
-                if(strongSelf == weakSelf) {
-                    strongSelf.isLoaded = YES;
-                    [strongSelf _didDownloadImage:item];
-                    strongSelf.downloadItem = nil;
-                    strongSelf.downloadListener = nil;
+                @try {
+                    if(strongSelf == weakSelf) {
+                        strongSelf.isLoaded = YES;
+                        [strongSelf _didDownloadImage:item];
+                        strongSelf.downloadItem = nil;
+                        strongSelf.downloadListener = nil;
+                    }
+                } @catch (NSException *exception) {
+                    
                 }
                 
             }]];
@@ -84,13 +88,17 @@
             
             if(strongSelf == weakSelf && _thumbProcessor) {
                 
-                placeHolder = _thumbProcessor(placeHolder,self.imageSize);
-                super.placeholder = placeHolder;
-                _thumbProcessor = nil;
-                
-                [ASQueue dispatchOnMainQueue:^{
-                    [self.delegate didDownloadImage:placeHolder object:self];
-                }];
+                @try {
+                    placeHolder = _thumbProcessor(placeHolder,self.imageSize);
+                    super.placeholder = placeHolder;
+                    _thumbProcessor = nil;
+                    
+                    [ASQueue dispatchOnMainQueue:^{
+                        [self.delegate didDownloadImage:placeHolder object:self];
+                    }];
+                } @catch (NSException *exception) {
+                    
+                } 
             }
 
         }]];

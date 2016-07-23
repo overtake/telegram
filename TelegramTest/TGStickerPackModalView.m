@@ -190,7 +190,8 @@ static NSImage * greenBackgroundImage(NSSize size) {
     _tableView.canSendStickerAlways = canSendSticker;
 }
 
--(void)setStickerPack:(TL_messages_stickerSet *)stickerPack forMessagesViewController:(MessagesViewController *)messagesViewController{
+-(void)show:(NSWindow *)window animated:(BOOL)animated stickerPack:(TL_messages_stickerSet *)stickerPack messagesController:(MessagesViewController *)messagesViewController {
+    
     _messagesViewController = messagesViewController;
     _tableView.messagesViewController = messagesViewController;
     _pack = stickerPack;
@@ -222,7 +223,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     
     
-    [_tableView showWithStickerPack:stickerPack];
+    
     
     __block BOOL packIsset = [TGModernESGViewController setWithId:stickerPack.set.n_id] != nil;
     
@@ -235,6 +236,11 @@ static NSImage * greenBackgroundImage(NSSize size) {
     if(dif < 4) {
         [self setContainerFrameSize:NSMakeSize(self.containerSize.width, (packIsset ? 0 : 50) + 80 + dif*80)];
     }
+    
+    [super show:window animated:animated];
+
+    
+    [_tableView showWithStickerPack:stickerPack];
     
     NSImage *placeholder = [[NSImage alloc] initWithData:headerSticker.thumb.bytes];
     
@@ -259,7 +265,7 @@ static NSImage * greenBackgroundImage(NSSize size) {
     [_bottomView setHidden:packIsset];
     
     [_addButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"StickerPack.AddStickerPack", nil),stickerPack.documents.count] forControlState:BTRControlStateNormal];
-  
+    
     _addButton.heightBugFix = 3;
     
     [_addButton setTitleFont:TGSystemBoldFont(14) forControlState:BTRControlStateNormal];
@@ -268,8 +274,9 @@ static NSImage * greenBackgroundImage(NSSize size) {
     
     
     [_headerView setFrameOrigin:NSMakePoint(0, self.containerSize.height - 80)];
-    
 }
+
+
 
 -(void)modalViewDidHide {
     
