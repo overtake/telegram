@@ -255,6 +255,9 @@ static NSImage *higlightedImage() {
 
 -(void)loadFeatured:(BOOL)force {
     
+    if(false)
+        return;
+    
     if(force || !isRemoteStickersLoaded()) {
         __block int nhash = 0;
         

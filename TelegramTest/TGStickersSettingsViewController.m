@@ -184,8 +184,8 @@
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    
-    if(ACCEPT_FEATURE) {
+    //ACCEPT_FEATURE
+    if(false) {
         [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
         
         weak();

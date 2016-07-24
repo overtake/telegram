@@ -145,7 +145,7 @@ static ChatHistoryController *observer;
     __block HistoryFilter *filter;
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
        
         filter = [_filters lastObject];
         
@@ -193,7 +193,7 @@ static ChatHistoryController *observer;
 {
     __block HistoryFilter *filter;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         if(_filters.count > index)
             filter = _filters[index];
     } synchronous:YES];
@@ -205,7 +205,7 @@ static ChatHistoryController *observer;
 -(HistoryFilter *)filterWithPeerId:(int)peer_id {
     __block HistoryFilter *filter;
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         [_filters enumerateObjectsUsingBlock:^(HistoryFilter *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             if(obj.peer_id == peer_id)
@@ -269,7 +269,7 @@ static ChatHistoryController *observer;
 
 -(void)prevStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         HistoryFilter *filer = [self filterWithNext:NO];
                 
@@ -283,7 +283,7 @@ static ChatHistoryController *observer;
     
 }
 -(void)nextStateAsync:(void (^)(ChatHistoryState state,ChatHistoryController *controller))block {
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         HistoryFilter *filer = [self filterWithNext:YES];
         [ASQueue dispatchOnMainQueue:^{
@@ -412,7 +412,7 @@ static ChatHistoryController *observer;
 -(void)setProccessing:(BOOL)isProccessing {
     
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         _proccessing = isProccessing;
     }];
     
@@ -544,7 +544,7 @@ static const int maxCacheCount = 30;
 
 
 +(void)addLatestMessageItems:(NSArray *)items position:(int)position {
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         
         [items enumerateObjectsUsingBlock:^(MessageTableItem *  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -576,7 +576,7 @@ static const int maxCacheCount = 30;
 
 +(void)clearLatestMessageItemsWithPeer:(TLPeer *)peer {
     
-    [ASQueue dispatchOnStageQueue:^{
+    [queue dispatchOnQueue:^{
         [lastMessageItems removeObjectForKey:@(peer.peer_id)];
     }];
     
