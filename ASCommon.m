@@ -77,11 +77,11 @@ void TGLogToFilev(NSString *format, va_list args)
 {
     NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
     
-    //BOOL result = [[NSProcessInfo processInfo].environment[@"console_logging"] boolValue];
+    BOOL result = [[NSProcessInfo processInfo].environment[@"console_logging"] boolValue];
     
-   // if(result) {
+    if(result) {
         NSLog(@"%@", message);
-   // }
+    }
     
     dispatch_async(TGLogQueue(), ^
     {
