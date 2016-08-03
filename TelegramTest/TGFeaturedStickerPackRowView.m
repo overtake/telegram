@@ -117,8 +117,13 @@
                 [weakSelf performAddRequest];
                 
             }];
+
             
-            [modalView show:self.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]] messagesController:appWindow().navigationController.messagesViewController];
+            [[TGModernESGViewController stickersSignal:item.set] startWithNext:^(id next) {
+                [modalView show:self.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:next] messagesController:appWindow().navigationController.messagesViewController];
+            }];
+            
+            
         }
         
         

@@ -125,6 +125,7 @@
 
 -(void)clear {
     [_request cancelRequest];
+    _controller = nil;
 }
 
 -(NSArray *)convertObjects:(NSArray *)list {

@@ -53,7 +53,7 @@
         
         [attrs appendString:@"\n" withColor:[NSColor whiteColor]];
         
-        range = [attrs appendString:[NSString stringWithFormat:NSLocalizedString(@"Stickers.StickersCount", nil),stickers.count] withColor:GRAY_TEXT_COLOR];
+        range = [attrs appendString:[NSString stringWithFormat:NSLocalizedString(@"Stickers.StickersCount", nil),_set.n_count] withColor:GRAY_TEXT_COLOR];
         
         [attrs setFont:TGSystemFont(13) forRange:range];
         

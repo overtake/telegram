@@ -23,5 +23,6 @@
 
 +(NSDictionary *)conversationLastData:(TL_conversation *)conversation;
 
++(NSString *)timerString:(int)until;
 
 @end

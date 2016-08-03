@@ -83,7 +83,9 @@
     [_imageView setFrameSize:item.imageObject.imageSize];
     _imageView.object = item.imageObject;
     
-    [_deletePack setHidden:(item.set.flags & (1 << 2)) == (1 << 2)];
+    
+    //(item.set.flags & (1 << 2)) == (1 << 2)
+    [_deletePack setHidden:NO];
     
     
 }

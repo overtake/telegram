@@ -138,7 +138,7 @@
         
        // [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
           //  [context setDuration:0.5];
-        [_textField setFrameOrigin:NSMakePoint(self.item.xOffset, 5)];
+        [_textField setFrameOrigin:NSMakePoint(self.item.xOffset - 4, 5)];
       //  } completionHandler:^{
             
     //    }];
@@ -168,7 +168,7 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_textField setFrameOrigin:NSMakePoint(self.item.xOffset, 5)];
+    [_textField setFrameOrigin:NSMakePoint(self.item.xOffset - 4, 5)];
     [_textField setFrameSize:NSMakeSize(newSize.width - self.item.xOffset * 2, self.item.height - 5)];
     [_separator setFrame:NSMakeRect(self.item.xOffset, 0, NSWidth(self.frame) - (self.item.xOffset * 2), DIALOG_BORDER_WIDTH)];
 }

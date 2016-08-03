@@ -264,12 +264,17 @@
     
     [template setReplyMessage:nil save:YES];
 
-    [[template updateSignalText:[[NSAttributedString alloc] init]] startWithNext:^(id next) {
-        if([next[0] boolValue] || replyMessage) {
-            [template saveTemplateInCloudIfNeeded];
-            [template performNotification];
-        }
-    }];
+    if(message.length > 0) {
+        [[template updateSignalText:[[NSAttributedString alloc] init]] startWithNext:^(id next) {
+            if([next[0] boolValue] || replyMessage) {
+                [template saveTemplateInCloudIfNeeded];
+                [template performNotification];
+            }
+        }];
+    } else if(replyMessage) {
+        [template saveTemplateInCloudIfNeeded];
+        [template performNotification];
+    }
     
     
     return  outMessage;
@@ -826,6 +831,8 @@ static TGLocationRequest *locationRequest;
                         [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":BLUE_COLOR}];
             } else if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.url.length > 0) {
                
+             //   open_link(response.url);
+                
                 TGEmbedModalView *embedModal = [[TGEmbedModalView alloc] init];
                 
                 [embedModal setWebpage:[TL_webPage createWithFlags:0 n_id:0 url:response.url display_url:response.url type:nil site_name:nil title:nil n_description:nil photo:nil embed_url:response.url embed_type:@"callback" embed_width:INT32_MAX embed_height:INT32_MAX duration:0 author:nil document:nil]];
@@ -926,10 +933,8 @@ static TGLocationRequest *locationRequest;
         
          RPCRequest *request = [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:pack.set.n_id access_hash:pack.set.access_hash] archived:NO] successHandler:^(id request, TLmessages_StickerSetInstallResult *response) {
             
-            
-            NSMutableDictionary *documents = [NSMutableDictionary dictionaryWithCapacity:response.sets.count];
              
-             NSMutableArray *copysets = [response.sets mutableCopy];
+             NSMutableArray<TL_stickerSetCovered *> *copysets = [response.sets mutableCopy];
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 
@@ -944,25 +949,22 @@ static TGLocationRequest *locationRequest;
                 stickers[@(pack.set.n_id)] = pack.documents;
                 
                 
-                
-                
                 if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
                     
-                    [response.sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        documents[@(obj.n_id)] = stickers[@(obj.n_id)];
-                        [stickers removeObjectForKey:@(obj.n_id)];
+                    [response.sets enumerateObjectsUsingBlock:^(TL_stickerSetCovered *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        [stickers removeObjectForKey:@(obj.set.n_id)];
                     }];
                     
                     NSMutableArray *removed = [NSMutableArray array];
                     
                     [sets enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                         
-                        __block TL_stickerSet * changedSet = nil;
+                        __block TLStickerSet * changedSet = nil;
                         
-                        [response.sets enumerateObjectsUsingBlock:^(TL_stickerSet * archived, NSUInteger idx, BOOL * _Nonnull stop) {
-                            if(obj.n_id == archived.n_id) {
+                        [response.sets enumerateObjectsUsingBlock:^(TL_stickerSetCovered * archived, NSUInteger idx, BOOL * _Nonnull stop) {
+                            if(obj.n_id == archived.set.n_id) {
                             
-                                changedSet = archived;
+                                changedSet = archived.set;
                                 [removed addObject:obj];
                             }
                         }];
@@ -984,24 +986,25 @@ static TGLocationRequest *locationRequest;
             }];
              
              
-             if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
-                 
-                 [Notification perform:ARCHIVE_STICKERS_CHANGED data:@{KEY_STICKERSET:copysets,KEY_DATA:documents}];
-                 
-                 [TMViewController hideModalProgress];
-                 
-                 TGModalArchivedPacks *archived = [[TGModalArchivedPacks alloc] initWithFrame:NSZeroRect];
-                 [archived show:appWindow() animated:YES sets:copysets documents:documents];
-             } else {
-                 [TMViewController hideModalProgressWithSuccess];
-             }
+             [ASQueue dispatchOnMainQueue:^{
+                 if([response isKindOfClass:[TL_messages_stickerSetInstallResultArchive class]]) {
+                     [Notification perform:ARCHIVE_STICKERS_CHANGED data:@{KEY_STICKERSET:copysets}];
+                     
+                     [TMViewController hideModalProgress];
+                     
+                     TGModalArchivedPacks *archived = [[TGModalArchivedPacks alloc] initWithFrame:NSZeroRect];
+                     [archived show:appWindow() animated:YES sets:copysets];
+                 } else {
+                     [TMViewController hideModalProgressWithSuccess];
+                 }
+             }];
+             
+             
+             
             
             [TGModernESGViewController reloadStickers];
             
-            
-            
-             
-             [subscriber putNext:@(YES)];
+            [subscriber putNext:@(YES)];
             
         } errorHandler:^(id request, RpcError *error) {
             [TMViewController hideModalProgress];

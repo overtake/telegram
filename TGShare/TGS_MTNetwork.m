@@ -106,7 +106,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
         
         [_queue dispatchOnQueue:^{
             
-            [self moveAndEncryptKeychain];
             
             _objectiveDatacenter = [[NSMutableDictionary alloc] init];
             _pollConnections = [[NSMutableArray alloc] init];
@@ -193,45 +192,13 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 
--(void)moveAndEncryptKeychain {
-    
-    NSString *applicationSupportPath = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES)[0];
-    NSString *applicationName = @"Telegram";
-    
-    NSString * odirectory = [[applicationSupportPath stringByAppendingPathComponent:applicationName] stringByAppendingPathComponent:@"mtkeychain"];
-    
-    
-    
-    BOOL isset = NO;
-    
-    if([[NSFileManager defaultManager] fileExistsAtPath:odirectory isDirectory:&isset]) {
-        
-        if(isset) {
-            
-            TGSKeychain *keychain = [self nKeychain];
-            
-            [keychain setNotEncryptedKeychain:YES];
-            
-            [keychain loadIfNeeded];
-            
-            [keychain setNotEncryptedKeychain:NO];
-            
-            [keychain updatePasscodeHash:[[NSData alloc] initWithEmptyBytes:32] save:YES];
-            
-            [[NSFileManager defaultManager] removeItemAtPath:odirectory error:nil];
-            
-        }
-        
-    }
-    
-}
 
 -(MTQueue *)queue {
     return [_mtProto messageServiceQueue];
 }
 
 -(TGSKeychain *)nKeychain {
-    return [TGSKeychain keychainWithName:@"ru.keepcoder.telegram"];
+    return [TGSKeychain keychainWithName:@"ru.keepcoder.Telegram"];
 }
 
 
@@ -552,9 +519,7 @@ static int MAX_WORKER_POLL = 5;
 
 id dispatch_in_time(int time, dispatch_block_t callback) {
     
-    
-    assert(callback != nil);
-    
+        
     GlobalDispatchAction *action = [[GlobalDispatchAction alloc] init];
     
     action.time = time;

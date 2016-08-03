@@ -41,4 +41,6 @@
 
 +(void)reloadStickers;
 
++(SSignal *)stickersSignal:(TLStickerSet *)stickerSet;
+
 @end

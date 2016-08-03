@@ -6,7 +6,7 @@
     #import <Cocoa/Cocoa.h>
 
 #define TGDEBUG // UNDEF IN RELEASE
-//#define TGSTABLE // DEF IN stable version
+#define TGSTABLE // DEF IN stable version
 
 
 #ifdef TGDEBUG
@@ -86,4 +86,12 @@
 #define TGAssert(e)
 #endif
 
+#endif
+
+#ifdef TGDEBUG
+#ifdef TGSTABLE
+#   define NSLog(...) NSLog(__VA_ARGS__)
+#endif
+#else
+#   define NSLog(...)
 #endif

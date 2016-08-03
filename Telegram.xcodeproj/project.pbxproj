@@ -233,9 +233,6 @@
 		C20A7E7E19DC1816008844F2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C20A7E7D19DC1816008844F2 /* CoreGraphics.framework */; };
 		C20A8A6B1D2672F400C70134 /* TGPopoverHint.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8A6A1D2672F400C70134 /* TGPopoverHint.m */; };
 		C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C26E80171B7B748A003CC483 /* SSignalKit.framework */; };
-		C20A8A9F1D2D079500C70134 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C20A8AA01D2D079500C70134 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C20A8AAB1D2D079B00C70134 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C20A8AAE1D2D41E200C70134 /* SQueue+ASExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AAD1D2D41E200C70134 /* SQueue+ASExtension.m */; };
 		C20A8AB21D2D526A00C70134 /* TGModernSearchvViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AB11D2D526A00C70134 /* TGModernSearchvViewController.m */; };
 		C20A8AB61D2D555400C70134 /* TGSearchSignalKit.m in Sources */ = {isa = PBXBuildFile; fileRef = C20A8AB51D2D555400C70134 /* TGSearchSignalKit.m */; };
@@ -384,6 +381,8 @@
 		C235780C1CAAE36E0092F50A /* debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = C235780B1CAAE36E0092F50A /* debug.xcconfig */; };
 		C23578981C1C4DE900F38698 /* TGGLVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */; };
 		C23578A41C1CD3AB00F38698 /* TGGLVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */; };
+		C239A6C31D4925DE0086C0A1 /* TGConfirmPhoneModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C239A6C21D4925DE0086C0A1 /* TGConfirmPhoneModalView.m */; };
+		C239A6C61D4938000086C0A1 /* TGSignalUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C239A6C51D4938000086C0A1 /* TGSignalUtils.m */; };
 		C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */; };
 		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
 		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
@@ -640,6 +639,8 @@
 		C2ACCE5F1ADD66A600ABEE78 /* TGConversationsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE5E1ADD66A600ABEE78 /* TGConversationsTableView.m */; };
 		C2ACCE6B1AE10ED200ABEE78 /* TGRaceEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6A1AE10ED200ABEE78 /* TGRaceEmoji.m */; };
 		C2ACCE6E1AE122A400ABEE78 /* EmojiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ACCE6D1AE122A400ABEE78 /* EmojiButton.m */; };
+		C2AFE6351D45234D006B9784 /* SSignalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C26E80171B7B748A003CC483 /* SSignalKit.framework */; };
+		C2AFE6371D4523CA006B9784 /* TGAnimationBlockDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C247015119839A20007AB338 /* TGAnimationBlockDelegate.m */; };
 		C2B0DF771BA98E7C0023982C /* TL_localEmptyMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF761BA98E7C0023982C /* TL_localEmptyMessage.m */; };
 		C2B0DF831BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF821BA9B7840023982C /* ComposeActionAddChannelModeratorBehavior.m */; };
 		C2B0DF861BA9C59B0023982C /* ComposeConfirmModeratorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DF851BA9C59B0023982C /* ComposeConfirmModeratorViewController.m */; };
@@ -657,6 +658,8 @@
 		C2B669891BA5591F004AF678 /* TGGeneralRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */; };
 		C2B6698C1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */; };
 		C2B6698F1BA575AE004AF678 /* TGChangeUserNameContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698E1BA575AE004AF678 /* TGChangeUserNameContainerView.m */; };
+		C2B7754B1D51E5E000A5F06F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; };
+		C2B7754D1D51E63900A5F06F /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
 		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
 		C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */; };
@@ -675,7 +678,6 @@
 		C2C5DCA61D185E0D0070AC56 /* TGSingleMediaSenderModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCA51D185E0D0070AC56 /* TGSingleMediaSenderModalView.m */; };
 		C2C5DCC71D1973710070AC56 /* TGSingleMediaPreviewRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCC61D1973710070AC56 /* TGSingleMediaPreviewRowItem.m */; };
 		C2C5DCCA1D1973950070AC56 /* TGSingleMediaPreviewRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCC91D1973950070AC56 /* TGSingleMediaPreviewRowView.m */; };
-		C2C5DCD21D19CC080070AC56 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B0A7721D12EE52001BAE72 /* Sparkle.framework */; };
 		C2C5DCDD1D1D4E080070AC56 /* TGFeaturedStickersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCDC1D1D4E080070AC56 /* TGFeaturedStickersViewController.m */; };
 		C2C5DCEA1D1D50F10070AC56 /* TGStickerPackRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCE91D1D50F10070AC56 /* TGStickerPackRowItem.m */; };
 		C2C5DCED1D1D51500070AC56 /* TGStickerPackRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C5DCEC1D1D51500070AC56 /* TGStickerPackRowView.m */; };
@@ -1085,8 +1087,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C20A8A9F1D2D079500C70134 /* Sparkle.framework in Copy Files (6 items) */,
-				C20A8AA01D2D079500C70134 /* HockeySDK.framework in Copy Files (6 items) */,
+				C2B7754D1D51E63900A5F06F /* Sparkle.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1851,6 +1852,10 @@
 		C23578971C1C4DE900F38698 /* TGGLVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGLVideoPlayer.m; sourceTree = "<group>"; };
 		C23578A21C1CD3AB00F38698 /* TGGLVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGLVideoFrame.h; sourceTree = "<group>"; };
 		C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGGLVideoFrame.m; sourceTree = "<group>"; };
+		C239A6C11D4925DE0086C0A1 /* TGConfirmPhoneModalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGConfirmPhoneModalView.h; sourceTree = "<group>"; };
+		C239A6C21D4925DE0086C0A1 /* TGConfirmPhoneModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConfirmPhoneModalView.m; sourceTree = "<group>"; };
+		C239A6C41D4938000086C0A1 /* TGSignalUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSignalUtils.h; sourceTree = "<group>"; };
+		C239A6C51D4938000086C0A1 /* TGSignalUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSignalUtils.m; sourceTree = "<group>"; };
 		C240B1B31B627A3300912248 /* TGSharedLinksTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinksTableView.h; sourceTree = "<group>"; };
 		C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinksTableView.m; sourceTree = "<group>"; };
 		C240B1B61B627B3700912248 /* SharedLinksHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedLinksHistoryFilter.h; sourceTree = "<group>"; };
@@ -2973,6 +2978,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2AFE6351D45234D006B9784 /* SSignalKit.framework in Frameworks */,
 				C2F07E281BC02FC500B3DB39 /* libz.tbd in Frameworks */,
 				C2F07E251BC02F6200B3DB39 /* SystemConfiguration.framework in Frameworks */,
 				C26E80341B8369B1003CC483 /* MtProtoKit.framework in Frameworks */,
@@ -2983,9 +2989,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2B7754B1D51E5E000A5F06F /* Sparkle.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
-				C20A8AAB1D2D079B00C70134 /* HockeySDK.framework in Frameworks */,
-				C2C5DCD21D19CC080070AC56 /* Sparkle.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
 				C2034BB31C2EB1C70080D023 /* VideoToolbox.framework in Frameworks */,
@@ -5601,6 +5606,8 @@
 				C20A8ACC1D2FCECD00C70134 /* TGJoinModalView.m */,
 				C2D4CA281D410390003118AE /* TGModalArchivedPacks.h */,
 				C2D4CA291D410390003118AE /* TGModalArchivedPacks.m */,
+				C239A6C11D4925DE0086C0A1 /* TGConfirmPhoneModalView.h */,
+				C239A6C21D4925DE0086C0A1 /* TGConfirmPhoneModalView.m */,
 			);
 			name = modal;
 			sourceTree = "<group>";
@@ -6301,6 +6308,8 @@
 				C2E5A0721BAC75C100C1BCA1 /* TGMessageViewSender.m */,
 				C20B63311CB2DE3900A02F24 /* TGAudioController.h */,
 				C20B63321CB2DE3900A02F24 /* TGAudioController.m */,
+				C239A6C41D4938000086C0A1 /* TGSignalUtils.h */,
+				C239A6C51D4938000086C0A1 /* TGSignalUtils.m */,
 			);
 			name = logic;
 			sourceTree = "<group>";
@@ -6696,6 +6705,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2AFE6371D4523CA006B9784 /* TGAnimationBlockDelegate.m in Sources */,
 				C2EA57971C9B209E0085F72F /* NSImage+RHResizableImageAdditions.m in Sources */,
 				C20BA6301B0E5E76001ECE22 /* TGDateUtils.mm in Sources */,
 				C2D5CE841B0B938B009F6419 /* SpacemanBlocks.h in Sources */,
@@ -6891,6 +6901,7 @@
 				C248F3D219BE046C00BF658E /* wav_io.c in Sources */,
 				0A5F724F18E1E6DF00514E53 /* HackUtils.m in Sources */,
 				C2967B161A9B59D2003759B2 /* TGPasslockModalView.m in Sources */,
+				C239A6C31D4925DE0086C0A1 /* TGConfirmPhoneModalView.m in Sources */,
 				CEF8EB8A17FCA81000740D66 /* NSString+NSStringHexToBytes.m in Sources */,
 				0A67588B18928F1A00F4487D /* TMGrowingTextView.m in Sources */,
 				0AF4F4AD189D5CD5004BA4DF /* MessageTableCellServiceMessage.m in Sources */,
@@ -6984,6 +6995,7 @@
 				C297955819EC29EA00BE893E /* GeneralSettingsRowView.m in Sources */,
 				0AB43BA818D4D60B00FB805A /* MessageInputGrowingTextView.m in Sources */,
 				C248F3E419BE08A800BF658E /* lpc.c in Sources */,
+				C239A6C61D4938000086C0A1 /* TGSignalUtils.m in Sources */,
 				C2CE53EC1BEB5ACF00BBEF5F /* TGGeneralInputRowItem.m in Sources */,
 				C2A5BFF318E02BAB0021BE68 /* TGAudioPlayer.m in Sources */,
 				C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */,

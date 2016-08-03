@@ -268,7 +268,7 @@ static NSMutableDictionary *list;
         }
     };
     
-    _textContainer = [[NSMutableAttributedString alloc] initWithString:draft.message];
+    _textContainer = [[NSMutableAttributedString alloc] initWithString:draft.message ? draft.message : @""];
     [self fillEntities:draft.entities];
     
     if(draft.isNo_webpage) {

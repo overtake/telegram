@@ -25,6 +25,7 @@
 #import "TGModalMessagesViewController.h"
 #import "TGContextMessagesvViewController.h"
 #import "TGJoinModalView.h"
+#import "TGConfirmPhoneModalView.h"
 @implementation OpenWithObject
 
 -(id)initWithFullname:(NSString *)fullname app:(NSURL *)app icon:(NSImage *)icon {
@@ -54,6 +55,7 @@ NSString *const TGImportCardPrefix = @"tg://resolve?domain=";
 NSString *const TGImportShareLinkPrefix = @"tg://msg_url?url=";
 NSString *const TGJoinGroupPrefix = @"tg://join?invite=";
 NSString *const TGStickerPackPrefix = @"tg://addstickers?set=";
+NSString *const TGConfirmPhonePrefix = @"tg://confirmphone";
 NSString *const TLUserNamePrefix = @"@";
 NSString *const TLHashTagPrefix = @"#";
 NSString *const TLBotCommandPrefix = @"/";
@@ -584,7 +586,7 @@ void join_group_by_hash(NSString * hash) {
         
         [RPCRequest sendRequest:[TLAPI_messages_checkChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TL_chatInvite *response) {
             
-            if([response isKindOfClass:[TL_chatInviteAlready class]] && ![(TLChat *)[response chat] isLeft]) {
+            if([response isKindOfClass:[TL_chatInviteAlready class]]) {
                 
                 TLChat *chat = [response chat];
                 
@@ -600,48 +602,55 @@ void join_group_by_hash(NSString * hash) {
     
             } else if([response isKindOfClass:[TL_chatInvite class]]) {
                 
+                //if(false) {
                 [TMViewController hideModalProgress];
-                
+                    
                 TGJoinModalView *modalView = [[TGJoinModalView alloc] initWithFrame:NSZeroRect];
-                
+                    
                 [modalView showWithChatInvite:response hash:hash];
-                
+                    
                 return;
-                
-//                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(response.isChannel ? response.isMegagroup ? @"Confirm.ConfrimToJoinSupergroup" : @"Confirm.ConfrimToJoinChannel" : @"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
-//                    
-//                    [TMViewController showModalProgress];
-//                    
-//                    [RPCRequest sendRequest:[TLAPI_messages_importChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TLUpdates *response) {
+                    
+//                } else {
+//                    confirm(appName(), [NSString stringWithFormat:NSLocalizedString(response.isChannel ? response.isMegagroup ? @"Confirm.ConfrimToJoinSupergroup" : @"Confirm.ConfrimToJoinChannel" : @"Confirm.ConfrimToJoinGroup", nil),[response title]], ^{
 //                        
-//                        if([response chats].count > 0) {
-//                            TLChat *chat = [response chats][0];
+//                        [TMViewController showModalProgress];
+//                        
+//                        [RPCRequest sendRequest:[TLAPI_messages_importChatInvite createWithN_hash:hash] successHandler:^(RPCRequest *request, TLUpdates *response) {
 //                            
-//                            TL_conversation *conversation = chat.dialog;
-//                            
-//                            [appWindow().navigationController showMessagesViewController:conversation];
-//                            
-//                            dispatch_after_seconds(0.2, ^{
+//                            if([response chats].count > 0) {
+//                                TLChat *chat = [response chats][0];
 //                                
-//                                [TMViewController hideModalProgressWithSuccess];
-//                            });
-//                        } else {
+//                                TL_conversation *conversation = chat.dialog;
+//                                
+//                                [appWindow().navigationController showMessagesViewController:conversation];
+//                                
+//                                dispatch_after_seconds(0.2, ^{
+//                                    
+//                                    [TMViewController hideModalProgressWithSuccess];
+//                                });
+//                            } else {
+//                                [TMViewController hideModalProgress];
+//                            }
+//                            
+//                            
+//                            
+//                        } errorHandler:^(RPCRequest *request, RpcError *error) {
 //                            [TMViewController hideModalProgress];
-//                        }
+//                            
+//                            if(error.error_code == 400) {
+//                                alert(appName(), NSLocalizedString(error.error_msg, nil));
+//                            }
+//                            
+//                        }];
 //                        
 //                        
-//                        
-//                    } errorHandler:^(RPCRequest *request, RpcError *error) {
-//                        [TMViewController hideModalProgress];
-//                        
-//                        if(error.error_code == 400) {
-//                            alert(appName(), NSLocalizedString(error.error_msg, nil));
-//                        }
-//                        
-//                    }];
-//                    
-//                    
-//                }, nil);
+//                    }, nil);
+//                }
+                
+                
+                
+
             }
             
             
@@ -653,7 +662,7 @@ void join_group_by_hash(NSString * hash) {
                 alert(appName(), NSLocalizedString(error.error_msg, nil));
             }
             
-        }];
+        } timeout:10];
     
 }
 
@@ -800,6 +809,27 @@ void share_link(NSString *url, NSString *text) {
     [[Telegram rightViewController] showShareLinkModalView:url text:text];
 }
 
+void confirm_phone_by_link(NSString *phone, NSString *hash) {
+    
+    [TMViewController showModalProgress];
+    
+    [RPCRequest sendRequest:[TLAPI_account_sendConfirmPhoneCode createWithFlags:0 n_hash:hash current_number:YES] successHandler:^(id request, TLauth_SentCode *response) {
+        
+        [TMViewController hideModalProgress];
+
+        
+        if(phone.length > 0 && hash.length > 0) {
+            TGConfirmPhoneModalView *modalView = [[TGConfirmPhoneModalView alloc] init];
+            [modalView show:appWindow() animated:YES response:response];
+        }
+        
+    } errorHandler:^(id request, RpcError *error) {
+        [TMViewController hideModalProgress];
+    } timeout:10];
+    
+    
+}
+
 void determinateURLLink(NSString *link) {
     
     
@@ -848,8 +878,8 @@ void determinateURLLink(NSString *link) {
 
 void open_link_with_controller(NSString *link, TMNavigationController *controller) {
     
-    if([TMViewController isModalActive])
-        return;
+//    if([TMViewController isModalActive])
+//        return;
     
     TMNavigationController *navigationController = controller ? controller : appWindow().navigationController;
     
@@ -965,6 +995,13 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
         return;
     }
     
+    if([link hasPrefix:TGConfirmPhonePrefix]) {
+        
+        NSDictionary *params = getUrlVars(link);
+        
+        confirm_phone_by_link(params[@"phone"], params[@"hash"]);
+    }
+    
     
     if([link hasPrefix:TLHashTagPrefix]) {
         
@@ -1004,6 +1041,7 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
             
             NSString *joinPrefix = @"joinchat/";
             NSString *stickerPrefix = @"addstickers/";
+            NSString *confirmphone = @"confirmphone?";
             
             
             if([name hasPrefix:joinPrefix]) {
@@ -1012,6 +1050,11 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
             } else if([name hasPrefix:stickerPrefix]) {
                 add_sticker_pack_by_name([TL_inputStickerSetShortName createWithShort_name:[name substringFromIndex:stickerPrefix.length]]);
                 return;
+            } else if([name hasPrefix:confirmphone]) {
+                NSDictionary *vars = getUrlVars(name);
+                confirm_phone_by_link(vars[@"phone"], vars[@"hash"]);
+                return;
+                
             } else if([name rangeOfString:@"/"].location == NSNotFound) {
                 
                 NSMutableDictionary *user = [@{@"domain":name} mutableCopy];
@@ -1651,14 +1694,19 @@ NSString *priorityString(NSString * str, ...) {
 }
 
 BOOL isEnterEvent(NSEvent *theEvent) {
-    return (theEvent.keyCode == 36 || theEvent.keyCode == 76);
+    NSUInteger flags = (theEvent.modifierFlags & NSDeviceIndependentModifierFlagsMask);
+    BOOL isEnter = (theEvent.keyCode == 0x24 || theEvent.keyCode ==  0x4C); // VK_RETURN
+
+    return isEnter;
 }
 
 BOOL isEnterAccess(NSEvent *theEvent) {
     
-    if((theEvent.keyCode == 36 || theEvent.keyCode == 76)) {
+    if(isEnterEvent(theEvent)) {
         
-        return [SettingsArchiver checkMaskedSetting:SendEnter] ? theEvent.modifierFlags == 256 : (theEvent.modifierFlags & NSCommandKeyMask) > 0;
+        NSUInteger flags = (theEvent.modifierFlags & NSDeviceIndependentModifierFlagsMask);
+        
+        return [SettingsArchiver checkMaskedSetting:SendEnter] ? flags == 0 || flags == 65536 : (theEvent.modifierFlags & NSCommandKeyMask) > 0;
 
     }
     

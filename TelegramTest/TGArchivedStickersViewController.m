@@ -65,12 +65,11 @@
 
 
 -(void)changedArchivedStickers:(NSNotification *)notification {
-    NSArray *sets = notification.userInfo[KEY_STICKERSET];
-    NSDictionary *stickers = notification.userInfo[KEY_DATA];
+    NSArray<TL_stickerSetCovered *> *sets = notification.userInfo[KEY_STICKERSET];
     
-    [sets enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [sets enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_stickerSetCovered *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject:@{@"set":obj,@"stickers":stickers[@(obj.n_id)],@"added":@(NO),@"unread":@(NO)} ];
+        TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject:@{@"set":obj.set,@"stickers":@[obj.cover],@"added":@(NO),@"unread":@(NO)} ];
         
         BOOL insert = [_tableView insert:item atIndex:3 tableRedraw:YES];
         
@@ -78,9 +77,9 @@
             
             item = [_tableView itemByHash:item.hash];
             item.isAdded = NO;
-            NSUInteger index = [_tableView positionOfItem:[_tableView itemByHash:item.hash]];
             
-            [_tableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+            [_tableView removeItem:item tableRedraw:YES];
+            
         }
         
     }];
@@ -91,27 +90,15 @@
 
 -(void)addSets:(NSArray *)sets  {
     
-    NSMutableArray *signals = [NSMutableArray array];
-    
-    [sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
-        [signals addObject:[[MTNetwork instance] requestSignal:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:set.n_id access_hash:set.access_hash]]]];
-    }];
-    
-    
-    [[SSignal combineSignals:signals] startWithNext:^(NSArray *next) {
+    [sets enumerateObjectsUsingBlock:^(TL_stickerSetCovered *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        [next enumerateObjectsUsingBlock:^(TL_messages_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject:@{@"set":obj.set,@"stickers":obj.documents,@"added":@(NO),@"unread":@(NO)} ];
-            
-            [_tableView addItem:item tableRedraw:NO];
-            
-        }];
+        TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject:@{@"set":obj.set,@"stickers":@[obj.cover],@"added":@(NO),@"unread":@(NO)}];
         
-        [_tableView reloadData];
+        [_tableView addItem:item tableRedraw:NO];
         
     }];
-   
+    
+    [_tableView reloadData];
     
 }
 

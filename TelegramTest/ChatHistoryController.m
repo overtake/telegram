@@ -61,7 +61,7 @@ static ChatHistoryController *observer;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             
-            queue = [[ASQueue alloc] initWithName:"chatqueue"];
+            queue =  [ASQueue globalQueue];
             
             listeners = [[NSMutableArray alloc] init];
             
@@ -954,13 +954,7 @@ static const int maxCacheCount = 30;
                 
                 if(![checkItem.message isKindOfClass:[TL_destructMessage class]]) {
                     
-                    [listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        
-                        ChatHistoryController *controller = obj.nonretainedObjectValue;
-                        
-                        [controller updateItemId:checkItem.message.randomId withId:checkItem.message.n_id];
-                        
-                    }];
+                     [self updateItemId:checkItem.message.randomId withId:checkItem.message.n_id];
                     
                 }
                 

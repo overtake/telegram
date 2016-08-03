@@ -196,7 +196,7 @@
     
     [ASQueue dispatchOnMainQueue:^{
         //[EmojiViewController reloadStickers];
-        //[TGModernEmojiViewController initialize];
+        [TGModernESGViewController reloadStickers];
         [TGModernESGViewController controller];
         [MessageSender syncTopCategories:^(NSArray *categories) {
         }];

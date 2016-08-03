@@ -16,7 +16,7 @@
 #import "TGSModalSenderView.h"
 #import "TMSearchTextField.h"
 #import "BTRButton.h"
-
+#import <SSignalKit/SSignalKit.h>
 @interface TGSSearchRowItem : TMRowItem
 
 @end
@@ -232,6 +232,7 @@ static ShareViewController *shareViewController;
     [_tableView insert:_isSearchActive ? _searchItems : _items startIndex:1 tableRedraw:YES];
     
     
+    
 }
 
 
@@ -267,6 +268,7 @@ static ShareViewController *shareViewController;
 
 -(void)loadNext {
     
+    
     if(_isLoaded)
         return;
     
@@ -287,80 +289,96 @@ static ShareViewController *shareViewController;
     
     [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:0 offset_peer:[TL_inputPeerEmpty create] limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
         
+        
         NSMutableArray *items = [[NSMutableArray alloc] init];
         
-        [[response dialogs] enumerateObjectsUsingBlock:^(TLDialog *obj, NSUInteger idx, BOOL *stop) {
-            
-            TLMessage *message = [[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.top_message]] lastObject];
-            
-            TGS_ConversationRowItem *item;
-            
-            if([obj.peer isKindOfClass:[TL_peerChat class]]) {
-                NSArray *chats = [[response chats] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.chat_id]];
-                
-                if(chats.count == 1) {
-                    item = [[TGS_ConversationRowItem alloc] initWithConversation:obj chat:chats[0]];
-                }
-            } else if([obj.peer isKindOfClass:[TL_peerUser class]]) {
-                NSArray *users = [_contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id == %d",obj.peer.user_id]];
-                
-                if(users.count == 1) {
-                    item = users[0];
-                } else {
-                    users = [[response users] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.user_id]];
+        
+            [[response dialogs] enumerateObjectsUsingBlock:^(TLDialog *obj, NSUInteger idx, BOOL *stop) {
+                @try {
+
+                    TLMessage *message = [[response.messages filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.top_message]] lastObject];
                     
-                    if(users.count == 1)
-                        item = [[TGS_ConversationRowItem alloc] initWithConversation:obj user:users[0]];
+                    TGS_ConversationRowItem *item;
+                    
+                    if([obj.peer isKindOfClass:[TL_peerChat class]]) {
+                        NSArray *chats = [[response chats] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.chat_id]];
+                        
+                        if(chats.count == 1) {
+                            item = [[TGS_ConversationRowItem alloc] initWithConversation:obj chat:chats[0]];
+                        }
+                    } else if([obj.peer isKindOfClass:[TL_peerUser class]]) {
+                        NSArray *users = [_contacts filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.user.n_id == %d",obj.peer.user_id]];
+                        
+                        if(users.count == 1) {
+                            item = users[0];
+                        } else {
+                            users = [[response users] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.user_id]];
+                            
+                            if(users.count == 1)
+                                item = [[TGS_ConversationRowItem alloc] initWithConversation:obj user:users[0]];
+                        }
+                    } else if([obj.peer isKindOfClass:[TL_peerChannel class]]) {
+                        TL_channel *channel = [[[response chats] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.channel_id]] lastObject];
+                        
+                        if(channel && channel.isMegagroup) {
+                            item = [[TGS_ConversationRowItem alloc] initWithConversation:obj chat:channel];
+                        }
+                        
+                    }
+                    
+                    item.date = message.date;
+                    if(item) {
+                        [items addObject:item];
+                    }
+                    
+                } @catch (NSException *exception) {
+                    NSLog(@"%@",exception);
                 }
-            } else if([obj.peer isKindOfClass:[TL_peerChannel class]]) {
-                TL_channel *channel = [[[response chats] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.n_id == %d",obj.peer.channel_id]] lastObject];
                 
-                if(channel && channel.isMegagroup) {
-                    item = [[TGS_ConversationRowItem alloc] initWithConversation:obj chat:channel];
-                }
-                
-            }
+            }];
             
-            item.date = message.date;
-            if(item) {
-                [items addObject:item];
-            }
-            
-        }];
+           
+       
+        
         
         [ASQueue dispatchOnMainQueue:^{
-            
-            [_items addObjectsFromArray:items];
-            
-            _isLocked = NO;
-            
-            if(!_isLoaded) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self loadNext];
-                });
+            @try {
+                [_items addObjectsFromArray:items];
+                
+                _isLocked = NO;
+                
+                
+                if(!_isSearchActive)
+                {
+                    [_tableView insert:items startIndex:_tableView.count tableRedraw:YES];
+                    
+                    if([response isKindOfClass:[TL_messages_dialogs class]]) {
+                        _isLoaded = YES;
+                        [self removeScrollEvent];
+                    } else if(_tableView.count - 1 == [response n_count]) {
+                        _isLoaded = YES;
+                        [self removeScrollEvent];
+                    }
+                }
+                
+                if(!_isLoaded) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self loadNext];
+                    });
+                }
+                
+            } @catch (NSException *exception) {
+                NSLog(@"%@",exception);
             }
-            
-            if(_isSearchActive)
-                return;
-            
-            [_tableView insert:items startIndex:_tableView.count tableRedraw:YES];
-            
-            if([response isKindOfClass:[TL_messages_dialogs class]]) {
-                _isLoaded = YES;
-                [self removeScrollEvent];
-            } else if(_tableView.count - 1 == [response n_count]) {
-                _isLoaded = YES;
-                [self removeScrollEvent];
-            }
-            
-            
             
         }];
-        
         
         
     } errorHandler:^(TGS_RPCRequest *request, RpcError *error) {
-        _isLoaded = NO;
+        [ASQueue dispatchOnMainQueue:^{
+            _isLoaded = NO;
+        }];
+        
     } timeout:30 queue:[ASQueue globalQueue]._dispatch_queue];
 
 }

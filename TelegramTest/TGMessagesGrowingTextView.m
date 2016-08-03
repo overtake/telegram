@@ -176,7 +176,7 @@
                     }
                 }];
             } else {
-                if(self.weakd.messagesController.attachmentsCount == 0)
+                if(self.weakd.messagesController.attachmentsCount == 0 && self.string.length == 0)
                     modal_caption_block();
                 else
                     [self.weakd.messagesController sendImage:@"image" forConversation:self.weakd.messagesController.conversation file_data:[image TIFFRepresentation]];

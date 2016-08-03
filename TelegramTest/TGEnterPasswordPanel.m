@@ -9,7 +9,9 @@
 #import "TGEnterPasswordPanel.h"
 #import <MtProtoKit/MTEncryption.h>
 #import "UserInfoShortTextEditView.h"
-
+#import "NSAttributedString+Hyperlink.h"
+#import "TGSignalUtils.h"
+#import "MessagesUtils.h"
 @interface TGEnterPasswordPanel ()<NSTextFieldDelegate>
 
 @property (nonatomic,strong) NSSecureTextField *secureField;
@@ -22,12 +24,18 @@
 
 @property (nonatomic,strong) TMView *enterPasswordContainer;
 @property (nonatomic,strong) TMView *confirmEmailCodeContainer;
+@property (nonatomic,strong) TMView *processDeletionView;
 
 @property (nonatomic,strong) TMTextButton *backButton;
 
 @property (nonatomic,strong) BTRButton *enterButton;
 @property (nonatomic,strong) TMView *currentController;
 
+@property (nonatomic,strong) TMTextField *resetAccountTimerField;
+@property (nonatomic,strong) id <SDisposable> resetDisposable;
+@property (nonatomic,strong) TMTextButton *resetWaitButton;
+
+@property (nonatomic,strong) TMTextButton *waitLogoutButton;
 @end
 
 @implementation TGEnterPasswordPanel
@@ -156,6 +164,67 @@
     return _confirmEmailCodeContainer;
 }
 
+-(TMView *)processDeletionView {
+    
+    if(_processDeletionView)
+        return _processDeletionView;
+    
+    
+    
+    _processDeletionView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.frame), NSHeight(self.frame))];
+    _processDeletionView.isFlipped = YES;
+
+    
+    TMView *containerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, 300, 240)];
+    containerView.isFlipped = YES;
+    [containerView setCenterByView:_processDeletionView];
+    [_processDeletionView addSubview:containerView];
+    
+    TMTextField *descriptionField = [TMTextField defaultTextField];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    
+    [attr appendString:[NSString stringWithFormat:NSLocalizedString(@"Account.CancelResetDesc", nil),@""] withColor:TEXT_COLOR];
+    [attr setAlignment:NSCenterTextAlignment range:attr.range];
+    [attr setFont:TGSystemFont(13) forRange:attr.range];
+    [attr detectBoldColorInStringWithFont:TGSystemMediumFont(13)];
+    NSSize size = [attr sizeForTextFieldForWidth:300];
+    
+    
+    [descriptionField setFrameSize:size];
+    [descriptionField setAttributedString:attr];
+    
+    
+    [containerView addSubview:descriptionField];
+    
+    _resetAccountTimerField = [TMTextField defaultTextField];
+    
+    [_resetAccountTimerField setFrameOrigin:NSMakePoint(0, NSMaxY(descriptionField.frame) + 10)];
+    
+    [containerView addSubview:_resetAccountTimerField];
+    
+    [descriptionField setCenteredXByView:containerView];
+    
+    
+    _resetWaitButton = [self resetAccountButton];
+    
+    [_resetWaitButton setFrameOrigin:NSMakePoint(0, NSMaxY(descriptionField.frame) + NSHeight(_resetWaitButton.frame) + 20)];
+    [_resetWaitButton setCenteredXByView:containerView];
+    [containerView addSubview:_resetWaitButton];
+    
+//    _waitLogoutButton = [TMTextButton standartMessageNavigationButtonWithTitle:NSLocalizedString(@"Password.logout", nil)];
+//    
+//    [_waitLogoutButton setFrameOrigin:NSMakePoint(NSWidth(_processDeletionView.frame) - NSWidth(_waitLogoutButton.frame) - 10, 10)];
+//    
+//    [_processDeletionView addSubview:_waitLogoutButton];
+    
+    
+    [_processDeletionView setCenterByView:self];
+    
+    
+    return _processDeletionView;
+    
+}
 
 -(TMView *)enterPasswordContainer {
     
@@ -168,10 +237,6 @@
     _enterPasswordContainer.isFlipped = YES;
     
     [_enterPasswordContainer setCenterByView:self];
-    
-    
-    
-    
     
     
     TMTextField *titleField = [TMTextField defaultTextField];
@@ -193,7 +258,6 @@
     [titleField setFrameOrigin:NSMakePoint(NSMinX(titleField.frame),  0)];
     
     [_enterPasswordContainer addSubview:titleField];
-    
     
     
     self.secureField = [[NSSecureTextField alloc] initWithFrame:NSMakeRect(0, 0, 250, 30)];
@@ -329,9 +393,6 @@
     
     [_enterPasswordContainer addSubview:self.resetPass];
     
-    
-    
-    
     TMView *s2 = [[TMView alloc] initWithFrame:self.secureField.frame];
     
     [s2 setFrame:NSMakeRect(NSMinX(s2.frame), NSMaxY(self.resetPass.frame) + 15, NSWidth(s2.frame), 1)];
@@ -340,50 +401,10 @@
     
     [_enterPasswordContainer addSubview:s2];
     
-    
-    
-    self.resetAccount = [[TMTextButton alloc] initWithFrame:NSZeroRect];
-    
-    self.resetAccount.stringValue = NSLocalizedString(@"EnterPassword.ResetAccount", nil);
-    self.resetAccount.textColor = [NSColor redColor];
-    self.resetAccount.font = TGSystemFont(14);
-    
-    [self.resetAccount sizeToFit];
-    
+    self.resetAccount = [self resetAccountButton];
     [self.resetAccount setCenterByView:_enterPasswordContainer];
-    
     [self.resetAccount setFrameOrigin:NSMakePoint(NSMinX(self.resetAccount.frame),  NSMaxY(self.resetPass.frame) + 30)];
-    
-    
-    [self.resetAccount setTapBlock:^ {
-        
-        confirm(NSLocalizedString(@"Alert.Warning", nil), NSLocalizedString(@"Password.ResetAlertDescription", nil), ^{
-            
-            [TMViewController showModalProgress];
-            
-            [RPCRequest sendRequest:[TLAPI_account_deleteAccount createWithReason:@"Forgot password"] successHandler:^(RPCRequest *request, id response) {
-                
-                 [[[MTNetwork instance] context] updatePasswordInputRequiredForDatacenterWithId:[[MTNetwork instance] currentDatacenter] required:NO];
-                
-                [[Telegram delegate] logoutWithForce:YES];
-                
-               
-                [weakSelf hide];
-                
-                [TMViewController hideModalProgress];
-                
-            } errorHandler:^(RPCRequest *request, RpcError *error) {
-                
-                [TMViewController hideModalProgress];
-                
-            } timeout:10];
-            
-        },nil);
-        //
-        
-    }];
-    
-    
+
     [_enterPasswordContainer addSubview:self.resetAccount];
     
     
@@ -411,6 +432,103 @@
     [self.secureField setFrame:NSMakeRect(50, NSMinY(self.secureField.frame), NSWidth(self.secureField.frame) - 50, NSHeight(self.secureField.frame))];
     
     return _enterPasswordContainer;
+}
+
+-(TMTextButton *)resetAccountButton {
+    TMTextButton *resetAccount = [[TMTextButton alloc] initWithFrame:NSZeroRect];
+    
+    resetAccount.stringValue = NSLocalizedString(@"EnterPassword.ResetAccount", nil);
+    resetAccount.textColor = [NSColor redColor];
+    resetAccount.font = TGSystemFont(14);
+    
+    [resetAccount sizeToFit];
+    
+    
+    
+    weak();
+    
+    [resetAccount setTapBlock:^ {
+        
+        confirm(NSLocalizedString(@"Alert.Warning", nil), NSLocalizedString(@"Password.ResetAlertDescription", nil), ^{
+            
+            [TMViewController showModalProgress];
+            
+            NSString *reason = @"Forgot password";
+            
+            if(isTestServer()) {
+                reason = @"confirm";
+            }
+            
+            [RPCRequest sendRequest:[TLAPI_account_deleteAccount createWithReason:reason] successHandler:^(RPCRequest *request, id response) {
+                
+                [[[MTNetwork instance] context] updatePasswordInputRequiredForDatacenterWithId:[[MTNetwork instance] currentDatacenter] required:NO];
+                
+                [[Telegram delegate] logoutWithForce:YES];
+                
+                
+                [weakSelf hide];
+                
+                [TMViewController hideModalProgress];
+                
+            } errorHandler:^(RPCRequest *request, RpcError *error) {
+                
+                if([error.error_msg hasPrefix:@"2FA_RECENT_CONFIRM"]) {
+                    alert(appName(), NSLocalizedString(error.error_msg, nil));
+                } else if([error.error_msg hasPrefix:@"2FA_CONFIRM_WAIT"]) {
+                    [weakSelf showResetWait:[[error.error_msg substringFromIndex:@"2FA_CONFIRM_WAIT_".length] intValue]];
+                }
+                
+                
+                [TMViewController hideModalProgress];
+                
+            } timeout:10];
+            
+        },nil);
+        //
+        
+    }];
+    
+    return resetAccount;
+
+}
+
+-(void)showResetWait:(int)delayTime {
+    [self.subviews enumerateObjectsUsingBlock:^(__kindof NSView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj setHidden:YES];
+    }];
+    
+    [self.processDeletionView setCenterByView:self];
+    [self addSubview:self.processDeletionView];
+    
+    [self.processDeletionView setHidden:NO];
+    _resetWaitButton.textColor = RED_COLOR;
+    _resetWaitButton.disableColor = GRAY_TEXT_COLOR;
+
+    _resetWaitButton.disable = YES;
+    
+    _resetDisposable = [[TGSignalUtils countdownSignal:delayTime delay:1] startWithNext:^(id next) {
+        
+        int until = [next intValue];
+        
+        NSString *timer = [MessagesUtils timerString:until];
+        
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        [attr appendString:timer withColor:TEXT_COLOR];
+        [attr setFont:TGSystemFont(15) forRange:attr.range];
+        [attr detectBoldColorInStringWithFont:TGSystemMediumFont(15)];
+        
+        [_resetAccountTimerField setAttributedString:attr];
+        
+        [_resetAccountTimerField sizeToFit];
+        [_resetAccountTimerField setCenteredXByView:_resetAccountTimerField.superview];
+        
+        
+        
+    } completed:^{
+        
+        _resetWaitButton.disable = NO;
+        
+    }];
 }
 
 

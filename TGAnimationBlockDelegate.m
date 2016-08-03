@@ -18,12 +18,12 @@
 
 
 
-- (void)pop_animationDidStart:(POPAnimation *)anim {
+- (void)pop_animationDidStart:(id)anim {
     
 }
 
 
-- (void)pop_animationDidStop:(POPAnimation *)anim finished:(BOOL)flag {
+- (void)pop_animationDidStop:(id)anim finished:(BOOL)flag {
     CALayer *layer = _layer;
     
     if (flag)

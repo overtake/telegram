@@ -185,7 +185,7 @@
         weak();
         
         _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
-        [_stickers load:NO];
+        //[_stickers load:NO];
         [_stickers setDidNeedReload:^{
             [weakSelf reload:NO];
         }];

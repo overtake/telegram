@@ -197,6 +197,8 @@ NSString *const tableModernDialogs = @"modern_dialogs";
 
 -(void)open:(void (^)())completeHandler queue:(dispatch_queue_t)dqueue {
     
+    
+    
     if(!dqueue)
         dqueue = dispatch_get_current_queue();
     

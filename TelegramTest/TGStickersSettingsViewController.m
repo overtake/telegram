@@ -184,36 +184,38 @@
     
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
-    //ACCEPT_FEATURE
-    if(false) {
-        [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
+    
+    [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
+
+    if(ACCEPT_FEATURE) {
         
         weak();
         
         __block NSUInteger nFeaturedSets = 0;
+        __block NSArray *fsets = nil;
         
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
             
             nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
-            
+            fsets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
         }];
         
-        [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
-            
-            TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
-            
-            [weakSelf.navigationViewController pushViewController:featured animated:YES];
-            
-        } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
+        if(fsets.count > 0) {
+            [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
+                
+                TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
+                
+                [weakSelf.navigationViewController pushViewController:featured animated:YES];
+                
+            } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
+        }
         
         
-
         
-         TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
+        TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
         
         _archivedItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
             
-           
             [weakSelf.navigationViewController pushViewController:featured animated:YES];
             
             [featured addSets:_archivedSets];
@@ -233,10 +235,6 @@
         }];
         
         [items addObject:_archivedItem];
-        
-        
-
-        
         
         [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
 
@@ -265,6 +263,12 @@
                                                         
     [packs removeObjectsInArray:current];
     
+    [current enumerateObjectsUsingBlock:^(TGStickerPackRowItem *obj, NSUInteger idx, BOOL *stop) {
+        
+        obj.editable = self.action.isEditable;
+        
+    }];
+    
     [_tableView addItems:current];
     
     if(packs.count == 0) {
@@ -283,14 +287,14 @@
 
 -(void)removeStickerPack:(TGStickerPackRowItem *)item {
     
+    BOOL isDefPack = (item.set.flags & (1 << 2)) == (1 << 2);
     
-    NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:NSLocalizedString(@"Stickers.RemoveOrArchive", nil) block:^(id result) {
-        if([result intValue] == 1000)
+    NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:[NSString stringWithFormat:NSLocalizedString(isDefPack ? @"Stickers.ArchiveAlert" : @"Stickers.RemoveOrArchive", nil),item.set.title] block:^(id result) {
+        if([result intValue] == 1000 && !isDefPack)
         {
             [self showModalProgress];
             
             [RPCRequest sendRequest:[TLAPI_messages_uninstallStickerSet createWithStickerset:item.inputSet] successHandler:^(id request, id response) {
-                
                 
                 [_tableView removeItemAtIndex:[_tableView indexOfObject:item] animated:YES];
                 
@@ -302,7 +306,7 @@
                 [self hideModalProgress];
             } timeout:10];
         }
-        else if([result intValue] == 1001) {
+        else if(([result intValue] == 1001 && !isDefPack) || ([result intValue] == 1000 && isDefPack)) {
             [self showModalProgress];
             
             [RPCRequest sendRequest:[TLAPI_messages_installStickerSet createWithStickerset:item.inputSet archived:YES] successHandler:^(id request, id response) {
@@ -311,7 +315,8 @@
                 
                 [TGModernESGViewController reloadStickers];
                 
-                [_archivedSets insertObject:item.set atIndex:0];
+                
+                [_archivedSets insertObject:[TL_stickerSetCovered createWithSet:item.set cover:[item.stickers firstObject]] atIndex:0];
                 
                 [_archivedItem setSubdescString:++_archivedCount > 0 ? [NSString stringWithFormat:@"%d",_archivedCount] : @""];
                 [_tableView reloadItem:_archivedItem];
@@ -324,15 +329,19 @@
         } else {
             
         }
-            
+        
     }];
-    [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Remove", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Archive", nil)];
-    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    
+    if(isDefPack) {
+        [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Archive", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    } else {
+        [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Remove", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Stickers.Archive", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+    }
+    
     [alert show];
-
-    
-    
 }
 
 
@@ -372,8 +381,12 @@
 - (void)selectionDidChange:(NSInteger)row item:(TGStickerPackRowItem *) item {
     
     if([item isKindOfClass:[TGStickerPackRowItem class]]) {
-        TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
-        [modalView show:self.view.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:[item.pack[@"stickers"] mutableCopy]] messagesController:appWindow().navigationController.messagesViewController];
+        
+        [[TGModernESGViewController stickersSignal:item.set] startWithNext:^(id next) {
+            TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
+
+            [modalView show:self.view.window animated:YES stickerPack:[TL_messages_stickerSet createWithSet:item.pack[@"set"] packs:nil documents:next] messagesController:appWindow().navigationController.messagesViewController];
+        }];
     }
     
 }

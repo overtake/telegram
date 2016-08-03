@@ -105,7 +105,7 @@
         
     } errorHandler:^(RPCRequest *request, RpcError *error) {
         weakSelf.state = MessageSendingStateError;
-    }];
+    } timeout:30 queue:[ASQueue globalQueue].nativeQueue];
     
 }
 

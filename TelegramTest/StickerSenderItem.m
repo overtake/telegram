@@ -29,19 +29,12 @@
     
     id media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] caption:@""];
     
-    if(self.conversation.type != DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-    } else {
-        
-        TL_broadcast *broadcast = self.conversation.broadcast;
-        
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[broadcast inputContacts] random_id:[broadcast generateRandomIds] message:self.message.message media:media];
-    }
+    request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+
     
     NSMutableArray *signals = [NSMutableArray array];
     
     [signals addObject:[[MTNetwork instance] requestSignal:request queue:[ASQueue globalQueue]]];
-    [signals addObject:[[MTNetwork instance] requestSignal:[TLAPI_messages_saveRecentSticker createWithN_id:[TL_inputDocument createWithN_id:self.message.media.document.n_id access_hash:self.message.media.document.access_hash] unsave:NO] queue:[ASQueue globalQueue]]];
 
     
     [[[SSignal combineSignals:signals] map:^id(NSArray *next) {

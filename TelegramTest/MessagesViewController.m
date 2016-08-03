@@ -648,6 +648,7 @@ static NSMutableDictionary *savedScrolling;
             complete();
         }
         
+        [self jumpToBottomButtonDisplay];
         
     }
     
@@ -4286,7 +4287,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(!conversation.canSendMessage)
         return;
     
-    if(self.conversation.type != DialogTypeSecretChat && (isMultiple || _modernMessagesBottomView.attachmentsCount > 0)) {
+    if(self.conversation.type != DialogTypeSecretChat && (isMultiple || _modernMessagesBottomView.attachmentsCount > 0 || _modernMessagesBottomView.inputTemplate.attributedString.length > 0)) {
         [self addImageAttachment:file_path forConversation:conversation file_data:data addCompletionHandler:completeHandler];
         
         return;

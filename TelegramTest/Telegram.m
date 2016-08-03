@@ -153,7 +153,7 @@ int stickers_recent_limit() {
 }
 
 void set_stickers_recent_limit(int limit) {
-    stickers_recent_limit_l = limit;
+    stickers_recent_limit_l = MAX(30, limit);
 }
 
 void setMegagroupSizeMax(int b) {

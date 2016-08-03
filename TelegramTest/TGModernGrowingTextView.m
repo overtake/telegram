@@ -43,7 +43,9 @@
 - (void) keyDown:(NSEvent *)theEvent {
     
     if(_weakd.textViewIsTypingEnabled) {
-        if(isEnterEvent(theEvent)) {
+        
+        
+        if(isEnterEvent(theEvent) && !(self.hasMarkedText && [SettingsArchiver checkMaskedSetting:MarkedInputText])) {
             
             BOOL result = isEnterAccess(theEvent) && [_weakd textViewEnterPressed:self];
             
@@ -127,7 +129,7 @@
         _placeholder = [TMTextField defaultTextField];
         _placeholder.alphaValue = 0.0f;
         [self addSubview:_placeholder];
-        
+                
         
     }
     
@@ -229,7 +231,7 @@
         
         newSize.width = [_delegate textViewSize].width;
         
-        NSSize layoutSize = NSMakeSize(newSize.width, newSize.height);
+        NSSize layoutSize = NSMakeSize(roundf(newSize.width), roundf(newSize.height));
         
         
         if(animated) {
@@ -255,7 +257,7 @@
             [self.layer removeAnimationForKey:@"bounds"];
             [self.layer addAnimation:sAnim forKey:@"bounds"];
             
-            [self.layer setFrame:NSMakeRect(0, 0, NSWidth(self.frame), layoutSize.height)];
+            [self.layer setFrame:NSMakeRect(NSMinX(self.frame), NSMinY(self.frame), NSWidth(self.frame), layoutSize.height)];
             
             
             
@@ -274,9 +276,11 @@
             [_scrollView.layer addAnimation:sAnim forKey:@"bounds"];
             
             
-            
-            [self setFrameSize:layoutSize];
+            [self setFrame:NSMakeRect(NSMinX(self.frame), NSMinY(self.frame), layoutSize.width, layoutSize.height)];
             [_scrollView setFrameSize:layoutSize];
+            
+
+            
         
             future();
             

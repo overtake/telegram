@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.07.16.
+//  Auto created by Mikhail Filimonov on 27.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1276,5 +1276,21 @@
 @property int limit;
 
 +(TLAPI_messages_getArchivedStickers*)createWithOffset_id:(long)offset_id limit:(int)limit;
+@end
+
+@interface TLAPI_account_sendConfirmPhoneCode : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAllow_flashcall;
+@property (nonatomic, strong) NSString* n_hash;
+@property Boolean current_number;
+
++(TLAPI_account_sendConfirmPhoneCode*)createWithFlags:(int)flags  n_hash:(NSString*)n_hash current_number:(Boolean)current_number;
+@end
+
+@interface TLAPI_account_confirmPhone : TLApiObject
+@property (nonatomic, strong) NSString* phone_code_hash;
+@property (nonatomic, strong) NSString* phone_code;
+
++(TLAPI_account_confirmPhone*)createWithPhone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code;
 @end
 

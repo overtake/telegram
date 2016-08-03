@@ -221,7 +221,6 @@
 
 -(void)updateProgress:(int)progress {
     
-    assert([NSThread isMainThread]);
     
     int part_progress = ceil(100/_ts_count);
     

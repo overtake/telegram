@@ -119,12 +119,16 @@
     [_nameLabel setCenteredXByView:_nameLabel.superview];
     
     
+    
+    
     NSMutableAttributedString *infoAttr = [[NSMutableAttributedString alloc] init];
-    [infoAttr appendString:[NSString stringWithFormat:fakeChat.participants_count > 1 ? NSLocalizedString(@"ChatInvite.MultiChatDesc", nil) : NSLocalizedString(@"ChatInvite.SingleChatDesc", nil),fakeChat.participants_count] withColor:GRAY_TEXT_COLOR];
+    [infoAttr appendString:[NSString stringWithFormat:fakeChat.participants_count > 1 ? NSLocalizedString(@"ChannelInvite.MultiDesc", nil) : NSLocalizedString(@"ChannelInvite.SingleDesc", nil),fakeChat.participants_count] withColor:GRAY_TEXT_COLOR];
+
     [infoAttr setFont:TGSystemFont(13) forRange:infoAttr.range];
     [_infoLabel setText:infoAttr maxWidth:self.containerSize.width - 40];
     [_infoLabel setFrameOrigin:NSMakePoint(0, NSMinY(_nameLabel.frame)  - NSHeight(_infoLabel.frame))];
     [_infoLabel setCenteredXByView:_infoLabel.superview];
+    
     
     [super show:appWindow() animated:YES];
 }
@@ -147,7 +151,7 @@
         TGTextLabel *name = [[TGTextLabel alloc] init];
         
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
-        [attr appendString:obj.first_name withColor:TEXT_COLOR];
+        [attr appendString:obj.first_name.length > 0 ? obj.first_name : obj.last_name withColor:TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:attr.range];
         
         [name setText:attr maxWidth:NSWidth(photo.frame)];

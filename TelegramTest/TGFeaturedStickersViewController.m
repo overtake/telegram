@@ -29,20 +29,17 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    __block NSArray *sets;
-    __block NSDictionary *stickers;
+    __block NSArray<TL_stickerSetCovered *> *sets;
     
     __block NSArray *unread = [NSArray array];
     
-    __block NSArray *localSets = [NSArray array];
+    __block NSArray<TL_stickerSet *> *localSets = [NSArray array];
     
     [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         
         sets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
         
         NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
-        
-        stickers = info[@"serialized"];
         
         unread = [transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
 
@@ -52,13 +49,13 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:NO];
     
-    [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [sets enumerateObjectsUsingBlock:^(TL_stickerSetCovered *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        BOOL isUnread = [unread indexOfObject:@(obj.n_id)] != NSNotFound;
+        BOOL isUnread = [unread indexOfObject:@(obj.set.n_id)] != NSNotFound;
         
         BOOL isAdded = [localSets indexOfObjectPassingTest:^BOOL(TL_stickerSet *s, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            if(s.n_id == obj.n_id) {
+            if(s.n_id == obj.set.n_id) {
                  *stop = YES;
                 
                 return YES;
@@ -68,7 +65,7 @@
             
         }] != NSNotFound;
         
-       TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject:stickers[@(obj.n_id)] ? @{@"set":obj,@"stickers":stickers[@(obj.n_id)],@"added":@(isAdded),@"unread":@(isUnread)} : @{@"set":obj,@"unread":@(isUnread),@"added":@(isAdded)}];
+       TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject: @{@"set":obj.set,@"stickers":@[obj.cover],@"added":@(isAdded),@"unread":@(isUnread)}];
         
         [_tableView addItem:item tableRedraw:NO];
         

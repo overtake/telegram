@@ -25,7 +25,7 @@
     [self close:YES];
 }
 
--(void)show:(NSWindow *)window animated:(BOOL)animated sets:(NSArray *)sets documents:(NSDictionary *)documents {
+-(void)show:(NSWindow *)window animated:(BOOL)animated sets:(NSArray *)sets {
     
     _tableView = [[TGSettingsTableView alloc] initWithFrame:NSMakeRect(0, 50, 300, 300)];
     
@@ -41,13 +41,11 @@
     
     [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:20] tableRedraw:YES];
     
-    [sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
+    [sets enumerateObjectsUsingBlock:^(TL_stickerSetCovered *set, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if(documents[@(set.n_id)] && [documents[@(set.n_id)] count] > 0) {
-            TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:@{@"set":set,@"stickers":documents[@(set.n_id)]}];
-            
-            [_tableView addItem:item tableRedraw:YES];
-        }
+        TGStickerPackRowItem *item = [[TGStickerPackRowItem alloc] initWithObject:@{@"set":set.set,@"stickers":@[set.cover]}];
+        
+        [_tableView addItem:item tableRedraw:YES];
         
     }];
     

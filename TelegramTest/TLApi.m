@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.07.16..
+//  Auto created by Mikhail Filimonov on 27.07.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3026,6 +3026,40 @@
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1871829985];
 	[stream writeLong:self.offset_id];
 	[stream writeInt:self.limit];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_sendConfirmPhoneCode
++(TLAPI_account_sendConfirmPhoneCode*)createWithFlags:(int)flags  n_hash:(NSString*)n_hash current_number:(Boolean)current_number {
+    TLAPI_account_sendConfirmPhoneCode* obj = [[TLAPI_account_sendConfirmPhoneCode alloc] init];
+    obj.flags = flags;
+	
+	obj.n_hash = n_hash;
+	obj.current_number = current_number;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:353818557];
+	[stream writeInt:self.flags];
+	
+	[stream writeString:self.n_hash];
+	if(self.flags & (1 << 0)) {[stream writeBool:self.current_number];}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_account_confirmPhone
++(TLAPI_account_confirmPhone*)createWithPhone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code {
+    TLAPI_account_confirmPhone* obj = [[TLAPI_account_confirmPhone alloc] init];
+    obj.phone_code_hash = phone_code_hash;
+	obj.phone_code = phone_code;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1596029123];
+	[stream writeString:self.phone_code_hash];
+	[stream writeString:self.phone_code];
 	return [stream getOutput];
 }
 @end

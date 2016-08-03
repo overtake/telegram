@@ -450,7 +450,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
             
            
             
-            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]]) {
+            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0) {
                 
                 objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 

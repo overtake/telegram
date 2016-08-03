@@ -96,7 +96,10 @@
 static void TGTelegramLoggingFunction(NSString *format, va_list args)
 {
 #ifdef TGDEBUG
+#ifndef TGSTABLE
+    
     TGLogv(format, args);
+#endif
 #endif
 }
 
@@ -105,12 +108,15 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
 
     
-
+#ifdef TGDEBUG
+    
     
     _mediaKeyTap = [[SPMediaKeyTap alloc] initWithDelegate:self];
     
     if([SPMediaKeyTap usesGlobalMediaKeyTap] && [SettingsArchiver checkMaskedSetting:HandleMediaKeysSettings])
         [_mediaKeyTap startWatchingMediaKeys];
+    
+#endif
 
 
     MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
@@ -550,14 +556,14 @@ void exceptionHandler(NSException * exception)
                         
                         [appWindow().navigationController goBackWithAnimation:YES];
                         
-//                        if(appWindow().navigationController.messagesViewController.inputText.length > 0) {
-//                            return incomingEvent;
-//                        } else {
-//                            
-//                            [appWindow().navigationController goBackWithAnimation:YES];
-//                            
-//                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
-//                        }
+                        if(appWindow().navigationController.messagesViewController.conversation.inputTemplate.attributedString.length > 0) {
+                            return incomingEvent;
+                        } else {
+                            
+                            [appWindow().navigationController goBackWithAnimation:YES];
+                            
+                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                        }
                     }
 //
 //                    
@@ -764,9 +770,9 @@ void exceptionHandler(NSException * exception)
             
             
             if(result.type == NSLeftMouseUp) {
-                int bp = 0;
                 
-                [result.window.firstResponder mouseUp:result];
+                if([result.window.firstResponder isKindOfClass:[NSClassFromString(@"TGMessagesTextView") class]])
+                    [result.window.firstResponder mouseUp:result];
             }
             
             if(result.type == NSLeftMouseUp && [TMViewController isModalActive]) {
@@ -988,6 +994,7 @@ void exceptionHandler(NSException * exception)
             [[MTNetwork instance] drop];
             
             [Storage drop];
+            
             
             [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
             

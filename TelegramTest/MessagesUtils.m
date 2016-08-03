@@ -781,5 +781,60 @@
     
 }
 
++(NSString *)timerString:(int)until {
+    int days = until / (60 * 60 * 24);
+    int hours = until / (60 * 60);
+    int minutes = until / 60 % 60;
+    int seconds = until;
+    
+    NSString *s = @"";
+    
+    
+    if(days) {
+        if(days == 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.DayDate", nil),days]];
+        else if(days > 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.DaysDate", nil),days]];
+    }
+    if(hours) {
+        
+        if(days)
+            s = [s stringByAppendingString:@" "];
+        
+        if(hours == 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.HourDate", nil),hours]];
+        else if(hours > 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.HoursDate", nil),hours]];
+    }
+    if(minutes) {
+        
+        if(hours)
+            s = [s stringByAppendingString:@" "];
+        
+        if(minutes == 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.MinuteDate", nil),minutes]];
+        else if(minutes > 1)
+            s = [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.MinutesDate", nil),minutes]];
+    }
+    
+    if(seconds) {
+        if(days == 0 && hours == 0 ) {
+            
+            if(minutes)
+                s = [s stringByAppendingString:@" "];
+            
+            s = seconds == 1 ? [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.SecondDate", nil),seconds]] : [s stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"Timer.SecondsDate", nil),seconds]];
+        }
+    }
+    
+    
+
+    
+   
+    
+   
+    return s;
+}
+
 
 @end

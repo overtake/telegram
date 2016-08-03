@@ -19,6 +19,7 @@
 #import "FullUsersManager.h"
 #import "ChatFullManager.h"
 #import "TGImageAttachmentsController.h"
+#import "TGSendTypingManager.h"
 @interface TGModernMessagesBottomView () <TGModernGrowingDelegate,TGBottomActionDelegate,TGModernSendControlDelegate,TGImageAttachmentsControllerDelegate> {
     TMView *_ts;
    
@@ -174,14 +175,21 @@ const float defYOffset = 12;
     [_audioRecordView setFrameSize:NSMakeSize(newSize.width - NSWidth(_sendControlView.frame), NSHeight(_sendControlView.frame))];
     [_messageActionsView setFrameSize:NSMakeSize(newSize.width, NSHeight(_messageActionsView.frame))];
     [_blockChatView setFrameSize:NSMakeSize(newSize.width, NSHeight(_blockChatView.frame))];
+    
+    
+    
+    
 }
 
 -(void)performSendMessage {
     
+    BOOL performSend = _inputTemplate.forwardMessages.count > 0 || _inputTemplate.attributedString.string.trim.length > 0 || _imageAttachmentsController.attachments.count > 0;
+    
     if(_inputTemplate.attributedString.length == 0) {
         [_messagesController performForward:_messagesController.conversation];
-    } else
+    } else if(_inputTemplate.attributedString.string.trim.length > 0) {
         [_messagesController sendMessage];
+    }
     
     
     
@@ -189,11 +197,14 @@ const float defYOffset = 12;
         [_messagesController sendAttachments:[_imageAttachmentsController attachments] forConversation:_messagesController.conversation addCompletionHandler:nil];
         
         if(_imageAttachmentsController.isShown) {
-            [_imageAttachmentsController hide:YES deleteItems:YES];
+            [_imageAttachmentsController hide:_animates deleteItems:YES];
+            
+            [self refreshHeight:_animates];
         }
     }
    
-    [_sendControlView performSendAnimation];
+    if(performSend)
+        [_sendControlView performSendAnimation];
     
 }
 
@@ -280,7 +291,6 @@ const float defYOffset = 12;
         [_audioRecordView moveWithCAAnimation:NSMakePoint(0, bottomSize.height) animated:animated];
     }
     
-    
     [_messagesController bottomViewChangeSize:fullSize.height animated:animated];
     
     
@@ -289,16 +299,20 @@ const float defYOffset = 12;
 
 - (BOOL) textViewEnterPressed:(TGModernGrowingTextView *)textView {
     
+    
     [self performSendMessage];
     
     return YES;
 }
 
 -(void)updateTextType {
-    [_sendControlView setType:_inputTemplate.type == TGInputMessageTemplateTypeEditMessage ? TGModernSendControlEditType :( _textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 ? TGModernSendControlSendType : TGModernSendControlRecordType)];
+    [_sendControlView setType:_inputTemplate.type == TGInputMessageTemplateTypeEditMessage ? TGModernSendControlEditType :( _textView.string.length > 0 || _inputTemplate.forwardMessages.count > 0 || _imageAttachmentsController.isShown ? TGModernSendControlSendType : TGModernSendControlRecordType)];
 }
 
 - (void) textViewTextDidChange:(TGModernGrowingTextView *)textView {
+    
+    if(textView.string.length > 0)
+        [TGSendTypingManager addAction:[TL_sendMessageTypingAction create] forConversation:_messagesController.conversation];
     
     [self updateTextType];
     
@@ -309,7 +323,9 @@ const float defYOffset = 12;
     [self resignalActions];
     
     [self checkMentionsOrTags];
+    
 }
+
 
 
 -(void)saveInputText {
@@ -332,6 +348,7 @@ const float defYOffset = 12;
 
 -(void)setActionState:(TGModernMessagesBottomViewState)state animated:(BOOL)animated {
     
+    
     if(state == TGModernMessagesBottomViewNormalState) {
         if(_messagesController.conversation.type == DialogTypeSecretChat) {
             EncryptedParams *params = _messagesController.conversation.encryptedChat.encryptedParams;
@@ -351,18 +368,7 @@ const float defYOffset = 12;
     
     if(_actionState == state)
         return;
-    else {
-        if(state == TGModernMessagesBottomViewActionsState && !_messageActionsView.superview) {
-            [self addSubview:_messageActionsView positioned:NSWindowBelow relativeTo:_ts];
-            [_messageActionsView performCAShow:NO];
-        } else if(state == TGModernMessagesBottomViewBlockChat && !_blockChatView.superview) {
-            [self addSubview:_blockChatView positioned:NSWindowBelow relativeTo:_ts];
-            [_blockChatView performCAShow:NO];
-        } else if(state == TGModernMessagesBottomViewRecordAudio && !_audioRecordView.superview) {
-            [self addSubview:_audioRecordView positioned:NSWindowBelow relativeTo:_ts];
-            [_audioRecordView performCAShow:NO];
-        }
-    }
+
     
     _actionState = state;
     
@@ -793,6 +799,7 @@ const float defYOffset = 12;
         [_imageAttachmentsController show:_messagesController.conversation animated:_animates];
         [self refreshHeight:_animates];
     }
+    [self updateTextType];
 }
 
 -(void)_didClickedOnBlockedView:(id)sender {
@@ -880,7 +887,7 @@ const float defYOffset = 12;
 }
 
 -(void)_insertEmoji:(NSString *)emoji {
-    [_textView insertText:emoji replacementRange:NSMakeRange(_textView.selectedRange.location, emoji.length + _textView.selectedRange.length)];
+    [_textView insertText:emoji replacementRange:NSMakeRange(_textView.selectedRange.location, _textView.selectedRange.length)];
 }
 
 -(void)_updateNotifySettings:(NSNotification *)notify {
@@ -895,7 +902,7 @@ const float defYOffset = 12;
         return;
     
     if(_messagesController.conversation && _messagesController.conversation.type == DialogTypeUser) {
-        [self setActionState:_actionState animated:YES];
+        [self setActionState:TGModernMessagesBottomViewNormalState animated:YES];
     }
 }
 
@@ -904,7 +911,7 @@ const float defYOffset = 12;
     
     if(chat.n_id == _messagesController.conversation.chat.n_id) {
         
-        [self setActionState:_actionState animated:YES];
+        [self setActionState:TGModernMessagesBottomViewNormalState animated:YES];
         
     }
 }
@@ -1014,11 +1021,13 @@ const float defYOffset = 12;
 }
 
 -(int)attachmentsCount {
-    return 0;
+    return (int) _imageAttachmentsController.attachments.count;
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
     [_imageAttachmentsController addItems:@[attachment] animated:YES];
+    
+    [self updateTextType];
     
     
     [self refreshHeight:YES];

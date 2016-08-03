@@ -1473,7 +1473,11 @@ NS_INLINE BOOL YDBIsMainThread()
 			YapDatabaseReadTransaction *transaction = [self newReadTransaction];
 		
 			[self preReadTransaction:transaction];
-			block(transaction);
+            @try {
+                block(transaction);
+            } @catch (NSException *exception) {
+                
+            }
 			[self postReadTransaction:transaction];
 		}
 	}});
@@ -1531,7 +1535,11 @@ NS_INLINE BOOL YDBIsMainThread()
 			YapDatabaseReadWriteTransaction *transaction = [self newReadWriteTransaction];
 			
 			[self preReadWriteTransaction:transaction];
-			block(transaction);
+            @try {
+                block(transaction);
+            } @catch (NSException *exception) {
+                
+            }
 			[self postReadWriteTransaction:transaction];
 			
 		}}); // End dispatch_sync(database->writeQueue)
@@ -1611,7 +1619,11 @@ NS_INLINE BOOL YDBIsMainThread()
 			YapDatabaseReadTransaction *transaction = [self newReadTransaction];
 			
 			[self preReadTransaction:transaction];
-			block(transaction);
+            @try {
+                block(transaction);
+            } @catch (NSException *exception) {
+                
+            }
 			[self postReadTransaction:transaction];
 		}
 		

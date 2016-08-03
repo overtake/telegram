@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 22.07.16.
+//  Auto created by Mikhail Filimonov on 27.07.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -15248,6 +15248,171 @@
     objc.edit_time_limit = self.edit_time_limit;
     objc.rating_e_decay = self.rating_e_decay;
     objc.stickers_recent_limit = self.stickers_recent_limit;
+    objc.disabled_features = [self.disabled_features copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_config_old53
++(TL_config_old53*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay disabled_features:(NSMutableArray*)disabled_features {
+	TL_config_old53* obj = [[TL_config_old53 alloc] init];
+	obj.date = date;
+	obj.expires = expires;
+	obj.test_mode = test_mode;
+	obj.this_dc = this_dc;
+	obj.dc_options = dc_options;
+	obj.chat_size_max = chat_size_max;
+	obj.megagroup_size_max = megagroup_size_max;
+	obj.forwarded_count_max = forwarded_count_max;
+	obj.online_update_period_ms = online_update_period_ms;
+	obj.offline_blur_timeout_ms = offline_blur_timeout_ms;
+	obj.offline_idle_timeout_ms = offline_idle_timeout_ms;
+	obj.online_cloud_timeout_ms = online_cloud_timeout_ms;
+	obj.notify_cloud_delay_ms = notify_cloud_delay_ms;
+	obj.notify_default_delay_ms = notify_default_delay_ms;
+	obj.chat_big_size = chat_big_size;
+	obj.push_chat_period_ms = push_chat_period_ms;
+	obj.push_chat_limit = push_chat_limit;
+	obj.saved_gifs_limit = saved_gifs_limit;
+	obj.edit_time_limit = edit_time_limit;
+	obj.rating_e_decay = rating_e_decay;
+	obj.disabled_features = disabled_features;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.date];
+	[stream writeInt:self.expires];
+	[stream writeBool:self.test_mode];
+	[stream writeInt:self.this_dc];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.dc_options count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLDcOption* obj = [self.dc_options objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	[stream writeInt:self.chat_size_max];
+	[stream writeInt:self.megagroup_size_max];
+	[stream writeInt:self.forwarded_count_max];
+	[stream writeInt:self.online_update_period_ms];
+	[stream writeInt:self.offline_blur_timeout_ms];
+	[stream writeInt:self.offline_idle_timeout_ms];
+	[stream writeInt:self.online_cloud_timeout_ms];
+	[stream writeInt:self.notify_cloud_delay_ms];
+	[stream writeInt:self.notify_default_delay_ms];
+	[stream writeInt:self.chat_big_size];
+	[stream writeInt:self.push_chat_period_ms];
+	[stream writeInt:self.push_chat_limit];
+	[stream writeInt:self.saved_gifs_limit];
+	[stream writeInt:self.edit_time_limit];
+	[stream writeInt:self.rating_e_decay];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.disabled_features count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLDisabledFeature* obj = [self.disabled_features objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.date = [stream readInt];
+	super.expires = [stream readInt];
+	super.test_mode = [stream readBool];
+	super.this_dc = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.dc_options)
+			self.dc_options = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDcOption* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLDcOption class]])
+                 [self.dc_options addObject:obj];
+            else
+                break;
+		}
+	}
+	super.chat_size_max = [stream readInt];
+	super.megagroup_size_max = [stream readInt];
+	super.forwarded_count_max = [stream readInt];
+	super.online_update_period_ms = [stream readInt];
+	super.offline_blur_timeout_ms = [stream readInt];
+	super.offline_idle_timeout_ms = [stream readInt];
+	super.online_cloud_timeout_ms = [stream readInt];
+	super.notify_cloud_delay_ms = [stream readInt];
+	super.notify_default_delay_ms = [stream readInt];
+	super.chat_big_size = [stream readInt];
+	super.push_chat_period_ms = [stream readInt];
+	super.push_chat_limit = [stream readInt];
+	super.saved_gifs_limit = [stream readInt];
+	super.edit_time_limit = [stream readInt];
+	super.rating_e_decay = [stream readInt];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.disabled_features)
+			self.disabled_features = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDisabledFeature* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLDisabledFeature class]])
+                 [self.disabled_features addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_config_old53 *)copy {
+    
+    TL_config_old53 *objc = [[TL_config_old53 alloc] init];
+    
+    objc.date = self.date;
+    objc.expires = self.expires;
+    objc.test_mode = self.test_mode;
+    objc.this_dc = self.this_dc;
+    objc.dc_options = [self.dc_options copy];
+    objc.chat_size_max = self.chat_size_max;
+    objc.megagroup_size_max = self.megagroup_size_max;
+    objc.forwarded_count_max = self.forwarded_count_max;
+    objc.online_update_period_ms = self.online_update_period_ms;
+    objc.offline_blur_timeout_ms = self.offline_blur_timeout_ms;
+    objc.offline_idle_timeout_ms = self.offline_idle_timeout_ms;
+    objc.online_cloud_timeout_ms = self.online_cloud_timeout_ms;
+    objc.notify_cloud_delay_ms = self.notify_cloud_delay_ms;
+    objc.notify_default_delay_ms = self.notify_default_delay_ms;
+    objc.chat_big_size = self.chat_big_size;
+    objc.push_chat_period_ms = self.push_chat_period_ms;
+    objc.push_chat_limit = self.push_chat_limit;
+    objc.saved_gifs_limit = self.saved_gifs_limit;
+    objc.edit_time_limit = self.edit_time_limit;
+    objc.rating_e_decay = self.rating_e_decay;
     objc.disabled_features = [self.disabled_features copy];
     
     return objc;

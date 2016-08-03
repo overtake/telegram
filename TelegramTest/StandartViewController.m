@@ -48,7 +48,7 @@
     [self.controller.searchTextField setHidden:newSize.width == 70];
     TMView *topView = self.subviews[0];
     
-    
+    [self.controller.searchTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 70, 31)];
     
     [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width , 48)];
   
@@ -105,7 +105,7 @@
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
     
-    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , 220, 31)];
+    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , NSWidth(topView.frame) - 70, 31)];
     
     [self.searchTextField setCenteredYByView:topView];
     
@@ -121,7 +121,7 @@
     int buttonX = self.view.frame.size.width == 70 ? 22 : NSMaxX(_searchTextField.frame) + roundf((NSWidth(topView.frame) - NSMaxX(_searchTextField.frame) - compose.size.width)/2.0f);
     
     
-    self.topButton = [[BTRButton alloc] initWithFrame:NSMakeRect(buttonX, 9, 26, 26)];
+    self.topButton = [[BTRButton alloc] initWithFrame:NSMakeRect(buttonX, 9, 38, 30)];
 
     
     [self.topButton setImage:compose forControlState:BTRControlStateNormal];

@@ -56,11 +56,10 @@
         
         if(strongSelf != nil) {
             
-            [[TGModernESGViewController controller] close];
+            [[TGModernESGViewController controller] forceClose];
             
             dispatch_after_seconds(0.1, ^{
                 
-                [strongSelf setHidden:YES];
                 
                 [strongSelf.messagesViewController sendFoundGif:[TL_messageMediaDocument createWithDocument:result.document caption:@""] forConversation:strongSelf.messagesViewController.conversation];
             });

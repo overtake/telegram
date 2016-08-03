@@ -103,7 +103,7 @@ static const int controlsHeight = 75;
 +(void)initialize {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        queue = [[ASQueue alloc] initWithName:"photoviewerQueue"];
+        queue = [ASQueue globalQueue];
     });
 }
 
@@ -620,6 +620,7 @@ static TGPhotoViewer *viewer;
 
 -(void)nextItem {
     
+    
     if(_isReversed) {
         
         [self performPrevItem];
@@ -649,6 +650,9 @@ static TGPhotoViewer *viewer;
 }
 
 -(void)performNextItem {
+    
+
+    
     NSUInteger count = [self listCount];
     
     if(count > 0) {
@@ -659,6 +663,8 @@ static TGPhotoViewer *viewer;
 }
 
 -(void)performPrevItem {
+    
+    
     NSUInteger count = [self listCount];
     
     if(count > 0 && self.currentItemId != 0) {

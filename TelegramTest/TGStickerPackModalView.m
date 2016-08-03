@@ -190,11 +190,16 @@ static NSImage * greenBackgroundImage(NSSize size) {
     _tableView.canSendStickerAlways = canSendSticker;
 }
 
+
+
 -(void)show:(NSWindow *)window animated:(BOOL)animated stickerPack:(TL_messages_stickerSet *)stickerPack messagesController:(MessagesViewController *)messagesViewController {
     
     _messagesViewController = messagesViewController;
     _tableView.messagesViewController = messagesViewController;
     _pack = stickerPack;
+    
+    
+    
     
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
     

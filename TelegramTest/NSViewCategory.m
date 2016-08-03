@@ -104,7 +104,7 @@
         
         [self.layer addAnimation:animation forKey:@"opacity"];
         
-        self.layer.opacity = 0.0f;
+        self.layer.opacity = 1.0;
 
     } else {
         [self removeFromSuperview];
