@@ -5,8 +5,8 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-//#define TGDEBUG // UNDEF IN RELEASE
-//#define TGSTABLE // DEF IN stable version
+#define TGDEBUG // UNDEF IN RELEASE
+#define TGSTABLE // DEF IN stable version
 
 
 #ifdef TGDEBUG
@@ -75,7 +75,11 @@
 
 
 #ifdef TGDEBUG
+#ifndef TGSTABLE
 #define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb",@"izhukov",@"requilence",@"nadymov",@"kolar",@"asmico",@"Cooper1",@"MarkusRa"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
+#else 
+#define ACCEPT_FEATURE YES
+#endif
 #else
 #define ACCEPT_FEATURE YES
 #endif

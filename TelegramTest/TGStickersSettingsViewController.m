@@ -186,59 +186,57 @@
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
     [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
-
-    if(ACCEPT_FEATURE) {
+    
+    
+    weak();
+    
+    __block NSUInteger nFeaturedSets = 0;
+    __block NSArray *fsets = nil;
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         
-        weak();
-        
-        __block NSUInteger nFeaturedSets = 0;
-        __block NSArray *fsets = nil;
-        
-        [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
+        fsets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
+    }];
+    
+    if(fsets.count > 0) {
+        [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
             
-            nFeaturedSets = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count];
-            fsets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
-        }];
-        
-        if(fsets.count > 0) {
-            [items addObject:[[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNextBadge callback:^(TGGeneralRowItem *item) {
-                
-                TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
-                
-                [weakSelf.navigationViewController pushViewController:featured animated:YES];
-                
-            } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
-        }
-        
-        
-        
-        TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
-        
-        _archivedItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+            TGFeaturedStickersViewController *featured = [[TGFeaturedStickersViewController alloc] init];
             
             [weakSelf.navigationViewController pushViewController:featured animated:YES];
             
-            [featured addSets:_archivedSets];
-            
-        } description:NSLocalizedString(@"Stickers.Archived", nil) subdesc:@"" height:42 stateback:nil];
-        
-        _archivedItem.locked = YES;
-        
-        [[featured loadNext:0]  startWithNext:^(TL_messages_archivedStickers *next) {
-            
-            _archivedCount = next.n_count;
-            _archivedSets = next.sets;
-            _archivedItem.locked = NO;
-            [_archivedItem setSubdescString:_archivedCount > 0 ? [NSString stringWithFormat:@"%d",_archivedCount] : @""];
-            [_tableView reloadItem:_archivedItem];
-            
-        }];
-        
-        [items addObject:_archivedItem];
-        
-        [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
-
+        } description:NSLocalizedString(@"Stickers.Featured", nil) subdesc:nFeaturedSets > 0 ? [NSString stringWithFormat:@"%ld",nFeaturedSets] : nil height:42 stateback:nil]];
     }
+    
+    
+    
+    TGArchivedStickersViewController *featured = [[TGArchivedStickersViewController alloc] init];
+    
+    _archivedItem = [[GeneralSettingsRowItem alloc] initWithType:SettingsRowItemTypeNext callback:^(TGGeneralRowItem *item) {
+        
+        [weakSelf.navigationViewController pushViewController:featured animated:YES];
+        
+        [featured addSets:_archivedSets];
+        
+    } description:NSLocalizedString(@"Stickers.Archived", nil) subdesc:@"" height:42 stateback:nil];
+    
+    _archivedItem.locked = YES;
+    
+    [[featured loadNext:0]  startWithNext:^(TL_messages_archivedStickers *next) {
+        
+        _archivedCount = next.n_count;
+        _archivedSets = next.sets;
+        _archivedItem.locked = NO;
+        [_archivedItem setSubdescString:_archivedCount > 0 ? [NSString stringWithFormat:@"%d",_archivedCount] : @""];
+        [_tableView reloadItem:_archivedItem];
+        
+    }];
+    
+    [items addObject:_archivedItem];
+    
+    [items addObject:[[TGGeneralRowItem alloc] initWithHeight:20]];
+
     
     
    

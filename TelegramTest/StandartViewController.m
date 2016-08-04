@@ -48,7 +48,7 @@
     [self.controller.searchTextField setHidden:newSize.width == 70];
     TMView *topView = self.subviews[0];
     
-    [self.controller.searchTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 70, 31)];
+    [self.controller.searchTextField setFrameSize:NSMakeSize(NSWidth(self.frame) - 74, 31)];
     
     [topView setFrame:NSMakeRect(0, self.bounds.size.height - 48, self.bounds.size.width , 48)];
   
@@ -105,7 +105,7 @@
     [self.view setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     
     
-    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , NSWidth(topView.frame) - 70, 31)];
+    self.searchTextField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(10, 8 , NSWidth(topView.frame) - 74, 31)];
     
     [self.searchTextField setCenteredYByView:topView];
     

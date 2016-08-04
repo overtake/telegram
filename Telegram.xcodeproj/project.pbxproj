@@ -658,7 +658,8 @@
 		C2B669891BA5591F004AF678 /* TGGeneralRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */; };
 		C2B6698C1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */; };
 		C2B6698F1BA575AE004AF678 /* TGChangeUserNameContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698E1BA575AE004AF678 /* TGChangeUserNameContainerView.m */; };
-		C2B775B91D52856100A5F06F /* TGShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C2B775BC1D5340D800A5F06F /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2B775BE1D5340E200A5F06F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
 		C2C1DC051A43345400BBCC63 /* MessageTableItemSticker.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC041A43345400BBCC63 /* MessageTableItemSticker.m */; };
 		C2C1DC0C1A43347800BBCC63 /* MessageTableCellStickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0B1A43347800BBCC63 /* MessageTableCellStickerView.m */; };
 		C2C1DC0F1A4336CE00BBCC63 /* TGStickerImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2C1DC0E1A4336CE00BBCC63 /* TGStickerImageObject.m */; };
@@ -1042,13 +1043,6 @@
 			remoteGlobalIDString = D0445DE31A7C2CA500267924;
 			remoteInfo = SSignalKitTests;
 		};
-		C2B775B71D52855800A5F06F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
-			remoteInfo = TGShare;
-		};
 		C2D8261A1B6FA8A600434D37 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
@@ -1093,6 +1087,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C2B775BC1D5340D800A5F06F /* Sparkle.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1103,7 +1098,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C2B775B91D52856100A5F06F /* TGShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2995,6 +2989,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2B775BE1D5340E200A5F06F /* Sparkle.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
@@ -6481,7 +6476,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				C2B775B81D52855800A5F06F /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7652,14 +7646,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		C2B775B81D52855800A5F06F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C2CBF3B51AF38426006BF90A /* TGShare */;
-			targetProxy = C2B775B71D52855800A5F06F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -7909,7 +7895,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;
@@ -7962,7 +7948,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
 				VALIDATE_PRODUCT = NO;

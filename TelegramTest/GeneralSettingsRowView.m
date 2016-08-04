@@ -36,7 +36,7 @@
         _nextDesc = [[TGTextLabel alloc] init];
         
         _badgeCounter = [[TGCirclularCounter alloc] initWithFrame:NSMakeRect(0, 0, 30, 30)];
-        [_badgeCounter setTextFont:TGSystemFont(12)];
+        [_badgeCounter setTextFont:TGSystemFont(11)];
         
         _badgeCounter.animated = NO;
         [self addSubview:_badgeCounter];
