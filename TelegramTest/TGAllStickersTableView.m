@@ -527,8 +527,7 @@ static NSImage *higlightedImage() {
 
 
 -(void)reloadData {
-    
-    
+        
     if(self.window == nil)
         return;
     
