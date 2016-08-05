@@ -1023,9 +1023,8 @@ void exceptionHandler(NSException * exception)
     
     if([[MTNetwork instance] isAuth] && !force) {
         
-         [TMViewController showModalProgress];
         
-         dispatch_block_t clearCache = ^ {
+        dispatch_block_t clearCache = ^ {
             [RPCRequest sendRequest:[TLAPI_auth_logOut create] successHandler:^(RPCRequest *request, id response) {
                 
                 [[Storage manager] drop:^{
@@ -1037,34 +1036,54 @@ void exceptionHandler(NSException * exception)
                 
                 [TMViewController hideModalProgress];
                 
-                confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
-                    
-                    [[Storage manager] drop:^{
-                        [self logoutWithForce:YES];
-                    }];
-                    
-                },nil);
+                if(error.error_code == 502) {
+                    confirm(NSLocalizedString(@"Auth.CantLogout", nil), NSLocalizedString(@"Auth.ForceLogout", nil), ^ {
+                        
+                        [[Storage manager] drop:^{
+                            [self logoutWithForce:YES];
+                        }];
+                        
+                    },nil);
+                }
+                
                 
             } timeout:5];
         };
         
+        confirm(appName(), NSLocalizedString(@"Confirm.ConfirmLogout", nil), ^{
+            [TMViewController showModalProgress];
+            
+            [ASQueue dispatchOnStageQueue:^{
+                
+                [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];
+                
+                [[NSFileManager defaultManager] createDirectoryAtPath:path()
+                                          withIntermediateDirectories:YES
+                                                           attributes:nil
+                                                                error:nil];
+                
+                clearCache();
+                
+            }];
+
+        }, nil);
+        
+
+    } else {
         
         [ASQueue dispatchOnStageQueue:^{
-             
+            
             [[NSFileManager defaultManager] removeItemAtPath:path() error:nil];
-             
+            
             [[NSFileManager defaultManager] createDirectoryAtPath:path()
-                                       withIntermediateDirectories:YES
-                                                        attributes:nil
-                                                             error:nil];
-             
-            clearCache();
-             
+                                      withIntermediateDirectories:YES
+                                                       attributes:nil
+                                                            error:nil];
+            
+            block();
+            
         }];
         
-        
-    } else {
-        block();
     }
     
 }

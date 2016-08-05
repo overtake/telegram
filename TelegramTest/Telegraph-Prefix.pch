@@ -6,7 +6,7 @@
     #import <Cocoa/Cocoa.h>
 
 #define TGDEBUG // UNDEF IN RELEASE
-#define TGSTABLE // DEF IN stable version
+//#define TGSTABLE // DEF IN stable version
 
 
 #ifdef TGDEBUG

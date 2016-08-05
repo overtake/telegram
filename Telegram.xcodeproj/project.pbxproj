@@ -893,6 +893,10 @@
 		C2DE4FAE1AD08C47001EC26C /* TGWebpageArticleContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FAD1AD08C47001EC26C /* TGWebpageArticleContainer.m */; };
 		C2DE4FB11AD2E5D6001EC26C /* TGWebpageAttach.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */; };
 		C2DE4FB51AD43ED0001EC26C /* TGArticleImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */; };
+		C2DF6A001D547DBE008B06D4 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2DF6A0B1D547DC2008B06D4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2DF6A0E1D54A08D008B06D4 /* TGContactSelfUserItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DF6A0D1D54A08D008B06D4 /* TGContactSelfUserItem.m */; };
+		C2DF6A111D54A09D008B06D4 /* TGContactSelfUserRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DF6A101D54A09D008B06D4 /* TGContactSelfUserRowView.m */; };
 		C2E40E2A19D58E370079046E /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2919D58E370079046E /* CoreMedia.framework */; };
 		C2E40E2C19D58E3C0079046E /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */; };
 		C2E40E2E19D58E430079046E /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2E40E2D19D58E430079046E /* Quartz.framework */; };
@@ -1088,6 +1092,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C2B775BC1D5340D800A5F06F /* Sparkle.framework in Copy Files (6 items) */,
+				C2DF6A001D547DBE008B06D4 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2758,6 +2763,10 @@
 		C2DE4FB01AD2E5D6001EC26C /* TGWebpageAttach.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebpageAttach.m; sourceTree = "<group>"; };
 		C2DE4FB31AD43ED0001EC26C /* TGArticleImageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGArticleImageObject.h; sourceTree = "<group>"; };
 		C2DE4FB41AD43ED0001EC26C /* TGArticleImageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGArticleImageObject.m; sourceTree = "<group>"; };
+		C2DF6A0C1D54A08D008B06D4 /* TGContactSelfUserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContactSelfUserItem.h; sourceTree = "<group>"; };
+		C2DF6A0D1D54A08D008B06D4 /* TGContactSelfUserItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContactSelfUserItem.m; sourceTree = "<group>"; };
+		C2DF6A0F1D54A09D008B06D4 /* TGContactSelfUserRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGContactSelfUserRowView.h; sourceTree = "<group>"; };
+		C2DF6A101D54A09D008B06D4 /* TGContactSelfUserRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGContactSelfUserRowView.m; sourceTree = "<group>"; };
 		C2E40E2919D58E370079046E /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		C2E40E2B19D58E3C0079046E /* PreferencePanes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PreferencePanes.framework; path = System/Library/Frameworks/PreferencePanes.framework; sourceTree = SDKROOT; };
 		C2E40E2D19D58E430079046E /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
@@ -2989,6 +2998,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2DF6A0B1D547DC2008B06D4 /* HockeySDK.framework in Frameworks */,
 				C2B775BE1D5340E200A5F06F /* Sparkle.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
@@ -4136,6 +4146,10 @@
 				C20A5EEB1B8CD8B8007F4B49 /* AddContactViewController.m */,
 				C21D483019ACC436000F06E1 /* ContactsViewController.h */,
 				C21D483119ACC436000F06E1 /* ContactsViewController.m */,
+				C2DF6A0C1D54A08D008B06D4 /* TGContactSelfUserItem.h */,
+				C2DF6A0D1D54A08D008B06D4 /* TGContactSelfUserItem.m */,
+				C2DF6A0F1D54A09D008B06D4 /* TGContactSelfUserRowView.h */,
+				C2DF6A101D54A09D008B06D4 /* TGContactSelfUserRowView.m */,
 			);
 			name = contacts;
 			sourceTree = "<group>";
@@ -7200,6 +7214,7 @@
 				0A6D099819535E8500A9AC64 /* TLEncryptedChatCategory.m in Sources */,
 				C20A8ABF1D2E8FDA00C70134 /* TGModernSearchSignals.m in Sources */,
 				C248F3D019BE046C00BF658E /* opus_header.c in Sources */,
+				C2DF6A111D54A09D008B06D4 /* TGContactSelfUserRowView.m in Sources */,
 				C2A5BFFD18E03D150021BE68 /* MessageTableCellAudioView.m in Sources */,
 				C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */,
 				C268C19619F0519C007F836A /* TransformationMatrix.cpp in Sources */,
@@ -7435,6 +7450,7 @@
 				0A9EDC501897BA0E0037E1BC /* NSImage+RBLResizableImageAdditions.m in Sources */,
 				C2ED75351C2A913400002ACF /* TGContextRowView.m in Sources */,
 				C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */,
+				C2DF6A0E1D54A08D008B06D4 /* TGContactSelfUserItem.m in Sources */,
 				0AB8F64E1861B07C000E6FF3 /* TMRowView.m in Sources */,
 				C2753DDF19E5B24500752BAF /* TGModernAnimatedImagePlayer.m in Sources */,
 				0A073FCF18BF65F500BAA928 /* TMNavigationBar.m in Sources */,

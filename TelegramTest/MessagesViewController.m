@@ -3051,10 +3051,7 @@ static NSTextAttachment *headerMediaIcon() {
         
          _editTemplate = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:dialog.peer_id];
          
-         if(self.class != [MessagesViewController class]) {
-             _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeSimpleText text:[[NSAttributedString alloc] init] peer_id:rand_int()];
-         }
-         
+
          
         [_modernMessagesBottomView setInputTemplate:_editTemplate animated:NO];
         

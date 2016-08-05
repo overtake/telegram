@@ -81,7 +81,6 @@ static TGPVUserBehavior *staticObserver;
             
             for (int i = 0; i < response.photos.count; i++) {
                 
-                
                 TL_photo *photo = response.photos[i];
                 
                 PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:[photo n_id] media:[photo.sizes lastObject] peer_id:_user.n_id];

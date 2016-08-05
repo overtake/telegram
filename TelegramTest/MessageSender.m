@@ -486,9 +486,11 @@
                     
                 }];
 //                
-//                if(!saved) {
-//                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
-//                }
+                if(!saved) {
+                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
+                    
+                    [self syncTopCategories:nil];
+                }
             }
 
         } @catch (NSException *exception) {
@@ -537,7 +539,7 @@
                 completeHandler(top);
             });
             
-            if([[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue] + 24*60*60 < [[MTNetwork instance] getTime]) {
+            if([[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue] + 24*60*60 < [[MTNetwork instance] getTime] || completeHandler == nil) {
                 [RPCRequest sendRequest:[TLAPI_contacts_getTopPeers createWithFlags:(1 << 0) | (1 << 2) offset:offset limit:100 n_hash:acc] successHandler:^(id request, TL_contacts_topPeers *response) {
                     
                     if([response isKindOfClass:[TL_contacts_topPeers class]]) {
@@ -1051,39 +1053,6 @@ static TGLocationRequest *locationRequest;
         
         [Notification perform:STICKERS_REORDER data:@{}];
         
-        
-        //        NSMutableDictionary *sc = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
-        //
-        //        if(!sc)
-        //        {
-        //            sc = [[NSMutableDictionary alloc] init];
-        //        }
-        //
-        //        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
-        //
-        //
-        //        if(!sc[@(attr.stickerset.n_id)]) {
-        //            sc[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
-        //        }
-        //
-        //        __block int max = 1;
-        //
-        //        [sc enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSMutableDictionary *obj, BOOL * _Nonnull stop) {
-        //
-        //            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *value, BOOL * _Nonnull stop) {
-        //
-        //                max = MAX(max,[value intValue]);
-        //
-        //            }];
-        //
-        //        }];
-        //
-        //        max++;
-        //
-        //
-        //        sc[@(attr.stickerset.n_id)][@(sticker.n_id)] = @(max);
-        //
-        //        [transaction setObject:sc forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
         
     }];
     

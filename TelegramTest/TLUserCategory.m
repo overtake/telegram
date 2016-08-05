@@ -411,6 +411,7 @@ DYNAMIC_PROPERTY(ENCRYPTED_TITLE_FOR_MESSAGE);
     id title = [self getTITLE_FOR_MESSAGE];
     
     if(!title) {
+
         NSMutableAttributedString *titleForMessageAttributedString = [[NSMutableAttributedString alloc] init];
         [titleForMessageAttributedString appendString:self.fullName withColor:NSColorFromRGB(0x222222)];
         [titleForMessageAttributedString setFont:TGSystemFont(14) forRange:titleForMessageAttributedString.range];
@@ -495,6 +496,7 @@ Statuses
 
 - (void)rebuidStatuses {
     [self setSTATUS_MESSAGES_HEADER_VIEW:nil];
+    [self setSTATUS_CHAT_HEADER:nil];
 //    [self statusForMessagesHeaderView];
 }
 
@@ -505,12 +507,13 @@ Statuses
 
 
 DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
+DYNAMIC_PROPERTY(STATUS_CHAT_HEADER);
 
 - (NSAttributedString *)statusForMessagesHeaderView {
     NSMutableAttributedString *str = [self getSTATUS_MESSAGES_HEADER_VIEW];
     if(!str) {
         str = [[NSMutableAttributedString alloc] init];
-        NSString *string = self.lastSeen;
+        NSString *string =self.lastSeen;
         NSRange range;
         if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
             range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
@@ -520,6 +523,29 @@ DYNAMIC_PROPERTY(STATUS_MESSAGES_HEADER_VIEW);
         
         [str setFont:TGSystemFont(12) forRange:range];
 //        [self setSTATUS_MESSAGES_HEADER_VIEW:str];
+    }
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setAlignment:2];
+    [str addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, str.length)];
+    return str;
+}
+
+
+- (NSAttributedString *)statusForChatHeader {
+    NSMutableAttributedString *str = [self getSTATUS_CHAT_HEADER];
+    if(!str) {
+        str = [[NSMutableAttributedString alloc] init];
+        NSString *string = self.isSelf ? NSLocalizedString(@"ChatWithYourSelf", nil) : self.lastSeen;
+        NSRange range;
+        if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
+            range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
+        } else {
+            range = [str appendString:string withColor:NSColorFromRGB(0xa9a9a9)];
+        }
+        
+        [str setFont:TGSystemFont(12) forRange:range];
+        //        [self setSTATUS_MESSAGES_HEADER_VIEW:str];
     }
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];

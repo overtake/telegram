@@ -59,7 +59,7 @@
         [self.container addSubview:self.nameTextField];
     
         self.statusTextField = [[TMStatusTextField alloc] initWithFrame:NSMakeRect(0, 3, 0, 0)];
-        [self.statusTextField setSelector:@selector(statusForMessagesHeaderView)];
+        [self.statusTextField setSelector:@selector(statusForChatHeader)];
         [self.statusTextField setAlignment:NSCenterTextAlignment];
         [self.statusTextField setStatusDelegate:self];
         [self.statusTextField setDrawsBackground:NO];

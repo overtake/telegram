@@ -52,6 +52,7 @@ typedef enum {
 //Statuses
 - (NSAttributedString *)statusAttributedString;
 - (NSAttributedString *)statusForMessagesHeaderView;
+- (NSAttributedString *)statusForChatHeader;
 - (NSAttributedString *)statusForUserInfoView;
 - (NSAttributedString *)statusForGroupInfo;
 - (NSAttributedString *)statusForSearchTableView;

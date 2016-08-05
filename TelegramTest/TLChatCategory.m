@@ -185,6 +185,9 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     return str;
 }
 
+- (NSAttributedString *)statusForChatHeader {
+    return [self statusForMessagesHeaderView];
+}
 
 
 - (NSAttributedString *)statusForMessagesHeaderView {

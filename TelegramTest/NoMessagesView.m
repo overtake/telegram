@@ -152,6 +152,50 @@
     
 }
 
+- (NSAttributedString *)buildCloudString {
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+    
+    [paragraphStyle setAlignment:NSCenterTextAlignment];
+    
+    [paragraphStyle setParagraphSpacing:11];
+    
+    NSMutableParagraphStyle *subParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [subParagraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
+    [subParagraphStyle setAlignment:NSCenterTextAlignment];
+    [subParagraphStyle setParagraphSpacing:4];
+    
+    NSMutableParagraphStyle *subParagraphStyle2 = [[NSMutableParagraphStyle alloc] init];
+    [subParagraphStyle2 setLineBreakMode:NSLineBreakByTruncatingTail];
+    [subParagraphStyle2 setAlignment:NSCenterTextAlignment];
+    [subParagraphStyle2 setParagraphSpacing:3];
+    
+    
+    
+    
+    
+    [string appendString:NSLocalizedString(@"YourCloudStorage", nil) withColor:GRAY_TEXT_COLOR];
+    
+    [string appendString:@"\n\n"];
+    
+    [string setFont:TGSystemFont(13) forRange:string.range];
+    
+    [string addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:string.range];
+    
+    
+    NSRange range = [string appendString:NSLocalizedString(@"YourCloudStorageDesc", nil) withColor:GRAY_TEXT_COLOR];
+    
+    [string addAttribute:NSParagraphStyleAttributeName value:subParagraphStyle range:range];
+    
+    
+    return string;
+    
+}
+
+
 
 -(void)setConversation:(TL_conversation *)conversation {
     
@@ -181,6 +225,13 @@
         
         [(TMTextField *)self.field setAttributedStringValue:self.secret];
                 
+    } if(conversation.type == DialogTypeUser && conversation.user.isSelf) {
+      
+        self.field = [TMTextField defaultTextField];
+        
+        
+        [(TMTextField *)self.field setAttributedStringValue:[self buildCloudString]];
+        
     } else {
         
         self.field = [[TGCTextView alloc] initWithFrame:NSZeroRect];

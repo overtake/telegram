@@ -15,6 +15,9 @@
 #import "TLPeer+Extensions.h"
 #import "AddContactViewController.h"
 #import "TGConversationsTableView.h"
+#import "TGContactSelfUserItem.h"
+#import "TGSettingsTableView.h"
+#import "SearchSeparatorItem.h"
 @interface ContactFirstItem : TMRowItem
 
 @end
@@ -24,6 +27,14 @@
 
 -(NSUInteger)hash {
     return 0;
+}
+
+-(int)height {
+    return 40;
+}
+
+-(Class)viewClass {
+    return NSClassFromString(@"ContactFirstView");
 }
 
 @end
@@ -107,6 +118,16 @@
     return self;
 }
 
+-(int)height {
+    return 50;
+}
+
+
+
+-(Class)viewClass {
+    return NSClassFromString(@"ContactUserView");
+}
+
 @end
 
 
@@ -130,11 +151,6 @@
     return YES;
 }
 
--(void)checkSelected:(BOOL)isSelected
-{
-    [self.titleTextField setSelected:isSelected];
-    [self.lastSeenTextField setSelected:isSelected];
-}
 
 
 -(NSColor *)color
@@ -152,6 +168,14 @@
     return (ContactUserItem *) [super rowItem];
 }
 
+
+-(void)checkSelected:(BOOL)isSelected
+{
+    [self.titleTextField setSelected:isSelected];
+    [self.lastSeenTextField setSelected:isSelected];
+}
+
+
 -(void)drawRect:(NSRect)dirtyRect {
     
 
@@ -161,10 +185,7 @@
     } else {
         [super drawRect:dirtyRect];
     }
-	
-   
-
-    
+	 
 }
 
 @end
@@ -214,6 +235,20 @@
 -(void)onContactsSortChanged:(NSNotification *)notification {
     [self.tableView.list sortUsingComparator:^NSComparisonResult(ContactUserItem *obj1, ContactUserItem *obj2) {
         
+        if([obj1 isKindOfClass:[TGContactSelfUserItem class]]) {
+            return NSOrderedAscending;
+        } else if([obj2 isKindOfClass:[TGContactSelfUserItem class]]) {
+            return NSOrderedDescending;
+        }
+        
+        if([obj1 isKindOfClass:[SearchSeparatorItem class]]) {
+            return NSOrderedAscending;
+        } else if([obj2 isKindOfClass:[SearchSeparatorItem class]]) {
+            return NSOrderedDescending;
+        }
+        
+        
+        
         if([obj1 isKindOfClass:[ContactFirstItem class]] )
         {
             return NSOrderedAscending;
@@ -221,6 +256,7 @@
         {
             return NSOrderedDescending;
         }
+        
         
         NSComparisonResult result = [@(obj1.user.lastSeenTime) compare:@(obj2.user.lastSeenTime)];
         
@@ -298,7 +334,10 @@
     
     [self.tableView reloadData];
     
-    [self.tableView insert:self.firstItem atIndex:0 tableRedraw:NO];
+    
+    [self.tableView addItem:[[TGContactSelfUserItem alloc] initWithObject:[UsersManager currentUser]] tableRedraw:NO];
+    [self.tableView addItem:[[SearchSeparatorItem alloc] initWithOneName:NSLocalizedString(@"Search.Separator.Contacts", nil) pluralName:nil] tableRedraw:NO];
+    [self.tableView addItem:self.firstItem tableRedraw:NO];
     
     [self.tableView reloadData];
     
@@ -358,7 +397,7 @@
 
 
 - (CGFloat) rowHeight:(NSUInteger)row item:(TMRowItem *)item {
-    return [item isKindOfClass:[ContactUserItem class]] ? 50 : 40;
+    return item.height;
 }
 
 - (BOOL) isGroupRow:(NSUInteger)row item:(TMRowItem *) item {
@@ -367,13 +406,7 @@
 
 - (NSView *)viewForRow:(NSUInteger)row item:(TMRowItem *)item {
     
-    if([item isKindOfClass:[ContactUserItem class]]) {
-        return [self.tableView cacheViewForClass:[ContactUserView class] identifier:@"contactItem" withSize:NSMakeSize(NSWidth(self.tableView.frame), 50)];
-    }else if([item isKindOfClass:[ContactFirstItem class]]) {
-        return [self.tableView cacheViewForClass:[ContactFirstView class] identifier:@"firstContactItem"];
-    }
-    
-    return nil;
+    return  [self.tableView cacheViewForClass:[item viewClass] identifier:NSStringFromClass([item viewClass]) withSize:NSMakeSize(NSWidth(_tableView.frame), item.height)];
 }
 
 
@@ -405,6 +438,9 @@
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
         [[Telegram rightViewController] showAddContactController];
+
+    } else if([item isKindOfClass:[TGContactSelfUserItem class]]) {
+        [appWindow().navigationController showMessagesViewController:[UsersManager currentUser].dialog];
 
     }
    
