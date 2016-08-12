@@ -54,7 +54,7 @@
             
             if(weakSelf.item.isset) {
                 [TGAudioPlayerWindow show:weakSelf.item.message.conversation navigation:weakSelf.item.table.viewController.navigationViewController];
-                [TGAudioPlayerWindow setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
+                [[TGAudioGlobalController globalController:weakSelf.messagesViewController.navigationViewController] setCurrentItem:(MessageTableItemAudioDocument *)weakSelf.item];
 
             } else {
                 [weakSelf checkOperation];
@@ -114,6 +114,8 @@
 
 - (void)setCellState:(CellState)cellState animated:(BOOL)animated  {
     [super setCellState:cellState animated:animated];
+    
+    
     
     switch (self.audioState) {
         case TGAudioPlayerGlobalStatePaused:
@@ -195,10 +197,10 @@
 - (void)setItem:(MessageTableItemAudioDocument *)item {
     [super setItem:item];
     
-    if([TGAudioPlayerWindow currentItem].message.n_id == item.message.n_id)
+    if([TGAudioGlobalController globalController:self.messagesViewController.navigationViewController].currentItem.message.n_id == item.message.n_id)
         _audioState = [TGAudioPlayerWindow playerState];
      else
-         _audioState = TGAudioPlayerGlobalStatePaused;
+        _audioState = TGAudioPlayerGlobalStatePaused;
     
     [_cView setFrame:NSMakeRect(0, 0, NSWidth(self.containerView.frame), NSHeight(self.playView.frame))];
     

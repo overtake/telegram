@@ -14,6 +14,8 @@
 
 @property (nonatomic,strong,readonly) TLUser *user;
 
+@property (nonatomic,strong,readonly) TLChat *chat;
+
 @property (nonatomic,strong) NSAttributedString *badge;
 @property (nonatomic,strong) NSAttributedString *forceBotStatus;
 
@@ -23,5 +25,6 @@
 @property (nonatomic,strong) dispatch_block_t stateCallback;
 
 -(id)initWithUser:(TLUser *)user;
+
 
 @end

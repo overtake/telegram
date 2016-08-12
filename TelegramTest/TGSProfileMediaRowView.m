@@ -116,9 +116,12 @@
         NSString *key = _photoAndVideoCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.PhotoOrVideo", nil) : NSLocalizedString(@"Modern.SharedMedia.PhotosAndVideos", nil);
         
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_photoAndVideoCounter] withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemMediumFont(14) forRange:range];
+
         [attr appendString:@" "];
-        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
-        
+        NSRange secondRange = [attr appendString:key withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:secondRange];
+
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
         [attr addAttribute:NSLinkAttributeName value:@"chat://photoOrVideo" range:range];
@@ -131,16 +134,18 @@
         
         
         if(attr.string.length > 0) {
-            [attr appendString:@"," withColor:GRAY_TEXT_COLOR];
-            [attr appendString:@" "];
+            [attr appendString:@"   "];
         }
        
         
         
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_filesCounter] withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemMediumFont(14) forRange:range];
+
         [attr appendString:@" "];
-        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
-        
+        NSRange secondRange = [attr appendString:key withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:secondRange];
+
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
         [attr addAttribute:NSLinkAttributeName value:@"chat://files" range:range];
@@ -152,13 +157,15 @@
         NSString *key = _audioCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.Audio", nil) : NSLocalizedString(@"Modern.SharedMedia.Audios", nil);
        
         if(attr.string.length > 0) {
-            [attr appendString:@"," withColor:GRAY_TEXT_COLOR];
-            [attr appendString:@" "];
+            [attr appendString:@"    "];
         }
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_audioCounter] withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemMediumFont(14) forRange:range];
+
         [attr appendString:@" "];
-        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
-        
+        NSRange secondRange = [attr appendString:key withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:secondRange];
+
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
         [attr addAttribute:NSLinkAttributeName value:@"chat://audio" range:range];
@@ -171,13 +178,14 @@
         NSString *key = _linksCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.Link", nil) : NSLocalizedString(@"Modern.SharedMedia.Links", nil);
         
         if(attr.string.length > 0) {
-            [attr appendString:@"," withColor:GRAY_TEXT_COLOR];
-            [attr appendString:@" "];
+            [attr appendString:@"    "];
         }
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_linksCounter] withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemMediumFont(14) forRange:range];
         [attr appendString:@" "];
-        NSRange secondRange = [attr appendString:key withColor:GRAY_TEXT_COLOR];
-        
+        NSRange secondRange = [attr appendString:key withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:secondRange];
+
         range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
         
         [attr addAttribute:NSLinkAttributeName value:@"chat://links" range:range];
@@ -185,7 +193,6 @@
     }
     
     
-    [attr setFont:TGSystemFont(14) forRange:attr.range];
     
     _loaderString = attr;
     
@@ -210,9 +217,9 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    [DIALOG_BORDER_COLOR setFill];
+   // [DIALOG_BORDER_COLOR setFill];
     
-    NSRectFill(NSMakeRect(self.item.xOffset, 0, NSWidth(dirtyRect) - self.item.xOffset * 2, DIALOG_BORDER_WIDTH));
+   // NSRectFill(NSMakeRect(self.item.xOffset, 0, NSWidth(dirtyRect) - self.item.xOffset * 2, DIALOG_BORDER_WIDTH));
 }
 
 
@@ -360,7 +367,7 @@ static NSMutableDictionary *loaders;
     [_headerTextField setText:_headerAttr maxWidth:NSWidth(self.frame) - self.item.xOffset*2];
     
     int totalHeight = NSHeight(_countersTextField.frame) + NSHeight(_headerTextField.frame);
-    [_countersTextField setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((NSHeight(self.frame) - totalHeight)/2) - 3)];
+    [_countersTextField setFrameOrigin:NSMakePoint(self.item.xOffset, roundf((NSHeight(self.frame) - totalHeight)/2) - 8)];
     [_headerTextField setFrameOrigin:NSMakePoint(self.item.xOffset , roundf((NSHeight(self.frame) - totalHeight)/2) + NSHeight(_countersTextField.frame))];
     
     if(loader.isLoaded && loader.loaderString.length == 0) {

@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 27.07.16.
+    //  Created by keepcoder on 05.08.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -226,7 +226,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_geoPoint class] forKey:[NSNumber numberWithInt:541710092]];
    [cs_classes setObject:[TL_auth_checkedPhone class] forKey:[NSNumber numberWithInt:-2128698738]];
    [cs_classes setObject:[TL_auth_sentCode class] forKey:[NSNumber numberWithInt:1577067778]];
-   [cs_classes setObject:[TL_auth_authorization class] forKey:[NSNumber numberWithInt:-16553231]];
+   [cs_classes setObject:[TL_auth_authorization class] forKey:[NSNumber numberWithInt:-855308010]];
    [cs_classes setObject:[TL_auth_exportedAuthorization class] forKey:[NSNumber numberWithInt:-543777747]];
    [cs_classes setObject:[TL_inputNotifyPeer class] forKey:[NSNumber numberWithInt:-1195615476]];
    [cs_classes setObject:[TL_inputNotifyUsers class] forKey:[NSNumber numberWithInt:423314455]];
@@ -298,7 +298,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_photos_photo class] forKey:[NSNumber numberWithInt:539045032]];
    [cs_classes setObject:[TL_upload_file class] forKey:[NSNumber numberWithInt:157948117]];
    [cs_classes setObject:[TL_dcOption class] forKey:[NSNumber numberWithInt:98092748]];
-   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:-201218881]];
+   [cs_classes setObject:[TL_config class] forKey:[NSNumber numberWithInt:-1704251862]];
    [cs_classes setObject:[TL_nearestDc class] forKey:[NSNumber numberWithInt:-1910892683]];
    [cs_classes setObject:[TL_help_appUpdate class] forKey:[NSNumber numberWithInt:-1987579119]];
    [cs_classes setObject:[TL_help_noAppUpdate class] forKey:[NSNumber numberWithInt:-1000708810]];
@@ -531,7 +531,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_keyboardButtonCallback class] forKey:[NSNumber numberWithInt:1748655686]];
    [cs_classes setObject:[TL_keyboardButtonRequestPhone class] forKey:[NSNumber numberWithInt:-1318425559]];
    [cs_classes setObject:[TL_keyboardButtonRequestGeoLocation class] forKey:[NSNumber numberWithInt:-59151553]];
-   [cs_classes setObject:[TL_keyboardButtonSwitchInline class] forKey:[NSNumber numberWithInt:-367298028]];
+   [cs_classes setObject:[TL_keyboardButtonSwitchInline class] forKey:[NSNumber numberWithInt:90744648]];
    [cs_classes setObject:[TL_replyInlineMarkup class] forKey:[NSNumber numberWithInt:1218642516]];
    [cs_classes setObject:[TL_messages_botCallbackAnswer class] forKey:[NSNumber numberWithInt:-1324486149]];
    [cs_classes setObject:[TL_messages_messageEditData class] forKey:[NSNumber numberWithInt:649453030]];
@@ -576,6 +576,9 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_stickerSetInstallResultSuccess class] forKey:[NSNumber numberWithInt:946083368]];
    [cs_classes setObject:[TL_messages_stickerSetInstallResultArchive class] forKey:[NSNumber numberWithInt:904138920]];
    [cs_classes setObject:[TL_stickerSetCovered class] forKey:[NSNumber numberWithInt:1678812626]];
+   [cs_classes setObject:[TL_updateConfig class] forKey:[NSNumber numberWithInt:-1574314746]];
+   [cs_classes setObject:[TL_inputMediaPhotoExternal class] forKey:[NSNumber numberWithInt:998007486]];
+   [cs_classes setObject:[TL_inputMediaDocumentExternal class] forKey:[NSNumber numberWithInt:1954019628]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

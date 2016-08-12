@@ -11,7 +11,6 @@
 #import "NSString+Size.h"
 #import "MessageSender.h"
 #import "TLPeer+Extensions.h"
-#import "MessagesBottomView.h"
 #import "CMath.h"
 #import "SpacemanBlocks.h"
 #import "TGInlineAudioPlayer.h"
@@ -452,7 +451,7 @@
     
 
     
-    _modernMessagesBottomView = [[TGModernMessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 58) messagesController:self];
+    _modernMessagesBottomView = [[TGModernMessagesBottomView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width , 50) messagesController:self];
     
     [self.view addSubview:_modernMessagesBottomView];
     
@@ -757,7 +756,7 @@ static NSMutableDictionary *savedScrolling;
         TGInputMessageTemplate *t = notification.userInfo[KEY_TEMPLATE];
         
         if(t.applyNextNotification) {
-            t.applyNextNotification = NO;
+            //t.applyNextNotification = NO;
             
             if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage && !t.editMessage && [notification.userInfo[KEY_DATA] boolValue])
             {
@@ -1184,7 +1183,7 @@ static NSTextAttachment *headerMediaIcon() {
 
         } else if(_modernMessagesBottomView.onClickToLockedView == nil || _modernMessagesBottomView.bot_start_var.length == 0) {
             
-            TGModernMessagesBottomViewState nState = self.state == MessagesViewControllerStateEditable ? TGModernMessagesBottomViewActionsState : TGModernMessagesBottomViewNormalState;
+            TGModernMessagesBottomViewState nState = self.state == MessagesViewControllerStateEditable ? TGModernMessagesBottomViewActionsState : _modernMessagesBottomView.actionState;
             
             if(nState != _modernMessagesBottomView.actionState) {
                 [_modernMessagesBottomView setActionState:nState];
@@ -4443,7 +4442,10 @@ static NSTextAttachment *headerMediaIcon() {
 }
 
 - (MessageTableItem *)objectAtIndex:(NSUInteger)position {
-    return [self.messages objectAtIndex:position];
+    if(position < self.messages.count)
+        return [self.messages objectAtIndex:position];
+    
+    return nil;
 }
 
 - (NSUInteger)indexOfObject:(MessageTableItem *)item {

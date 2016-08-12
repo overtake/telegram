@@ -261,6 +261,7 @@
             
             [weakSelf.messagesViewController setCellsEditButtonShow:YES animated:YES];
             [weakSelf setSelected:YES animated:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
         }]];
     }

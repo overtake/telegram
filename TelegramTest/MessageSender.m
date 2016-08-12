@@ -536,7 +536,8 @@
             int offset = 0;
             
             dispatch_async(dqueue, ^{
-                completeHandler(top);
+                if(completeHandler)
+                    completeHandler(top);
             });
             
             if([[transaction objectForKey:@"dt" inCollection:TOP_PEERS] intValue] + 24*60*60 < [[MTNetwork instance] getTime] || completeHandler == nil) {
@@ -549,7 +550,8 @@
                         [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
                         
                         dispatch_async(dqueue, ^{
-                            completeHandler(response.categories);
+                            if(completeHandler)
+                                completeHandler(response.categories);
                         });
                         
                     } else {
@@ -557,7 +559,8 @@
                         [transaction setObject:@([[MTNetwork instance] getTime]) forKey:@"dt" inCollection:TOP_PEERS];
                         
                         dispatch_async(dqueue, ^{
-                            completeHandler(top);
+                            if(completeHandler)
+                                completeHandler(top);
                         });
                     }
                     
@@ -915,13 +918,24 @@ static TGLocationRequest *locationRequest;
         handler(TGInlineKeyboardSuccessType);
     } else if([keyboard isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
         
-        if(messagesViewController.class == [TGContextMessagesvViewController class]) {
+        if(keyboard.isSame_peer) {
+            TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
             
-            TGContextMessagesvViewController *m = (TGContextMessagesvViewController *)messagesViewController;
+            if([conversation.chat isKindOfClass:[TLChat class]]) {
+                [template setReplyMessage:message save:YES];
+            }
             
-            [m.contextModalView didNeedCloseAndSwitch:keyboard];
+            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:keyboard.text]];
+            [template performNotification];
         } else {
-            [[Telegram rightViewController] showInlineBotSwitchModalView:message.via_bot_id != 0 ? message.via_bot_user : message.fromUser keyboard:keyboard];
+            if(messagesViewController.class == [TGContextMessagesvViewController class]) {
+                
+                TGContextMessagesvViewController *m = (TGContextMessagesvViewController *)messagesViewController;
+                
+                [m.contextModalView didNeedCloseAndSwitch:keyboard];
+            } else {
+                [[Telegram rightViewController] showInlineBotSwitchModalView:message.via_bot_id != 0 ? message.via_bot_user : message.fromUser keyboard:keyboard];
+            }
         }
         
     }

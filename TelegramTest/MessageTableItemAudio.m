@@ -15,6 +15,7 @@
 #import "DownloadDocumentItem.h"
 #import "TL_documentAttributeAudio+Extension.h"
 #import "MessageTableCellAudioView.h"
+#import "TGAudioGlobalController.h"
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
@@ -35,7 +36,7 @@
         
         [self doAfterDownload];
         
-        self.state = AudioStateWaitPlaying;
+        self.state = TGAudioPlayerGlobalStateWaitPlaying;
         
         [self checkStartDownload:[self.message.to_id isKindOfClass:[TL_peerChat class]] ? AutoGroupAudio : AutoPrivateAudio size:self.document.size];
         
@@ -82,7 +83,7 @@
     }];
 }
 
--(void)setState:(AudioState)state {
+-(void)setState:(int)state {
     _state = state;
 }
 

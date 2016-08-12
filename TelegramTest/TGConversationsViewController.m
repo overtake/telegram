@@ -20,7 +20,6 @@
 #import "TGModernConversationHistoryController.h"
 #import "TGHeadChatPanel.h"
 #import "TMAudioRecorder.h"
-#import "MessagesBottomView.h"
 #import "TGModernESGViewController.h"
 #import "SpacemanBlocks.h"
 @interface TestView : TMView

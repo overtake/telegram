@@ -56,9 +56,7 @@
     if(self.isSelected) {
         [BLUE_COLOR_SELECT setFill];
         NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
-    } else {
-        [super drawRect:dirtyRect];
-    }
+    } 
     
 }
 

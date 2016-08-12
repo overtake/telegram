@@ -186,11 +186,11 @@ const static int textFieldXOffset = 30;
         self.textField = [[_TMSearchTextField alloc] initWithFrame:NSZeroRect];
         [self.textField setDelegate:self];
         [self.textField setSearchDelegate:self];
-        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemLightFont(12)}];
+        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemFont(12)}];
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
         [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setFont:TGSystemLightFont(12)];
+        [self.textField setFont:TGSystemFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];

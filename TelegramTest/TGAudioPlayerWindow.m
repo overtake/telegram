@@ -116,8 +116,7 @@
     
     
 
-    _audioController = [[TGAudioGlobalController alloc] init];
-    [_audioController addEventListener:self];
+    
     
     
     _windowContainerView = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth([self.contentView bounds]), MINI_PHEIGHT)];
@@ -175,7 +174,7 @@
     } forControlEvents:BTRControlEventMouseDownInside];
     
     
-    [_playButton setBackgroundImage:image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
+    [_playButton setImage:image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
     
     
     [_playButton setFrameSize:image_AudioPlayerPlay().size];
@@ -183,14 +182,14 @@
     [_playButton setCenterByView:_controlsContrainer];
 
     
-    [_prevButton setBackgroundImage:image_AudioPlayerBack() forControlState:BTRControlStateNormal];
+    [_prevButton setImage:image_AudioPlayerBack() forControlState:BTRControlStateNormal];
     
     [_prevButton setFrameSize:image_AudioPlayerBack().size];
     
     [_prevButton setFrameOrigin:NSMakePoint(NSMinX(_playButton.frame) - NSWidth(_prevButton.frame) - 25, NSMinY(_playButton.frame))];
     
     
-    [_nextButton setBackgroundImage:image_AudioPlayerNext() forControlState:BTRControlStateNormal];
+    [_nextButton setImage:image_AudioPlayerNext() forControlState:BTRControlStateNormal];
     
     [_nextButton setFrameSize:image_AudioPlayerNext().size];
     
@@ -264,7 +263,7 @@
     
     _closeButton = [[BTRButton alloc] initWithFrame:NSMakeRect(15, NSHeight(_containerView.frame) - 20, image_AudioPlayerClose().size.width, image_AudioPlayerClose().size.height)];
     
-    [_closeButton setBackgroundImage:image_AudioPlayerClose() forControlState:BTRControlStateNormal];
+    [_closeButton setImage:[image_AudioPlayerClose() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
     
     [_containerView addSubview:_closeButton];
     
@@ -278,7 +277,7 @@
     
     _pinButton = [[BTRButton alloc] initWithFrame:NSMakeRect(35, NSHeight(_containerView.frame) - 20, image_AudioPlayerPin().size.width, image_AudioPlayerPin().size.height)];
     
-    [_pinButton setBackgroundImage:image_AudioPlayerPin() forControlState:BTRControlStateNormal];
+    [_pinButton setImage:[image_AudioPlayerPin() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
     
     [_containerView addSubview:_pinButton];
     
@@ -286,30 +285,30 @@
         
         [weakSelf setLevel:self.level == NSNormalWindowLevel ? NSScreenSaverWindowLevel : NSNormalWindowLevel];
         
-        [weakSelf.pinButton setImage:self.level == NSNormalWindowLevel ? image_AudioPlayerPin() : image_AudioPlayerPinActive() forControlState:BTRControlStateNormal];
+        [weakSelf.pinButton setImage:self.level == NSNormalWindowLevel ? [image_AudioPlayerPin() imageTintedWithColor:GRAY_ICON_COLOR] : [image_AudioPlayerPin() imageTintedWithColor:BLUE_ICON_COLOR] forControlState:BTRControlStateNormal];
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
-//    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 22, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
-//    
-//    
-//    [_audioPlayerVisibility setImage:image_AudioPlayerVisibilityActive() forControlState:BTRControlStateNormal];
-//    
-//    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
-//        
-//        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
-//        
-//        [TGAudioPlayerWindow hide:NO];
-//        
-//    } forControlEvents:BTRControlEventMouseDownInside];
-//    
-//    [_containerView addSubview:_audioPlayerVisibility];
+    _audioPlayerVisibility = [[BTRButton alloc] initWithFrame:NSMakeRect(NSMaxX(_pinButton.frame) + 10, NSHeight(_containerView.frame) - 20, image_AudioPlayerVisibilityActive().size.width, image_AudioPlayerVisibilityActive().size.height)];
+    
+    
+    [_audioPlayerVisibility setImage:[image_AudioPlayerVisibilityActive() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
+    
+    [_audioPlayerVisibility addBlock:^(BTRControlEvents events) {
+        
+        [weakSelf.audioController.navigationController showInlinePlayer:weakSelf.audioController];
+        
+        [TGAudioPlayerWindow hide:NO];
+        
+    } forControlEvents:BTRControlEventMouseDownInside];
+    
+    [_containerView addSubview:_audioPlayerVisibility];
     
     
     
-    _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - 30, NSHeight(_containerView.frame) - 30, 25, 25)];
+    _showPlayListButton = [[BTRButton alloc] initWithFrame:NSMakeRect(NSWidth(_containerView.frame) - image_AudioPlayerList().size.width - 7, NSHeight(_containerView.frame) - image_AudioPlayerList().size.height - 7, image_AudioPlayerList().size.width, image_AudioPlayerList().size.height)];
     
-    [_showPlayListButton setImage:image_AudioPlayerList() forControlState:BTRControlStateNormal];
+    [_showPlayListButton setImage:[image_AudioPlayerList() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
     
     [_showPlayListButton addBlock:^(BTRControlEvents events) {
         
@@ -340,7 +339,7 @@
 
 -(void)updateWindowWithHeight:(float)height animate:(BOOL)animate {
     
-    [self.showPlayListButton setImage:_windowState == TGAudioPlayerGlobalStyleMini ? image_AudioPlayerList() : image_AudioPlayerListActive() forControlState:BTRControlStateNormal];
+    [self.showPlayListButton setImage:_windowState == TGAudioPlayerGlobalStyleMini ? [image_AudioPlayerList() imageTintedWithColor:GRAY_ICON_COLOR] : [image_AudioPlayerList() imageTintedWithColor:BLUE_ICON_COLOR] forControlState:BTRControlStateNormal];
     
     NSRect frame = [self frame];
     
@@ -449,8 +448,9 @@
     [[self instance] show:conversation navigation:navigation];
 }
 
-+(MessageTableItemAudioDocument *)currentItem {
-    return [self instance].currentItem;
+
++(TGAudioGlobalController *)controller {
+    return [self instance].audioController;
 }
 
 +(void)hide:(BOOL)stop {
@@ -466,10 +466,17 @@
 
 -(void)show:(TL_conversation *)conversation navigation:(TGMessagesNavigationController *)navigation {
     
+    
+    
     if([self isVisible] && _audioController.conversation == conversation)
         return;
     
     if(![[NSUserDefaults standardUserDefaults] boolForKey:@"inline-player"]) {
+        
+        
+        _audioController = [[TGAudioGlobalController alloc] init];
+        [_audioController addEventListener:self];
+        
         [_audioController setPlayerList:_playListContainerView];
         [_audioController setProgressView:_progressView];
         
@@ -487,7 +494,9 @@
         self.audioController.autoStart = YES;
         
     } else {
-        [navigation showInlinePlayer:nil];
+        TGAudioGlobalController *audioController = [[TGAudioGlobalController alloc] init];
+        [audioController show:conversation navigation:navigation];
+        [navigation showInlinePlayer:audioController];
     }
     
     
@@ -543,12 +552,13 @@
 
 -(void)clear {
     [_audioController hide];
+    _audioController = nil;
 }
 
 
 
 -(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerGlobalState)state {
-    [_playButton setBackgroundImage:state == TGAudioPlayerGlobalStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
+    [_playButton setImage:state == TGAudioPlayerGlobalStatePlaying ? image_AudioPlayerPause() : image_AudioPlayerPlay() forControlState:BTRControlStateNormal];
 }
 
 -(void)playerDidChangeTime:(NSTimeInterval)currentTime {

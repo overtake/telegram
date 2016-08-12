@@ -13,6 +13,7 @@
 #import "SenderHeader.h"
 #import "TGTransformScrollView.h"
 #import "TGStickerPreviewModalView.h"
+#import "RBLPopover.h"
 @interface StickersPanelView ()
 @property (nonatomic,strong) TGTransformScrollView *scrollView;
 

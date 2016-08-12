@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16..
+//  Auto created by Mikhail Filimonov on 05.08.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -3060,6 +3060,19 @@
 	SerializedData* stream = [ClassStore streamWithConstuctor:1596029123];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_getAdminedPublicChannels
++(TLAPI_channels_getAdminedPublicChannels*)create {
+    TLAPI_channels_getAdminedPublicChannels* obj = [[TLAPI_channels_getAdminedPublicChannels alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1920105769];
+	
 	return [stream getOutput];
 }
 @end

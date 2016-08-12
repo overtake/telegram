@@ -11,7 +11,6 @@
 #import "Telegram.h"
 #import "PreviewObject.h"
 #import "SenderHeader.h"
-#import "MessagesBottomView.h"
 #import "MessagesUtils.h"
 #import "FullUsersManager.h"
 #import "SelfDestructionController.h"

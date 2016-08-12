@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16.
+//  Auto created by Mikhail Filimonov on 05.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1098,6 +1098,88 @@
     
     objc.url = self.url;
     objc.q = self.q;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMediaPhotoExternal
++(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url {
+	TL_inputMediaPhotoExternal* obj = [[TL_inputMediaPhotoExternal alloc] init];
+	obj.url = url;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.url];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.url = [stream readString];
+}
+        
+-(TL_inputMediaPhotoExternal *)copy {
+    
+    TL_inputMediaPhotoExternal *objc = [[TL_inputMediaPhotoExternal alloc] init];
+    
+    objc.url = self.url;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_inputMediaDocumentExternal
++(TL_inputMediaDocumentExternal*)createWithUrl:(TLInputFile*)url {
+	TL_inputMediaDocumentExternal* obj = [[TL_inputMediaDocumentExternal alloc] init];
+	obj.url = url;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.url stream:stream];
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.url = [ClassStore TLDeserialize:stream];
+}
+        
+-(TL_inputMediaDocumentExternal *)copy {
+    
+    TL_inputMediaDocumentExternal *objc = [[TL_inputMediaDocumentExternal alloc] init];
+    
+    objc.url = [self.url copy];
     
     return objc;
 }
@@ -7904,15 +7986,21 @@
 @end
         
 @implementation TL_auth_authorization
-+(TL_auth_authorization*)createWithUser:(TLUser*)user {
++(TL_auth_authorization*)createWithFlags:(int)flags tmp_sessions:(int)tmp_sessions user:(TLUser*)user {
 	TL_auth_authorization* obj = [[TL_auth_authorization alloc] init];
+	obj.flags = flags;
+	obj.tmp_sessions = tmp_sessions;
 	obj.user = user;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.tmp_sessions];}
 	[ClassStore TLSerialize:self.user stream:stream];
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	if(self.flags & (1 << 0)) {super.tmp_sessions = [stream readInt];}
 	self.user = [ClassStore TLDeserialize:stream];
 }
         
@@ -7920,6 +8008,8 @@
     
     TL_auth_authorization *objc = [[TL_auth_authorization alloc] init];
     
+    objc.flags = self.flags;
+    objc.tmp_sessions = self.tmp_sessions;
     objc.user = [self.user copy];
     
     return objc;
@@ -7940,7 +8030,13 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setTmp_sessions:(int)tmp_sessions
+{
+   super.tmp_sessions = tmp_sessions;
+                
+    if(super.tmp_sessions == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}
         
 @end
 
@@ -13497,6 +13593,47 @@
         
 @end
 
+@implementation TL_updateConfig
++(TL_updateConfig*)create {
+	TL_updateConfig* obj = [[TL_updateConfig alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_updateConfig *)copy {
+    
+    TL_updateConfig *objc = [[TL_updateConfig alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
 @implementation TLupdates_State
 
 @end
@@ -15104,8 +15241,9 @@
 @end
         
 @implementation TL_config
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay stickers_recent_limit:(int)stickers_recent_limit disabled_features:(NSMutableArray*)disabled_features {
++(TL_config*)createWithFlags:(int)flags date:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay stickers_recent_limit:(int)stickers_recent_limit tmp_sessions:(int)tmp_sessions disabled_features:(NSMutableArray*)disabled_features {
 	TL_config* obj = [[TL_config alloc] init];
+	obj.flags = flags;
 	obj.date = date;
 	obj.expires = expires;
 	obj.test_mode = test_mode;
@@ -15127,10 +15265,12 @@
 	obj.edit_time_limit = edit_time_limit;
 	obj.rating_e_decay = rating_e_decay;
 	obj.stickers_recent_limit = stickers_recent_limit;
+	obj.tmp_sessions = tmp_sessions;
 	obj.disabled_features = disabled_features;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeInt:self.date];
 	[stream writeInt:self.expires];
 	[stream writeBool:self.test_mode];
@@ -15161,6 +15301,7 @@
 	[stream writeInt:self.edit_time_limit];
 	[stream writeInt:self.rating_e_decay];
 	[stream writeInt:self.stickers_recent_limit];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.tmp_sessions];}
 	//Serialize FullVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -15173,6 +15314,7 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
 	super.date = [stream readInt];
 	super.expires = [stream readInt];
 	super.test_mode = [stream readBool];
@@ -15207,6 +15349,7 @@
 	super.edit_time_limit = [stream readInt];
 	super.rating_e_decay = [stream readInt];
 	super.stickers_recent_limit = [stream readInt];
+	if(self.flags & (1 << 0)) {super.tmp_sessions = [stream readInt];}
 	//UNS FullVector
 	[stream readInt];
 	{
@@ -15227,6 +15370,7 @@
     
     TL_config *objc = [[TL_config alloc] init];
     
+    objc.flags = self.flags;
     objc.date = self.date;
     objc.expires = self.expires;
     objc.test_mode = self.test_mode;
@@ -15248,6 +15392,7 @@
     objc.edit_time_limit = self.edit_time_limit;
     objc.rating_e_decay = self.rating_e_decay;
     objc.stickers_recent_limit = self.stickers_recent_limit;
+    objc.tmp_sessions = self.tmp_sessions;
     objc.disabled_features = [self.disabled_features copy];
     
     return objc;
@@ -15268,7 +15413,13 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setTmp_sessions:(int)tmp_sessions
+{
+   super.tmp_sessions = tmp_sessions;
+                
+    if(super.tmp_sessions == 0)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}
         
 @end
 
@@ -21316,7 +21467,9 @@
 @end
 
 @implementation TLKeyboardButton
-
+            
+-(BOOL)isSame_peer {return NO;}
+            
 @end
         
 @implementation TL_keyboardButton
@@ -21533,17 +21686,23 @@
 @end
 
 @implementation TL_keyboardButtonSwitchInline
-+(TL_keyboardButtonSwitchInline*)createWithText:(NSString*)text query:(NSString*)query {
++(TL_keyboardButtonSwitchInline*)createWithFlags:(int)flags  text:(NSString*)text query:(NSString*)query {
 	TL_keyboardButtonSwitchInline* obj = [[TL_keyboardButtonSwitchInline alloc] init];
+	obj.flags = flags;
+	
 	obj.text = text;
 	obj.query = query;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
 	[stream writeString:self.text];
 	[stream writeString:self.query];
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
 	super.text = [stream readString];
 	super.query = [stream readString];
 }
@@ -21551,6 +21710,8 @@
 -(TL_keyboardButtonSwitchInline *)copy {
     
     TL_keyboardButtonSwitchInline *objc = [[TL_keyboardButtonSwitchInline alloc] init];
+    
+    objc.flags = self.flags;
     
     objc.text = self.text;
     objc.query = self.query;
@@ -21573,7 +21734,9 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(BOOL)isSame_peer {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 
@@ -26240,13 +26403,16 @@
 @implementation TLmessages_BotCallbackAnswer
             
 -(BOOL)isAlert {return NO;}
+                        
+-(BOOL)isHas_url {return NO;}
             
 @end
         
 @implementation TL_messages_botCallbackAnswer
-+(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags  message:(NSString*)message url:(NSString*)url {
++(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags   message:(NSString*)message url:(NSString*)url {
 	TL_messages_botCallbackAnswer* obj = [[TL_messages_botCallbackAnswer alloc] init];
 	obj.flags = flags;
+	
 	
 	obj.message = message;
 	obj.url = url;
@@ -26255,11 +26421,13 @@
 -(void)serialize:(SerializedData*)stream {
 	[stream writeInt:self.flags];
 	
+	
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
 	if(self.flags & (1 << 2)) {[stream writeString:self.url];}
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	if(self.flags & (1 << 0)) {super.message = [stream readString];}
 	if(self.flags & (1 << 2)) {super.url = [stream readString];}
@@ -26270,6 +26438,7 @@
     TL_messages_botCallbackAnswer *objc = [[TL_messages_botCallbackAnswer alloc] init];
     
     objc.flags = self.flags;
+    
     
     objc.message = self.message;
     objc.url = self.url;
@@ -26294,6 +26463,8 @@
         
             
 -(BOOL)isAlert {return (self.flags & (1 << 1)) > 0;}
+                        
+-(BOOL)isHas_url {return (self.flags & (1 << 3)) > 0;}
                         
 -(void)setMessage:(NSString*)message
 {

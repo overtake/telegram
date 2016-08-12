@@ -70,8 +70,8 @@
 +(SSignal *)emojiSignal:(TL_conversation *)conversation actionType:(TGModernSendControlType)actionType {
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
-        
-        [subscriber putNext:@(actionType == TGModernSendControlSendType || actionType == TGModernSendControlRecordType || actionType == TGModernSendControlInlineRequestType)];
+        //actionType == TGModernSendControlSendType || actionType == TGModernSendControlRecordType || actionType == TGModernSendControlInlineRequestType || actionType == TGModernSendControlInlineRequestType
+        [subscriber putNext:@(YES)];
         
         [subscriber putCompletion];
         

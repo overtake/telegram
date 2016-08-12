@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16.
+//  Auto created by Mikhail Filimonov on 05.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1292,5 +1292,11 @@
 @property (nonatomic, strong) NSString* phone_code;
 
 +(TLAPI_account_confirmPhone*)createWithPhone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code;
+@end
+
+@interface TLAPI_channels_getAdminedPublicChannels : TLApiObject
+
+
++(TLAPI_channels_getAdminedPublicChannels*)create;
 @end
 

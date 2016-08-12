@@ -40,23 +40,36 @@
     [super pushViewController:viewController animated:animated];
 }
 
+-(void)goBackWithAnimation:(BOOL)animated {
+
+    [super goBackWithAnimation:animated];
+    
+    [self updateInlinePlayer:self.currentController];
+
+}
+
 -(void)updateInlinePlayer:(TMViewController *)viewController  {
     [_inlineAudioPlayer setStyle:TGAudioPlayerGlobalStyleMini animated:NO];
-    //[_inlineAudioPlayer setFrameOrigin:NSMakePoint(0, NSHeight(self.view.frame) - (viewController.isNavigationBarHidden ? 0 : NSHeight(self.nagivationBarView.frame)) - 50)];
+    [_inlineAudioPlayer setFrameOrigin:NSMakePoint(0, NSHeight(self.view.frame) - (viewController.isNavigationBarHidden ? 0 : self.navigationOffset) - 50)];
 }
 
 
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller {
-//    if(!_inlineAudioPlayer) {
-//        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - NSHeight(self.nagivationBarView.frame) - 50, NSWidth(self.view.frame), 50) globalController:controller];
-//        [self.view addSubview:_inlineAudioPlayer];
-//    }
+    if(!_inlineAudioPlayer) {
+        _inlineAudioPlayer = [[TGInlineAudioPlayer alloc] initWithFrame:NSMakeRect(0, NSHeight(self.view.frame) - self.navigationOffset - 50, NSWidth(self.view.frame), 50) globalController:controller];
+        [self.view addSubview:_inlineAudioPlayer];
+    }
     
+
     [self.inlineAudioPlayer show:controller ? controller.conversation : self.messagesViewController.conversation navigation:self];
     
     [self.currentController.view setFrameSize:NSMakeSize(NSWidth(self.currentController.view.frame), self.view.bounds.size.height - self.navigationOffset - self.viewControllerTopOffset)];
     
     
+}
+
+-(TGAudioGlobalController *)inlineController {
+    return _inlineAudioPlayer.audioController;
 }
 
 -(void)hideInlinePlayer:(TGAudioGlobalController *)controller {

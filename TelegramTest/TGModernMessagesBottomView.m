@@ -58,7 +58,7 @@
 @implementation TGModernMessagesBottomView
 
 
-const float defYOffset = 12;
+const float defYOffset = 8;
 
 -(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController {
     if(self = [super initWithFrame:frameRect]) {
@@ -268,7 +268,7 @@ const float defYOffset = 12;
     
     height = self.defTextViewHeight;
     
-    NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 58);
+    NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 50);
     
     NSSize bottomSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? MAX(_bottomHeight,0) + (_imageAttachmentsController.isShown && _sendControlView.type != TGModernSendControlEditType ? NSHeight(_imageAttachmentsController.frame) : 0) : 0);
     NSSize fullSize = NSMakeSize(NSWidth(self.frame), topSize.height + bottomSize.height);
@@ -280,7 +280,7 @@ const float defYOffset = 12;
     [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
-    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
+    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 && _actionState != TGModernMessagesBottomViewActionsState ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
 
 
     [_imageAttachmentsController moveWithCAAnimation:NSMakePoint(NSMinX(_imageAttachmentsController.frame), _imageAttachmentsController.isShown ? _bottomHeight : _bottomHeight - NSHeight(_imageAttachmentsController.frame)) animated:animated];
@@ -371,6 +371,7 @@ const float defYOffset = 12;
 
     
     _actionState = state;
+
     
     if(state == TGModernMessagesBottomViewActionsState) {
         [self addSubview:_messageActionsView positioned:NSWindowBelow relativeTo:_ts];
@@ -389,9 +390,9 @@ const float defYOffset = 12;
 
     
 
-    if(state != TGModernMessagesBottomViewNormalState && state != TGModernMessagesBottomViewRecordAudio)
+    if(state != TGModernMessagesBottomViewNormalState && state != TGModernMessagesBottomViewRecordAudio) {
         [_topContainerView removeFromSuperview:animated];
-    else if(!_topContainerView.superview) {
+    } else if(!_topContainerView.superview) {
         [self addSubview:_topContainerView positioned:NSWindowBelow relativeTo:_ts];
         [_topContainerView performCAShow:NO];
         
@@ -429,6 +430,7 @@ const float defYOffset = 12;
     
     if(_inputTemplate.peer_id != inputTemplate.peer_id)
         [self setOnClickToLockedView:nil];
+    
     
     _inputTemplate = inputTemplate;
     

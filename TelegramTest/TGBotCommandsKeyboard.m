@@ -81,6 +81,25 @@
     return self;
 }
 
+NSImage *tint_image_share_inline_bot() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [image_share_inline_bot() imageTintedWithColor:GRAY_ICON_COLOR];
+    });
+    
+    return image;
+}
+
+NSImage *tint_image_bot_inline_button_url() {
+    static NSImage *image;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        image = [image_bot_inline_button_url() imageTintedWithColor:GRAY_ICON_COLOR];
+    });
+    
+    return image;
+}
 
 -(void)setKeyboardButton:(TLKeyboardButton *)keyboardButton {
     _keyboardButton = keyboardButton;
@@ -95,7 +114,7 @@
     
     if([keyboardButton isKindOfClass:[TL_keyboardButtonUrl class]] || [keyboardButton isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
         if(!_inlineBotUrlImageView) {
-            _inlineBotUrlImageView = imageViewWithImage([keyboardButton isKindOfClass:[TL_keyboardButtonSwitchInline class]] ? image_share_inline_bot() : image_bot_inline_button_url());
+            _inlineBotUrlImageView = imageViewWithImage([keyboardButton isKindOfClass:[TL_keyboardButtonSwitchInline class]] ? tint_image_share_inline_bot() : tint_image_bot_inline_button_url());
             [self addSubview:_inlineBotUrlImageView];
         }
         

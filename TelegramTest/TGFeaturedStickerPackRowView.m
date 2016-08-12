@@ -88,12 +88,17 @@
     
     [TMViewController showModalProgress];
     
-    
-    [[MessageSender addStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]]] startWithNext:^(id next) {
+    [[TGModernESGViewController stickersSignal:item.set] startWithNext:^(id next) {
         
-        complete([next boolValue]);
+        [[MessageSender addStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:next]] startWithNext:^(id next) {
+            
+            complete([next boolValue]);
+            
+        }];
         
     }];
+    
+    
     
 
 }

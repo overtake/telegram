@@ -10,26 +10,26 @@
 #import "TGAudioPlayerWindow.h"
 
 @interface TGAudioController () <TGAudioPlayerDelegate>
-@property (nonatomic,assign) AudioState audioState;
+@property (nonatomic,assign) TGAudioPlayerGlobalState audioState;
 @end
 
 @implementation TGAudioController
 
 -(void)playOrPause {
     
-    if(_audioState == AudioStateWaitPlaying) {
+    if(_audioState == TGAudioPlayerGlobalStateWaitPlaying) {
         self.currentTime = 0;
         [self play:0];
         
         return;
     }
-    if(_audioState == AudioStatePaused) {
-        self.audioState = AudioStatePlaying;
+    if(_audioState == TGAudioPlayerGlobalStatePaused) {
+        self.audioState = TGAudioPlayerGlobalStatePlaying;
         [self play:self.currentTime];
         return;
     }
-    if(_audioState == AudioStatePlaying) {
-        self.audioState = AudioStatePaused;
+    if(_audioState == TGAudioPlayerGlobalStatePlaying) {
+        self.audioState = TGAudioPlayerGlobalStatePaused;
         [self.progressTimer invalidate];
         _progressTimer = nil;
         [self pause];
@@ -64,7 +64,7 @@
         [globalAudioPlayer() setDelegate:self];
         [globalAudioPlayer() playFromPosition:fromPosition];
         
-        self.audioState = AudioStatePlaying;
+        self.audioState = TGAudioPlayerGlobalStatePlaying;
         [self startTimer];
     }
 }
@@ -99,7 +99,7 @@
     if(!self.progressTimer) {
         _progressTimer = [[TGTimer alloc] initWithTimeout:1.0f/60.0f repeat:YES completion:^{
             
-            if(_audioState != AudioStatePlaying) {
+            if(_audioState != TGAudioPlayerGlobalStatePlaying) {
                 [_progressTimer invalidate];
                 _progressTimer = nil;
             }
@@ -116,7 +116,7 @@
     }
 }
 
--(void)setAudioState:(AudioState)audioState {
+-(void)setAudioState:(TGAudioPlayerGlobalState)audioState {
     _audioState = audioState;
     
     [self.delegate audioControllerSetNeedDisplay];
@@ -129,7 +129,7 @@
     
     self.currentTime = 0;
     
-    self.audioState = AudioStateWaitPlaying;
+    self.audioState = TGAudioPlayerGlobalStateWaitPlaying;
     
     [self.delegate audioControllerSetNeedDisplay];
     
@@ -138,11 +138,11 @@
 
 
 -(void)setPath:(NSString *)path  {
-    _audioState = AudioStateWaitPlaying;
+    _audioState = TGAudioPlayerGlobalStateWaitPlaying;
     _path = path;
 }
 
--(AudioState)state {
+-(TGAudioPlayerGlobalState)state {
     return _audioState;
 }
 

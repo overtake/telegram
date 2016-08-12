@@ -92,7 +92,7 @@
 @implementation LeftViewController
 
 
-static const int bottomOffset = 58;
+static const int bottomOffset = 50;
 
 - (void)loadView {
     [super loadView];

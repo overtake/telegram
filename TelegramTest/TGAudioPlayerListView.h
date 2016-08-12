@@ -11,7 +11,6 @@
 @interface TGAudioPlayerListView : TMView
 
 
-@property (nonatomic,strong) TL_conversation *conversation;
 
 @property (nonatomic,strong,readonly) NSArray *list;
 
@@ -20,6 +19,8 @@
 @property (nonatomic,strong) void (^changedAudio)(MessageTableItemAudioDocument *item);
 
 @property (nonatomic,weak) TGAudioGlobalController *controller;
+
+@property (nonatomic,assign) Class filterClass;
 
 
 -(NSImage *)getAlbumImageFromItem:(MessageTableItemAudioDocument *)item;

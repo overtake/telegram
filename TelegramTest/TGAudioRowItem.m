@@ -46,9 +46,7 @@
             _imageObject.imageSize = image_MusicStandartCover().size;
         
         }
-        
-        
-        
+  
     }
     
     return self;

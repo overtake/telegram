@@ -133,8 +133,16 @@
     return (TGAudioRowItem *)self.rowItem;
 }
 
+-(void)checkSelected:(BOOL)isSelected {
+    if(_imageView.image == self.imageView.object.placeholder) {
+        
+        TGAudioRowItem *item = (TGAudioRowItem *) [self rowItem];
+
+        _imageView.image = item.isSelected ? image_MusicStandartCover_Active() : self.imageView.object.placeholder;
+    }
+}
+
 -(void)redrawRow {
-    [super redrawRow];
     
     TGAudioRowItem *item = (TGAudioRowItem *) [self rowItem];
     
@@ -144,7 +152,6 @@
         [_imageView setFrameSize:item.imageObject.imageSize];
         
     } 
-    
     
     [_imageView setCenteredYByView:self];
     
@@ -161,8 +168,9 @@
     
     
     [_nameField setCenteredYByView:self];
-    
-    
+        
+    [super redrawRow];
+
     [self setNeedsDisplay:YES];
     
 }

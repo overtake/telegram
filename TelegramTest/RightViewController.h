@@ -19,7 +19,6 @@
 #import "GeneralSettingsViewController.h"
 #import "AboutViewController.h"
 #import "UserNameViewController.h"
-#import "AddContactViewController.h"
 #import "PrivacyViewController.h"
 #import "PrivacySettingsViewController.h"
 #import "PrivacyUserListController.h"
@@ -63,7 +62,6 @@
 @property (nonatomic, strong) GeneralSettingsViewController *generalSettingsViewController;
 @property (nonatomic, strong) AboutViewController *aboutViewController;
 @property (nonatomic, strong) UserNameViewController *userNameViewController;
-@property (nonatomic, strong) AddContactViewController *addContactViewController;
 @property (nonatomic, strong) PrivacyViewController *privacyViewController;
 @property (nonatomic, strong) PrivacySettingsViewController *lastSeenViewController;
 @property (nonatomic, strong) PrivacyUserListController *privacyUserListController;
@@ -112,8 +110,6 @@
 - (void)showUserNameController;
 - (void)showUserNameControllerWithChannel:(TL_channel *)channel completionHandler:(dispatch_block_t)completionHandler;
 
-
-- (void)showAddContactController;
 - (void)showPrivacyController;
 - (void)showLastSeenController;
 

@@ -10,7 +10,6 @@
 #import "DownloadQueue.h"
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
-#import "MessagesBottomView.h"
 #import "TGContextImportantRowItem.h"
 #import "TGModernStickRowItem.h"
 @interface TGGifSearchRowView : TMRowView

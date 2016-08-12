@@ -29,6 +29,7 @@
     return self;
 }
 
+
 -(TLDocument *)document {
     if([self.message.media isKindOfClass:[TL_messageMediaBotResult class]]) {
         return self.message.media.bot_result.document;
@@ -75,7 +76,7 @@
     [attr addAttribute:NSParagraphStyleAttributeName value:style range:attr.range];
 
     
-    _nameAttributedString = attr;
+    self.nameAttributedString = attr;
     
     [self regenerate];
 }
@@ -91,55 +92,70 @@
 }
 
 -(void)regenerate {
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
     
-    TL_documentAttributeAudio *audio = [self audioAttr];
     
-    NSString *perfomer = [audio.performer trim];
-    NSString *title = [audio.title trim];
-    
+    if(![self.path hasSuffix:@"ogg"]) {
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        TL_documentAttributeAudio *audio = [self audioAttr];
+        
+        NSString *perfomer = [audio.performer trim];
+        NSString *title = [audio.title trim];
+        
+        
+        if(audio && (title.length > 0 || perfomer.length > 0)) {
+            
+            
+            
+            if(perfomer.length > 0)
+                [attr appendString:perfomer withColor:TEXT_COLOR];
+            else
+                [attr appendString:@"Unknown Artist" withColor:TEXT_COLOR];
+            [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
+            
+            if(title.length > 0) {
+                [attr appendString:@"\n"];
+            }
+            
+            if(title.length > 0) {
+                NSRange range = [attr appendString:title withColor:NSColorFromRGB(0x7F7F7F)];
+                [attr setFont:TGSystemFont(13) forRange:range];
+            }
+            
+            
+            
+            
+        } else {
+            [attr appendString:self.document.file_name withColor:TEXT_COLOR];
+            [attr setFont:TGSystemFont(13) forRange:attr.range];
+        }
+        
+        [attr setSelectionColor:NSColorFromRGB(0xfffffe) forColor:TEXT_COLOR];
+        [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x7F7F7F)];
+        
+        
+        
+        _id3AttributedString = attr;
+        
+        
+        NSMutableAttributedString *copy = [attr mutableCopy];
+        
+        [copy setAlignment:NSCenterTextAlignment range:copy.range];
+        
+        _id3AttributedStringHeader = copy;
 
-    if(audio && (title.length > 0 || perfomer.length > 0)) {
-        
-        
-        
-        if(perfomer.length > 0)
-            [attr appendString:perfomer withColor:TEXT_COLOR];
-        else
-            [attr appendString:@"Unknown Artist" withColor:TEXT_COLOR];
-        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
-        
-        if(title.length > 0) {
-            [attr appendString:@"\n"];
-        }
-        
-        if(title.length > 0) {
-            NSRange range = [attr appendString:title withColor:NSColorFromRGB(0x7F7F7F)];
-            [attr setFont:TGSystemFont(13) forRange:range];
-        }
-        
-        
-        
-        
     } else {
-        [attr appendString:self.document.file_name withColor:TEXT_COLOR];
+        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+        
+        [attr appendString:self.message.isN_out ? NSLocalizedString(@"You", nil) : self.message.fromUser.fullName withColor:TEXT_COLOR];
+        [attr appendString:@" - " withColor:TEXT_COLOR];
+        [attr appendString:NSLocalizedString(@"ChatMedia.Voice", nil) withColor:GRAY_TEXT_COLOR];
+        
         [attr setFont:TGSystemFont(13) forRange:attr.range];
+        
+        _id3AttributedStringHeader = attr;
     }
     
-    [attr setSelectionColor:NSColorFromRGB(0xfffffe) forColor:TEXT_COLOR];
-    [attr setSelectionColor:[NSColor whiteColor] forColor:NSColorFromRGB(0x7F7F7F)];
-    
-    
-    
-    _id3AttributedString = attr;
-    
-    
-    NSMutableAttributedString *copy = [attr mutableCopy];
-    
-    [copy setAlignment:NSCenterTextAlignment range:copy.range];
-    
-    _id3AttributedStringHeader = copy;
-
 }
 
 - (Class)downloadClass {
@@ -177,9 +193,9 @@
 
 -(BOOL)makeSizeByWidth:(int)width {
     
-    _nameSize = [_nameAttributedString coreTextSizeForTextFieldForWidth:width - 40 - self.defaultOffset];
+    self.nameSize = [self.nameAttributedString coreTextSizeForTextFieldForWidth:width - 40 - self.defaultOffset];
     
-    self.contentSize = self.blockSize = NSMakeSize(_nameSize.width + 40 + self.defaultOffset, 40);
+    self.contentSize = self.blockSize = NSMakeSize(self.nameSize.width + 40 + self.defaultOffset, 40);
     
     return [super makeSizeByWidth:width];
 }

@@ -234,6 +234,11 @@
     
 }
 
+-(void)forceUpdate {
+    self.lastUserName = nil;
+    [self updateChecker];
+}
+
 -(BOOL)isNumberValid {
     NSCharacterSet* nonNumbers = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
     NSRange r = [self.textView.textView.stringValue rangeOfCharacterFromSet: nonNumbers];

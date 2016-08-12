@@ -88,7 +88,7 @@
 
 -(void)removeFromSuperview:(BOOL)animated {
     
-    if(animated) {
+    if(false) {
         CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0f toValue:0.0];
         
         TGAnimationBlockDelegate *block = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
@@ -96,6 +96,7 @@
         block.completion = ^(BOOL completed){
             if(completed)
                 [self removeFromSuperview];
+            self.layer.opacity = 1.0;
         };
         
         animation.delegate = block;
@@ -104,7 +105,7 @@
         
         [self.layer addAnimation:animation forKey:@"opacity"];
         
-        self.layer.opacity = 1.0;
+        self.layer.opacity = 0.0;
 
     } else {
         [self removeFromSuperview];

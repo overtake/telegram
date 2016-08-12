@@ -19,7 +19,7 @@
 
 @property (nonatomic,strong) TMTextField *durationField;
 
-@property (nonatomic,assign) AudioState audioState;
+@property (nonatomic,assign) TGAudioPlayerGlobalState audioState;
 @property (nonatomic,strong) TGTimer *progressTimer;
 @property (nonatomic,assign) NSTimeInterval currentTime;
 @end
@@ -79,21 +79,21 @@
 
 -(void)playOrPause {
     
-    if(_audioState == AudioStateWaitPlaying) {
+    if(_audioState == TGAudioPlayerGlobalStateWaitPlaying) {
          self.currentTime = 0;
         [self setNeedsDisplay:YES];
         [self play:0];
         
         return;
     }
-    if(_audioState == AudioStatePaused) {
-        self.audioState = AudioStatePlaying;
+    if(_audioState == TGAudioPlayerGlobalStatePaused) {
+        self.audioState = TGAudioPlayerGlobalStatePlaying;
         [globalAudioPlayer() reset];
         [self startTimer];
         return;
     }
-    if(_audioState == AudioStatePlaying) {
-        self.audioState = AudioStatePaused;
+    if(_audioState == TGAudioPlayerGlobalStatePlaying) {
+        self.audioState = TGAudioPlayerGlobalStatePaused;
         [self.progressTimer invalidate];
         self.progressTimer = nil;
         [self pause];
@@ -124,7 +124,7 @@
         [globalAudioPlayer() setDelegate:self];
         [globalAudioPlayer() playFromPosition:fromPosition];
         
-        self.audioState = AudioStatePlaying;
+        self.audioState = TGAudioPlayerGlobalStatePlaying;
         [self startTimer];
     }
 }
@@ -159,7 +159,7 @@
     if(!self.progressTimer) {
         self.progressTimer = [[TGTimer alloc] initWithTimeout:1.0f/60.0f repeat:YES completion:^{
             
-            if(_audioState != AudioStatePlaying) {
+            if(_audioState != TGAudioPlayerGlobalStatePlaying) {
                 [self.progressTimer invalidate];
                 self.progressTimer = nil;
             }
@@ -176,14 +176,14 @@
     }
 }
 
--(void)setAudioState:(AudioState)audioState {
+-(void)setAudioState:(TGAudioPlayerGlobalState)audioState {
     _audioState = audioState;
     
     [self updateDurationField];
     
-    [self.playOrPauseButton setImage:_audioState == AudioStatePlaying ? image_TempAudioPreviewPause() : image_TempAudioPreviewPlay() forControlState:BTRControlStateNormal];
+    [self.playOrPauseButton setImage:_audioState == TGAudioPlayerGlobalStatePlaying ? image_TempAudioPreviewPause() : image_TempAudioPreviewPlay() forControlState:BTRControlStateNormal];
     
-    if(_audioState == AudioStatePlaying || _audioState == AudioStatePaused) {
+    if(_audioState == TGAudioPlayerGlobalStatePlaying || _audioState == TGAudioPlayerGlobalStatePaused) {
         _waveformView.defaultColor = NSColorFromRGB(0xced9e0);
         _waveformView.progressColor = [NSColor whiteColor];
     } else {
@@ -198,7 +198,7 @@
     
     self.currentTime = 0;
     
-     self.audioState = AudioStateWaitPlaying;
+     self.audioState = TGAudioPlayerGlobalStateWaitPlaying;
     
     [self setNeedsDisplay:YES];
     
@@ -208,7 +208,7 @@
 
 -(void)setAudio_file:(NSString *)audio_file  audioAttr:(TL_documentAttributeAudio *)audioAttr {
     
-    _audioState = AudioStateWaitPlaying;
+    _audioState = TGAudioPlayerGlobalStateWaitPlaying;
     _audio_file = audio_file;
     _audioAttr = audioAttr;
     
@@ -221,7 +221,7 @@
 
 -(void)updateDurationField {
     
-    if(_audioState == AudioStatePlaying || _audioState == AudioStatePaused) {
+    if(_audioState == TGAudioPlayerGlobalStatePlaying || _audioState == TGAudioPlayerGlobalStatePaused) {
         [_durationField setStringValue:[NSString durationTransformedValue:_currentTime]];
     } else {
         [_durationField setStringValue:[NSString durationTransformedValue:_audioAttr.duration]];

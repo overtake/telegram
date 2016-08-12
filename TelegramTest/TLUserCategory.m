@@ -277,8 +277,8 @@ DYNAMIC_PROPERTY(ProfileTitle);
     
     if(!title) {
         NSMutableAttributedString *profileAttributedString = [[NSMutableAttributedString alloc] init];
-        [profileAttributedString appendString:self.fullName withColor:NSColorFromRGB(0x222222)];
-        [profileAttributedString setFont:TGSystemFont(15) forRange:profileAttributedString.range];
+        [profileAttributedString appendString:self.fullName withColor:TEXT_COLOR];
+        [profileAttributedString setFont:TGSystemFont(18) forRange:profileAttributedString.range];
         [profileAttributedString setAlignment:NSLeftTextAlignment range:profileAttributedString.range];
         [self setProfileTitle:profileAttributedString];
     }

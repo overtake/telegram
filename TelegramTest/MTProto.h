@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16.
+//  Auto created by Mikhail Filimonov on 05.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -648,7 +648,7 @@
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
-@property (nonatomic, strong) NSString* url;
+@property (nonatomic, strong) TLInputFile* url;
 @property (nonatomic, strong) NSString* q;
 @property int duration;
 @property int w;
@@ -684,6 +684,12 @@
 @end
 @interface TL_inputMediaGifExternal : TLInputMedia<NSCoding>
 +(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
+@end
+@interface TL_inputMediaPhotoExternal : TLInputMedia<NSCoding>
++(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url;
+@end
+@interface TL_inputMediaDocumentExternal : TLInputMedia<NSCoding>
++(TL_inputMediaDocumentExternal*)createWithUrl:(TLInputFile*)url;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -1316,11 +1322,13 @@
 @end
 	
 @interface TLauth_Authorization()
+@property int flags;
+@property int tmp_sessions;
 @property (nonatomic, strong) TLUser* user;
 @end
 
 @interface TL_auth_authorization : TLauth_Authorization<NSCoding>
-+(TL_auth_authorization*)createWithUser:(TLUser*)user;
++(TL_auth_authorization*)createWithFlags:(int)flags tmp_sessions:(int)tmp_sessions user:(TLUser*)user;
 @end
 	
 @interface TLauth_ExportedAuthorization()
@@ -1842,6 +1850,9 @@
 @interface TL_updateRecentStickers : TLUpdate<NSCoding>
 +(TL_updateRecentStickers*)create;
 @end
+@interface TL_updateConfig : TLUpdate<NSCoding>
++(TL_updateConfig*)create;
+@end
 	
 @interface TLupdates_State()
 @property int pts;
@@ -1973,6 +1984,7 @@
 @end
 	
 @interface TLConfig()
+@property int flags;
 @property int date;
 @property int expires;
 @property Boolean test_mode;
@@ -1994,11 +2006,12 @@
 @property int edit_time_limit;
 @property int rating_e_decay;
 @property int stickers_recent_limit;
+@property int tmp_sessions;
 @property (nonatomic, strong) NSMutableArray* disabled_features;
 @end
 
 @interface TL_config : TLConfig<NSCoding>
-+(TL_config*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay stickers_recent_limit:(int)stickers_recent_limit disabled_features:(NSMutableArray*)disabled_features;
++(TL_config*)createWithFlags:(int)flags date:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay stickers_recent_limit:(int)stickers_recent_limit tmp_sessions:(int)tmp_sessions disabled_features:(NSMutableArray*)disabled_features;
 @end
 @interface TL_config_old53 : TLConfig<NSCoding>
 +(TL_config_old53*)createWithDate:(int)date expires:(int)expires test_mode:(Boolean)test_mode this_dc:(int)this_dc dc_options:(NSMutableArray*)dc_options chat_size_max:(int)chat_size_max megagroup_size_max:(int)megagroup_size_max forwarded_count_max:(int)forwarded_count_max online_update_period_ms:(int)online_update_period_ms offline_blur_timeout_ms:(int)offline_blur_timeout_ms offline_idle_timeout_ms:(int)offline_idle_timeout_ms online_cloud_timeout_ms:(int)online_cloud_timeout_ms notify_cloud_delay_ms:(int)notify_cloud_delay_ms notify_default_delay_ms:(int)notify_default_delay_ms chat_big_size:(int)chat_big_size push_chat_period_ms:(int)push_chat_period_ms push_chat_limit:(int)push_chat_limit saved_gifs_limit:(int)saved_gifs_limit edit_time_limit:(int)edit_time_limit rating_e_decay:(int)rating_e_decay disabled_features:(NSMutableArray*)disabled_features;
@@ -2671,6 +2684,8 @@
 @property (nonatomic, strong) NSString* text;
 @property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSData* data;
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isSame_peer;
 @property (nonatomic, strong) NSString* query;
 @end
 
@@ -2690,7 +2705,7 @@
 +(TL_keyboardButtonRequestGeoLocation*)createWithText:(NSString*)text;
 @end
 @interface TL_keyboardButtonSwitchInline : TLKeyboardButton<NSCoding>
-+(TL_keyboardButtonSwitchInline*)createWithText:(NSString*)text query:(NSString*)query;
++(TL_keyboardButtonSwitchInline*)createWithFlags:(int)flags  text:(NSString*)text query:(NSString*)query;
 @end
 	
 @interface TLKeyboardButtonRow()
@@ -3166,12 +3181,13 @@
 @interface TLmessages_BotCallbackAnswer()
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isAlert;
+@property (nonatomic,assign,readonly) BOOL isHas_url;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSString* url;
 @end
 
 @interface TL_messages_botCallbackAnswer : TLmessages_BotCallbackAnswer<NSCoding>
-+(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags  message:(NSString*)message url:(NSString*)url;
++(TL_messages_botCallbackAnswer*)createWithFlags:(int)flags   message:(NSString*)message url:(NSString*)url;
 @end
 	
 @interface TLmessages_MessageEditData()

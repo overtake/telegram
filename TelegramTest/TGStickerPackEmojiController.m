@@ -298,13 +298,13 @@
         
         TGPackItem *gifpack = [[TGPackItem alloc] init];
         gifpack.packId = -3;
-        gifpack.image = image_emojiContainer8();
+        gifpack.image = [image_emojiGifContainer() imageTintedWithColor:GRAY_ICON_COLOR];
         [_packs addObject:gifpack];
         
         if(_stickers.hasRecentStickers) {
             TGPackItem *recent = [[TGPackItem alloc] init];
             recent.packId = -1;
-            recent.image = image_emojiContainer1();
+            recent.image = [image_emojiContainer1() imageTintedWithColor:GRAY_ICON_COLOR];
             [_packs addObject:recent];
         }
         
@@ -322,7 +322,7 @@
         
         TGPackItem *settings = [[TGPackItem alloc] init];
         settings.packId = -2;
-        settings.image = image_StickerSettings();
+        settings.image = [image_StickerSettings() imageTintedWithColor:GRAY_ICON_COLOR];
         [_packs addObject:settings];
     }
     

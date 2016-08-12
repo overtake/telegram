@@ -407,7 +407,7 @@ static TMTableView *tableStatic;
     
     if(theEvent.keyCode == 125 || theEvent.keyCode == 126 || theEvent.keyCode == 121 || theEvent.keyCode == 116) {
         
-        if((theEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+        if((theEvent.modifierFlags & NSAlternateKeyMask) > 0 || (theEvent.modifierFlags & NSControlKeyMask) > 0)  {
             if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
                 return;
             

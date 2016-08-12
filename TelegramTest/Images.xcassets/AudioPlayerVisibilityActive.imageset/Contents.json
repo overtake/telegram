@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "AudioPlayerVisibility.png",
+      "filename" : "Player_Min.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "AudioPlayerVisibility@2x.png",
+      "filename" : "Player_Min@2x.png",
       "scale" : "2x"
     },
     {

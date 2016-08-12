@@ -39,7 +39,7 @@
         _nameTextField = [[TMNameTextField alloc] initWithFrame:NSZeroRect];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        
+        [_nameTextField setSelector:@selector(profileTitle)];
         _statusTextField = [[TMStatusTextField alloc] init];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -183,7 +183,7 @@
     
     int totalHeight = NSHeight(_nameTextField.frame) + NSHeight(_statusTextField.frame);
     
-    [_statusTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 8, roundf((newSize.height - totalHeight)/2))];
+    [_statusTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 10, roundf((newSize.height - totalHeight)/2))];
     [_nameTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 10, roundf((newSize.height - totalHeight)/2 + NSHeight(_statusTextField.frame)))];
     
     

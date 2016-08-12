@@ -32,7 +32,7 @@
         
         self.scrollAnimation = [[TMScrollAnimation alloc] init];
         self.scrollAnimation.scrollView = self;
-        
+        self.scrollAnimation.duration = 0.4;
         [self setScrollerStyle:NSScrollerStyleOverlay];
         
 //        [self setPostsBoundsChangedNotifications:YES];
@@ -235,6 +235,7 @@
         [self.clipView scrollRectToVisible:NSMakeRect(point.x, point.y, NSWidth(self.frame), NSHeight(self.frame)) animated:NO];
         
     } else {
+        
         
         
         if(self.scrollAnimation.isAnimating) {

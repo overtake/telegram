@@ -92,7 +92,6 @@
     self.aboutViewController = [[AboutViewController alloc] initWithFrame:rect];
     self.userNameViewController = [[UserNameViewController alloc] initWithFrame:rect];
     
-    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:rect];
     
     self.lastSeenViewController = [[PrivacySettingsViewController alloc] initWithFrame:rect];
     
@@ -758,15 +757,6 @@
 
 }
 
--(void)showAddContactController {
-    if(self.navigationViewController.currentController == self.addContactViewController)
-        return;
-    
-    [self hideModalView:YES animation:NO];
-    
-    
-    [self.navigationViewController pushViewController:self.addContactViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-}
 
 - (void)showPrivacyController {
     if(self.navigationViewController.currentController == self.privacyViewController)

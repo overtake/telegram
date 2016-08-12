@@ -109,7 +109,9 @@ __attribute__((weak_import,deprecated("API newer than Deployment Target.")))
 #define BLUE_SEPARATOR_COLOR NSColorFromRGB(0x66A7DB)
 #define MIN_IMG_SIZE NSMakeSize(320,40)
 #define RED_COLOR NSColorFromRGB(0xee6363)
-
+#define DARK_GRAY_TEXT_COLOR NSColorFromRGB(0x333333)
+#define BLUE_ICON_COLOR NSColorFromRGB(0x0f8fe4)
+#define GRAY_ICON_COLOR NSColorFromRGB(0x9e9e9e)
 #define weak() __weak typeof(self) weakSelf = self;
 #define strongWeak() __block __typeof(&*self)strongSelf = weakSelf;
 #define APP_VERSION [[[[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"] componentsSeparatedByCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]] componentsJoinedByString:@""] intValue]

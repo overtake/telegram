@@ -248,6 +248,12 @@ CACHE_IMAGE(draftIcon);
 CACHE_IMAGE(AudioPlayerVisibility);
 CACHE_IMAGE(AudioPlayerVisibilityActive);
 CACHE_IMAGE(ic_send);
+
+CACHE_IMAGE(Player_Repeat);
+CACHE_IMAGE(Player_RepeatActive);
+CACHE_IMAGE(StickerLink);
+CACHE_IMAGE(emojiGifContainer);
+CACHE_IMAGE(MusicStandartCover_Active);
 @interface ImageUtils : NSObject
 
 

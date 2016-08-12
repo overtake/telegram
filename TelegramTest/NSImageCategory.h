@@ -25,4 +25,6 @@
               configBlock:(void (^)(WebPConfig *))configBlock
                     error:(NSError **)error;
 
+- (NSImage *)imageTintedWithColor:(NSColor *)tint;
+
 @end

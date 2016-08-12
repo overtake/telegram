@@ -42,8 +42,6 @@
 #import "TGPasslockModalView.h"
 #import "ASCommon.h"
 #import "TGModalView.h"
-#import "MessageInputGrowingTextView.h"
-#import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
@@ -491,9 +489,26 @@ void exceptionHandler(NSException * exception)
         }
         
        
+        /*
+         typedef NS_OPTIONS(NSUInteger, NSEventModifierFlags) {
+         NSAlphaShiftKeyMask         = 1 << 16,
+         NSShiftKeyMask              = 1 << 17,
+         NSControlKeyMask            = 1 << 18,
+         NSAlternateKeyMask          = 1 << 19,
+         NSCommandKeyMask            = 1 << 20,
+         NSNumericPadKeyMask         = 1 << 21,
+         NSHelpKeyMask               = 1 << 22,
+         NSFunctionKeyMask           = 1 << 23,
+         NSDeviceIndependentModifierFlagsMask    = 0xffff0000UL
+         };
+         */
+        
+        if((incomingEvent.modifierFlags & (NSControlKeyMask)) == NSControlKeyMask) {
+            NSLog(@"keyCode:%d",incomingEvent.keyCode);
+        }
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            if((incomingEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+            if((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0) {
                 BOOL result = YES;
                 
 //                if([responder isKindOfClass:[NSTextField class]]) {

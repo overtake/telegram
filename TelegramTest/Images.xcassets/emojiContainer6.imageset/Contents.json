@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "6.png"
+      "filename" : "Emoji_Car.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "6@2x.png"
+      "filename" : "Emoji_Car@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

@@ -829,5 +829,8 @@ static const int navigationOffset = 48;
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller {
     
 }
+-(TGAudioGlobalController *)inlineController {
+    return nil;
+}
 
 @end

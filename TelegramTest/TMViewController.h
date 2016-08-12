@@ -10,6 +10,7 @@
 #import "TMView.h"
 #import "TMTextField.h"
 #import "TMNavigationBar.h"
+#import "RBLPopover.h"
 @class MessagesViewController;
 @class TGAttachObject;
 @class TMPopover;

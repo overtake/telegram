@@ -11,7 +11,6 @@
 #import "UploadOperation.h"
 #import "TMElements.h"
 #import "MessagesDelegate.h"
-#import "MessageInputGrowingTextView.h"
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"

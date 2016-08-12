@@ -9,6 +9,9 @@
 #import "TGAudioGlobalController.h"
 #import "TGTimer.h"
 #import "TGAudioGlobalController.h"
+#import "AudioHistoryFilter.h"
+#import "MP3HistoryFilter.h"
+#import "TGAudioPlayerWindow.h"
 @interface TGAudioGlobalController ()<TGAudioPlayerDelegate> {
     TGTimer *_progressTimer;
 }
@@ -31,6 +34,7 @@
 -(instancetype)init {
     if(self = [super init]) {
         _eventListeners = [[NSMutableArray alloc] init];
+        _filterClass = [MP3HistoryFilter class];
         
     }
     
@@ -41,24 +45,44 @@
     if(_conversation == conversation)
         return;
     
-    
     _navigationController = navigation;
     
     _conversation = conversation;
     [self updateWithItem:nil];
     _currentItem = nil;
-    [_playerList setConversation:_conversation];
-    
-    
+    [_playerList setController:nil];
 
+}
+
+-(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation currentItem:(MessageTableItemAudioDocument *)currentItem {
+    if(_conversation == conversation)
+        return;
+    
+    _navigationController = navigation;
+    _autoStart = YES;
+    _conversation = conversation;
+    [self updateWithItem:currentItem];
+    
+    self.currentItem = currentItem;
+    [_playerList setController:self];
+    
+    
+}
+
+-(void)setRepeat:(BOOL)repeat {
+    _repeat = repeat;
 }
 
 -(void)hide {
     [self stopPlayer];
     [self.currentItem.downloadItem removeEvent:_downloadEventListener];
     _downloadEventListener = nil;
-    [_playerList setConversation:nil];
+    [_playerList setController:nil];
     _conversation = nil;
+    [_eventListeners removeAllObjects];
+    [_navigationController hideInlinePlayer:nil];
+    [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(_currentItem.message.n_id),KEY_PEER_ID:@(_currentItem.message.peer_id)}];
+    _currentItem = nil;
 }
 
 -(TGAudioPlayerGlobalState)pState {
@@ -71,10 +95,19 @@
     
 }
 
+-(void)setFilterClass:(Class)filterClass {
+    _filterClass = filterClass;
+    _playerList.filterClass = filterClass;
+}
+
 -(void)setPlayerList:(TGAudioPlayerListView *)playerList {
     _playerList = playerList;
     
+    _playerList.filterClass = _filterClass;
+    
     _playerList.controller = self;
+    
+    [self updateWithItem:_currentItem];
     
     weak();
     
@@ -118,6 +151,8 @@
     
     _currentItem = audioItem;
     
+    _currentItem.state = TGAudioPlayerGlobalStateWaitPlaying;
+    
     [self updateWithItem:_currentItem];
 
     
@@ -125,9 +160,7 @@
         return;
     
     
-  
-    
-    [self.eventListeners enumerateObjectsUsingBlock:^(id  <TGAudioPlayerGlobalDelegate> obj, NSUInteger idx, BOOL * _Nonnull stop) {
+   [self.eventListeners enumerateObjectsUsingBlock:^(id  <TGAudioPlayerGlobalDelegate> obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
         if([obj respondsToSelector:@selector(playerDidChangeItem:)])
             [obj playerDidChangeItem:audioItem];
@@ -203,6 +236,11 @@
     
 }
 
+
++(TGAudioGlobalController *)globalController:(TMNavigationController *)nav {
+    return [TGAudioPlayerWindow controller] ? [TGAudioPlayerWindow controller] : nav.inlineController;
+}
+
 -(void)updateDownloadListener {
     
     
@@ -257,10 +295,11 @@
 
 -(void)clear {
     [self stopPlayer];
-    [_playerList setConversation:nil];
+    [_playerList setController:nil];
 }
 
 -(void)setPlayerState:(TGAudioPlayerGlobalState)playerState {
+    _currentItem.state = playerState;
     _playerState = playerState;
     
     [self notifyAllListeners];
@@ -281,7 +320,6 @@
 
 -(void)play:(NSTimeInterval)fromPosition {
     
-    self.playerState = TGAudioPlayerGlobalStatePlaying;
     
     [globalAudioPlayer() stop];
     if(globalAudioPlayer().delegate != self)
@@ -291,10 +329,11 @@
     if(globalAudioPlayer()) {
         [globalAudioPlayer() setDelegate:self];
         [globalAudioPlayer() playFromPosition:fromPosition];
-        
-        _currentItem.state = AudioStatePlaying;
         [self startTimer];
     }
+    
+    self.playerState = TGAudioPlayerGlobalStatePlaying;
+
 }
 
 - (void)forcePause {
@@ -314,7 +353,7 @@
                 _progressTimer = nil;
             }
             
-            if(_currentItem.state != AudioStatePlaying) {
+            if(_currentItem.state != TGAudioPlayerGlobalStatePlaying) {
                 [_progressTimer invalidate];
                 _progressTimer = nil;
             }
@@ -333,19 +372,18 @@
     [_progressTimer invalidate];
     _progressTimer = nil;
     setGlobalAudioPlayer(nil);
-    _currentItem.state = AudioStateWaitPlaying;
-    self.playerState = TGAudioPlayerGlobalStatePaused;
+    self.playerState = TGAudioPlayerGlobalStateWaitPlaying;
     self.currentTime = 0;
     [_progressView setCurrentProgress:0];
     
 }
 
 -(void)nextTrack {
-    [_playerList selectNext];
+   [_playerList selectNext];
 }
 
 -(void)prevTrack {
-    [_playerList selectPrev];
+   [_playerList selectPrev];
 }
 
 -(void)pause {
@@ -398,8 +436,16 @@
 
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
-    if(self.playerState == TGAudioPlayerGlobalStatePlaying)
-        [self nextTrack];
+    if(self.playerState == TGAudioPlayerGlobalStatePlaying) {
+        if(!_repeat)
+            [self nextTrack];
+        else {
+            id item = self.currentItem;
+            [self setCurrentItem:nil];
+            [self setCurrentItem:item];
+        }
+    }
+    
 }
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
     

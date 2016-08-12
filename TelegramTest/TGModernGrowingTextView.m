@@ -15,7 +15,7 @@
 
 -(NSPoint)textContainerOrigin {
     
-    if([self numberOfLines] <= 1) {
+    if([self numberOfLines] < 10) {
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         int yOffset = 1;
         
@@ -25,6 +25,8 @@
     return [super textContainerOrigin];
     
 }
+
+
 
 
 
