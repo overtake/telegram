@@ -234,7 +234,7 @@ static NSDictionary *attributes() {
                 
                 NSImage *image = self.isSelected ? image_VerifyWhite() : image_Verify();
                 
-                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
             }
             
             if(self.item.conversation.isMute && self.style != ConversationTableCellShortStyle && self.class == [TGConversationTableCell class]) {

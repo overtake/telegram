@@ -26,7 +26,7 @@
 @property (nonatomic,strong) NSAttributedString *nameAttributedString;
 @property (nonatomic,assign) NSSize nameSize;
 
-
+- (void)tryReadContent;
 
 - (BOOL)isset;
 - (NSString *)path;

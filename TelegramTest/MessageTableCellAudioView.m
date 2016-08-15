@@ -53,6 +53,8 @@
             if(weakSelf.audioItem.state == TGAudioPlayerGlobalStateWaitPlaying) {
                 if(weakSelf.item.isset) {
                     
+                    [weakSelf.controller hide];
+                    
                     TGAudioGlobalController *global = [[TGAudioGlobalController alloc] init];
                     global.filterClass = [AudioHistoryFilter class];
                     [global setReversed:YES];
@@ -69,20 +71,13 @@
                 }
                 return;
             }
-//            if(weakSelf.audioItem.state == TGAudioPlayerGlobalStatePaused) {
-//                weakSelf.audioItem.state = TGAudioPlayerGlobalStatePlaying;
-//                weakSelf.cellState = weakSelf.cellState;
-//              //  [weakSelf play:weakSelf.currentTime];
-//                return;
-//            }
-//            if(weakSelf.audioItem.state == TGAudioPlayerGlobalStatePlaying) {
-//                weakSelf.audioItem.state = TGAudioPlayerGlobalStatePaused;
-//                weakSelf.cellState = weakSelf.cellState;
-//                [weakSelf.progressTimer invalidate];
-//                weakSelf.progressTimer = nil;
-//              //  [weakSelf pause];
-//                return;
-//            }
+            if(weakSelf.audioItem.state == TGAudioPlayerGlobalStatePaused || weakSelf.audioItem.state == TGAudioPlayerGlobalStatePlaying) {
+                
+                [weakSelf.controller playOrPause];
+                
+                return;
+            }
+           
         } forControlEvents:BTRControlEventClick];
 
         [self.containerView addSubview:_playView];
@@ -382,6 +377,11 @@
 
 -(void)playerDidChangedState:(MessageTableItemAudioDocument *)item playerState:(TGAudioPlayerGlobalState)state {
     [self updateCellState:YES];
+    
+    if(item.message.n_id == self.item.message.n_id) {
+        [self.audioItem tryReadContent];
+    }
+    
 }
 -(void)playerDidChangeItem:(MessageTableItemAudioDocument *)item {
     [self updateCellState:YES];

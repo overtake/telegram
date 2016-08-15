@@ -134,7 +134,7 @@
         
         
         if(attr.string.length > 0) {
-            [attr appendString:@"   "];
+            [attr appendString:@"    "];
         }
        
         
@@ -157,7 +157,7 @@
         NSString *key = _audioCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.Audio", nil) : NSLocalizedString(@"Modern.SharedMedia.Audios", nil);
        
         if(attr.string.length > 0) {
-            [attr appendString:@"    "];
+            [attr appendString:@"     "];
         }
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_audioCounter] withColor:BLUE_UI_COLOR];
         [attr setFont:TGSystemMediumFont(14) forRange:range];
@@ -178,7 +178,7 @@
         NSString *key = _linksCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.Link", nil) : NSLocalizedString(@"Modern.SharedMedia.Links", nil);
         
         if(attr.string.length > 0) {
-            [attr appendString:@"    "];
+            [attr appendString:@"     "];
         }
         NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_linksCounter] withColor:BLUE_UI_COLOR];
         [attr setFont:TGSystemMediumFont(14) forRange:range];

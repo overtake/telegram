@@ -28,10 +28,12 @@
         
         [_attach setCenterByView:self];
         
+        NSImage *attach_h = [image_BottomAttach() imageTintedWithColor:BLUE_ICON_COLOR];
+        
         [_attach setBackgroundImage:image_BottomAttach() forControlState:BTRControlStateNormal];
-        [_attach setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateSelected];
-        [_attach setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateSelected | BTRControlStateHover];
-        [_attach setBackgroundImage:image_AttachHighlighted() forControlState:BTRControlStateHighlighted];
+        [_attach setBackgroundImage:attach_h forControlState:BTRControlStateSelected];
+        [_attach setBackgroundImage:attach_h forControlState:BTRControlStateSelected | BTRControlStateHover];
+        [_attach setBackgroundImage:attach_h forControlState:BTRControlStateHighlighted];
         [_attach addTarget:self action:@selector(attachButtonPressed) forControlEvents:BTRControlEventMouseEntered];
         [_attach addTarget:self action:@selector(showMediaAttachPanel) forControlEvents:BTRControlEventMouseDownInside];
         
@@ -105,8 +107,8 @@
     NSMenuItem *attachPhotoOrVideoItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.PictureOrVideo", nil) withBlock:^(id sender) {
         [self showMediaAttachPanel];
     }];
-    [attachPhotoOrVideoItem setImage:image_AttachPhotoVideo()];
-    [attachPhotoOrVideoItem setHighlightedImage:image_AttachPhotoVideoHighlighted()];
+    [attachPhotoOrVideoItem setImage:[image_AttachPhotoVideo() imageTintedWithColor:GRAY_ICON_COLOR]];
+    [attachPhotoOrVideoItem setHighlightedImage:[image_AttachPhotoVideo() imageTintedWithColor:[NSColor whiteColor]]];
     [theMenu addItem:attachPhotoOrVideoItem];
     
     
@@ -117,8 +119,8 @@
         [pictureTaker setValue:[NSValue valueWithSize:NSMakeSize(640, 640)] forKey:IKPictureTakerOutputImageMaxSizeKey];
         [pictureTaker beginPictureTakerSheetForWindow:self.window withDelegate:self didEndSelector:@selector(pictureTakerValidated:code:contextInfo:) contextInfo:nil];
     }];
-    [attachTakePhotoItem setImage:image_AttachTakePhoto()];
-    [attachTakePhotoItem setHighlightedImage:image_AttachTakePhotoHighlighted()];
+    [attachTakePhotoItem setImage:[image_AttachTakePhoto() imageTintedWithColor:GRAY_ICON_COLOR]];
+    [attachTakePhotoItem setHighlightedImage:[image_AttachTakePhoto() imageTintedWithColor:[NSColor whiteColor]]];
     [theMenu addItem:attachTakePhotoItem];
     
     weak();
@@ -135,8 +137,8 @@
         
     }];
     
-    [attachLocationItem setImage:image_AttachLocation()];
-    [attachLocationItem setHighlightedImage:image_AttachLocationHighlighted()];
+    [attachLocationItem setImage:[image_AttachLocation() imageTintedWithColor:GRAY_ICON_COLOR]];
+    [attachLocationItem setHighlightedImage:[image_AttachLocation() imageTintedWithColor:[NSColor whiteColor]]];
     
     
     if(_messagesController.conversation.type != DialogTypeSecretChat && floor(NSAppKitVersionNumber) >= NSAppKitVersionNumber10_9) {
@@ -152,8 +154,8 @@
             
         }];
     }];
-    [attachFileItem setImage:image_AttachFile()];
-    [attachFileItem setHighlightedImage:image_AttachFileHighlighted()];
+    [attachFileItem setImage:[image_AttachFile() imageTintedWithColor:GRAY_ICON_COLOR]];
+    [attachFileItem setHighlightedImage:[image_AttachFile() imageTintedWithColor:[NSColor whiteColor]]];
     
     
     [theMenu addItem:attachFileItem];

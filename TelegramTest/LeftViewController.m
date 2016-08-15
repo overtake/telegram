@@ -250,7 +250,7 @@ static TMViewController *changedController;
             
             [[Telegram rightViewController].navigationViewController.viewControllerStack removeObjectsInRange:NSMakeRange(idx, [Telegram rightViewController].navigationViewController.viewControllerStack.count - idx)];
             
-            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:changedController != [[Telegram rightViewController] currentEmptyController]];
+            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:NO];
             changedController = nil;
             
         }

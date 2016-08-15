@@ -87,7 +87,7 @@
     _state = state;
 }
 
-- (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer {
+- (void)tryReadContent {
     
 
     if(!self.message.n_out && !self.message.readedContent) {

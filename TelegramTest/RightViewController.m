@@ -717,7 +717,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:NO];
 }
 
 

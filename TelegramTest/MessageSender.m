@@ -925,7 +925,7 @@ static TGLocationRequest *locationRequest;
                 [template setReplyMessage:message save:YES];
             }
             
-            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:keyboard.text]];
+            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@ %@",message.fromUser.username, keyboard.query]]];
             [template performNotification];
         } else {
             if(messagesViewController.class == [TGContextMessagesvViewController class]) {

@@ -198,7 +198,7 @@
     [self setFrame:self.frame];
     
     
-    if(self.replyObject.isEditMessage) {
+    if(self.replyObject.isEditMessage && self.replyObject.replyMessage.to_id.user_id != [UsersManager currentUserId]) {
         _editTimerLabel = [[TGTextLabel alloc] init];
         [self addSubview:_editTimerLabel];
         [_editTimerLabel setBackgroundColor:self.backgroundColor];

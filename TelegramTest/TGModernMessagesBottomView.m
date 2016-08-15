@@ -772,9 +772,12 @@ const float defYOffset = 8;
 
 -(void)checkAndDisableSendingWithInlineBot:(TLUser *)user animated:(BOOL)animated {
     
-    if(user)
+    if(user) {
+        _sendControlView.animates = NO;
         [_sendControlView setType:TGModernSendControlInlineRequestType];
-    else
+        _sendControlView.animates = self.animates;
+
+    }  else
         [self updateTextType];
     
     [self resignalActions];

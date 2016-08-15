@@ -13,6 +13,35 @@
 #import "TMCircularProgress.h"
 #import "SpacemanBlocks.h"
 
+@interface TGBottomCircularProgress : TMCircularProgress
+
+@end
+
+@implementation TGBottomCircularProgress
+
+-(void)drawRect:(NSRect)dirtyRect {
+    
+    
+    
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(0, 0, NSWidth(self.frame) , NSHeight(self.frame) ) xRadius:(NSWidth(self.frame) )/2.0 yRadius:(NSHeight(self.frame) )/2.0];
+    
+    [[NSColor whiteColor] setStroke];
+    [[NSColor clearColor] setFill];
+
+    [path setLineWidth:5.0];
+    [path fill];
+    [path stroke];
+    
+    
+    [super drawRect:dirtyRect];
+    
+}
+
+-(int)topPadding {
+    return 1;
+}
+
+@end
 
 @interface TGBottomActionsView (){
     RBLPopover *_emojipopover;
@@ -25,7 +54,7 @@
 @property (nonatomic, strong) BTRButton *secretTimer;
 @property (nonatomic, strong) BTRButton *emoji;
 
-@property (nonatomic,strong) TMCircularProgress *progressView;
+@property (nonatomic,strong) TGBottomCircularProgress *progressView;
 
 @property (nonatomic,assign) int progress;
 
@@ -39,21 +68,25 @@
         _animates = YES;
         
         
-        _progressView = [[TMCircularProgress alloc] initWithFrame:NSMakeRect(0, 0, 26, 26)];
-        [_progressView setBackgroundColor:[NSColor whiteColor]];
+        _progressView = [[TGBottomCircularProgress alloc] initWithFrame:NSMakeRect(0, 0, 22, 22)];
+        [_progressView setBackgroundColor:[NSColor clearColor]];
+        
+        
+        
+        NSImage *smile_h = [image_smile() imageTintedWithColor:BLUE_ICON_COLOR];
         
         _emoji = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_smile().size.width, image_smile().size.height)];
-        [_emoji setBackgroundImage:image_smile() forControlState:BTRControlStateNormal];
-        [_emoji setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
-        [_emoji setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected | BTRControlStateHover];
-        [_emoji setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected];
+        [_emoji setBackgroundImage:[[image_smile() imageTintedWithColor:GRAY_ICON_COLOR] imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
+        [_emoji setBackgroundImage:smile_h forControlState:BTRControlStateHighlighted];
+        [_emoji setBackgroundImage:smile_h forControlState:BTRControlStateSelected | BTRControlStateHover];
+        [_emoji setBackgroundImage:smile_h forControlState:BTRControlStateSelected];
         
         [_emoji addTarget:self action:@selector(emojiEntered:) forControlEvents:BTRControlEventMouseEntered];
         [_emoji addTarget:self action:@selector(emojiClick:) forControlEvents:BTRControlEventClick];
         
         
         _botKeyboard = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_botKeyboard().size.width, image_botKeyboard().size.height)];
-        [_botKeyboard setImage:image_botKeyboard() forControlState:BTRControlStateNormal];
+        [_botKeyboard setImage:[image_botKeyboard() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
         
         
         _botCommand = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, image_botCommand().size.width, image_botCommand().size.height)];
@@ -136,7 +169,7 @@
 
 -(void)setActiveKeyboardButton:(BOOL)active {
     [_botKeyboard setSelected:active];
-    [_botKeyboard setImage:active ? image_botKeyboardActive() : image_botKeyboard() forControlState:BTRControlStateNormal];
+    [_botKeyboard setImage:active ? [image_botKeyboard() imageTintedWithColor:BLUE_ICON_COLOR] : [image_botKeyboard() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
 }
 
 -(void)setActiveSilentMode:(BOOL)active {
@@ -281,10 +314,9 @@
         _progressView->duration = 0.2;
         [_progressView setProgress:100.0f animated:YES];
         
-
        
     } else {
-        _progressView->duration = 3.0;
+        _progressView->duration = 0.3;
         [_progressView setProgress:progress animated:YES];
     }
     

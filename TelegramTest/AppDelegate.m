@@ -508,7 +508,7 @@ void exceptionHandler(NSException * exception)
         }
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            if((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0) {
+            if(((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0 )&& incomingEvent.modifierFlags != 10617090) {
                 BOOL result = YES;
                 
 //                if([responder isKindOfClass:[NSTextField class]]) {

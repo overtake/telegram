@@ -81,8 +81,7 @@
     _conversation = nil;
     [_eventListeners removeAllObjects];
     [_navigationController hideInlinePlayer:nil];
-    [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(_currentItem.message.n_id),KEY_PEER_ID:@(_currentItem.message.peer_id)}];
-    _currentItem = nil;
+    self.currentItem = nil;
 }
 
 -(TGAudioPlayerGlobalState)pState {
@@ -138,6 +137,13 @@
 }
 
 -(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem {
+    
+    
+    if(_currentItem)
+        [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(_currentItem.message.n_id),KEY_PEER_ID:@(_currentItem.message.peer_id)}];
+    
+    if(audioItem)
+        [Notification perform:UPDATE_MESSAGE_ITEM data:@{KEY_MESSAGE_ID:@(audioItem.message.n_id),KEY_PEER_ID:@(audioItem.message.peer_id)}];
     
     [_currentItem.downloadItem removeEvent:_downloadEventListener];
     

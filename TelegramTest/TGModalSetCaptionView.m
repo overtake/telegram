@@ -110,11 +110,16 @@
         _emojiButton = [[BTRButton alloc] initWithFrame:NSMakeRect(_textView.containerView.frame.size.width - image_smile().size.width - 7, NSHeight(_textView.frame) - image_smile().size.height - 5, image_smile().size.width, image_smile().size.height)];
         [_emojiButton setAutoresizingMask:NSViewMinXMargin | NSViewMinYMargin];
         [_emojiButton.layer disableActions];
+        
+        
+        NSImage *smile_h = [image_smile() imageTintedWithColor:BLUE_ICON_COLOR];
+
+        
         [_emojiButton setBackgroundImage:image_smile() forControlState:BTRControlStateNormal];
-        [_emojiButton setBackgroundImage:image_smileHover() forControlState:BTRControlStateHover];
-        [_emojiButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateHighlighted];
-        [_emojiButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected | BTRControlStateHover];
-        [_emojiButton setBackgroundImage:image_smileActive() forControlState:BTRControlStateSelected];
+        [_emojiButton setBackgroundImage:smile_h forControlState:BTRControlStateHover];
+        [_emojiButton setBackgroundImage:smile_h forControlState:BTRControlStateHighlighted];
+        [_emojiButton setBackgroundImage:smile_h forControlState:BTRControlStateSelected | BTRControlStateHover];
+        [_emojiButton setBackgroundImage:smile_h forControlState:BTRControlStateSelected];
         
         
         [_emojiButton addTarget:self action:@selector(smileButtonEntered:) forControlEvents:BTRControlEventMouseEntered];

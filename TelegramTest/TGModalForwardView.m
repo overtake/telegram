@@ -67,6 +67,10 @@
     [self.ok setTitle:NSLocalizedString(@"Conversation.Action.Share", nil) forControlState:BTRControlStateNormal];
     [self.ok setTitleColor:GRAY_TEXT_COLOR forControlState:BTRControlStateDisabled];
     
+    [self.ok.titleLabel sizeToFit];
+    
+    [self.ok setFrameSize:NSMakeSize(NSWidth(self.ok.titleLabel.frame) + 20, NSHeight(self.ok.frame))];
+    
     _counter = [[TGCirclularCounter alloc] initWithFrame:NSMakeRect(0, 0, 50, 50)];
     
     _counter.backgroundColor = NSColorFromRGB(0x5098d3);
