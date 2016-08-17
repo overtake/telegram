@@ -24,8 +24,8 @@
     
     NSPoint scrollPoint = [[self contentView] bounds].origin;
     
-    BOOL isInverted = [[[NSUserDefaults standardUserDefaults] objectForKey:@"com.apple.swipescrolldirection"] boolValue];
     if(!isInverted)
+    BOOL isInverted = event.isDirectionInvertedFromDevice;
         scrollPoint.x += ([event scrollingDeltaY] + [event scrollingDeltaX]);
     else
         scrollPoint.x -= ([event scrollingDeltaY] + [event scrollingDeltaX]);
