@@ -17,7 +17,7 @@
 }
 
 
-- (void)scrollWheel:(NSEvent *) event
+- (void)scrollWheel:(NSEvent *)event
 {
     NSPoint scrollPoint = [[self contentView] bounds].origin;
 
