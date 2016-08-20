@@ -448,7 +448,7 @@ static long h_r_l;
 
 
 -(void)resort {
-    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:_controller.isReversed],[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.n_id" ascending:_controller.isReversed]]];
+    [_fullItems sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.date" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"self.document.message.n_id" ascending:YES]]];
 }
 
 -(NSUInteger)posAsItem:(TGAudioRowItem *)item {

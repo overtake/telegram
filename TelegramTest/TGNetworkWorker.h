@@ -30,7 +30,9 @@
 
 @property (nonatomic, readonly) NSInteger datacenterId;
 
-- (instancetype)initWithContext:(MTContext *)context datacenterId:(NSInteger)datacenterId masterDatacenterId:(NSInteger)masterDatacenterId;
+- (instancetype)initWithContext:(MTContext *)context datacenterId:(NSInteger)datacenterId masterDatacenterId:(NSInteger)masterDatacenterId queue:(ASQueue *)queue;
+
+-(void)update;
 
 - (bool)isBusy;
 - (void)setIsBusy:(bool)isBusy;

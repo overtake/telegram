@@ -595,6 +595,10 @@
 		C29E5FE81CCA365300476AE2 /* PXListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FE31CCA365300476AE2 /* PXListViewCell.m */; };
 		C29E5FEB1CCA37EB00476AE2 /* PXListView+UserInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FEA1CCA37EB00476AE2 /* PXListView+UserInteraction.m */; };
 		C29E5FEF1CCA393E00476AE2 /* TGHorizontalTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FEE1CCA393E00476AE2 /* TGHorizontalTableView.m */; };
+		C2A1E7AA1D67712500271D3D /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A1E7AB1D67712900271D3D /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
+		C2A1E7AC1D67987400271D3D /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2A1E7AD1D67987900271D3D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
@@ -649,6 +653,7 @@
 		C2B0DFA21BAB34330023982C /* ComposeActionChannelMembersBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B0DFA11BAB34330023982C /* ComposeActionChannelMembersBehavior.m */; };
 		C2B325EE1A237A420012DE34 /* TLApiObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B325ED1A237A420012DE34 /* TLApiObject.m */; };
 		C2B326081A24F77E0012DE34 /* PhoneChangeAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */; };
+		C2B562821D65E3DA00291A7B /* TGPipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B562811D65E3DA00291A7B /* TGPipWindow.m */; };
 		C2B669861BA5571C004AF678 /* TGSettingsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669851BA5571C004AF678 /* TGSettingsTableView.m */; };
 		C2B669891BA5591F004AF678 /* TGGeneralRowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B669881BA5591F004AF678 /* TGGeneralRowItem.m */; };
 		C2B6698C1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2B6698B1BA570AF004AF678 /* ComposeCreateChannelUserNameStepViewController.m */; };
@@ -900,10 +905,6 @@
 		C2EA57971C9B209E0085F72F /* NSImage+RHResizableImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A235AD31823238900D2247B /* NSImage+RHResizableImageAdditions.m */; };
 		C2EB117D1D58DA8C00FBACE1 /* TGSearchTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = C2EB117C1D58DA8C00FBACE1 /* TGSearchTextField.m */; };
 		C2EB11801D5A2CBA00FBACE1 /* TGAddContactModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2EB117F1D5A2CBA00FBACE1 /* TGAddContactModalView.m */; };
-		C2EB11811D5B85DD00FBACE1 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2EB11821D5B85E000FBACE1 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C2EB11831D5CA05200FBACE1 /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2EB11841D5CA05500FBACE1 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
 		C2EBE3211D09CD90009D9C96 /* TGGifPreviewModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2EBE3201D09CD90009D9C96 /* TGGifPreviewModalView.m */; };
 		C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED28031BFF7F0E00F19531 /* TGReportChannelModalView.m */; };
 		C2ED357D18D9FECB00D0027C /* CAProgressLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C2ED357C18D9FECB00D0027C /* CAProgressLayer.m */; };
@@ -1089,20 +1090,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2EB11811D5B85DD00FBACE1 /* HockeySDK.framework in Copy Files (6 items) */,
-				C2EB11831D5CA05200FBACE1 /* Sparkle.framework in Copy Files (6 items) */,
+				C2A1E7AA1D67712500271D3D /* Sparkle.framework in Copy Files (6 items) */,
+				C2A1E7AC1D67987400271D3D /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C2CBF3C41AF38427006BF90A /* Embed App Extensions */ = {
+		C2CBF3C41AF38427006BF90A /* Embed App Extensions (1 item) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
 			);
-			name = "Embed App Extensions";
+			name = "Embed App Extensions (1 item)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -2413,6 +2414,8 @@
 		C2B325ED1A237A420012DE34 /* TLApiObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLApiObject.m; sourceTree = "<group>"; };
 		C2B326061A24F77E0012DE34 /* PhoneChangeAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneChangeAlertController.h; sourceTree = "<group>"; };
 		C2B326071A24F77E0012DE34 /* PhoneChangeAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeAlertController.m; sourceTree = "<group>"; };
+		C2B562801D65E3DA00291A7B /* TGPipWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPipWindow.h; sourceTree = "<group>"; };
+		C2B562811D65E3DA00291A7B /* TGPipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGPipWindow.m; sourceTree = "<group>"; };
 		C2B669841BA5571C004AF678 /* TGSettingsTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSettingsTableView.h; sourceTree = "<group>"; };
 		C2B669851BA5571C004AF678 /* TGSettingsTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSettingsTableView.m; sourceTree = "<group>"; };
 		C2B669871BA5591F004AF678 /* TGGeneralRowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGGeneralRowItem.h; sourceTree = "<group>"; };
@@ -2992,8 +2995,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2EB11841D5CA05500FBACE1 /* Sparkle.framework in Frameworks */,
-				C2EB11821D5B85E000FBACE1 /* HockeySDK.framework in Frameworks */,
+				C2A1E7AB1D67712900271D3D /* Sparkle.framework in Frameworks */,
+				C2A1E7AD1D67987900271D3D /* HockeySDK.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
@@ -4592,6 +4595,8 @@
 				C267527C1A1B68F500152D9A /* TGPVImageObject.m */,
 				C2CB5D011B4AF9C000CD61DF /* TGPVDocumentObject.h */,
 				C2CB5D021B4AF9C000CD61DF /* TGPVDocumentObject.m */,
+				C2B562801D65E3DA00291A7B /* TGPipWindow.h */,
+				C2B562811D65E3DA00291A7B /* TGPipWindow.m */,
 			);
 			name = photoviewer;
 			sourceTree = "<group>";
@@ -6474,7 +6479,7 @@
 				CEB09E5517DAFC250055F150 /* Frameworks */,
 				CEB09E5617DAFC250055F150 /* Resources */,
 				0AB6A4FB1827DD4B0015920A /* Copy Files (6 items) */,
-				C2CBF3C41AF38427006BF90A /* Embed App Extensions */,
+				C2CBF3C41AF38427006BF90A /* Embed App Extensions (1 item) */,
 				C2CBF64F1AFA9DCB006BF90A /* ShellScript */,
 			);
 			buildRules = (
@@ -7570,6 +7575,7 @@
 				0AA7E1D318CD392A0064EFC7 /* UIImageView+AFNetworking.m in Sources */,
 				C20A5EE61B8CC813007F4B49 /* TGEvent.m in Sources */,
 				C2B0DF8F1BAAD9330023982C /* ComposeManagmentViewController.m in Sources */,
+				C2B562821D65E3DA00291A7B /* TGPipWindow.m in Sources */,
 				C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */,
 				C23578981C1C4DE900F38698 /* TGGLVideoPlayer.m in Sources */,
 				C20A7E5F19D7069C008844F2 /* TGActor.m in Sources */,
@@ -7710,7 +7716,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -7758,7 +7763,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
-				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;

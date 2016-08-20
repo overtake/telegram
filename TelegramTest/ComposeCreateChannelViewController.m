@@ -191,7 +191,7 @@
                                    endAngle: 360 clockwise:NO];
     
     
-    [image_Camera() drawInRect:NSMakeRect(40,NSHeight(dirtyRect) - 70, image_Camera().size.width, image_Camera().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+    [image_Camera() drawInRect:NSMakeRect(40,NSHeight(dirtyRect) - 70, image_Camera().size.width, image_Camera().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
     
     [GRAY_BORDER_COLOR set];
     [path stroke];

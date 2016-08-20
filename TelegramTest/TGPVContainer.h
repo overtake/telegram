@@ -19,6 +19,7 @@
 @property (nonatomic,strong) TL_conversation *conversation;
 
 
+
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated;
 
 -(BOOL)ifVideoFullScreenPlayingNeedToogle;

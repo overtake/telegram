@@ -129,7 +129,7 @@
             weakSelf.currentTime = globalAudioPlayer().duration * (progress/100);
             
             if(weakSelf.playerState == TGAudioPlayerGlobalStatePlaying) {
-                [globalAudioPlayer() playFromPosition:weakSelf.currentTime];
+                [self play:weakSelf.currentTime];
             }
         }
         
@@ -314,7 +314,7 @@
 
 -(void)setCurrentTime:(NSTimeInterval)currentTime {
     _currentTime = currentTime;
-    [self.progressView setCurrentProgress:(self.currentTime/globalAudioPlayer().duration) * 100];
+    [self.progressView setCurrentProgress:((float)self.currentTime/(float)globalAudioPlayer().duration) * 100.0];
     
     [self.eventListeners enumerateObjectsUsingBlock:^(id  <TGAudioPlayerGlobalDelegate> obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if([obj respondsToSelector:@selector(playerDidChangeTime:)]) {
@@ -328,13 +328,19 @@
     
     
     [globalAudioPlayer() stop];
+    
     if(globalAudioPlayer().delegate != self)
         [globalAudioPlayer().delegate audioPlayerDidFinishPlaying:globalAudioPlayer()];
+    
     setGlobalAudioPlayer([TGAudioPlayer audioPlayerForPath:[_currentItem path]]);
     
     if(globalAudioPlayer()) {
         [globalAudioPlayer() setDelegate:self];
         [globalAudioPlayer() playFromPosition:fromPosition];
+        
+        [_progressTimer invalidate];
+        _progressTimer = nil;
+        
         [self startTimer];
     }
     
@@ -443,8 +449,12 @@
 
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer {
     if(self.playerState == TGAudioPlayerGlobalStatePlaying) {
-        if(!_repeat)
-            [self nextTrack];
+        if(!_repeat) {
+            if(_reversed)
+                [self nextTrack];
+            else
+                [self prevTrack];
+        }
         else {
             id item = self.currentItem;
             [self setCurrentItem:nil];

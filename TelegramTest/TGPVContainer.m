@@ -15,7 +15,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MessageCellDescriptionView.h"
 #import "TGVideoViewerItem.h"
-
+#import "TGPipWindow.h"
 
 @interface TGZoomableImage : TGPVImageView
 @property (nonatomic,assign) NSPoint startPoint;
@@ -101,6 +101,9 @@
 
 @implementation TGVideoPlayer
 
+-(BOOL)mouseDownCanMoveWindow {
+    return [self.window isKindOfClass:[TGPipWindow class]];
+}
 
 @end
 
@@ -122,6 +125,7 @@
 
 @property (nonatomic,strong) TMLoaderView *loaderView;
 @property (nonatomic,strong) DownloadEventListener *eventListener;
+@property (nonatomic,strong) TGPipWindow *pipWindow;
 
 @end
 
@@ -574,6 +578,7 @@ static const int bottomHeight = 60;
 
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     
+    
     [_currentViewerItem.downloadItem removeEvent:_eventListener];
     [self.loaderView setHidden:currentViewerItem.isset || currentViewerItem.downloadItem == nil || currentViewerItem.downloadItem.downloadState == DownloadStateCompleted animated:animated];
     [self updateDownloadListeners:currentViewerItem.downloadItem];
@@ -599,9 +604,6 @@ static const int bottomHeight = 60;
     [self updateSize];
     
     
-
-  
-    
     [self.imageContainerView setHidden:NO];
     
     
@@ -617,21 +619,73 @@ static const int bottomHeight = 60;
             
         AVPlayer *player = [AVPlayer playerWithURL:url];
             
-        if(!_videoPlayerView) {
+        if(!_videoPlayerView ) {
             
-            _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSZeroRect];
+            if(![_currentViewerItem.previewObject.reservedObject2 isKindOfClass:[AVPlayerView class]]) {
+                _videoPlayerView = [[TGVideoPlayer alloc] initWithFrame:NSZeroRect];
+            } else {
+                _videoPlayerView = _currentViewerItem.previewObject.reservedObject2;
+                [_videoPlayerView removeFromSuperview];
+            }
+            
             _videoPlayerView.showsFullScreenToggleButton = YES;
-            [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
+            if(NSAppKitVersionNumber > NSAppKitVersionNumber10_8)
+                [_videoPlayerView setControlsStyle:AVPlayerViewControlsStyleFloating];
             [self addSubview:_videoPlayerView];
+            
+            if(NSAppKitVersionNumber > NSAppKitVersionNumber10_9) {
+                BTRButton  *view = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
+                view.backgroundColor = [NSColor clearColor];
+                [view setImage:image_pip_on() forControlState:BTRControlStateNormal];
+                
+                weak();
+                
+                [view addBlock:^(BTRControlEvents events) {
+                    
+                    if(!weakSelf.ifVideoFullScreenPlayingNeedToogle) {
+                        TGVideoPlayer *player = weakSelf.videoPlayerView;
+                        TGPhotoViewerItem *item = weakSelf.currentViewerItem;
+                        
+                        NSRect playerFrame = player.frame;
+                        NSRect superFrame = player.superview.frame;
+                        
+                        [[TGPhotoViewer viewer] hide];
+                        
+                        [player setFrame:playerFrame];
+                        
+                        TGPipWindow *pipWindow = [[TGPipWindow alloc] initWithPlayer:player origin:NSMakePoint(NSMinX(superFrame), NSMinY(superFrame) + NSMinY(playerFrame)) currentItem:item];
+                        
+                        [pipWindow makeKeyAndOrderFront:nil];
+                    } else {
+                        NSBeep();
+                    }
+                    
+                   
+                    
+                    
+                } forControlEvents:BTRControlEventClick];
+                
+                NSView *controls = [[[_videoPlayerView.subviews lastObject] subviews] lastObject];
+                
+                [view setFrameOrigin:NSMakePoint(344, 31)];
+                
+                [controls addSubview:view];
+            }
+
             
         }
         NSSize size = [self contentFullSize:self.currentViewerItem];
         [_videoPlayerView setFrame:NSMakeRect(0, roundf((self.frame.size.height - size.height) / 2), size.width, size.height)];
         
+        if(!_videoPlayerView.player) {
+            _videoPlayerView.player = player;
+            
+            [_videoPlayerView.player play];
+        } else {
+            _currentViewerItem.previewObject.reservedObject2 = nil;
+        }
        
-        _videoPlayerView.player = player;
         
-        [_videoPlayerView.player play];
         
     } else {
         if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]]) {
@@ -640,9 +694,12 @@ static const int bottomHeight = 60;
             
         }
         
-        [_videoPlayerView.player pause];
+        if(_videoPlayerView && CFGetRetainCount((__bridge CFTypeRef)(_videoPlayerView)) <= 3) {
+            [_videoPlayerView.player pause];
+            
+            _videoPlayerView.player = nil;
+        }
         
-        _videoPlayerView.player = nil;
         [_videoPlayerView removeFromSuperview];
         _videoPlayerView = nil;
     }

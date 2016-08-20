@@ -121,7 +121,15 @@
         
     }];
     
+}
+
+-(BOOL)becomeFirstResponder {
     
+    if(_tableView.count == 0) {
+        return NO;
+    }
+    
+    return [super becomeFirstResponder];
 }
 
 -(void)viewWillAppear:(BOOL)animated {

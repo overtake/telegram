@@ -9,7 +9,6 @@
 #import "DownloadItem.h"
 #import "DownloadQueue.h"
 #import "DownloadOperation.h"
-
 @interface DownloadItem ()
 @property (nonatomic,strong) NSMutableArray *events;
 @end
@@ -82,6 +81,10 @@ static int futureUniqueKey = 0;
     
 }
 
+-(BOOL)isNeedRequestAgain {
+    return NO;
+}
+
 -(void)dealloc {
     
 }
@@ -131,6 +134,8 @@ static int futureUniqueKey = 0;
     
     return [DownloadQueue dispatcher];
 }
+
+
 
 -(void)notify:(DownloadItemHandlerType)type {
     [self.deliveryQueue dispatchOnQueue:^{

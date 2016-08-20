@@ -672,11 +672,24 @@ void exceptionHandler(NSException * exception)
         
         if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 3) {
             
-            if([Telegram rightViewController].navigationViewController.currentController == [[Telegram rightViewController] messagesViewController]) {
-                [[[Telegram rightViewController] messagesViewController] showSearchBox];
+            if(appWindow().navigationController.currentController == [appWindow().navigationController messagesViewController]) {
+                [[appWindow().navigationController messagesViewController] showSearchBox];
             }
             
              return [[NSEvent alloc]init];
+            
+        }
+        
+        if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 29) {
+            
+            
+            if([[Telegram rightViewController] isModalViewActive]) {
+                [[Telegram rightViewController] modalViewSendAction:[UsersManager currentUser].dialog];
+            } else {
+                [appWindow().navigationController showMessagesViewController:[UsersManager currentUser].dialog];
+            }
+            
+            return [[NSEvent alloc]init];
             
         }
         

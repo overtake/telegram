@@ -19,11 +19,11 @@
 #import "TGPVZoomControl.h"
 #import "TGPVDocumentsBehavior.h"
 #import "TGPVChatPhotoBehavior.h"
+#import "TGPipWindow.h"
+#import "TGAudioGlobalController.h"
 @interface TGPhotoViewer ()
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
-
-
 
 @property (nonatomic,strong) TMView *background;
 
@@ -580,6 +580,19 @@ static TGPhotoViewer *viewer;
 
 
 -(void)makeKeyAndOrderFront:(id)sender {
+    
+    TGAudioGlobalController *audio = [TGAudioGlobalController globalController:appWindow().navigationController];
+    
+    if(audio) {
+        
+        if(audio.pState == TGAudioPlayerGlobalStatePlaying) {
+            [audio pause];
+        }
+        
+    }
+    
+    
+    [TGPipWindow close];
     
     self.invokeWindow = appWindow();
     

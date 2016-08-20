@@ -80,7 +80,7 @@
     TGModernSearchItem *item = (TGModernSearchItem *)self.rowItem;
 
     if(item.conversation.isVerified) {
-        [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.titleTextField.frame),NSMinY(self.titleTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [self.isSelected ? image_VerifyWhite() : image_Verify() drawInRect:NSMakeRect(NSMaxX(self.titleTextField.frame),NSMinY(self.titleTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
     }
     
 }

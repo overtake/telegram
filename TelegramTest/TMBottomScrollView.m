@@ -61,7 +61,9 @@
 
 
 -(void)setHidden:(BOOL)flag {
-   
+
+    
+    self.alphaValue = !flag ? 0.0 : 1.0;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
         
@@ -69,13 +71,16 @@
         
     } completionHandler:^{
          [super setHidden:flag];
+        
+        if(flag) {
+            [self setMessagesCount:0];
+            [self dropCounter];
+            [self sizeToFit];
+        }
+        
     }];
     
-    if(flag) {
-        [self setMessagesCount:0];
-        [self dropCounter];
-        [self sizeToFit];
-    }
+    
     
 }
 
@@ -83,10 +88,15 @@
 - (void)clickHandler {
 
     if(_callback) {
-        _callback();
+        
         [self setHidden:YES];
+
+         _callback();
+        
     }
 }
+
+
 
 - (void)handleStateChange {
     [self setNeedsDisplay:YES];
@@ -133,33 +143,6 @@
     [path stroke];
     
 
-    
-    
-    
-   // if(self.messagesCount) {
-        
-        
-        
-//        NSSize size = [self.messagesCountAttributedString size];
-//        size.width = ceil(size.width) ;
-//        
-//        int max = MAX(size.width,size.height);
-//    
-//        int cmax = max + 10;
-//    
-//        NSBezierPath *cpath = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(roundf((NSWidth(self.frame) - cmax)/2.0), NSHeight(self.frame) - cmax, cmax, cmax) xRadius:cmax/2.0f yRadius:cmax/2.0f];
-//        
-//        [BLUE_UI_COLOR setFill];
-//        
-//         NSPoint point = NSMakePoint(roundf((NSWidth(self.frame) - size.width)/2.0), NSHeight(self.frame) - ((float)cmax - size.height/2.0));
-//        
-//        [cpath fill];
-//        
-    
-        
-       // [self.messagesCountAttributedString drawAtPoint:point];
-  //  }
-    
     
     NSPoint ipoint;
     

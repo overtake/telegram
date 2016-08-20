@@ -138,6 +138,7 @@
     self.object = nil;
     self.successHandler = nil;
     self.errorHandler = nil;
+    
 }
 
 - (void)completeHandler {

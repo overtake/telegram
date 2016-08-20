@@ -51,6 +51,7 @@
         
         self.stateImages = [[NSMutableDictionary alloc] init];
         [self addSubview:self.imageView];
+        
     }
     
     return self;

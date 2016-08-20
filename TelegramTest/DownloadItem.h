@@ -79,9 +79,9 @@ typedef enum {
 @property (nonatomic,assign) BOOL isRemoteLoaded;
 
 
+@property (nonatomic,assign,readonly) int date;
 
-
-
+-(BOOL)isNeedRequestAgain;
 
 //@property (atomic,copy) DownloadItemHandler progressHandler;
 //@property (atomic,copy) DownloadItemHandler errorHandler;

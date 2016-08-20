@@ -683,7 +683,7 @@ const float defYOffset = 8;
             if(type == TGHintViewShowMentionType) {
                 [_messagesController.hintView showMentionPopupWithQuery:search conversation:_messagesController.conversation chat:_messagesController.conversation.chat allowInlineBot:[_textView.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
                 
-            } else if(type == TGHintViewShowHashtagType && [check isEqualToString:@" "]) {
+            } else if(type == TGHintViewShowHashtagType) {
                 
                 [_messagesController.hintView showHashtagHintsWithQuery:search conversation:_messagesController.conversation peer_id:_messagesController.conversation.peer_id choiceHandler:callback];
                 

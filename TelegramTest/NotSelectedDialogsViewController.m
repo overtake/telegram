@@ -10,6 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "TGCTextView.h"
 @interface NotSelectedDialogsViewController()
+@property (nonatomic,strong) NSTextView *hiddenView;
 @end
 
 @implementation NotSelectedDialogsViewController
@@ -18,6 +19,8 @@
     self = [super initWithFrame:frame];
     if(self) {
         self.isNavigationBarHidden = YES;
+        
+        
     }
     return self;
 }
@@ -32,6 +35,12 @@
     NSView *containerView = [[NSView alloc] init];
     [self.view addSubview:containerView];
 
+    
+    _hiddenView = [[NSTextView alloc] init];
+
+    [self.view addSubview:_hiddenView];
+    
+    
     
     weak();
     
@@ -75,6 +84,8 @@
   //  [self.view.window makeFirstResponder:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecomeNotification:) name:NSWindowDidBecomeKeyNotification object:self.view.window];
+    
+   // [[Telegram leftViewController] becomeFirstResponder];
     
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        [self.view.window makeFirstResponder:nil];

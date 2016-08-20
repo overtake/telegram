@@ -153,13 +153,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGInputMessageTemplate.m"
-            timestampString = "490810908.124486"
+            filePath = "TelegramTest/TGStickerPackEmojiController.m"
+            timestampString = "493316798.948686"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "466"
-            endingLineNumber = "466"
-            landmarkName = "-copy"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
+            landmarkName = "-didSelected:scrollToPack:selectItem:disableAnimation:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

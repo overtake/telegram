@@ -289,7 +289,8 @@
         
         NSRange range = [self insertMessageTableItemsToList:items startPosition:pos needCheckLastMessage:YES backItems:&items checkActive:NO];
         
-        [self insertAndGoToEnd:range forceEnd:NO items:@[_unreadMark]];
+        [self insertAndGoToEnd:range forceEnd:NO items:items];
+        scrolledAfterAddedUnreadMark = NO;
         
        // [self messagesLoadedTryToInsert:@[_unreadMark] pos:_jumpToBottomButton.messagesCount+1 next:NO];
 
@@ -693,6 +694,7 @@ static NSMutableDictionary *savedScrolling;
                             [[NSAnimationContext currentContext] setDuration:0.0f];
                             [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
                             [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                            [self scrollToUnreadItemWithStartPositionChecking];
                             
                             //                        NSTableRowView *rowView = [self.table rowViewAtRow:index makeIfNecessary:NO];
                             //
@@ -810,6 +812,8 @@ static NSMutableDictionary *savedScrolling;
                
                 [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
                 [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+                [self scrollToUnreadItemWithStartPositionChecking];
+
             }
             
             
@@ -831,6 +835,8 @@ static NSMutableDictionary *savedScrolling;
             
             [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
             [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
+            [self scrollToUnreadItemWithStartPositionChecking];
+
         }
     };
     
@@ -904,8 +910,8 @@ static NSMutableDictionary *savedScrolling;
                 
                 if(index != NSNotFound) {
                     [self.table noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:index]];
-                    
                     [self.table reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:index] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                    [self scrollToUnreadItemWithStartPositionChecking];
                 }
 
             }
@@ -1995,6 +2001,8 @@ static NSTextAttachment *headerMediaIcon() {
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     [self updateScrollBtn];
     
+    scrolledAfterAddedUnreadMark = YES;
+    
     if([self.table.scrollView isNeedUpdateTop]) {
         
         [self.historyController prevStateAsync:^(ChatHistoryState state,ChatHistoryController *controller) {
@@ -2163,6 +2171,8 @@ static NSTextAttachment *headerMediaIcon() {
     {
         _unreadMark = [[MessageTableItemUnreadMark alloc] initWithCount:0 type:RemoveUnreadMarkAfterSecondsType];
     }
+    
+    scrolledAfterAddedUnreadMark = NO;
     
     [self messagesLoadedTryToInsert:@[_unreadMark] pos:0 next:NO];
 }
@@ -2600,6 +2610,7 @@ static NSTextAttachment *headerMediaIcon() {
                 NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:row];
                 [self.table noteHeightOfRowsWithIndexesChanged:indexSet];
                 [self.table reloadDataForRowIndexes:indexSet columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+                [self scrollToUnreadItemWithStartPositionChecking];
             }
             backItem = item;
             row--;
@@ -3435,6 +3446,14 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+static BOOL scrolledAfterAddedUnreadMark = NO;
+
+-(void)scrollToUnreadItemWithStartPositionChecking {
+    if(self.unreadMark.removeType == RemoveUnreadMarkAfterSecondsType && !scrolledAfterAddedUnreadMark) {
+        [self scrollToItem:self.unreadMark animated:NO centered:NO highlight:NO];
+    }
+}
+
 
 - (void)scrollToUnreadItem:(BOOL)animated {
     
@@ -3674,6 +3693,7 @@ static NSTextAttachment *headerMediaIcon() {
         [[NSAnimationContext currentContext] setDuration:0];
         [self.table noteHeightOfRowsWithIndexesChanged:rld];
         [self.table reloadDataForRowIndexes:rld columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self scrollToUnreadItemWithStartPositionChecking];
     }
     
 
@@ -3682,6 +3702,7 @@ static NSTextAttachment *headerMediaIcon() {
         [[NSAnimationContext currentContext] setDuration:0];
         [self.table noteHeightOfRowsWithIndexesChanged:set];
         [self.table reloadDataForRowIndexes:set columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self scrollToUnreadItemWithStartPositionChecking];
     }
     
     
@@ -3766,7 +3787,7 @@ static NSTextAttachment *headerMediaIcon() {
                 [self.table moveRowAtIndex:row toIndex:nRow];
             
             [self.table noteHeightOfRowsWithIndexesChanged:set];
-            
+            [self scrollToUnreadItemWithStartPositionChecking];
         }
         
         
@@ -3890,20 +3911,17 @@ static NSTextAttachment *headerMediaIcon() {
         
         else
         {
-            for (NSUInteger i = 0; i < message.length; i += messagePartLimit)
-            {
-                NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(messagePartLimit, message.length - i))];
-                if (substring.length != 0) {
-                    
-                    MessageSenderItem *sender = [[cs alloc] initWithMessage:substring forConversation:conversation entities:entities noWebpage:noWebpage  additionFlags:self.senderFlags];
-                    sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-                    
-                    [preparedItems insertObject:sender.tableItem atIndex:0];
-                    
-                    
-                }
+            
+            NSArray<NSString *> *parts = cut_messages(message,messagePartLimit);
+            
+            [parts enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                MessageSenderItem *sender = [[cs alloc] initWithMessage:obj forConversation:conversation entities:entities noWebpage:noWebpage  additionFlags:self.senderFlags];
+                sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                 
-            }
+                [preparedItems insertObject:sender.tableItem atIndex:0];
+
+            }];
+
             
             [self.historyController addItems:preparedItems conversation:conversation callback:callback sentControllerCallback:nil];
         }

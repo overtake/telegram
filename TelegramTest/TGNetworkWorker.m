@@ -11,6 +11,7 @@
 #import <MTProtoKit/MTRequestMessageService.h>
 #import <MTProtoKit/MTRequest.h>
 
+
 static int workerCount = 0;
 
 @interface TGNetworkWorker () <MTRequestMessageServiceDelegate>
@@ -20,23 +21,24 @@ static int workerCount = 0;
     MTRequestMessageService *_requestService;
     
     TGTimer *_timeoutTimer;
-
+    
     bool _isReadyToBeRemoved;
     bool _isBusy;
+    ASQueue *_queue;
 }
 
 @end
 
 @implementation TGNetworkWorker
 
-- (instancetype)initWithContext:(MTContext *)context datacenterId:(NSInteger)datacenterId masterDatacenterId:(NSInteger)masterDatacenterId
+- (instancetype)initWithContext:(MTContext *)context datacenterId:(NSInteger)datacenterId masterDatacenterId:(NSInteger)masterDatacenterId queue:(ASQueue *)queue
 {
     self = [super init];
     if (self != nil)
     {
         workerCount++;
         MTLog(@"[TGNetworkWorker#%x/%d start (%d)]", (int)self, (int)datacenterId, workerCount);
-
+        _queue = queue;
         _context = context;
         _datacenterId = datacenterId;
         
@@ -72,42 +74,49 @@ static int workerCount = 0;
 
 - (void)startTimer
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        [self clearTimer];
-        
-        __weak TGNetworkWorker *weakSelf = self;
-        _timeoutTimer = [[TGTimer alloc] initWithTimeout:30 repeat:false completion:^
-        {
-            __strong TGNetworkWorker *strongSelf = weakSelf;
-            [strongSelf timerTimeout];
-        } queue:[[ASQueue globalQueue] nativeQueue]];
-        [_timeoutTimer start];
-    }];
+    [_queue dispatchOnQueue:^
+     {
+         [self clearTimer];
+         
+         __weak TGNetworkWorker *weakSelf = self;
+         _timeoutTimer = [[TGTimer alloc] initWithTimeout:30 repeat:false completion:^
+                          {
+                              
+                            //  [_requestService requestCount:^(NSUInteger requestCount) {
+                                  
+                              __strong TGNetworkWorker *strongSelf = weakSelf;
+                              [strongSelf timerTimeout];
+                              
+                            //  }];
+                              
+                              
+                          } queue:[ASQueue globalQueue].nativeQueue];
+         [_timeoutTimer start];
+     }];
 }
 
 - (void)clearTimer
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        if (_timeoutTimer != nil)
-        {
-            [_timeoutTimer invalidate];
-            _timeoutTimer = nil;
-        }
-    }];
+    [_queue dispatchOnQueue:^
+     {
+         if (_timeoutTimer != nil)
+         {
+             [_timeoutTimer invalidate];
+             _timeoutTimer = nil;
+         }
+     }];
 }
 
 - (void)timerTimeout
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        _isReadyToBeRemoved = true;
-        
-        id<TGNetworkWorkerDelegate> delegate = _delegate;
-        if ([delegate respondsToSelector:@selector(networkWorkerReadyToBeRemoved:)])
-            [delegate networkWorkerReadyToBeRemoved:self];
-    }];
+    [_queue dispatchOnQueue:^
+     {
+         _isReadyToBeRemoved = true;
+         
+         id<TGNetworkWorkerDelegate> delegate = _delegate;
+         if ([delegate respondsToSelector:@selector(networkWorkerReadyToBeRemoved:)])
+             [delegate networkWorkerReadyToBeRemoved:self];
+     }];
 }
 
 - (bool)isBusy
@@ -115,47 +124,56 @@ static int workerCount = 0;
     return _isBusy;
 }
 
+-(void)update {
+    [_queue dispatchOnQueue:^{
+        [_mtProto pause];
+        [_mtProto resume];
+    }];
+}
+
 - (void)setIsBusy:(bool)isBusy
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        if (_isBusy != isBusy)
-        {
-            _isBusy = isBusy;
-            if (isBusy)
-                [self clearTimer];
-            else
-                [self startTimer];
-            
-            if (!_isBusy)
-            {
-                id<TGNetworkWorkerDelegate> delegate = _delegate;
-                if ([delegate respondsToSelector:@selector(networkWorkerDidBecomeAvailable:)])
-                    [delegate networkWorkerDidBecomeAvailable:self];
-            }
-        }
-    }];
+
+    
+    [_queue dispatchOnQueue:^
+     {
+         if (_isBusy != isBusy)
+         {
+             _isBusy = isBusy;
+             if (isBusy)
+                 [self clearTimer];
+             else
+                 [self startTimer];
+             
+             if (!_isBusy)
+             {
+                 id<TGNetworkWorkerDelegate> delegate = _delegate;
+                 if ([delegate respondsToSelector:@selector(networkWorkerDidBecomeAvailable:)])
+                     [delegate networkWorkerDidBecomeAvailable:self];
+             }
+         }
+     }];
 }
 
 - (void)updateReadyToBeRemoved
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        if (_isReadyToBeRemoved)
-        {
-            id<TGNetworkWorkerDelegate> delegate = _delegate;
-            if ([delegate respondsToSelector:@selector(networkWorkerReadyToBeRemoved:)])
-                [delegate networkWorkerReadyToBeRemoved:self];
-        }
-    }];
+    [_queue dispatchOnQueue:^
+     {
+         if (_isReadyToBeRemoved)
+         {
+             id<TGNetworkWorkerDelegate> delegate = _delegate;
+             if ([delegate respondsToSelector:@selector(networkWorkerReadyToBeRemoved:)])
+                 [delegate networkWorkerReadyToBeRemoved:self];
+         }
+     }];
 }
 
 - (void)addRequest:(MTRequest *)request
 {
-    [ASQueue dispatchOnStageQueue:^
-    {
-        [_requestService addRequest:request];
-    }];
+    [_queue dispatchOnQueue:^
+     {
+         [_requestService addRequest:request];
+     }];
 }
 
 - (void)cancelRequestById:(id)requestId
@@ -163,8 +181,24 @@ static int workerCount = 0;
     [_requestService removeRequestByInternalId:requestId askForReconnectionOnDrop:true];
 }
 
+- (void)cancelRequestByIdSoft:(id)requestId
+{
+    [_requestService removeRequestByInternalId:requestId askForReconnectionOnDrop:false];
+}
+
+- (void)ensureConnection
+{
+    [_mtProto requestTransportTransaction];
+}
+
 - (void)requestMessageServiceDidCompleteAllRequests:(MTRequestMessageService *)__unused requestMessageService
 {
+}
+
+- (void)requestMessageServiceAuthorizationRequired:(MTRequestMessageService *)__unused requestMessageService
+{
+    [_context updateAuthTokenForDatacenterWithId:_datacenterId authToken:nil];
+    [_context authTokenForDatacenterWithIdRequired:_datacenterId authToken:_mtProto.requiredAuthToken masterDatacenterId:_mtProto.authTokenMasterDatacenterId];
 }
 
 @end

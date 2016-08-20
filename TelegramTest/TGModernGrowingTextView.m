@@ -76,8 +76,21 @@
    return [super resignFirstResponder];
 }
 
+-(void)setString:(NSString *)string {
+    [super setString:string];
+}
 
+-(void)insertText:(id)insertString {
+    [super insertText:insertString];
+}
 
+-(void)insertText:(id)insertString replacementRange:(NSRange)replacementRange {
+    [super insertText:insertString replacementRange:replacementRange];
+}
+
+-(void)paste:(id)sender {
+    [super paste:sender];
+}
 
 @end
 
@@ -368,7 +381,7 @@
 }
 
 -(BOOL)_needShowPlaceholder {
-    return _textView.string.length == 0 && _placeholderAttributedString;
+    return _textView.string.length == 0 && _placeholderAttributedString && !_textView.hasMarkedText;
 }
 
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString update:(BOOL)update {
@@ -591,6 +604,7 @@
         int bp = 0;
     }
     
+
     
 
 }

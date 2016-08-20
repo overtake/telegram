@@ -22,7 +22,8 @@
 #import <MTProtoKit/MTRequestErrorContext.h>
 #import <MTProtoKit/MTInternalId.h>
 
-static const int TGMaxWorkerCount = 4;
+
+static const int TGMaxWorkerCount = 6;
 
 MTInternalIdClass(TGDownloadWorker)
 
@@ -440,8 +441,13 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(void)update {
-    [_mtProto pause];
-    [_mtProto resume];
+    [_queue dispatchOnQueue:^{
+        [_mtProto pause];
+        [_mtProto resume];
+    }];
+    
+    
+    
 }
 
 +(void)pause {
@@ -563,7 +569,14 @@ static NSString *kDefaultDatacenter = @"default_dc";
 
 -(void)cancelRequest:(RPCRequest *)request {
     [_queue dispatchOnQueue:^{
-         [_requestService removeRequestByInternalId:request.mtrequest.internalId];
+        
+        if(request.guard) {
+            [request.guard.worker cancelRequestById:request.mtrequest.internalId];
+            request.guard = nil;
+        } else {
+            [_requestService removeRequestByInternalId:request.mtrequest.internalId];
+        }
+        
     }];
 }
 
@@ -578,9 +591,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
         
         
         [self requestDownloadWorkerForDatacenterId:datacenterId completion:^(TGNetworkWorkerGuard *guard) {
-            
+            request.guard = guard;
             [guard.worker addRequest:[self constructRequest:request]];
-
         }];
         
     }];
@@ -593,7 +605,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [_queue dispatchOnQueue:^{
         
         [self requestDownloadWorkerForDatacenterId:self.currentDatacenter completion:^(TGNetworkWorkerGuard *guard) {
-            
+            request.guard = guard;
             [guard.worker addRequest:[self constructRequest:request]];
             
         }];
@@ -1066,7 +1078,7 @@ void remove_global_dispatcher(id internalId) {
                   
                   if (selectedWorker == nil && workerList.count < TGMaxWorkerCount)
                   {
-                      TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:[nDatacenterId integerValue] masterDatacenterId:_masterDatacenter];
+                      TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:[nDatacenterId integerValue] masterDatacenterId:_masterDatacenter queue:_queue];
                       worker.delegate = self;
                       [workerList addObject:worker];
                       

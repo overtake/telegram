@@ -240,7 +240,8 @@ NSDictionary *non_documents_mime_types() {
 void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
-        
+        if(path)
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
 }
 
@@ -758,7 +759,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(obj) {
+    if(obj && ![obj isMin]) {
         
         perform();
         

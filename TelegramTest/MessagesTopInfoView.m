@@ -358,7 +358,7 @@ static NSMutableDictionary *cache;
     
     dispatch_block_t block = ^{
         
-        if(![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg_id,chat_id]]) {
+        if(![[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"igonore_pinned_%d_%d",msg_id,chat_id]] && msg.peer_id == self.conversation.peer_id) {
             self.action = MessagesTopInfoActionPinnedMessage;
             
             TGReplyObject *replyObject = [[TGReplyObject alloc] initWithReplyMessage:msg fromMessage:nil tableItem:nil pinnedMessage:YES];

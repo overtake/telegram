@@ -268,7 +268,7 @@
 }
 
 -(BOOL)becomeFirstResponder {
-    return [super becomeFirstResponder];
+    return [self.searchTextField becomeFirstResponder];
 }
 
 -(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
@@ -342,7 +342,8 @@
 -(BOOL)resignFirstResponder {
     
     [self.searchTextField endEditing];
-    
+    [self.searchTextField setStringValue:@""];
+    [self.searchTextField resignFirstResponder];
     return YES;
 }
 

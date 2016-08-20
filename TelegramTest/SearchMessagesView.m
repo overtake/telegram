@@ -243,7 +243,6 @@
     
     [self.nextButton setBackgroundImage:_messages.count < 2 || _currentIdx <= 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
     
-    
 }
 
 -(void)next {

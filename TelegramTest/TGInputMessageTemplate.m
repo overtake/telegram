@@ -17,6 +17,8 @@
     NSMutableAttributedString *_textContainer;
 }
 
+static const int maxLength = 50000;
+
 static NSString *kYapTemplateCollection = @"kYapTemplateCollection";
 static ASQueue *queue;
 static NSMutableDictionary *list;
@@ -29,6 +31,9 @@ static NSMutableDictionary *list;
         _replyMessage = [aDecoder decodeObjectForKey:@"replyMessage"];
         _disabledWebpage = [aDecoder decodeObjectForKey:@"disabledWebpage"];
         _textContainer = [aDecoder decodeObjectForKey:@"attributedString"];
+        
+        if(_textContainer.length > maxLength)
+        _textContainer = [[_textContainer attributedSubstringFromRange:NSMakeRange(0, MIN(_textContainer.length,maxLength))] mutableCopy];
         
         _autoSave = YES;
     }
@@ -334,11 +339,16 @@ static NSMutableDictionary *list;
     }
 }
 
--(void)updateTextAndSave:(NSAttributedString *)newText {
+-(void)updateTextAndSave:(NSAttributedString *)nText {
+    
+    
+    NSAttributedString *newText = nText;
+    
+    if(newText.length > maxLength)
+        newText = [newText attributedSubstringFromRange:NSMakeRange(0, MIN(newText.length,maxLength))];
     
     BOOL save = ![_textContainer isEqualToAttributedString:newText];
     
-
 
     _textContainer = [newText mutableCopy];
     
@@ -353,10 +363,15 @@ static NSMutableDictionary *list;
 }
 
 
--(SSignal *)updateSignalText:(NSAttributedString *)newText {
+-(SSignal *)updateSignalText:(NSAttributedString *)nText {
     
     
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
+        
+        NSAttributedString *newText = nText;
+        
+        if(newText.length > maxLength)
+            newText = [newText attributedSubstringFromRange:NSMakeRange(0, MIN(newText.length,maxLength))];
         
         BOOL save = ![_textContainer isEqualToAttributedString:newText];
         BOOL changedWebpage = self.webpage != newText.string.webpageLink && ![self.webpage isEqualToString:[newText.string webpageLink]];

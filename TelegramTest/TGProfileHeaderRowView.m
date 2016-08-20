@@ -29,7 +29,7 @@
     [super drawRect:dirtyRect];
     
     if(self.item.conversation.isVerified && !self.item.isEditable) {
-        [image_Verify() drawInRect:NSMakeRect(NSMaxX(_nameTextField.frame),NSMinY(_nameTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_Verify() drawInRect:NSMakeRect(NSMaxX(_nameTextField.frame),NSMinY(_nameTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
     }
 }
 

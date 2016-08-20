@@ -247,6 +247,9 @@ CACHE_IMAGE(Player_RepeatActive);
 CACHE_IMAGE(StickerLink);
 CACHE_IMAGE(emojiGifContainer);
 CACHE_IMAGE(MusicStandartCover_Active);
+
+CACHE_IMAGE(pip_on);
+CACHE_IMAGE(pip_off);
 @interface ImageUtils : NSObject
 
 

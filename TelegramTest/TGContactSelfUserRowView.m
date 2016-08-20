@@ -36,6 +36,8 @@
         [self addSubview:_nameView];
         [self addSubview:_phoneView];
         
+        [self setToolTip:@"⌘ + 0"];
+        
     }
     
     return self;

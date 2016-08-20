@@ -308,9 +308,9 @@
             [_packs addObject:recent];
         }
         
-        NSDictionary *stickers = [_stickers allStickers];
-        
-        [[_stickers sets] enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
+        NSDictionary *stickers = [TGModernESGViewController allStickers];
+        NSArray *sets = [TGModernESGViewController allSets];
+        [sets enumerateObjectsUsingBlock:^(TL_stickerSet *obj, NSUInteger idx, BOOL *stop) {
             
             id sticker = [stickers[@(obj.n_id)] firstObject];
             
@@ -332,7 +332,7 @@
     
     
     [self.stickers scrollToBeginningOfDocument:nil];
-    if(_packs.count > 0 && reloadStickers)
+    if(_packs.count > 2 && reloadStickers)
         [self didSelected:_packs[1] scrollToPack:NO selectItem:YES disableAnimation:YES];
     
 
@@ -441,7 +441,7 @@
     return _packs.count;
 }
 - (CGFloat)listView:(PXListView*)aListView heightOfRow:(NSUInteger)row {
-    return _esgViewController.isLayoutStyle ? 58 : 44;
+    return _esgViewController.isLayoutStyle ? 50 : 44;
 }
 - (CGFloat)listView:(PXListView*)aListView widthOfRow:(NSUInteger)row {
     return MAX(roundf(NSWidth(self.frame)/(_packs.count )),48);

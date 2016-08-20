@@ -10,6 +10,7 @@
 #import "TLObject.h"
 #import "RpcError.h"
 #import <MTProtoKit/MTRequest.h>
+#import "TGNetworkWorker.h"
 @interface RPC : NSObject
 
 
@@ -21,6 +22,8 @@
 @property (nonatomic, assign) dispatch_queue_t queue;
 
 @property (nonatomic, assign) BOOL alwayContinueWithErrorContext;
+
+@property (nonatomic,strong) TGNetworkWorkerGuard *guard;
 
 typedef void (^RPCSuccessHandler)(id request, id response);
 typedef void (^RPCErrorHandler)(id request, RpcError *error);

@@ -145,7 +145,7 @@ DYNAMIC_PROPERTY(DUser);
     [_textField setTextColor:self.isSelected ? [NSColor whiteColor] : TEXT_COLOR];
     [_descField setTextColor:self.isSelected ? [NSColor whiteColor] : GRAY_TEXT_COLOR];
     
-    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : -1) )];
+    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 2 : -1) )];
     
     [_descField setFrameOrigin:NSMakePoint(xOffset, NSMinY(_textField.frame) - NSHeight(_descField.frame) + 2)];
 }

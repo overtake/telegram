@@ -34,4 +34,6 @@ NSString *mimetypefromExtension(NSString *extension);
 
 NSString* extensionForMimetype(NSString *mimetype);
 
+NSArray<NSString *> *cut_messages(NSString *message, int max_length);
+
 @end

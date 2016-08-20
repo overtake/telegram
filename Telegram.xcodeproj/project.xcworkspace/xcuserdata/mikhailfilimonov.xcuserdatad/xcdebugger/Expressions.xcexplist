@@ -993,6 +993,9 @@
          contextName = "+[SearchItem hash:]:SearchItem.m">
       </ContextState>
       <ContextState
+         contextName = "__32-[MTNetwork _processWorkerQueue]_block_invoke_2:MTNetwork.m">
+      </ContextState>
+      <ContextState
          contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke_4:TGMessagesHintView.m">
       </ContextState>
       <ContextState
@@ -6649,6 +6652,14 @@
          contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
       </ContextState>
       <ContextState
+         contextName = "__43-[TGAudioGlobalController setProgressView:]_block_invoke:TGAudioGlobalController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.currentTime">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">
       </ContextState>
       <ContextState
@@ -6778,6 +6789,9 @@
       </ContextState>
       <ContextState
          contextName = "__32-[NewLoginViewController signIn]_block_invoke227:NewLoginViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[_TMSearchTextField becomeFirstResponder]_block_invoke:TMSearchTextField.m">
       </ContextState>
       <ContextState
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
@@ -8496,6 +8510,9 @@
       </ContextState>
       <ContextState
          contextName = "-[ContactsViewController selectionDidChange:item:]:ContactsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "cut_messages:CFunctions.m">
       </ContextState>
       <ContextState
          contextName = "+[EncryptedParams findAndCreate:]:EncryptedParams.m">

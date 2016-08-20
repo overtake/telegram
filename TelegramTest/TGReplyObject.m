@@ -55,7 +55,7 @@
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
         
-        _containerHeight = 33;
+        _containerHeight = 30;
         
         if(_replyMessage != nil) {
             [self updateObject];

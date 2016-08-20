@@ -114,6 +114,9 @@
             return;
     }
     
+    if(conversation.peer_id == [UsersManager currentUserId])
+        return;
+    
     NSMutableDictionary *actions = _conversations[@(conversation.peer_id)];
     
     

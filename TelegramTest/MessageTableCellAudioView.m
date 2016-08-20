@@ -71,7 +71,7 @@
                 }
                 return;
             }
-            if(weakSelf.audioItem.state == TGAudioPlayerGlobalStatePaused || weakSelf.audioItem.state == TGAudioPlayerGlobalStatePlaying) {
+            if(weakSelf.audioItem.state == TGAudioPlayerGlobalStatePaused || weakSelf.audioItem.state == TGAudioPlayerGlobalStatePlaying || weakSelf.audioItem.state == TGAudioPlayerGlobalStateForcePaused) {
                 
                 [weakSelf.controller playOrPause];
                 
@@ -245,7 +245,7 @@
                 [self.waveformView setProgress:0];
                 break;
                 
-            case TGAudioPlayerGlobalStatePaused:
+            case TGAudioPlayerGlobalStatePaused: case TGAudioPlayerGlobalStateForcePaused:
                 [_playView setImage:voice_play_image() forControlState:BTRControlStateNormal];
                 break;
                 
@@ -264,72 +264,72 @@
     
 }
 
--(void)mouseUp:(NSEvent *)theEvent {
-    
-    [super mouseUp:theEvent];
-    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSRect rect = _waveformView.frame;
-    
-    
-    if(self.acceptTimeChanger) {
-        self.acceptTimeChanger = NO;
-        [self changeTime:pos rect:rect];
-      //  [self play:self.currentTime];
-    }
-    
-}
+//-(void)mouseUp:(NSEvent *)theEvent {
+//    
+//    [super mouseUp:theEvent];
+//    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+//    
+//    NSRect rect = _waveformView.frame;
+//    
+//    
+//    if(self.acceptTimeChanger) {
+//        self.acceptTimeChanger = NO;
+//        [self changeTime:pos rect:rect];
+//      //  [self play:self.currentTime];
+//    }
+//    
+//}
+//
+//
+//-(void)mouseDown:(NSEvent *)theEvent {
+//    [super mouseDown:theEvent];
+//    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+//    
+//    NSRect rect = _waveformView.frame;
+//    
+//    self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
+//    
+//    if(self.acceptTimeChanger) {
+//        [self changeTime:pos rect:rect];
+//       // [self pause];
+//    }
+//}
 
-
--(void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    NSRect rect = _waveformView.frame;
-    
-    self.acceptTimeChanger = NSPointInRect(pos, rect) && [globalAudioPlayer() isEqualToPath:self.item.path] && !globalAudioPlayer().isPaused;
-    
-    if(self.acceptTimeChanger) {
-        [self changeTime:pos rect:rect];
-       // [self pause];
-    }
-}
-
--(void)mouseDragged:(NSEvent *)theEvent {
-    [super mouseDragged:theEvent];
-    
-    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
-    
-    
-    if(pos.x > NSMinX(_waveformView.frame)) {
-        NSRect rect = _waveformView.frame;
-        
-        if(self.acceptTimeChanger) {
-            
-            [self changeTime:pos rect:rect];
-            
-        }
-    }
-    
-}
-
-- (void)changeTime:(NSPoint)pos rect:(NSRect)rect {
-    
-    float x0 = pos.x -rect.origin.x;
-    float percent = x0/rect.size.width;
-    
-    __block int duration;
-    
-    [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
-        duration = (float)[globalAudioPlayer() duration];
-    } synchronous:YES];
-    
-    self.currentTime =  percent * [globalAudioPlayer() duration];
-    
-   
-    
-    [self setNeedsDisplay:YES];
-}
+//-(void)mouseDragged:(NSEvent *)theEvent {
+//    [super mouseDragged:theEvent];
+//    
+//    NSPoint pos = [self.containerView convertPoint:[theEvent locationInWindow] fromView:nil];
+//    
+//    
+//    if(pos.x > NSMinX(_waveformView.frame)) {
+//        NSRect rect = _waveformView.frame;
+//        
+//        if(self.acceptTimeChanger) {
+//            
+//            [self changeTime:pos rect:rect];
+//            
+//        }
+//    }
+//    
+//}
+//
+//- (void)changeTime:(NSPoint)pos rect:(NSRect)rect {
+//    
+//    float x0 = pos.x -rect.origin.x;
+//    float percent = x0/rect.size.width;
+//    
+//    __block int duration;
+//    
+//    [[TGAudioPlayer _playerQueue] dispatchOnQueue:^{
+//        duration = (float)[globalAudioPlayer() duration];
+//    } synchronous:YES];
+//    
+//    self.currentTime =  percent * [globalAudioPlayer() duration];
+//    
+//   
+//    
+//    [self setNeedsDisplay:YES];
+//}
 
 
 

@@ -21,5 +21,7 @@
 @property (nonatomic,strong) id reservedObject;
 @property (nonatomic,strong) id reservedObject1;
 
+@property (nonatomic,weak) id reservedObject2;
+
 -(id)initWithMsdId:(long)msg_id media:(id)media peer_id:(int)peer_id;
 @end

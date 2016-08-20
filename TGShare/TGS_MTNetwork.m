@@ -301,14 +301,14 @@ static int MAX_WORKER_POLL = 5;
         NSMutableArray *poll = [[NSMutableArray alloc] init];
         
         for (int j = 0; j < MAX_WORKER_POLL; j++) {
-            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId];
+            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId queue:_queue];
             [poll addObject:worker];
         }
         [_objectiveDatacenter setObject:poll forKey:@(i)];
     }
     
     for (int i = 1; i < _datacenterCount+1; i++) {
-        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
+        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId queue:_queue];
         [_pollConnections addObject:worker];
     }
 }

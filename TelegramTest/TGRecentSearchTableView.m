@@ -369,7 +369,7 @@
         
         headerItem.isMore= !headerItem.isMore;
         
-        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self indexOfItem:headerItem]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
        
     }
     

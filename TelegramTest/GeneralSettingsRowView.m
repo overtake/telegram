@@ -241,7 +241,7 @@
             
             int y = roundf(NSHeight(self.frame)/2 - image.size.height/2);
             
-            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, y , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+            [image drawInRect:NSMakeRect(NSWidth(self.frame) - item.xOffset - image_ArrowGrey().size.width - image.size.width - 8, y , image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
         }
     }
     

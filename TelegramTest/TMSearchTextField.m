@@ -56,14 +56,26 @@
 - (BOOL)becomeFirstResponder {
     
     @try {
-//        NSString *sourceString = [[NSThread callStackSymbols] objectAtIndex:4];
-//        // Example: 1   UIKit                               0x00540c89 -[UIApplication _callInitializationDelegatesForURL:payload:suspended:] + 1163
-//        NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
-//        NSMutableArray *array = [NSMutableArray arrayWithArray:[sourceString  componentsSeparatedByCharactersInSet:separatorSet]];
-//        [array removeObject:@""];
 //        
-//        if(array.count > 4 && [[array objectAtIndex:4] isEqualToString:@"_selectFirstKeyView"])
+//        __block BOOL accept = YES;
+//        
+//        [[NSThread callStackSymbols] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            
+//            NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
+//            NSMutableArray *array = [NSMutableArray arrayWithArray:[obj  componentsSeparatedByCharactersInSet:separatorSet]];
+//            [array removeObject:@""];
+//
+//            if([array[4] hasPrefix:@"sendEvent:"] || ([array[4] hasPrefix:@"initializeMainWindow"])) {
+//                accept = NO;
+//                *stop = YES;
+//            }
+//        }];
+//        
+//        
+//        if(accept) {
 //            return NO;
+//        }
+        
         
        
 
