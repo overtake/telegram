@@ -102,7 +102,7 @@ DYNAMIC_PROPERTY(DType);
 Online
 */
 - (BOOL)isOnline {
-    return [[MTNetwork instance] getTime] < self.status.lastSeenTime;
+    return [[MTNetwork instance] getTime] < self.lastSeenTime;
 }
 
 DYNAMIC_PROPERTY(FULLUPDATETIME)
@@ -202,6 +202,7 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     [self setENCRYPTED_TITLE_FOR_MESSAGE:nil];
     [self setUserNameTitle:nil];
     [self setProfileTitle:nil];
+    [self setSTATUS_CHAT_HEADER:nil];
     
 }
 
@@ -497,6 +498,7 @@ Statuses
 - (void)rebuidStatuses {
     [self setSTATUS_MESSAGES_HEADER_VIEW:nil];
     [self setSTATUS_CHAT_HEADER:nil];
+
 //    [self statusForMessagesHeaderView];
 }
 
@@ -533,20 +535,16 @@ DYNAMIC_PROPERTY(STATUS_CHAT_HEADER);
 
 
 - (NSAttributedString *)statusForChatHeader {
-    NSMutableAttributedString *str = [self getSTATUS_CHAT_HEADER];
-    if(!str) {
-        str = [[NSMutableAttributedString alloc] init];
-        NSString *string = self.isSelf ? NSLocalizedString(@"ChatWithYourSelf", nil) : self.lastSeen;
-        NSRange range;
-        if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
-            range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
-        } else {
-            range = [str appendString:string withColor:NSColorFromRGB(0xa9a9a9)];
-        }
-        
-        [str setFont:TGSystemFont(12) forRange:range];
-        //        [self setSTATUS_MESSAGES_HEADER_VIEW:str];
+    NSMutableAttributedString *str = [[NSMutableAttributedString alloc] init];
+    NSString *string = self.isSelf ? NSLocalizedString(@"ChatWithYourSelf", nil) : self.lastSeen;
+    NSRange range;
+    if([string isEqualToString:NSLocalizedString(@"Account.Online", nil)]) {
+        range = [str appendString:NSLocalizedString(@"Account.Online", nil) withColor:BLUE_UI_COLOR];
+    } else {
+        range = [str appendString:string withColor:NSColorFromRGB(0xa9a9a9)];
     }
+    
+    [str setFont:TGSystemFont(12) forRange:range];
     
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     [paragraphStyle setAlignment:2];

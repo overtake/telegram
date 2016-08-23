@@ -1022,25 +1022,27 @@ static const int overpts = 5000;
 
 -(void)updateDifference {
     
+    [self updateDifference:NO updateConnectionState:YES];
     
-    [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
-        if(_updateState.pts == 0 || (_updateState.pts + overpts) > state.pts) {
-            [self updateDifference:NO updateConnectionState:YES];
-        } else {
-            [[[Storage manager] runDestroyer] startWithNext:^(id next) {
-                
-                _updateState = [[TGUpdateState alloc] initWithPts:state.pts qts:state.qts date:state.date seq:state.seq pts_count:0];
-                [self saveUpdateState];
-                
-                [SharedManager drop];
-                [Notification perform:DIALOGS_FLUSH_AND_RELOAD data:@{}];
-            }];
-            
-        }
-    } errorHandler:^(id request, RpcError *error) {
-        _holdUpdates = NO;
-        [self updateDifference:NO updateConnectionState:YES];
-    } timeout:0 queue:queue.nativeQueue];
+    
+//    [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
+//        if(_updateState.pts == 0 || (_updateState.pts + overpts) > state.pts) {
+//            [self updateDifference:NO updateConnectionState:YES];
+//        } else {
+//            [[[Storage manager] runDestroyer] startWithNext:^(id next) {
+//                
+//                _updateState = [[TGUpdateState alloc] initWithPts:state.pts qts:state.qts date:state.date seq:state.seq pts_count:0];
+//                [self saveUpdateState];
+//                
+//                [SharedManager drop];
+//                [Notification perform:DIALOGS_FLUSH_AND_RELOAD data:@{}];
+//            }];
+//            
+//        }
+//    } errorHandler:^(id request, RpcError *error) {
+//        _holdUpdates = NO;
+//        [self updateDifference:NO updateConnectionState:YES];
+//    } timeout:0 queue:queue.nativeQueue];
 
     
 }

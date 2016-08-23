@@ -82,6 +82,27 @@ extern NSString *const kPermissionInlineBotLocationRequest;
 
 +(NSFont *)font;
 
++(NSFont *)font11;
++(NSFont *)font12;
++(NSFont *)font13;
++(NSFont *)font14;
++(NSFont *)font15;
+
++(NSFont *)font125;
++(NSFont *)fontMedium125;
+
++(NSFont *)fontMedium11;
++(NSFont *)fontMedium12;
++(NSFont *)fontMedium13;
++(NSFont *)fontMedium14;
++(NSFont *)fontMedium15;
+
++(NSFont *)fontBold11;
++(NSFont *)fontBold12;
++(NSFont *)fontBold13;
++(NSFont *)fontBold14;
++(NSFont *)fontBold15;
+
 + (void)addEventListener:(id<SettingsListener>)listener;
 + (void)removeEventListener:(id<SettingsListener>)listener;
 

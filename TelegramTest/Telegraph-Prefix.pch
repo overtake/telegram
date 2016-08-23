@@ -5,12 +5,10 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-//#define TGDEBUG // UNDEF IN RELEASE
-//#define TGSTABLE // DEF IN stable version
-
-
 #ifdef TGDEBUG
+#ifndef TGSTABLE
 #import "TGUIMainThreadGuard.h"
+#endif
 #endif
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0

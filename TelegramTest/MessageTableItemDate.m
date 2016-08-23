@@ -18,7 +18,7 @@
         [formatter setDateFormat:@"dd MMMM"];
         
         [attr appendString:[formatter stringFromDate:object] withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(13) forRange:attr.range];
+        [attr setFont:[SettingsArchiver font13] forRange:attr.range];
         
         _text = [attr copy];
     }

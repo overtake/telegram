@@ -16,7 +16,7 @@
 #import "MessageCellDescriptionView.h"
 #import "TGVideoViewerItem.h"
 #import "TGPipWindow.h"
-
+#import "TGAudioGlobalController.h"
 @interface TGZoomableImage : TGPVImageView
 @property (nonatomic,assign) NSPoint startPoint;
 @property (nonatomic,assign) BOOL isDragged;
@@ -612,6 +612,16 @@ static const int bottomHeight = 60;
     [_photoCaptionView setHidden:[currentViewerItem isKindOfClass:[TGVideoViewerItem class]]];
     
     if([currentViewerItem isKindOfClass:[TGVideoViewerItem class]] && item.isset) {
+        
+        TGAudioGlobalController *audio = [TGAudioGlobalController globalController:appWindow().navigationController];
+        
+        if(audio) {
+            
+            if(audio.pState == TGAudioPlayerGlobalStatePlaying) {
+                [audio pause];
+            }
+            
+        }
         
         [self.imageContainerView setHidden:YES];
         

@@ -14,6 +14,10 @@
 #endif
 #endif
 
+#ifdef TGDEBUG
+#import <Sparkle/Sparkle.h>
+#endif
+
 #import "TelegramWindow.h"
 #import "LoginWindow.h"
 #import "MainWindow.h"

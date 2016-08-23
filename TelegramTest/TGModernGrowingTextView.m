@@ -202,6 +202,8 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    
+    
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces]) {
         NSString *replace = [self.string replaceSmilesToEmoji];
 
@@ -212,7 +214,7 @@
     }
     
     
-    _textView.font = TGSystemFont(13);
+    _textView.font = self.font;
     
     self.scrollView.verticalScrollElasticity = NSHeight(_scrollView.contentView.documentRect) <= NSHeight(_scrollView.frame) ? NSScrollElasticityNone : NSScrollElasticityAllowed;
     
@@ -350,9 +352,12 @@
             
             
             
+            
         } else {
             [_placeholder setHidden:!self._needShowPlaceholder];
         }
+        
+        
         
         [_placeholder setFrameOrigin:self._needShowPlaceholder ? NSMakePoint(self._startXPlaceholder, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
         
@@ -378,6 +383,11 @@
     [super setFrameSize:newSize];
     [_scrollView setFrameSize:NSMakeSize(newSize.width, newSize.height)];
     [_textView setFrameSize:NSMakeSize(NSWidth(_scrollView.frame), NSHeight(_textView.frame))];
+    
+    
+    [_placeholder sizeToFit];
+    [_placeholder setFrameSize:NSMakeSize(MIN(NSWidth(_textView.frame) - self._startXPlaceholder - 10,NSWidth(_placeholder.frame)), NSHeight(_placeholder.frame))];
+
 }
 
 -(BOOL)_needShowPlaceholder {
@@ -706,6 +716,10 @@
 
 -(Class)_textViewClass {
     return [TGGrowingTextView class];
+}
+
+-(NSFont *)font {
+    return TGSystemFont(13);
 }
 
 -(int)_startXPlaceholder {

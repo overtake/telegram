@@ -98,7 +98,7 @@ static NSCache *replyCache;
     
     [replyHeader appendString:name withColor:nameColor];
     
-    [replyHeader setFont:TGSystemMediumFont(12.5) forRange:replyHeader.range];
+    [replyHeader setFont:[SettingsArchiver fontMedium125] forRange:replyHeader.range];
     
   //  [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
     
@@ -131,7 +131,7 @@ static NSCache *replyCache;
     
     [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
     
-    [replyText setFont:TGSystemFont(12.5) forRange:replyText.range];
+    [replyText setFont:[SettingsArchiver font125] forRange:replyText.range];
     
     _replyText = replyText;
     

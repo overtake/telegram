@@ -79,6 +79,8 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     
     [Notification addObserver:self selector:@selector(notificationFlushAndReloadDialogs:) name:DIALOGS_FLUSH_AND_RELOAD];
+    
+    [Notification addObserver:self selector:@selector(didChangeLayout:) name:LAYOUT_CHANGED];
     [self addScrollEvent];
     
     
@@ -132,6 +134,10 @@
     return [super becomeFirstResponder];
 }
 
+-(void)didChangeLayout:(id)notification {
+    [self.tableView reloadData];
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -144,6 +150,8 @@
   //  });
     
 }
+
+
 
 
 -(void)didLoadedConversations:(NSArray *)conversations withRange:(NSRange)range {

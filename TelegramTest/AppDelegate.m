@@ -12,9 +12,7 @@
 //#import "AFnetworkActivityIndicatorManager.h"
 #import "SSKeychain.h"
 #import "TGSecretAction.h"
-#ifdef TGDEBUG
-#import <Sparkle/Sparkle.h>
-#endif
+
 
 #import "FileUtils.h"
 #import "MTNetwork.h"
@@ -361,12 +359,20 @@ void exceptionHandler(NSException * exception)
 - (void)initializeUpdater {
     
 
+#ifdef TGHUETA
+   
+    int bp = 0;
+    
+#endif
+    
     
 #ifdef TGDEBUG
     
     [self.updater setAutomaticallyChecksForUpdates:YES];
     
     [self.updater setFeedURL:[NSURL URLWithString:[NSBundle mainBundle].infoDictionary[@"SUFeedURL"]]];
+    
+
     
     NSLog(@"%@",self.updater.feedURL.absoluteString);
     
@@ -544,7 +550,7 @@ void exceptionHandler(NSException * exception)
             if([Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].currentEmptyController && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
                 
                 if(![responder isKindOfClass:[NSTextView class]] || ![((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
-                    [[Telegram leftViewController] becomeFirstResponder];
+                    [[Telegram leftViewController].currentTabController becomeFirstResponder:YES];
                     
                     return [[NSEvent alloc] init];
                 } 

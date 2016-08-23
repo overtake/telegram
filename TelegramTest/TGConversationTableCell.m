@@ -217,7 +217,7 @@ static NSDictionary *attributes() {
                 NSRectFill(NSMakeRect(NSMinX(_nameTextField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameTextField.frame), 1));
                 
             } else {
-                color = BLUE_COLOR_SELECT;
+                color = [Telegram isSingleLayout] ? DIALOG_BORDER_COLOR : BLUE_COLOR_SELECT;
                 [color set];
                 NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
                  _swipe.layer.backgroundColor = color.CGColor;
@@ -348,7 +348,7 @@ static NSDictionary *attributes() {
         [attr appendString:[NSString stringWithFormat:@"%@%@",self.item.typing,_dots] withColor:GRAY_TEXT_COLOR];
         [attr setSelectionColor:[NSColor whiteColor] forColor:GRAY_TEXT_COLOR];
         [attr setFont:TGSystemFont(13) forRange:attr.range];
-        [attr setSelected:self.isSelected];
+        [attr setSelected:self.isSelected && ![Telegram isSingleLayout]];
         
         
         
@@ -388,10 +388,10 @@ static NSDictionary *attributes() {
     _nameTextField.selectedAttach = nil;
     
     [_nameTextField clear];
-    [_nameTextField setSelected:self.isSelected];
+    [_nameTextField setSelected:self.isSelected && ![Telegram isSingleLayout]];
     
-    [item.messageText setSelected:self.isSelected];
-    [item.dateText setSelected:self.isSelected];
+    [item.messageText setSelected:self.isSelected && ![Telegram isSingleLayout]];
+    [item.dateText setSelected:self.isSelected && ![Telegram isSingleLayout]];
     
     
     [_nameTextField updateWithConversation:item.conversation];

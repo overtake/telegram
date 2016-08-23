@@ -297,7 +297,12 @@
 		C215BE211C7B71C800B4BF16 /* TGModernForwardCellContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE201C7B71C800B4BF16 /* TGModernForwardCellContainer.m */; };
 		C215BE2E1C7B917B00B4BF16 /* TGTextLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */; };
 		C215BE311C7B979100B4BF16 /* TGFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C215BE301C7B979100B4BF16 /* TGFont.mm */; };
+		C217498B1D6B7B8E00B2493F /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C217498C1D6B7B9200B2493F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
+		C2195A5A1D690BD10066D82E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C2195A5C1D690D160066D82E /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2195A5B1D690D160066D82E /* libopus.a */; };
+		C2195A5D1D690E7C0066D82E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
 		C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2B18D7044600253A7A /* MessageSenderItem.m */; };
 		C21C7B2F18D7334D00253A7A /* MessageSenderSecretItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B2E18D7334D00253A7A /* MessageSenderSecretItem.m */; };
 		C21C7B3218D737BD00253A7A /* ImageSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C21C7B3118D737BD00253A7A /* ImageSenderItem.m */; };
@@ -595,10 +600,6 @@
 		C29E5FE81CCA365300476AE2 /* PXListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FE31CCA365300476AE2 /* PXListViewCell.m */; };
 		C29E5FEB1CCA37EB00476AE2 /* PXListView+UserInteraction.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FEA1CCA37EB00476AE2 /* PXListView+UserInteraction.m */; };
 		C29E5FEF1CCA393E00476AE2 /* TGHorizontalTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C29E5FEE1CCA393E00476AE2 /* TGHorizontalTableView.m */; };
-		C2A1E7AA1D67712500271D3D /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2A1E7AB1D67712900271D3D /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
-		C2A1E7AC1D67987400271D3D /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C2A1E7AD1D67987900271D3D /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2A2B4261BD01FC20083DA8A /* TGHeadChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */; };
 		C2A2B42E1BD519870083DA8A /* TGHCMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B42D1BD519870083DA8A /* TGHCMessagesViewController.m */; };
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
@@ -994,11 +995,8 @@
 		CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB09E5B17DAFC250055F150 /* Cocoa.framework */; };
 		CEB09E6817DAFC250055F150 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB09E6717DAFC250055F150 /* main.m */; };
 		CEB09E6F17DAFC250055F150 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB09E6E17DAFC250055F150 /* AppDelegate.m */; };
-		CEB0A1E317DB03AA0055F150 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB0A14A17DB03A90055F150 /* AsyncSocket.m */; };
-		CEB0A1E417DB03AA0055F150 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB0A14C17DB03A90055F150 /* AsyncUdpSocket.m */; };
 		CEB0A23317DB03D40055F150 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB0A23217DB03D40055F150 /* CoreServices.framework */; };
 		CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEB0A23417DB03E00055F150 /* Security.framework */; };
-		CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2A5BF9D18DC800E0021BE68 /* libopus.a */; };
 		CEB26161180C91F900378932 /* RpcErrorParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB26160180C91F900378932 /* RpcErrorParser.m */; };
 		CEB26165180C928A00378932 /* RpcError.m in Sources */ = {isa = PBXBuildFile; fileRef = CEB26164180C928A00378932 /* RpcError.m */; };
 		CEB7ADE518128581005CB6A1 /* DownloadQueue.mm in Sources */ = {isa = PBXBuildFile; fileRef = CEB7ADE418128581005CB6A1 /* DownloadQueue.mm */; };
@@ -1090,8 +1088,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2A1E7AA1D67712500271D3D /* Sparkle.framework in Copy Files (6 items) */,
-				C2A1E7AC1D67987400271D3D /* HockeySDK.framework in Copy Files (6 items) */,
+				C2195A5A1D690BD10066D82E /* Sparkle.framework in Copy Files (6 items) */,
+				C217498B1D6B7B8E00B2493F /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1689,6 +1687,7 @@
 		C215BE301C7B979100B4BF16 /* TGFont.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TGFont.mm; sourceTree = "<group>"; };
 		C2182BBC19589246002469CA /* TL_localMessageService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TL_localMessageService.h; sourceTree = "<group>"; };
 		C2182BBD19589246002469CA /* TL_localMessageService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TL_localMessageService.m; sourceTree = "<group>"; };
+		C2195A5B1D690D160066D82E /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopus.a; sourceTree = "<group>"; };
 		C21C7B2A18D7044600253A7A /* MessageSenderItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderItem.h; sourceTree = "<group>"; };
 		C21C7B2B18D7044600253A7A /* MessageSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSenderItem.m; sourceTree = "<group>"; };
 		C21C7B2D18D7334D00253A7A /* MessageSenderSecretItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSenderSecretItem.h; sourceTree = "<group>"; };
@@ -2309,6 +2308,7 @@
 		C29E5FEA1CCA37EB00476AE2 /* PXListView+UserInteraction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PXListView+UserInteraction.m"; sourceTree = "<group>"; };
 		C29E5FED1CCA393E00476AE2 /* TGHorizontalTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHorizontalTableView.h; sourceTree = "<group>"; };
 		C29E5FEE1CCA393E00476AE2 /* TGHorizontalTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHorizontalTableView.m; sourceTree = "<group>"; };
+		C2A1E7B11D68CACA00271D3D /* store.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = store.xcconfig; sourceTree = "<group>"; };
 		C2A2B4241BD01FC20083DA8A /* TGHeadChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHeadChatPanel.h; sourceTree = "<group>"; };
 		C2A2B4251BD01FC20083DA8A /* TGHeadChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHeadChatPanel.m; sourceTree = "<group>"; };
 		C2A2B42C1BD519870083DA8A /* TGHCMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHCMessagesViewController.h; sourceTree = "<group>"; };
@@ -2940,10 +2940,6 @@
 		CEB09E6917DAFC250055F150 /* Telegraph-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Telegraph-Prefix.pch"; sourceTree = "<group>"; };
 		CEB09E6D17DAFC250055F150 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CEB09E6E17DAFC250055F150 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		CEB0A14917DB03A90055F150 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
-		CEB0A14A17DB03A90055F150 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		CEB0A14B17DB03A90055F150 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
-		CEB0A14C17DB03A90055F150 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
 		CEB0A23217DB03D40055F150 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		CEB0A23417DB03E00055F150 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		CEB2615F180C91F900378932 /* RpcErrorParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RpcErrorParser.h; sourceTree = "<group>"; };
@@ -2995,8 +2991,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C2A1E7AB1D67712900271D3D /* Sparkle.framework in Frameworks */,
-				C2A1E7AD1D67987900271D3D /* HockeySDK.framework in Frameworks */,
+				C217498C1D6B7B9200B2493F /* HockeySDK.framework in Frameworks */,
+				C2195A5D1D690E7C0066D82E /* Sparkle.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
 				C2C3D9C11CA586B70031A296 /* CoreLocation.framework in Frameworks */,
@@ -3034,12 +3030,12 @@
 				C2A5BFFA18E02D8F0021BE68 /* AudioUnit.framework in Frameworks */,
 				C2C8AB0D1A3F3BC900C857D6 /* libwebpmux.a in Frameworks */,
 				0A13B82A18199C1A00E06702 /* AddressBook.framework in Frameworks */,
+				C2195A5C1D690D160066D82E /* libopus.a in Frameworks */,
 				CE29CA7C1801355200803E22 /* libssl.a in Frameworks */,
 				CE29CA7B1801355200803E22 /* libcrypto.a in Frameworks */,
 				C2C8AB0B1A3F3BC900C857D6 /* libwebp.a in Frameworks */,
 				CE05838017FDB68C0029EFCB /* CoreFoundation.framework in Frameworks */,
 				CEB0A23517DB03E00055F150 /* Security.framework in Frameworks */,
-				CEB0D71618E0CBB000457D08 /* libopus.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6057,7 +6053,6 @@
 				CEAE5D57181ECDE900C17645 /* sql */,
 				C2CBF3B71AF38427006BF90A /* TGShare */,
 				CEB09E6117DAFC250055F150 /* Telegram */,
-				CEB0A14817DB03A90055F150 /* RunLoop */,
 				CEB09E5A17DAFC250055F150 /* Frameworks */,
 				CEB09E5917DAFC250055F150 /* Products */,
 			);
@@ -6111,6 +6106,7 @@
 				C2A5BFB218DC80620021BE68 /* opusfile */,
 				C23298D618CF5FC7000826E5 /* QuickLook.framework */,
 				CE29CA791801355200803E22 /* libcrypto.a */,
+				C2195A5B1D690D160066D82E /* libopus.a */,
 				CE29CA7A1801355200803E22 /* libssl.a */,
 				CEB0A23417DB03E00055F150 /* Security.framework */,
 				CEB0A23217DB03D40055F150 /* CoreServices.framework */,
@@ -6181,19 +6177,9 @@
 				C2B1730B19A3BF43003FBA23 /* Application.h */,
 				C23578091CAAE2370092F50A /* stable.xcconfig */,
 				C235780B1CAAE36E0092F50A /* debug.xcconfig */,
+				C2A1E7B11D68CACA00271D3D /* store.xcconfig */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		CEB0A14817DB03A90055F150 /* RunLoop */ = {
-			isa = PBXGroup;
-			children = (
-				CEB0A14917DB03A90055F150 /* AsyncSocket.h */,
-				CEB0A14A17DB03A90055F150 /* AsyncSocket.m */,
-				CEB0A14B17DB03A90055F150 /* AsyncUdpSocket.h */,
-				CEB0A14C17DB03A90055F150 /* AsyncUdpSocket.m */,
-			);
-			path = RunLoop;
 			sourceTree = "<group>";
 		};
 		CEB0A25217DB09C60055F150 /* protocol */ = {
@@ -7078,7 +7064,6 @@
 				0AA0145E1831140D00901B7A /* NSAttributedString+Hyperlink.m in Sources */,
 				C2967B191A9B75B4003759B2 /* TGPasslock.m in Sources */,
 				C29E5FE81CCA365300476AE2 /* PXListViewCell.m in Sources */,
-				CEB0A1E317DB03AA0055F150 /* AsyncSocket.m in Sources */,
 				CEF5C02817FFFEFE006CEE27 /* NSData+Extensions.m in Sources */,
 				C2967B1C1A9B9710003759B2 /* TGPasscodeSettingsViewController.m in Sources */,
 				C222773218FC2CA4002AA0F6 /* MessageTableItemUnreadMark.m in Sources */,
@@ -7223,7 +7208,6 @@
 				C20A8AC21D2E90AB00C70134 /* TGModernSearchResult.m in Sources */,
 				C2C85B9B1AEE4E1F00FBEABD /* ASCommon.m in Sources */,
 				0A9EDC521897BA0E0037E1BC /* NSTextView+RBLAntialiasingAdditions.m in Sources */,
-				CEB0A1E417DB03AA0055F150 /* AsyncUdpSocket.m in Sources */,
 				C26976A21A0AB3A20047E2C3 /* PhotoCollectionImageView.m in Sources */,
 				C23536AD19CC64330044978E /* LoginBottomView.m in Sources */,
 				0A59067D18AA32C8002ED7BA /* BTRLabel.m in Sources */,
@@ -7706,6 +7690,131 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C2195A4A1D68F1230066D82E /* Stable */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					TGDEBUG,
+					TGSTABLE,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+			};
+			name = Stable;
+		};
+		C2195A4B1D68F1230066D82E /* Stable */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C23578091CAAE2370092F50A /* stable.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
+					"$(PROJECT_DIR)/HockeySDK-Mac",
+					"$(PROJECT_DIR)/MtProtoKit",
+					"$(PROJECT_DIR)/",
+					"$(PROJECT_DIR)",
+				);
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				HEADER_SEARCH_PATHS = (
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					./sqlcipher/sr,
+					"./MtProtoKit/**",
+				);
+				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
+					"$(SDKROOT)/usr/lib/system",
+					"$(PROJECT_DIR)/",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
+				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
+				PRODUCT_NAME = Telegram;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
+				VALIDATE_PRODUCT = NO;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Stable;
+		};
+		C2195A4C1D68F1230066D82E /* Stable */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = TGShare/TGShare.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = TGShare/TGShare.pch;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"./MtProtoKit/**",
+				);
+				INFOPLIST_FILE = TGShare/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CODE_SIGN_FLAGS = "";
+				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
+				PRODUCT_BUNDLE_IDENTIFIER = "ru.keepcoder.Telegram.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "19668b0a-3925-4226-86de-70f5fd6b95ab";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				USER_HEADER_SEARCH_PATHS = "./MtProtoKit/**";
+			};
+			name = Stable;
+		};
 		C2CBF3C61AF38427006BF90A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -7817,6 +7926,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					TGDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7870,18 +7980,17 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
 					"$(PROJECT_DIR)/MtProtoKit",
+					"$(PROJECT_DIR)/",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
 					"./MtProtoKit/**",
@@ -7889,10 +7998,9 @@
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 					"$(SDKROOT)/usr/lib/system",
+					"$(PROJECT_DIR)/",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -7905,7 +8013,7 @@
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -7913,7 +8021,7 @@
 		};
 		CEB09E7A17DAFC250055F150 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C23578091CAAE2370092F50A /* stable.xcconfig */;
+			baseConfigurationReference = C2A1E7B11D68CACA00271D3D /* store.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Telegram.entitlements;
@@ -7923,18 +8031,17 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/HockeySDK-Mac/Vendor/CrashReporter",
-					"$(PROJECT_DIR)/TelegramTest",
 					"$(PROJECT_DIR)/HockeySDK-Mac",
 					"$(PROJECT_DIR)/MtProtoKit",
+					"$(PROJECT_DIR)/",
+					"$(PROJECT_DIR)",
 				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TelegramTest/Telegraph-Prefix.pch";
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
 					"./MtProtoKit/**",
@@ -7942,10 +8049,9 @@
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/lib",
 					"$(SDKROOT)/usr/lib/system",
+					"$(PROJECT_DIR)/",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
@@ -7956,9 +8062,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
 				SDKROOT = macosx;
-				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/**";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -7972,6 +8078,7 @@
 			buildConfigurations = (
 				C2CBF3C61AF38427006BF90A /* Debug */,
 				C2CBF3C71AF38427006BF90A /* Release */,
+				C2195A4C1D68F1230066D82E /* Stable */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -7981,6 +8088,7 @@
 			buildConfigurations = (
 				CEB09E7617DAFC250055F150 /* Debug */,
 				CEB09E7717DAFC250055F150 /* Release */,
+				C2195A4A1D68F1230066D82E /* Stable */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -7990,6 +8098,7 @@
 			buildConfigurations = (
 				CEB09E7917DAFC250055F150 /* Debug */,
 				CEB09E7A17DAFC250055F150 /* Release */,
+				C2195A4B1D68F1230066D82E /* Stable */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -118,5 +118,7 @@
 
 -(MessagesViewController *)messagesViewController;
 
+-(void)becomeFirstResponder:(BOOL)force;
+
 
 @end

@@ -208,7 +208,23 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
+    
+    NSArray *modals = [TMViewController modalsView];
+    
+    [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj isKindOfClass:[TGModalView class]]) {
+            // TO DO
+            //NSLog(@"%@",obj);
+        }
+        
+    }];
+
+    
+    
     [_backgroundView setFrameSize:newSize];
+    
+    [_backgroundView setCenterByView:self];
     
     [self setContainerFrameSize:self.containerSize];
     
@@ -232,12 +248,12 @@
 
 -(void)show:(NSWindow *)window animated:(BOOL)animated {
     
+    [window.contentView.subviews[0] addSubview:self];
 
     [self setFrameSize:window.contentView.frame.size];
     
     [self setContainerFrameSize:self.containerSize];
     
-    [window.contentView.subviews[0] addSubview:self];
     
     [window makeFirstResponder:self];
     
@@ -346,12 +362,8 @@
         [self modalViewDidHide];
     }
     
-    
-    
-    
-    
-    
 }
+
 
 -(void)setOpaqueContent:(BOOL)opaqueContent {
     _opaqueContent = opaqueContent;

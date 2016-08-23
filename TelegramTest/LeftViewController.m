@@ -273,9 +273,6 @@ static TMViewController *changedController;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.conversationsViewController viewWillAppear:NO];
-    });
     
 //    
 //    self.tabController.selectedIndex = self.tabController.selectedIndex;

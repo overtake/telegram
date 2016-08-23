@@ -481,18 +481,17 @@
         
         
     }
-    static float size = 11.5;
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
         
         attributedString = [[NSMutableAttributedString alloc] init];
         
         NSRange range = [attributedString appendString:NSLocalizedString(@"Bot.WhatBotCanDo", nil) withColor:TEXT_COLOR];
-        [attributedString setFont:TGSystemMediumFont(13) forRange:range];
+        [attributedString setFont:[SettingsArchiver fontMedium13] forRange:range];
         [attributedString setAlignment:NSCenterTextAlignment range:range];
         [attributedString appendString:@"\n\n"];
         range = [attributedString appendString:actionText withColor:TEXT_COLOR];
-        [attributedString setFont:TGSystemFont(13) forRange:range];
+        [attributedString setFont:[SettingsArchiver font13] forRange:range];
         [attributedString setAlignment:NSLeftTextAlignment range:range];
         
         return attributedString;
@@ -504,11 +503,11 @@
     
     if(message.from_id > 0 && start.location != NSNotFound) {
         [attributedString setLink:[TMInAppLinks userProfile:user.n_id] forRange:start];
-        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+        [attributedString setFont:[SettingsArchiver fontMedium125] forRange:start];
     }
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
-    [attributedString setFont:TGSystemFont(size) forRange:start];
+    [attributedString setFont:[SettingsArchiver font125] forRange:start];
     
     if(users.count > 0) {
         
@@ -516,7 +515,7 @@
             
             NSRange start = [attributedString appendString:[obj fullName] withColor:LINK_COLOR];
             [attributedString setLink:[TMInAppLinks userProfile:obj.n_id] forRange:start];
-            [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+            [attributedString setFont:[SettingsArchiver fontMedium125] forRange:start];
             
             if(idx != users.count -1) {
                 [attributedString appendString:@", " withColor:NSColorFromRGB(0xaeaeae)];
@@ -528,7 +527,7 @@
     
     if(title) {
         start = [attributedString appendString:[NSString stringWithFormat:@"\"%@\"", title] withColor:NSColorFromRGB(0xaeaeae)];
-        [attributedString setFont:TGSystemMediumFont(size) forRange:start];
+        [attributedString setFont:[SettingsArchiver fontMedium125] forRange:start];
     }
     
     return attributedString;

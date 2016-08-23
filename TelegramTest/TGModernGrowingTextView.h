@@ -66,6 +66,7 @@
 
 -(void)setSelectedRange:(NSRange)range;
 
+-(NSFont *)font;
 
 -(Class)_textViewClass;
 -(int)_startXPlaceholder;

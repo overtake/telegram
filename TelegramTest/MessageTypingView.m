@@ -142,7 +142,7 @@ const NSTimeInterval typingIntervalSecond = 0.14;
         [self.textField setFrameOrigin:NSMakePoint(NSMinX(_textField.frame), -20)];
     }
     
-    [self.textField setFont:TGSystemFont(12)];
+    [self.textField setFont:[SettingsArchiver font12]];
     self.textField.attributedStringValue = self.attributedString;
     self.endString = (int) self.attributedString.length;
     [self.textField sizeToFit];

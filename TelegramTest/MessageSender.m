@@ -488,8 +488,10 @@
 //                
                 if(!saved) {
                     [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
-                    
-                    [self syncTopCategories:nil];
+                    [transaction setObject:@(0) forKey:@"dt" inCollection:TOP_PEERS];
+                    [self syncTopCategories:^(NSArray *categories) {
+                        
+                    }];
                 }
             }
 

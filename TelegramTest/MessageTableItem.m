@@ -70,14 +70,14 @@ static NSCache *cItems;
         self.message = object;
         
         
-        if(self.message.media.caption.length > 0 || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0 && self.message.media.bot_result == nil)) {
+        if((self.message.media.caption.length > 0 && self.message.message.length == 0) || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0 && self.message.media.bot_result == nil)) {
             NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
             
             NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;
             
             [c appendString:[[caption trim] fixEmoji] withColor:TEXT_COLOR];
             
-            [c setFont:TGSystemFont(13) forRange:c.range];
+            [c setFont:[SettingsArchiver font13] forRange:c.range];
             
             [c detectAndAddLinks:self.linkParseTypes()];
             

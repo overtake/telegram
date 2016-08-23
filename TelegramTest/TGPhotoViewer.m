@@ -581,15 +581,7 @@ static TGPhotoViewer *viewer;
 
 -(void)makeKeyAndOrderFront:(id)sender {
     
-    TGAudioGlobalController *audio = [TGAudioGlobalController globalController:appWindow().navigationController];
     
-    if(audio) {
-        
-        if(audio.pState == TGAudioPlayerGlobalStatePlaying) {
-            [audio pause];
-        }
-        
-    }
     
     
     [TGPipWindow close];

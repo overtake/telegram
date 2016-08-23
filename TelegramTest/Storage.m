@@ -1257,9 +1257,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         NSMutableDictionary *peers = [NSMutableDictionary dictionary];
         
-        
-        
-        
         void (^proccessResult)(NSString *tableName, FMResultSet *result) = ^(NSString *tableName, FMResultSet *result){
             
             @try {

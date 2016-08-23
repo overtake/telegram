@@ -66,7 +66,7 @@
         self.viewSize = NSMakeSize(0, 10);
         
         NSDictionary *attributes = @{
-                                     NSFontAttributeName: TGSystemFont(13),
+                                     NSFontAttributeName: [SettingsArchiver font13],
                                      NSForegroundColorAttributeName: NSColorFromRGB(0xbbbbbb)
                                      };
         

@@ -37,6 +37,8 @@
 -(void)modalViewDidShow;
 -(void)modalViewDidHide;
 
+
+
 -(BOOL)isShown;
 
 -(NSRect)contentRect;

@@ -75,9 +75,11 @@
 //        if(accept) {
 //            return NO;
 //        }
-        
-        
-       
+#ifdef TGDEBUG
+        if([[Telegram mainViewController] isMinimisze]) {
+            return NO;
+        }
+#endif
 
     } @catch (NSException *exception) {
         

@@ -165,6 +165,12 @@
     return NO;
 }
 
+-(void)becomeFirstResponder:(BOOL)force {
+    if(force) {
+        
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated {
     

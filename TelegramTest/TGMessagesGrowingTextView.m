@@ -339,6 +339,10 @@
     return _isInline ? [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)].width - 2  : [super _startXPlaceholder];
 }
 
+-(NSFont *)font {
+    return [SettingsArchiver font];
+}
+
 -(BOOL)_needShowPlaceholder {
     return _isInline || [super _needShowPlaceholder];
 }

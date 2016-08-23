@@ -268,7 +268,15 @@
 }
 
 -(BOOL)becomeFirstResponder {
-    return [self.searchTextField becomeFirstResponder];
+    return [super becomeFirstResponder];
+}
+
+-(void)becomeFirstResponder:(BOOL)force {
+    if(force) {
+        [_searchTextField becomeFirstResponder];
+    } else {
+        [super becomeFirstResponder];
+    }
 }
 
 -(void)hideSearchViewControllerWithConversationUsed:(TL_conversation*)conversation {
