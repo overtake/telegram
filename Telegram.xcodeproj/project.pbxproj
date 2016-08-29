@@ -297,8 +297,6 @@
 		C215BE211C7B71C800B4BF16 /* TGModernForwardCellContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE201C7B71C800B4BF16 /* TGModernForwardCellContainer.m */; };
 		C215BE2E1C7B917B00B4BF16 /* TGTextLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C215BE2D1C7B917B00B4BF16 /* TGTextLabel.m */; };
 		C215BE311C7B979100B4BF16 /* TGFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = C215BE301C7B979100B4BF16 /* TGFont.mm */; };
-		C217498B1D6B7B8E00B2493F /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C217498C1D6B7B9200B2493F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C2182BBE19589246002469CA /* TL_localMessageService.m in Sources */ = {isa = PBXBuildFile; fileRef = C2182BBD19589246002469CA /* TL_localMessageService.m */; };
 		C2195A5A1D690BD10066D82E /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2195A5C1D690D160066D82E /* libopus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C2195A5B1D690D160066D82E /* libopus.a */; };
@@ -605,6 +603,9 @@
 		C2A2B4311BD7C8DB0083DA8A /* TGModalForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A2B4301BD7C8DB0083DA8A /* TGModalForwardView.m */; };
 		C2A3FB091A278E2700DE791B /* PhoneChangeController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB081A278E2700DE791B /* PhoneChangeController.m */; };
 		C2A3FB0D1A28A6B200DE791B /* TGHashContact.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */; };
+		C2A4A6261D6CA453002C6320 /* TGWebgameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2A4A6251D6CA453002C6320 /* TGWebgameViewController.m */; };
+		C2A4A6281D6DD034002C6320 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C2A4A6291D6DD039002C6320 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C2A5BFBE18DC80620021BE68 /* info.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB318DC80620021BE68 /* info.c */; };
 		C2A5BFBF18DC80620021BE68 /* internal.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB418DC80620021BE68 /* internal.c */; };
 		C2A5BFC018DC80620021BE68 /* opusfile.c in Sources */ = {isa = PBXBuildFile; fileRef = C2A5BFB618DC80620021BE68 /* opusfile.c */; };
@@ -1089,7 +1090,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				C2195A5A1D690BD10066D82E /* Sparkle.framework in Copy Files (6 items) */,
-				C217498B1D6B7B8E00B2493F /* HockeySDK.framework in Copy Files (6 items) */,
+				C2A4A6291D6DD039002C6320 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2319,6 +2320,8 @@
 		C2A3FB081A278E2700DE791B /* PhoneChangeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneChangeController.m; sourceTree = "<group>"; };
 		C2A3FB0B1A28A6B200DE791B /* TGHashContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHashContact.h; sourceTree = "<group>"; };
 		C2A3FB0C1A28A6B200DE791B /* TGHashContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHashContact.m; sourceTree = "<group>"; };
+		C2A4A6241D6CA453002C6320 /* TGWebgameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGWebgameViewController.h; sourceTree = "<group>"; };
+		C2A4A6251D6CA453002C6320 /* TGWebgameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGWebgameViewController.m; sourceTree = "<group>"; };
 		C2A5BF9D18DC800E0021BE68 /* libopus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libopus.a; path = ../../libopus.a; sourceTree = "<group>"; };
 		C2A5BFA218DC80620021BE68 /* opus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus.h; sourceTree = "<group>"; };
 		C2A5BFA318DC80620021BE68 /* opus_defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opus_defines.h; sourceTree = "<group>"; };
@@ -2991,7 +2994,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C217498C1D6B7B9200B2493F /* HockeySDK.framework in Frameworks */,
+				C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */,
+				C2A4A6281D6DD034002C6320 /* HockeySDK.framework in Frameworks */,
 				C2195A5D1D690E7C0066D82E /* Sparkle.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
 				C21D06DD1CBE5A5900CB28B8 /* Carbon.framework in Frameworks */,
@@ -3008,7 +3012,6 @@
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
 				C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */,
 				CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */,
-				C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */,
 				0AB8F2BB1948BCF30074E4E7 /* AVFoundation.framework in Frameworks */,
 				C2F07E151BBD7D3B00B3DB39 /* AVKit.framework in Frameworks */,
 				CEB09E5C17DAFC250055F150 /* Cocoa.framework in Frameworks */,
@@ -5024,6 +5027,15 @@
 			name = contacts;
 			sourceTree = "<group>";
 		};
+		C2A4A6231D6CA3BA002C6320 /* game */ = {
+			isa = PBXGroup;
+			children = (
+				C2A4A6241D6CA453002C6320 /* TGWebgameViewController.h */,
+				C2A4A6251D6CA453002C6320 /* TGWebgameViewController.m */,
+			);
+			name = game;
+			sourceTree = "<group>";
+		};
 		C2A5BF9F18DC80620021BE68 /* opus */ = {
 			isa = PBXGroup;
 			children = (
@@ -6224,6 +6236,7 @@
 		CEB260F4180C0EB300378932 /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				C2A4A6231D6CA3BA002C6320 /* game */,
 				C20AEF3B1C1F2932001BAAA0 /* tgimage */,
 				C2D51BEC1B21C6FD009327C0 /* audio */,
 				C2D4B73A1AFCD35F0035B4E4 /* modal */,
@@ -7504,6 +7517,7 @@
 				C274C44A1ACD9FF5000DFDE4 /* TGWebpageStandartObject.m in Sources */,
 				C248F3CF19BE046C00BF658E /* diag_range.c in Sources */,
 				0A59067818AA32C8002ED7BA /* BTRButton.m in Sources */,
+				C2A4A6261D6CA453002C6320 /* TGWebgameViewController.m in Sources */,
 				C2D51BFE1B21D762009327C0 /* ComposeChatPickerViewController.m in Sources */,
 				C26F7EBB1A5ED66E001D1AE2 /* AbortKeySecretSenderItem.m in Sources */,
 				C2CE53CA1BE8C0DB00BBEF5F /* TGSProfileMediaRowView.m in Sources */,

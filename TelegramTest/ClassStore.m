@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 05.08.16.
+    //  Created by keepcoder on 25.08.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -546,7 +546,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputBotInlineResultDocument class] forKey:[NSNumber numberWithInt:-459324]];
    [cs_classes setObject:[TL_botInlineMediaResult class] forKey:[NSNumber numberWithInt:400266251]];
    [cs_classes setObject:[TL_inputBotInlineMessageID class] forKey:[NSNumber numberWithInt:-1995686519]];
-   [cs_classes setObject:[TL_updateInlineBotCallbackQuery class] forKey:[NSNumber numberWithInt:750622127]];
+   [cs_classes setObject:[TL_updateInlineBotCallbackQuery class] forKey:[NSNumber numberWithInt:-703028597]];
    [cs_classes setObject:[TL_inlineBotSwitchPM class] forKey:[NSNumber numberWithInt:1008755359]];
    [cs_classes setObject:[TL_messages_peerDialogs class] forKey:[NSNumber numberWithInt:863093588]];
    [cs_classes setObject:[TL_topPeer class] forKey:[NSNumber numberWithInt:-305282981]];
@@ -577,8 +577,11 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_messages_stickerSetInstallResultArchive class] forKey:[NSNumber numberWithInt:904138920]];
    [cs_classes setObject:[TL_stickerSetCovered class] forKey:[NSNumber numberWithInt:1678812626]];
    [cs_classes setObject:[TL_updateConfig class] forKey:[NSNumber numberWithInt:-1574314746]];
-   [cs_classes setObject:[TL_inputMediaPhotoExternal class] forKey:[NSNumber numberWithInt:998007486]];
-   [cs_classes setObject:[TL_inputMediaDocumentExternal class] forKey:[NSNumber numberWithInt:1954019628]];
+   [cs_classes setObject:[TL_updatePtsChanged class] forKey:[NSNumber numberWithInt:861169551]];
+   [cs_classes setObject:[TL_inputMediaPhotoExternal class] forKey:[NSNumber numberWithInt:-1252045032]];
+   [cs_classes setObject:[TL_inputMediaDocumentExternal class] forKey:[NSNumber numberWithInt:-437690244]];
+   [cs_classes setObject:[TL_keyboardButtonGame class] forKey:[NSNumber numberWithInt:687616356]];
+   [cs_classes setObject:[TL_messageActionGameScore class] forKey:[NSNumber numberWithInt:974442405]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

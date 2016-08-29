@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.08.16.
+//  Auto created by Mikhail Filimonov on 25.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -331,12 +331,13 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
+@property (nonatomic,assign,readonly) BOOL isWith_my_score;
 @property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags    from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -502,15 +503,6 @@
 @property long random_id;
 
 +(TLAPI_messages_forwardMessage*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id random_id:(long)random_id;
-@end
-
-@interface TLAPI_messages_sendBroadcast : TLApiObject
-@property (nonatomic, strong) NSMutableArray* contacts;
-@property (nonatomic, strong) NSMutableArray* random_id;
-@property (nonatomic, strong) NSString* message;
-@property (nonatomic, strong) TLInputMedia* media;
-
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media;
 @end
 
 @interface TLAPI_messages_getDhConfig : TLApiObject
@@ -1173,11 +1165,13 @@
 @end
 
 @interface TLAPI_messages_getBotCallbackAnswer : TLApiObject
+@property int flags;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int msg_id;
 @property (nonatomic, strong) NSData* data;
+@property int game_id;
 
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
++(TLAPI_messages_getBotCallbackAnswer*)createWithFlags:(int)flags peer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data game_id:(int)game_id;
 @end
 
 @interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
@@ -1298,5 +1292,28 @@
 
 
 +(TLAPI_channels_getAdminedPublicChannels*)create;
+@end
+
+@interface TLAPI_messages_setGameScore : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isEdit_message;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int game_id;
+@property int score;
+
++(TLAPI_messages_setGameScore*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id game_id:(int)game_id score:(int)score;
+@end
+
+@interface TLAPI_messages_setInlineGameScore : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isEdit_message;
+@property (nonatomic, strong) TLInputBotInlineMessageID* n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int game_id;
+@property int score;
+
++(TLAPI_messages_setInlineGameScore*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id game_id:(int)game_id score:(int)score;
 @end
 

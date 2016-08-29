@@ -44,7 +44,7 @@
         
         [n appendString:[firstNames componentsJoinedByString:@", "] withColor:LINK_COLOR];
         
-        [n setFont:TGSystemMediumFont(13) forRange:n.range];
+        [n setFont:[SettingsArchiver fontMedium125] forRange:n.range];
         
         
         NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
@@ -60,7 +60,7 @@
         
         [d appendString:[NSString stringWithFormat:NSLocalizedString(messages.count == 1 ? @"Forward.Message" : @"Forward.Messages", nil), messages.count] withColor:GRAY_TEXT_COLOR];
         
-        [d setFont:TGSystemFont(13) forRange:d.range];
+        [d setFont:[SettingsArchiver font125] forRange:d.range];
         
         _fwd_desc = d;
         

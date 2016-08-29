@@ -161,16 +161,16 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
         
         [self removeFile];
         
-        TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
+       // TGAudioWaveform *waveform = [FileUtils waveformForPath:opusPath];
         
 
         [ASQueue dispatchOnMainQueue:^{
             
             if(askConfirm) {
-                TL_documentAttributeAudio *audioAttr = [TL_documentAttributeAudio createWithFlags:0 duration:duration title:nil performer:nil waveform:[waveform bitstream]];
-                //[self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
+               // TL_documentAttributeAudio *audioAttr = [TL_documentAttributeAudio createWithFlags:0 duration:duration title:nil performer:nil waveform:nil];
+              //  [self.messagesViewController.bottomView showQuickRecordedPreview:opusPath audioAttr:audioAttr];
             } else
-                [self.messagesViewController sendAudio:opusPath forConversation:conversation waveforms:[waveform bitstream]];
+                [self.messagesViewController sendAudio:opusPath forConversation:conversation waveforms:nil];
         }];
     };
     

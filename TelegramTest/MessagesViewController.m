@@ -1260,9 +1260,8 @@ static NSTextAttachment *headerMediaIcon() {
     
      [ChatHistoryController dispatchOnChatQueue:^{
          StartBotSenderItem *sender = [[StartBotSenderItem alloc] initWithMessage:conversation.type == DialogTypeChat || conversation.type == DialogTypeChannel ? [NSString stringWithFormat:@"/start@%@",bot.username] : @"/start"  forConversation:conversation bot:bot startParam:startParam];
-         sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
          
-         [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+         [self.historyController addAndSendMessage:sender.message sender:sender];
      }];
 
 }
@@ -3170,7 +3169,8 @@ static NSTextAttachment *headerMediaIcon() {
     } else if(self.state == MessagesViewControllerStateEditable) {
         [self unSelectAll];
         return YES;
-    }
+    } else if(self.editTemplate.attributedString.length > 0)
+        return YES;
     
     return NO;
 }
@@ -3900,12 +3900,10 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         Class cs = conversation.type == DialogTypeSecretChat ? [MessageSenderSecretItem class] : [MessageSenderItem class];
         
         static const NSInteger messagePartLimit = 4096;
-        NSMutableArray *preparedItems = [[NSMutableArray alloc] init];
         
         if (message.length <= messagePartLimit) {
             MessageSenderItem *sender = [[cs alloc] initWithMessage:message forConversation:conversation  entities:entities noWebpage:noWebpage additionFlags:self.senderFlags];
-            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addAndSendMessage:sender.message sender:sender];
             
         }
         
@@ -3914,16 +3912,19 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
             
             NSArray<NSString *> *parts = cut_messages(message,messagePartLimit);
             
+            NSMutableArray *preparedMessages = [[NSMutableArray alloc] init];
+            NSMutableArray *preparedSenders = [[NSMutableArray alloc] init];
+
+            
             [parts enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 MessageSenderItem *sender = [[cs alloc] initWithMessage:obj forConversation:conversation entities:entities noWebpage:noWebpage  additionFlags:self.senderFlags];
-                sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
                 
-                [preparedItems insertObject:sender.tableItem atIndex:0];
-
+                [preparedMessages insertObject:sender.message atIndex:0];
+                [preparedSenders insertObject:sender atIndex:0];
             }];
 
             
-            [self.historyController addItems:preparedItems conversation:conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addAndSendMessages:preparedMessages senders:preparedSenders sync:YES];
         }
         
         [self performForward:self.conversation];
@@ -3943,8 +3944,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         Class cs = self.conversation.type == DialogTypeSecretChat ? [LocationSenderItem class] : [LocationSenderItem class];
         
         LocationSenderItem *sender = [[cs alloc] initWithCoordinates:coordinates conversation:conversation additionFlags:self.senderFlags];
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
         
     }];
     
@@ -3972,8 +3972,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         } else {
             sender = [[VideoSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 }
 
@@ -3989,11 +3988,8 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     
     [ChatHistoryController dispatchOnChatQueue:^{
         
-        SenderItem *sender;
-        sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem additionFlags:senderFlags];
-        
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+        SenderItem *sender = [[CompressedDocumentSenderItem alloc] initWithItem:compressedItem additionFlags:senderFlags];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 
 }
@@ -4005,22 +4001,11 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     [ChatHistoryController dispatchOnChatQueue:^{
         SenderItem *sender;
         if(conversation.type != DialogTypeSecretChat)
-        sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
-        else {
-            
-//            if([botContextResult isKindOfClass:[TL_botInlineMediaResultDocument class]] || [botContextResult isKindOfClass:[TL_botInlineMediaResultPhoto class]] || ([botContextResult isKindOfClass:[TL_botInlineResult class]] && [botContextResult.send_message isKindOfClass:[TL_botInlineMessageMediaAuto class]])) {
-//                sender = [[InlineBotMediaSecretSenderItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name conversation:conversation];
-//            } else {
-//                sender = [[MessageSenderSecretItem alloc] initWithBotContextResult:botContextResult via_bot_name:via_bot_name queryId:queryId conversation:conversation];
-//            }
-        }
-        
+            sender = [[ContextBotSenderItem alloc] initWithBotContextResult:botContextResult via_bot_id:via_bot_id queryId:queryId additionFlags:additionFlags conversation:conversation];
+
         if(sender != nil) {
-            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [self.historyController addItem:sender.tableItem sentControllerCallback:nil];
+            [self.historyController addAndSendMessage:sender.message sender:sender];
         }
-        
-        
         
     }];
 }
@@ -4063,8 +4048,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
             sender = [[DocumentSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
         
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 }
 
@@ -4094,9 +4078,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
             sender = [[StickerSecretSenderItem alloc] initWithConversation:conversation document:sticker];
         }
         
-       
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
         
     }];
     
@@ -4123,8 +4105,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
             sender = [[AudioSenderItem alloc] initWithPath:file_path forConversation:conversation additionFlags:self.senderFlags waveforms:waveforms];
         }
         
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 }
 
@@ -4140,14 +4121,12 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         
         void (^fwd_blck) (NSArray *fwd_msgs) = ^(NSArray *fwd_messages) {
             ForwardSenterItem *sender = [[ForwardSenterItem alloc] initWithMessages:fwd_messages forConversation:conversation additionFlags:conversation != _conversation ? 0 : self.senderFlags];
-            sender.tableItems = [self messageTableItemsFromMessages:sender.fakes];
-            [self.historyController addItems:sender.tableItems conversation:conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addAndSendMessages:sender.fakes senders:@[sender] sync:YES];
         };
         
         void (^custom_blck) (TL_localMessage *msg) = ^(TL_localMessage *msg) {
             MessageSenderItem *sender = [[MessageSenderItem alloc] initWithMessage:msg.message forConversation:conversation additionFlags:conversation != _conversation ? 0 : self.senderFlags];
-            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] firstObject];
-            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addAndSendMessage:sender.message sender:sender];
         };
         
                     
@@ -4181,7 +4160,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         
         
         
-    }];
+    } synchronous:YES];
 }
 
 - (void)shareContact:(TLUser *)contact forConversation:(TL_conversation *)conversation callback:(dispatch_block_t)callback  {
@@ -4193,9 +4172,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     [ChatHistoryController dispatchOnChatQueue:^{
         
         ShareContactSenterItem *sender = [[ShareContactSenterItem alloc] initWithContact:contact forConversation:conversation additionFlags:self.senderFlags];
-        
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 }
 
@@ -4217,12 +4194,8 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     if(lastTTL == -1 || lastTTL != ttl ) {
         
         [ChatHistoryController dispatchOnChatQueue:^{
-            
             SetTTLSenderItem *sender = [[SetTTLSenderItem alloc] initWithConversation:conversation ttl:ttl];
-            
-            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            
-            [self.historyController addItem:sender.tableItem conversation:conversation callback:callback sentControllerCallback:nil];
+            [self.historyController addAndSendMessage:sender.message sender:sender];
         }];
         
     } else if(callback) callback();
@@ -4245,23 +4218,20 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     
     [ChatHistoryController dispatchOnChatQueue:^{
         
-        NSMutableArray *items = [[NSMutableArray alloc] init];
-        
+        NSMutableArray *preparedMessages = [[NSMutableArray alloc] init];
+        NSMutableArray *preparedSenders = [[NSMutableArray alloc] init];
         [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
             
             SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj additionFlags:self.senderFlags];
-            
-            
-            sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-            [items insertObject:sender.tableItem atIndex:0];
+            [preparedMessages addObject:sender.message];
+            [preparedSenders addObject:sender];
  
         }];
         
-       
-        [self.historyController addItems:items conversation:conversation sentControllerCallback:completeHandler];
+        [self.historyController addAndSendMessages:preparedMessages senders:preparedSenders sync:YES];
         
         
-    }];
+    } synchronous:YES];
 }
 
 - (void)addImageAttachment:(NSString *)file_path forConversation:(TL_conversation *)conversation file_data:(NSData *)data addCompletionHandler:(dispatch_block_t)completeHandler {
@@ -4361,8 +4331,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
             sender = [[ImageSenderItem alloc] initWithImage:originImage jpegData:imageData forConversation:conversation additionFlags:self.senderFlags caption:caption];
         }
         
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem sentControllerCallback:completeHandler];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
 }
 
@@ -4378,9 +4347,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     [ChatHistoryController dispatchOnChatQueue:^{
         
         ExternalGifSenderItem *sender = [[ExternalGifSenderItem alloc] initWithMedia:media additionFlags:senderFlags forConversation:conversation];
-        
-        sender.tableItem = [[self messageTableItemsFromMessages:@[sender.message]] lastObject];
-        [self.historyController addItem:sender.tableItem conversation:conversation callback:nil sentControllerCallback:nil];
+        [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
     
 }

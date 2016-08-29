@@ -387,9 +387,6 @@ void exceptionHandler(NSException * exception)
     [NSTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(checkUpdates) userInfo:nil repeats:YES];
     [self.updater checkForUpdatesInBackground];
     
-    
-    
-    
 #endif
     
 }
@@ -402,6 +399,14 @@ void exceptionHandler(NSException * exception)
 
         
         NSEvent *result = incomingEvent;
+        
+        TelegramWindow *window = ((TelegramWindow *)result.window);
+        
+        if([window isKindOfClass:[TelegramWindow class]] && [window.navigationController.currentController isKindOfClass:NSClassFromString(@"TGWebgameViewController")]) {
+           // [window.navigationController.currentController becomeFirstResponder];
+            [window.firstResponder keyDown:incomingEvent];
+            return [[NSEvent alloc] init];
+        }
         
         if(result.window != self.mainWindow) {
             
@@ -577,14 +582,9 @@ void exceptionHandler(NSException * exception)
                         
                         [appWindow().navigationController goBackWithAnimation:YES];
                         
-                        if(appWindow().navigationController.messagesViewController.conversation.inputTemplate.attributedString.length > 0) {
-                            return incomingEvent;
-                        } else {
-                            
-                            [appWindow().navigationController goBackWithAnimation:YES];
-                            
-                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
-                        }
+                        
+                    } else {
+                        return incomingEvent;
                     }
 //
 //                    

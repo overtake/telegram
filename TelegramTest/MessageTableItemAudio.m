@@ -16,6 +16,11 @@
 #import "TL_documentAttributeAudio+Extension.h"
 #import "MessageTableCellAudioView.h"
 #import "TGAudioGlobalController.h"
+
+@interface MessageTableItemAudio ()
+@property (nonatomic,strong,readonly) NSArray *wform;
+@end
+
 @implementation MessageTableItemAudio
 
 - (id)initWithObject:(TLMessage *)object {
@@ -32,7 +37,7 @@
         [attr setFont:TGSystemFont(12) forRange:attr.range];
         _duration = attr;
 
-        _waveform = audio.arrayWaveform;
+        _wform = audio.arrayWaveform;
         
         [self doAfterDownload];
         
@@ -42,6 +47,15 @@
         
     }
     return self;
+}
+
+-(NSArray *)waveform {
+    if(!_wform || _wform.count == 0) {
+        TL_documentAttributeAudio *audio = (TL_documentAttributeAudio *) [self.document attributeWithClass:[TL_documentAttributeAudio class]];
+        _wform = audio.arrayWaveform;  
+    }
+    
+    return _wform;
 }
 
 -(TLDocument *)document {

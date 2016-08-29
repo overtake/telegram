@@ -33,6 +33,7 @@
 #import "TGEmbedModalView.h"
 #import "TGModernESGViewController.h"
 #import "TGModalArchivedPacks.h"
+#import "TGWebgameViewController.h"
 @implementation MessageSender
 
 
@@ -629,6 +630,10 @@
     return (int) msgId;
 }
 
++(int)getCurrentSecretMessageId {
+    return (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"store_secret_message_id"];
+}
+
 
 +(int)getFakeMessageId {
     
@@ -824,11 +829,11 @@ static TGLocationRequest *locationRequest;
 +(RPCRequest *)proccessInlineKeyboardButton:(TLKeyboardButton *)keyboard messagesViewController:(MessagesViewController *)messagesViewController conversation:(TL_conversation *)conversation message:(TL_localMessage *)message handler:(void (^)(TGInlineKeyboardProccessType type))handler {
     
     
-    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]]) {
+    if([keyboard isKindOfClass:[TL_keyboardButtonCallback class]] || [keyboard isKindOfClass:[TL_keyboardButtonGame class]]) {
         
         handler(TGInlineKeyboardProccessingType);
         
-        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithPeer:conversation.inputPeer msg_id:message.n_id data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithFlags:(keyboard.data ? (1 << 0) : 0) | (keyboard.game_id ? (1 << 1) : 0) peer:conversation.inputPeer msg_id:message.n_id data:keyboard.data game_id:keyboard.game_id] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.message.length > 0) {
                 if(response.isAlert)
@@ -838,13 +843,18 @@ static TGLocationRequest *locationRequest;
                         [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":BLUE_COLOR}];
             } else if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.url.length > 0) {
                
-             //   open_link(response.url);
+                TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
+                TGWebgameViewController *game = [[TGWebgameViewController alloc] init];
                 
-                TGEmbedModalView *embedModal = [[TGEmbedModalView alloc] init];
+                [game startWithUrl:response.url bot:user keyboard:keyboard message:message];
                 
-                [embedModal setWebpage:[TL_webPage createWithFlags:0 n_id:0 url:response.url display_url:response.url type:nil site_name:nil title:nil n_description:nil photo:nil embed_url:response.url embed_type:@"callback" embed_width:INT32_MAX embed_height:INT32_MAX duration:0 author:nil document:nil]];
+                [appWindow().navigationController pushViewController:game animated:YES];
                 
-                [embedModal show:appWindow() animated:YES];
+//                TGEmbedModalView *embedModal = [[TGEmbedModalView alloc] init];
+                
+//                [embedModal setWebpage:[TL_webPage createWithFlags:0 n_id:0 url:response.url display_url:response.url type:nil site_name:nil title:nil n_description:nil photo:nil embed_url:response.url embed_type:@"callback" embed_width:INT32_MAX embed_height:INT32_MAX duration:0 author:nil document:nil]];
+                
+//                [embedModal show:appWindow() animated:YES];
             }
             
             handler(TGInlineKeyboardSuccessType);
@@ -936,7 +946,10 @@ static TGLocationRequest *locationRequest;
                 
                 [m.contextModalView didNeedCloseAndSwitch:keyboard];
             } else {
-                [[Telegram rightViewController] showInlineBotSwitchModalView:message.via_bot_id != 0 ? message.via_bot_user : message.fromUser keyboard:keyboard];
+                
+                TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
+                
+                [[Telegram rightViewController] showInlineBotSwitchModalView:user query:[NSString stringWithFormat:@"@%@ %@",user.username, keyboard.query]];
             }
         }
         
@@ -1042,6 +1055,38 @@ static TGLocationRequest *locationRequest;
 
 +(void)addRecentSticker:(TLDocument *)sticker {
     [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+         NSMutableDictionary *useCount = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+        
+        if(!useCount)
+        {
+            useCount = [[NSMutableDictionary alloc] init];
+        }
+        
+        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
+        
+        
+        if(!useCount[@(attr.stickerset.n_id)]) {
+            useCount[@(attr.stickerset.n_id)] = [NSMutableDictionary dictionary];
+        }
+        
+        __block int max = 1;
+        
+        [useCount enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSMutableDictionary *obj, BOOL * _Nonnull stop) {
+            
+            [obj enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSNumber *value, BOOL * _Nonnull stop) {
+                
+                max = MAX(max,[value intValue]);
+                
+            }];
+            
+        }];
+        
+        max++;
+        useCount[@(attr.stickerset.n_id)][@(sticker.n_id)] = @(max);
+        [transaction setObject:useCount forKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+        
+       
         
         
         NSMutableArray *sc = [transaction objectForKey:@"remoteRecentStickers" inCollection:STICKERS_COLLECTION];

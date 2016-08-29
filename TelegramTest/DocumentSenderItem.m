@@ -318,7 +318,7 @@
             
             
             
-            if([self.message.media.document.mime_type hasSuffix:@"webp"]) {
+            if([strongSelf.message.media.document.mime_type hasSuffix:@"webp"]) {
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],message.media.document.n_id];
                 
                 NSString *np = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],[msg media].document.n_id];
@@ -342,13 +342,13 @@
                 message.media = [msg media];
             }
             
-            strongSelf.tableItem.message.media = message.media;
+            strongSelf.message.media = message.media;
             
             
-            NSString *ep = exportPath(self.message.randomId,extensionForMimetype(self.message.media.document.mime_type));
+            NSString *ep = exportPath(strongSelf.message.randomId,extensionForMimetype(strongSelf.message.media.document.mime_type));
             
             if([[NSFileManager defaultManager] fileExistsAtPath:ep isDirectory:NULL]) {
-                [[NSFileManager defaultManager] moveItemAtPath:ep toPath:mediaFilePath(self.message) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:ep toPath:mediaFilePath(strongSelf.message) error:nil];
             }
             
             
@@ -358,12 +358,12 @@
             }
             
             
-            self.uploader = nil;
-            self.uploaderThumb = nil;
+            strongSelf.uploader = nil;
+            strongSelf.uploaderThumb = nil;
             
             message.dstate = DeliveryStateNormal;
             
-            [self.message save:YES];
+            [strongSelf.message save:YES];
             
             strongSelf.state = MessageSendingStateSent;
             

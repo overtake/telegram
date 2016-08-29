@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.08.16.
+//  Auto created by Mikhail Filimonov on 25.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -648,7 +648,7 @@
 @property (nonatomic, strong) NSString* address;
 @property (nonatomic, strong) NSString* provider;
 @property (nonatomic, strong) NSString* venue_id;
-@property (nonatomic, strong) TLInputFile* url;
+@property (nonatomic, strong) NSString* url;
 @property (nonatomic, strong) NSString* q;
 @property int duration;
 @property int w;
@@ -686,10 +686,10 @@
 +(TL_inputMediaGifExternal*)createWithUrl:(NSString*)url q:(NSString*)q;
 @end
 @interface TL_inputMediaPhotoExternal : TLInputMedia<NSCoding>
-+(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url;
++(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url caption:(NSString*)caption;
 @end
 @interface TL_inputMediaDocumentExternal : TLInputMedia<NSCoding>
-+(TL_inputMediaDocumentExternal*)createWithUrl:(TLInputFile*)url;
++(TL_inputMediaDocumentExternal*)createWithUrl:(NSString*)url caption:(NSString*)caption;
 @end
 @interface TL_inputMediaUploadedVideo_old34 : TLInputMedia<NSCoding>
 +(TL_inputMediaUploadedVideo_old34*)createWithFile:(TLInputFile*)file duration:(int)duration w:(int)w h:(int)h caption:(NSString*)caption;
@@ -1189,6 +1189,8 @@
 @property int inviter_id;
 @property int channel_id;
 @property int chat_id;
+@property int game_id;
+@property int score;
 @end
 
 @interface TL_messageActionEmpty : TLMessageAction<NSCoding>
@@ -1229,6 +1231,9 @@
 @end
 @interface TL_messageActionHistoryClear : TLMessageAction<NSCoding>
 +(TL_messageActionHistoryClear*)create;
+@end
+@interface TL_messageActionGameScore : TLMessageAction<NSCoding>
++(TL_messageActionGameScore*)createWithGame_id:(int)game_id score:(int)score;
 @end
 @interface TL_messageActionChatAddUser_old40 : TLMessageAction<NSCoding>
 +(TL_messageActionChatAddUser_old40*)createWithUser_id:(int)user_id;
@@ -1700,6 +1705,7 @@
 @property (nonatomic, strong) NSString* offset;
 @property (nonatomic, strong) TLInputBotInlineMessageID* msg_id;
 @property (nonatomic, strong) NSData* data;
+@property int game_id;
 @property (nonatomic, strong) TLDraftMessage* draft;
 @end
 
@@ -1836,7 +1842,7 @@
 +(TL_updateEditMessage*)createWithMessage:(TLMessage*)message pts:(int)pts pts_count:(int)pts_count;
 @end
 @interface TL_updateInlineBotCallbackQuery : TLUpdate<NSCoding>
-+(TL_updateInlineBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data;
++(TL_updateInlineBotCallbackQuery*)createWithFlags:(int)flags query_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data game_id:(int)game_id;
 @end
 @interface TL_updateReadChannelOutbox : TLUpdate<NSCoding>
 +(TL_updateReadChannelOutbox*)createWithChannel_id:(int)channel_id max_id:(int)max_id;
@@ -1852,6 +1858,9 @@
 @end
 @interface TL_updateConfig : TLUpdate<NSCoding>
 +(TL_updateConfig*)create;
+@end
+@interface TL_updatePtsChanged : TLUpdate<NSCoding>
++(TL_updatePtsChanged*)create;
 @end
 	
 @interface TLupdates_State()
@@ -2687,6 +2696,9 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSame_peer;
 @property (nonatomic, strong) NSString* query;
+@property (nonatomic, strong) NSString* game_title;
+@property int game_id;
+@property (nonatomic, strong) NSString* start_param;
 @end
 
 @interface TL_keyboardButton : TLKeyboardButton<NSCoding>
@@ -2706,6 +2718,9 @@
 @end
 @interface TL_keyboardButtonSwitchInline : TLKeyboardButton<NSCoding>
 +(TL_keyboardButtonSwitchInline*)createWithFlags:(int)flags  text:(NSString*)text query:(NSString*)query;
+@end
+@interface TL_keyboardButtonGame : TLKeyboardButton<NSCoding>
++(TL_keyboardButtonGame*)createWithText:(NSString*)text game_title:(NSString*)game_title game_id:(int)game_id start_param:(NSString*)start_param;
 @end
 	
 @interface TLKeyboardButtonRow()

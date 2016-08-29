@@ -865,7 +865,7 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateEncryptedMessagesRead class]]) {
             TL_conversation *dialog = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
             if(dialog) {
-                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog.peer max_id:INT32_MAX out:YES];
+                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog.peer max_id:[MessageSender getCurrentSecretMessageId] out:YES];
             }
             return;
         }

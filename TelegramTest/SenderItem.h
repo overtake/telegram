@@ -39,7 +39,6 @@ typedef enum {
 
 
 @property (nonatomic,strong) TL_conversation *conversation;
-@property (nonatomic,strong) MessageTableItem *tableItem;
 
 @property (nonatomic, strong) NSString *filePath;
 

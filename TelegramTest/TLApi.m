@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.08.16..
+//  Auto created by Mikhail Filimonov on 25.08.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -770,9 +770,10 @@
 @end
 
 @implementation TLAPI_messages_forwardMessages
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags    from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
     TLAPI_messages_forwardMessages* obj = [[TLAPI_messages_forwardMessages alloc] init];
     obj.flags = flags;
+	
 	
 	
 	obj.from_peer = from_peer;
@@ -784,6 +785,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1888354709];
 	[stream writeInt:self.flags];
+	
 	
 	
 	[ClassStore TLSerialize:self.from_peer stream:stream];
@@ -1207,46 +1209,6 @@
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.n_id];
 	[stream writeLong:self.random_id];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_messages_sendBroadcast
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media {
-    TLAPI_messages_sendBroadcast* obj = [[TLAPI_messages_sendBroadcast alloc] init];
-    obj.contacts = contacts;
-	obj.random_id = random_id;
-	obj.message = message;
-	obj.media = media;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1082919718];
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.contacts count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLInputUser* obj = [self.contacts objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-	//Serialize ShortVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.random_id count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            if([self.random_id count] > i) {
-                NSNumber* obj = [self.random_id objectAtIndex:i];
-			[stream writeLong:[obj longValue]];
-            }  else
-                break;
-		}
-	}
-	[stream writeString:self.message];
-	[ClassStore TLSerialize:self.media stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -2787,18 +2749,22 @@
 @end
 
 @implementation TLAPI_messages_getBotCallbackAnswer
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data {
++(TLAPI_messages_getBotCallbackAnswer*)createWithFlags:(int)flags peer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data game_id:(int)game_id {
     TLAPI_messages_getBotCallbackAnswer* obj = [[TLAPI_messages_getBotCallbackAnswer alloc] init];
-    obj.peer = peer;
+    obj.flags = flags;
+	obj.peer = peer;
 	obj.msg_id = msg_id;
 	obj.data = data;
+	obj.game_id = game_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1494659324];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1821992216];
+	[stream writeInt:self.flags];
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.msg_id];
-	[stream writeByteArray:self.data];
+	if(self.flags & (1 << 0)) {[stream writeByteArray:self.data];}
+	if(self.flags & (1 << 1)) {[stream writeInt:self.game_id];}
 	return [stream getOutput];
 }
 @end
@@ -3073,6 +3039,54 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1920105769];
 	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setGameScore
++(TLAPI_messages_setGameScore*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id game_id:(int)game_id score:(int)score {
+    TLAPI_messages_setGameScore* obj = [[TLAPI_messages_setGameScore alloc] init];
+    obj.flags = flags;
+	
+	obj.peer = peer;
+	obj.n_id = n_id;
+	obj.user_id = user_id;
+	obj.game_id = game_id;
+	obj.score = score;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-541295585];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.game_id];
+	[stream writeInt:self.score];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setInlineGameScore
++(TLAPI_messages_setInlineGameScore*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id game_id:(int)game_id score:(int)score {
+    TLAPI_messages_setInlineGameScore* obj = [[TLAPI_messages_setInlineGameScore alloc] init];
+    obj.flags = flags;
+	
+	obj.n_id = n_id;
+	obj.user_id = user_id;
+	obj.game_id = game_id;
+	obj.score = score;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1425572593];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.game_id];
+	[stream writeInt:self.score];
 	return [stream getOutput];
 }
 @end

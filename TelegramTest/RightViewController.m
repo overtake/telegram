@@ -454,13 +454,13 @@
     
 }
 
-- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard {
+- (void)showInlineBotSwitchModalView:(TLUser *)user query:(NSString *)query {
     [self hideModalView:YES animation:NO];
     
     TMModalView *view = [self shareInlineModalView];
     
     self.modalView = view;
-    self.modalObject = [NSString stringWithFormat:@"@%@ %@",user.username, keyboard.query];
+    self.modalObject = query;
     
     
     if([Telegram isSingleLayout]) {

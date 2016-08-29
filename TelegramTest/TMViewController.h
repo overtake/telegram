@@ -120,5 +120,7 @@
 
 -(void)becomeFirstResponder:(BOOL)force;
 
+-(void)addSubview:(NSView *)subview;
+
 
 @end

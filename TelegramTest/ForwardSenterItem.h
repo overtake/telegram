@@ -10,7 +10,6 @@
 
 @interface ForwardSenterItem : SenderItem
 
-@property (nonatomic,strong) NSArray *tableItems;
 @property (nonatomic,strong) NSArray *fakes;
 @property (nonatomic,strong) NSArray *msg_ids;
 -(id)initWithMessages:(NSArray *)msgs forConversation:(TL_conversation *)conversation additionFlags:(int)additionFlags;

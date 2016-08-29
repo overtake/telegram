@@ -497,6 +497,10 @@ static void *kType;
 
 -(void)setRead_outbox_max_id:(int)read_outbox_max_id {
     [super setRead_outbox_max_id:read_outbox_max_id];
+    
+    if(self.type == DialogTypeSecretChat) {
+        int bp = 0;
+    }
 }
 
 

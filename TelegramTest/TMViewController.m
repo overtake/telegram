@@ -166,9 +166,11 @@
 }
 
 -(void)becomeFirstResponder:(BOOL)force {
-    if(force) {
-        
-    }
+    [self becomeFirstResponder];
+}
+
+-(void)addSubview:(NSView *)subview {
+    [self.view addSubview:subview];
 }
 
 

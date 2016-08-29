@@ -401,10 +401,10 @@ static const int navigationOffset = 48;
         newView.layer.backgroundColor = [NSColor whiteColor].CGColor;
         
     
-        float duration = 0.25;
+        float duration = 0.2;
         
         
-        float animOldFrom,animOldTo,animNewTo,animNewFrom = 0;
+        float animOldFrom = 0.0,animOldTo = 0.0,animNewTo = 0.0,animNewFrom = 0.0;
         
         CAMediaTimingFunction *timingFunction;
         
@@ -451,38 +451,40 @@ static const int navigationOffset = 48;
         
         [trm enumerateObjectsUsingBlock:^(TMView  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
+            NSPoint point = NSMakePoint(animOldTo, NSMinY(obj.frame));
             
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                [[obj animator] setFrameOrigin:NSMakePoint(animOldTo, NSMinY(obj.frame))];
-                [[obj animator] setAlphaValue:0.2];
-            } completionHandler:^{
+            CABasicAnimation *anim = [TMAnimations postionWithDuration:duration fromValue:NSMakePoint(0, NSMinY(obj.frame)) toValue:point];
+            
+            TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] init];
+            
+            [delegate setCompletion:^(BOOL complete) {
                 [obj removeFromSuperview];
             }];
             
+            anim.delegate = delegate;
             
+            [obj.layer removeAnimationForKey:@"position"];
+            [obj.layer addAnimation:anim forKey:@"position"];
+            [obj.layer setPosition:point];
+
         }];
         
-        
+        NSPoint point = NSMakePoint(animNewTo, NSMinY(newViewController.navigationBarView.frame));
         if(isAnimate) {
             
-            newViewController.navigationBarView.alphaValue = 0.2;
+            CABasicAnimation *anim = [TMAnimations postionWithDuration:duration fromValue:NSMakePoint(animNewFrom, NSMinY(newViewController.navigationBarView.frame)) toValue:point];
             
-            [newViewController.navigationBarView setFrameOrigin:NSMakePoint(NSMaxX(self.view.frame), NSMinY(newViewController.navigationBarView.frame))];
+            [newViewController.navigationBarView.layer removeAnimationForKey:@"position"];
+            [newViewController.navigationBarView.layer addAnimation:anim forKey:@"position"];
+            [newViewController.navigationBarView.layer setPosition:point];
+            [newViewController.navigationBarView.layer addAnimation:[TMAnimations fadeWithDuration:duration fromValue:0.2 toValue:1.0f] forKey:@"opacity"];
             
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext * _Nonnull context) {
-                [context setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
-                [[newViewController.navigationBarView animator] setFrameOrigin:NSMakePoint(animNewTo, NSMinY(newViewController.navigationBarView.frame))];
-                [[newViewController.navigationBarView animator] setAlphaValue:1.0f];
-            } completionHandler:^{
-                
-            }];
-        } else {
-            newViewController.navigationBarView.alphaValue = 1.0f;
         }
-
         
-        // end bar animation
+        [newViewController.navigationBarView setFrameOrigin:point];
+
+
+         // end bar animation
         
         
         __block int two = 2;
@@ -558,6 +560,7 @@ static const int navigationOffset = 48;
         [_ndelegate setCompletion:^(BOOL finished) {
             [newView setFrameOrigin:NSMakePoint(0, 0)];
             [newViewController viewDidAppear:NO];
+            [newViewController becomeFirstResponder];
             block();
         }];
         

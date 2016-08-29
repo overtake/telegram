@@ -710,7 +710,7 @@ static TGPhotoViewer *viewer;
     
     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    if(_list.count > 1 && !_waitRequest) {
+    if(_list.count > 1 && !_waitRequest && ![self.behavior isKindOfClass:[TGPVUserBehavior class]]) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
         if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
             _waitRequest = YES;

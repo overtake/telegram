@@ -27,7 +27,7 @@ typedef enum {
 
 - (void)setAnimation:(CAAnimation *)anim forKey:(NSString *)key;
 -(void)removeFromSuperview:(BOOL)animated;
--(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated;
+-(CABasicAnimation *)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated;
 -(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 -(void)widthWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 

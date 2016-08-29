@@ -547,6 +547,8 @@ static NSImage *higlightedImage() {
             recent = [recent subarrayWithRange:NSMakeRange(0, MIN(stickers_recent_limit(),recent.count))];
         }
        
+        NSDictionary *useRecent = [transaction objectForKey:@"recentStickers" inCollection:STICKERS_COLLECTION];
+        
         
         weakSelf.hasRecentStickers = recent.count > 0;
         
@@ -589,6 +591,21 @@ static NSImage *higlightedImage() {
         [weakSelf.sets enumerateObjectsUsingBlock:^(TL_stickerSet *set, NSUInteger idx, BOOL * _Nonnull stop) {
             if(!_isCustomStickerPack)
                 [items addObject:[[TGModernStickRowItem alloc] initWithObject:set.title]];
+            
+            NSDictionary *rpack = useRecent[@(set.n_id)];
+            if(rpack) {
+                [weakSelf.stickers[@(set.n_id)] sortUsingComparator:^NSComparisonResult(TL_document *obj1, TL_document *obj2) {
+                    
+                    int u1 = [rpack[@(obj1.n_id)] intValue];
+                    int u2 = [rpack[@(obj2.n_id)] intValue];
+                    
+                    NSComparisonResult result = [@(u1) compare:@(u2)];
+                    
+                    return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
+                    
+                }];
+            }
+            
             
             [weakSelf.stickers[@(set.n_id)] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 

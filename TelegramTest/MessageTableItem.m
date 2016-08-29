@@ -70,18 +70,22 @@ static NSCache *cItems;
         self.message = object;
         
         
-        if((self.message.media.caption.length > 0 && self.message.message.length == 0) || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0 && self.message.media.bot_result == nil)) {
-            NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+        if((self.message.media.caption.length > 0) || (self.message.media != nil && ![self.message.media isKindOfClass:[TL_messageMediaEmpty class]] && ![self.message.media isKindOfClass:[TL_messageMediaWebPage class]] && self.message.message.length > 0 && self.message.media.bot_result == nil)) {
             
-            NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;
+            if(self.message.message.length == 0) {
+                NSMutableAttributedString *c = [[NSMutableAttributedString alloc] init];
+                
+                NSString *caption = self.message.media.caption.length > 0 ? self.message.media.caption : self.message.message;
+                
+                [c appendString:[[caption trim] fixEmoji] withColor:TEXT_COLOR];
+                
+                [c setFont:[SettingsArchiver font13] forRange:c.range];
+                
+                [c detectAndAddLinks:self.linkParseTypes()];
+                
+                _caption = c;
+            }
             
-            [c appendString:[[caption trim] fixEmoji] withColor:TEXT_COLOR];
-            
-            [c setFont:[SettingsArchiver font13] forRange:c.range];
-            
-            [c detectAndAddLinks:self.linkParseTypes()];
-            
-            _caption = c;
         }
         
         [self rebuildDate];
@@ -101,7 +105,7 @@ static NSCache *cItems;
 
         self.isForwadedMessage = self.message.fwd_from != nil;
         
-        if(self.isForwadedMessage && [self.message.media isKindOfClass:[TL_messageMediaDocument class]] && ([self.message.media.document isSticker] || (self.message.media.document.audioAttr && !self.message.media.document.audioAttr.isVoice))) {
+        if(self.isForwadedMessage && (([self.message.media isKindOfClass:[TL_messageMediaDocument class]] && ([self.message.media.document isSticker] || (self.message.media.document.audioAttr && !self.message.media.document.audioAttr.isVoice))) || self.message.reply_markup != nil)) {
             self.isForwadedMessage = NO;
         }
         
@@ -448,9 +452,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     @try {
         if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
-           
-            
-            if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0) {
+           if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0) {
                 
                 objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 
@@ -797,7 +799,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
        
     }
     
-    if(self.message.edit_date != 0 && (!self.message.isPost || self.message.from_id == 0) && self.message.via_bot_id == 0) {
+    if(self.message.edit_date != 0 && (!self.message.isPost || self.message.from_id == 0) && self.message.via_bot_id == 0 && !self.message.fromUser.isBot) {
         [signString appendString:NSLocalizedString(@"Message.Edited", nil) withColor:GRAY_TEXT_COLOR];
     }
     

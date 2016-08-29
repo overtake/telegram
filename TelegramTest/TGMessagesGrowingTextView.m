@@ -158,7 +158,7 @@
     dispatch_block_t modal_caption_block = ^{
         TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
         
-        [modalView show:self.window animated:YES file:path ? path : image.name filedata:jpegNormalizedData(image) ptype:type caption:caption conversation:self.weakd.messagesController.conversation messagesViewController:self.weakd.messagesController];
+        [modalView show:self.window animated:YES file:path ? path : image.name filedata:jpegNormalizedData(image) ptype:type caption:nil conversation:self.weakd.messagesController.conversation messagesViewController:self.weakd.messagesController];
     };
     
     

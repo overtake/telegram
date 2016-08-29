@@ -114,7 +114,9 @@
 }
 
 
--(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
+-(CABasicAnimation *)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
+    
+    CABasicAnimation *anim = nil;
     
     if(animated) {
         int presentX = NSMinX(self.frame);
@@ -127,7 +129,7 @@
             presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
         }
         
-        CABasicAnimation *anim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, presentY) toValue:position];
+        anim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, presentY) toValue:position];
         
         
         [self.layer removeAnimationForKey:@"position"];
@@ -135,10 +137,11 @@
         [self.layer setPosition:position];
 
     }
-
-    
-    
+ 
     [self setFrameOrigin:position];
+    
+    return anim;
+
 }
 
 -(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated {

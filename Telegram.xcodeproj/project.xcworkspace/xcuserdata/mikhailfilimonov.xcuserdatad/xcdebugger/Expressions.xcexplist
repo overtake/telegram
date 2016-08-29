@@ -122,16 +122,7 @@
          contextName = "__39-[AppDelegate initializeKeyDownHandler]_block_invoke:AppDelegate.m">
          <PersistentStrings>
             <PersistentString
-               value = "result.keyCode">
-            </PersistentString>
-            <PersistentString
-               value = "result.modifierFlags">
-            </PersistentString>
-            <PersistentString
                value = "result.responder">
-            </PersistentString>
-            <PersistentString
-               value = "result.window">
             </PersistentString>
             <PersistentString
                value = "incomingEvent.window">
@@ -547,6 +538,9 @@
          contextName = "__30-[TGVTVideoView displayFrame:]_block_invoke:TGVTVideoView.m">
       </ContextState>
       <ContextState
+         contextName = "__57-[ChatHistoryController addAndSendMessages:senders:sync:]_block_invoke:ChatHistoryController.m">
+      </ContextState>
+      <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
          <PersistentStrings>
             <PersistentString
@@ -616,6 +610,9 @@
                value = "result">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[MessagesUtils conversationLastText:conversation:]:MessagesUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[NSString(NSString_FindURLs) locationsOfLinks:]:NSString+FindURLs.m">
@@ -1487,16 +1484,19 @@
                value = "object">
             </PersistentString>
             <PersistentString
-               value = "self.isForwadedMessage">
-            </PersistentString>
-            <PersistentString
                value = "self.message.media.document.mime_type">
             </PersistentString>
             <PersistentString
-               value = "self.user ">
+               value = "object.from_id">
             </PersistentString>
             <PersistentString
-               value = "object.from_id">
+               value = "self.isForwadedMessage">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.media.caption">
+            </PersistentString>
+            <PersistentString
+               value = "self.user ">
             </PersistentString>
             <PersistentString
                value = "self.message.fwd_from_id">
@@ -2582,6 +2582,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.view.bounds.size.height">
+            </PersistentString>
+            <PersistentString
+               value = "animNewFrom">
             </PersistentString>
             <PersistentString
                value = "newViewController.navigationBarView">
@@ -3747,6 +3750,12 @@
          contextName = "-[ForwardSenterItem senderFlags]:ForwardSenterItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "msg.via_bot_id">
+            </PersistentString>
+            <PersistentString
+               value = "msg.reply_markup">
+            </PersistentString>
+            <PersistentString
                value = "msg.isPost">
             </PersistentString>
          </PersistentStrings>
@@ -4038,6 +4047,14 @@
             </PersistentString>
             <PersistentString
                value = "item.itemCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[HistoryFilter filterAndAdd:latest:]_block_invoke:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "filterItems">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4743,6 +4760,9 @@
       </ContextState>
       <ContextState
          contextName = "-[TLUser(Category) type]:TLUserCategory.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[MessageSender proccessInlineKeyboardButton:messagesViewController:conversation:message:handler:]:MessageSender.m">
       </ContextState>
       <ContextState
          contextName = "__add_sticker_pack_by_name_block_invoke:FileUtils.m">
@@ -6518,19 +6538,10 @@
          contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "holeSql">
-            </PersistentString>
-            <PersistentString
-               value = "next">
-            </PersistentString>
-            <PersistentString
-               value = "allHoles">
-            </PersistentString>
-            <PersistentString
                value = "conversationId">
             </PersistentString>
             <PersistentString
-               value = "sql">
+               value = "limit">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7060,6 +7071,17 @@
          contextName = "__35-[TGInputMessageTemplate saveForce]_block_invoke:TGInputMessageTemplate.m">
       </ContextState>
       <ContextState
+         contextName = "-[TL_localMessage unread]:TL_localMessage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation.read_inbox_max_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.conversation.read_outbox_max_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGReplyObject initWithReplyMessage:]:TGReplyObject.m">
          <PersistentStrings>
             <PersistentString
@@ -7124,6 +7146,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.filter.botHole.max_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[NoMessagesView setConversation:]:NoMessagesView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "conversation.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -8396,6 +8426,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ForwardSenterItem setMsg_ids:]:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke189:MessageTableCell.m">
          <PersistentStrings>
             <PersistentString
@@ -8731,6 +8764,9 @@
                value = "((MessageTableItemVideo *)self.item).imageObject">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke.133:ForwardSenterItem.m">
       </ContextState>
       <ContextState
          contextName = "__89-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:flags:]_block_invoke1320:MessagesViewController.m">

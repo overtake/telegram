@@ -92,7 +92,7 @@
 
 - (void)showShareContactModalView:(TLUser *)user;
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
-- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard;
+- (void)showInlineBotSwitchModalView:(TLUser *)user query:(NSString *)query;
 - (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
 
 

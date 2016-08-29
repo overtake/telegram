@@ -21,7 +21,9 @@
 @property (nonatomic, strong) TGAudioPlayer *player;
 @property (nonatomic, assign) int state;
 @property (nonatomic, weak) MessageTableCellAudioView *cellView;
-@property (nonatomic,strong,readonly) NSArray *waveform;
+
+
+-(NSArray *)waveform;
 
 @property (nonatomic,strong) NSAttributedString *nameAttributedString;
 @property (nonatomic,assign) NSSize nameSize;

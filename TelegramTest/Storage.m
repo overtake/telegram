@@ -837,6 +837,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         NSMutableArray *holes = [NSMutableArray array];
         
+        
         NSString *holeSql = [NSString stringWithFormat:@"select * from %@ where peer_id = %@ and max_id > %@ and min_id < %@ and (type & 2 = 2) order by date asc",tableMessageHoles,@(conversationId),@(next ? min : min_id),@(next ? max_id : max)];
         
         
@@ -3006,6 +3007,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)addHolesAroundMessage:(TL_localMessage *)message completionHandler:(void (^)(TGMessageHole *hole, BOOL next))completionHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    if([message isKindOfClass:[TL_destructMessage class]])
+        return;
     
     [queue inDatabase:^(FMDatabase *db) {
         

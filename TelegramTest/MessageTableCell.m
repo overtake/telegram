@@ -35,7 +35,6 @@
         
         if(sender && sender.state != MessageSendingStateSent) {
             item.messageSender = sender;
-            item.messageSender.tableItem = item;
             if(item.messageSender.state == MessageStateWaitSend) {
                 [item.messageSender send];
             }

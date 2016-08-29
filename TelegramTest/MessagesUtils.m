@@ -290,6 +290,8 @@
             } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
                 msgText = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
 
+            } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
+                msgText = [NSString stringWithFormat:NSLocalizedString(@"Message.Action.ConversationGame", nil),action.score];
             }
 
             
@@ -480,6 +482,9 @@
         }
         
         
+    } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
+        
+       actionText = [NSString stringWithFormat:NSLocalizedString(@"Message.Action.GameScored", nil),action.score];
     }
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -508,6 +513,35 @@
     
     start = [attributedString appendString:[NSString stringWithFormat:@" %@ ", actionText] withColor:NSColorFromRGB(0xaeaeae)];
     [attributedString setFont:[SettingsArchiver font125] forRange:start];
+    
+    
+    if([action isKindOfClass:[TL_messageActionGameScore class]]) {
+        __block TL_keyboardButtonGame *game = nil;
+        
+        [message.replyMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            [obj.buttons enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if([obj isKindOfClass:[TL_keyboardButtonGame class]]) {
+                    game = obj;
+                    *stop = YES;
+                }
+                
+            }];
+            
+        }];
+        if(game) {
+            [attributedString appendString:@" "];
+            NSRange gameLink = [attributedString appendString:game.game_title withColor:LINK_COLOR];
+            [attributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(message.to_id.class),message.peer_id,message.reply_to_msg_id,message.n_id] forRange:gameLink];
+            [attributedString setFont:[SettingsArchiver fontMedium125] forRange:gameLink];
+        }
+        
+        NSRange range = [attributedString.string rangeOfString:[NSString stringWithFormat:@"%d",action.score]];
+        if(range.location != NSNotFound)
+            [attributedString setFont:[SettingsArchiver fontMedium125] forRange:range];
+        
+    }
     
     if(users.count > 0) {
         

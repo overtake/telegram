@@ -127,21 +127,16 @@
         
         [TMViewController showModalProgress];
         
-      //  if(chat.username.length > 0) {
-       //     link = [NSString stringWithFormat:@"https://telegram.me/%@/%d",chat.username,_messageCaller.n_id];
-       //     copy_block();
-      //  } else {
-            [RPCRequest sendRequest:[TLAPI_channels_exportMessageLink createWithChannel:chat.inputPeer n_id:_messageCaller.n_id] successHandler:^(id request, TL_exportedMessageLink *response) {
-                
-                link = response.link;
-                
-                copy_block();
-                
-            } errorHandler:^(id request, RpcError *error) {
-                alert(appName(), NSLocalizedString(error.error_msg, nil));
-                [TMViewController hideModalProgress];
-            }];
-      //  }
+        [RPCRequest sendRequest:[TLAPI_channels_exportMessageLink createWithChannel:chat.inputPeer n_id:_messageCaller.n_id] successHandler:^(id request, TL_exportedMessageLink *response) {
+            
+            link = response.link;
+            
+            copy_block();
+            
+        } errorHandler:^(id request, RpcError *error) {
+            alert(appName(), NSLocalizedString(error.error_msg, nil));
+            [TMViewController hideModalProgress];
+        }];
         
     }
     
@@ -153,6 +148,10 @@
         [ids sortUsingComparator:^NSComparisonResult(TLMessage * a, TLMessage * b) {
             return a.n_id > b.n_id ? NSOrderedDescending : NSOrderedAscending;
         }];
+        
+        if(ids.count == 0 && _messagesViewController.state == MessagesViewControllerStateNone && _messageCaller) {
+            [ids addObject:_messageCaller];
+        }
         
         
         [_tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {

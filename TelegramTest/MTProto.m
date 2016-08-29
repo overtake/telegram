@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 05.08.16.
+//  Auto created by Mikhail Filimonov on 25.08.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1122,16 +1122,19 @@
 @end
 
 @implementation TL_inputMediaPhotoExternal
-+(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url {
++(TL_inputMediaPhotoExternal*)createWithUrl:(NSString*)url caption:(NSString*)caption {
 	TL_inputMediaPhotoExternal* obj = [[TL_inputMediaPhotoExternal alloc] init];
 	obj.url = url;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
 	[stream writeString:self.url];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.url = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaPhotoExternal *)copy {
@@ -1139,6 +1142,7 @@
     TL_inputMediaPhotoExternal *objc = [[TL_inputMediaPhotoExternal alloc] init];
     
     objc.url = self.url;
+    objc.caption = self.caption;
     
     return objc;
 }
@@ -1163,23 +1167,27 @@
 @end
 
 @implementation TL_inputMediaDocumentExternal
-+(TL_inputMediaDocumentExternal*)createWithUrl:(TLInputFile*)url {
++(TL_inputMediaDocumentExternal*)createWithUrl:(NSString*)url caption:(NSString*)caption {
 	TL_inputMediaDocumentExternal* obj = [[TL_inputMediaDocumentExternal alloc] init];
 	obj.url = url;
+	obj.caption = caption;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
-	[ClassStore TLSerialize:self.url stream:stream];
+	[stream writeString:self.url];
+	[stream writeString:self.caption];
 }
 -(void)unserialize:(SerializedData*)stream {
-	self.url = [ClassStore TLDeserialize:stream];
+	super.url = [stream readString];
+	super.caption = [stream readString];
 }
         
 -(TL_inputMediaDocumentExternal *)copy {
     
     TL_inputMediaDocumentExternal *objc = [[TL_inputMediaDocumentExternal alloc] init];
     
-    objc.url = [self.url copy];
+    objc.url = self.url;
+    objc.caption = self.caption;
     
     return objc;
 }
@@ -7250,6 +7258,51 @@
     TL_messageActionHistoryClear *objc = [[TL_messageActionHistoryClear alloc] init];
     
     
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_messageActionGameScore
++(TL_messageActionGameScore*)createWithGame_id:(int)game_id score:(int)score {
+	TL_messageActionGameScore* obj = [[TL_messageActionGameScore alloc] init];
+	obj.game_id = game_id;
+	obj.score = score;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.game_id];
+	[stream writeInt:self.score];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.game_id = [stream readInt];
+	super.score = [stream readInt];
+}
+        
+-(TL_messageActionGameScore *)copy {
+    
+    TL_messageActionGameScore *objc = [[TL_messageActionGameScore alloc] init];
+    
+    objc.game_id = self.game_id;
+    objc.score = self.score;
     
     return objc;
 }
@@ -13369,35 +13422,43 @@
 @end
 
 @implementation TL_updateInlineBotCallbackQuery
-+(TL_updateInlineBotCallbackQuery*)createWithQuery_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data {
++(TL_updateInlineBotCallbackQuery*)createWithFlags:(int)flags query_id:(long)query_id user_id:(int)user_id msg_id:(TLInputBotInlineMessageID*)msg_id data:(NSData*)data game_id:(int)game_id {
 	TL_updateInlineBotCallbackQuery* obj = [[TL_updateInlineBotCallbackQuery alloc] init];
+	obj.flags = flags;
 	obj.query_id = query_id;
 	obj.user_id = user_id;
 	obj.msg_id = msg_id;
 	obj.data = data;
+	obj.game_id = game_id;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
 	[stream writeLong:self.query_id];
 	[stream writeInt:self.user_id];
 	[ClassStore TLSerialize:self.msg_id stream:stream];
-	[stream writeByteArray:self.data];
+	if(self.flags & (1 << 0)) {[stream writeByteArray:self.data];}
+	if(self.flags & (1 << 1)) {[stream writeInt:self.game_id];}
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
 	super.query_id = [stream readLong];
 	super.user_id = [stream readInt];
 	self.msg_id = [ClassStore TLDeserialize:stream];
-	super.data = [stream readByteArray];
+	if(self.flags & (1 << 0)) {super.data = [stream readByteArray];}
+	if(self.flags & (1 << 1)) {super.game_id = [stream readInt];}
 }
         
 -(TL_updateInlineBotCallbackQuery *)copy {
     
     TL_updateInlineBotCallbackQuery *objc = [[TL_updateInlineBotCallbackQuery alloc] init];
     
+    objc.flags = self.flags;
     objc.query_id = self.query_id;
     objc.user_id = self.user_id;
     objc.msg_id = [self.msg_id copy];
     objc.data = [self.data copy];
+    objc.game_id = self.game_id;
     
     return objc;
 }
@@ -13417,7 +13478,19 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(void)setData:(NSData*)data
+{
+   super.data = data;
+                
+    if(super.data == nil)  { super.flags&= ~ (1 << 0) ;} else { super.flags|= (1 << 0); }
+}            
+-(void)setGame_id:(int)game_id
+{
+   super.game_id = game_id;
+                
+    if(super.game_id == 0)  { super.flags&= ~ (1 << 1) ;} else { super.flags|= (1 << 1); }
+}
         
 @end
 
@@ -13609,6 +13682,47 @@
 -(TL_updateConfig *)copy {
     
     TL_updateConfig *objc = [[TL_updateConfig alloc] init];
+    
+    
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_updatePtsChanged
++(TL_updatePtsChanged*)create {
+	TL_updatePtsChanged* obj = [[TL_updatePtsChanged alloc] init];
+	
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	
+}
+-(void)unserialize:(SerializedData*)stream {
+	
+}
+        
+-(TL_updatePtsChanged *)copy {
+    
+    TL_updatePtsChanged *objc = [[TL_updatePtsChanged alloc] init];
     
     
     
@@ -21737,6 +21851,59 @@
             
 -(BOOL)isSame_peer {return (self.flags & (1 << 0)) > 0;}
             
+        
+@end
+
+@implementation TL_keyboardButtonGame
++(TL_keyboardButtonGame*)createWithText:(NSString*)text game_title:(NSString*)game_title game_id:(int)game_id start_param:(NSString*)start_param {
+	TL_keyboardButtonGame* obj = [[TL_keyboardButtonGame alloc] init];
+	obj.text = text;
+	obj.game_title = game_title;
+	obj.game_id = game_id;
+	obj.start_param = start_param;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[stream writeString:self.text];
+	[stream writeString:self.game_title];
+	[stream writeInt:self.game_id];
+	[stream writeString:self.start_param];
+}
+-(void)unserialize:(SerializedData*)stream {
+	super.text = [stream readString];
+	super.game_title = [stream readString];
+	super.game_id = [stream readInt];
+	super.start_param = [stream readString];
+}
+        
+-(TL_keyboardButtonGame *)copy {
+    
+    TL_keyboardButtonGame *objc = [[TL_keyboardButtonGame alloc] init];
+    
+    objc.text = self.text;
+    objc.game_title = self.game_title;
+    objc.game_id = self.game_id;
+    objc.start_param = self.start_param;
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
         
 @end
 
