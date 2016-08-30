@@ -9,7 +9,7 @@
 #import "MessageTableCell.h"
 #import "MessageTableCellTextView.h"
 #import "TGMessageViewSender.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 @interface MessageTableCell()<NSMenuDelegate>
 
 @end

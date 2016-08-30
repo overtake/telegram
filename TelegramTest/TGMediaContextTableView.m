@@ -1,7 +1,6 @@
 #import "TGMediaContextTableView.h"
 #import "TMTableView.h"
 #import "TMSearchTextField.h"
-#import "UIImageView+AFNetworking.h"
 #import "SpacemanBlocks.h"
 #import "TGImageView.h"
 #import "TGExternalImageObject.h"

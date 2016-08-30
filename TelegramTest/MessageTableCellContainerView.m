@@ -14,7 +14,7 @@
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
 #import "MessageReplyContainer.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGHeadChatPanel.h"
 #import "TGModalForwardView.h"
 

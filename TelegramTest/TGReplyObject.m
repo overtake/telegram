@@ -11,6 +11,7 @@
 #import "NSString+Extended.h"
 #import "MessageTableItem.h"
 #import "TGArticleImageObject.h"
+#import "TGExternalImageObject.h"
 @interface TGReplyObject ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -165,7 +166,10 @@ static NSCache *replyCache;
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaGeo class]]) {
         
-        
+        _replyThumb = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", _replyMessage.media.geo.lat,  _replyMessage.media.geo.n_long, ([NSScreen mainScreen].backingScaleFactor == 2 ? @"100x100" : @"50x50")]];
+        _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
+        _replyThumb.placeholder = gray_resizable_placeholder();
+
     }
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaVideo class]]) {

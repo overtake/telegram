@@ -2,9 +2,9 @@
 
 #import <objc/runtime.h>
 
-static const char *lockPropertyKey = "TLObjectLock::lock";
+static const char *lockPropertyKey = "TGObjectLock::lock";
 
-@interface TLObjectLockImpl : NSObject
+@interface TGObjectLockImpl : NSObject
 {
     TG_SYNCHRONIZED_DEFINE(objectLock);
 }
@@ -14,7 +14,7 @@ static const char *lockPropertyKey = "TLObjectLock::lock";
 
 @end
 
-@implementation TLObjectLockImpl
+@implementation TGObjectLockImpl
 
 - (id)init
 {
@@ -42,12 +42,12 @@ static const char *lockPropertyKey = "TLObjectLock::lock";
 
 - (void)tgLockObject
 {
-    TLObjectLockImpl *lock = (TLObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
+    TGObjectLockImpl *lock = (TGObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
     if (lock == nil)
     {
         @synchronized(self)
         {
-            lock = [[TLObjectLockImpl alloc] init];
+            lock = [[TGObjectLockImpl alloc] init];
             objc_setAssociatedObject(self, lockPropertyKey, lock, OBJC_ASSOCIATION_RETAIN);
         }
     }
@@ -57,12 +57,12 @@ static const char *lockPropertyKey = "TLObjectLock::lock";
 
 - (void)tgUnlockObject
 {
-    TLObjectLockImpl *lock = (TLObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
+    TGObjectLockImpl *lock = (TGObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
     if (lock == nil)
     {
         @synchronized(self)
         {
-            lock = [[TLObjectLockImpl alloc] init];
+            lock = [[TGObjectLockImpl alloc] init];
             objc_setAssociatedObject(self, lockPropertyKey, lock, OBJC_ASSOCIATION_RETAIN);
         }
     }

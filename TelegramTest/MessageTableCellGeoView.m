@@ -7,7 +7,6 @@
 //
 
 #import "MessageTableCellGeoView.h"
-#import "UIImageView+AFNetworking.h"
 #import "TGImageView.h"
 #import "TGCTextView.h"
 @interface MessageTableCellGeoView()

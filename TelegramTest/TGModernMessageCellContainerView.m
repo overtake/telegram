@@ -11,7 +11,7 @@
 #import "TGTextLabel.h"
 #import "MessageReplyContainer.h"
 #import "TGModernMessageCellRightView.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGModalForwardView.h"
 #import "TGCaptionView.h"
 #import "TGBotCommandsKeyboard.h"

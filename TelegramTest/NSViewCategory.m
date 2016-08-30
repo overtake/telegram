@@ -228,6 +228,21 @@
     self.layer.opacity = 1.0f;
 }
 
+-(instancetype)insertVibrancyViewBlendingMode:(int)mode
+{
+    Class vibrantClass=NSClassFromString(@"NSVisualEffectView");
+    if (vibrantClass)
+    {
+        NSVisualEffectView *vibrant=[[vibrantClass alloc] initWithFrame:self.bounds];
+        [vibrant setBlendingMode:mode];
+        [self addSubview:vibrant positioned:NSWindowBelow relativeTo:nil];
+        
+        return vibrant;
+    }
+    
+    return nil;
+}
+
 static CALAyerAnimationInstance *instance() {
     static CALAyerAnimationInstance *instance;
     static dispatch_once_t onceToken;

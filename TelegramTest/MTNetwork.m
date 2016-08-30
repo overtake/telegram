@@ -398,7 +398,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
     
     
     if(!isTestServer()) {
-        _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+        _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] init];
         
         
         void (^execute)() = ^{

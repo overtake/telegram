@@ -14,7 +14,7 @@
 #import "SelfDestructionController.h"
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGCaptionView.h"
 #import "TGExternalImageObject.h"
 

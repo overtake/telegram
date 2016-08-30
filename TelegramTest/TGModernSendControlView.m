@@ -7,7 +7,6 @@
 //
 
 #import "TGModernSendControlView.h"
-#import "POPLayerExtras.h"
 #import "TGModernMessagesBottomView.h"
 
 

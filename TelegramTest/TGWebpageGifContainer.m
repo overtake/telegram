@@ -8,7 +8,6 @@
 
 #import "TGWebpageGifContainer.h"
 #import "TGWebpageGifObject.h"
-#import "TGModernAnimatedImagePlayer.h"
 #import "TGVTVideoView.h"
 #import "SpacemanBlocks.h"
 @interface TGWebpageGifContainer () {

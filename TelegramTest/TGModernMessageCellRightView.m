@@ -9,7 +9,6 @@
 #import "TGModernMessageCellRightView.h"
 #import "TGTextLabel.h"
 #import "MessageStateLayer.h"
-#import "POPLayerExtras.h"
 @interface TGModernMessageCellRightView ()
 @property (nonatomic,strong) TGTextLabel *dateLabel;
 @property (nonatomic,strong) MessageStateLayer *stateLayer;

@@ -7,7 +7,6 @@
 //
 
 #import "TGCirclularCounter.h"
-#import "POPLayerExtras.h"
 #import "SpacemanBlocks.h"
 @interface TGCirclularCounter () {
     SMDelayedBlockHandle handle;

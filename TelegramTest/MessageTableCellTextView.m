@@ -10,7 +10,7 @@
 #import "MessageTableCellTextView.h"
 #import "MessageTableItemText.h"
 #import "TGTimerTarget.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGImageView.h"
 #import "XCDYouTubeKit.h"
 #import "TGWebpageContainer.h"

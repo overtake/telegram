@@ -31,6 +31,8 @@ typedef enum {
 -(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 -(void)widthWithCAAnimation:(NSRect)rect animated:(BOOL)animated;
 
+-(instancetype)insertVibrancyViewBlendingMode:(int)mode;
+
 -(void)performCAFade:(BOOL)animated;
 -(void)performCAShow:(BOOL)animated;
 -(void)performShake:(dispatch_block_t)completeBlock;
