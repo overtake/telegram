@@ -51,6 +51,8 @@ typedef enum {
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler;
 +(SSignal *)addStickerPack:(TL_messages_stickerSet *)pack;
 
-+(void)addRecentSticker:(TLDocument *)sticker ;
++(void)addRecentSticker:(TLDocument *)sticker;
+
++(void)addServiceNotification:(NSString *)message;
 
 @end

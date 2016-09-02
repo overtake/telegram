@@ -472,7 +472,7 @@
     NSPoint eventLocation = [_attachButton convertPoint: [theEvent locationInWindow] fromView: nil];
     
     if([_attachButton hitTest:eventLocation]) {
-        NSPoint dragPosition = NSMakePoint(80, 8);
+        NSPoint dragPosition = [self convertPoint:self.thumbView.frame.origin fromView:self.thumbView];
         
         NSString *path = mediaFilePath(self.item.message);
         

@@ -748,9 +748,15 @@ static NSMutableArray *wrong_files;
     if([[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDir]) {
         if(isDir) {
             
-            next();
+            confirm(NSLocalizedString(@"SendMessage.FolderFound",nil),NSLocalizedString(@"SendMessage.FolderFoundDesc",nil),^{
+                [messagesViewController sendFolder:file forConversation:messagesViewController.conversation];
+                next();
+            },^{
+                next();
+            });
             
             return;
+            
         }
         
     } else {
@@ -1117,6 +1123,36 @@ static TGLocationRequest *locationRequest;
         
     }];
     
+}
+
++(void)addServiceNotification:(NSString *)message {
+    
+    
+    __block TLUser *user = [[UsersManager sharedManager] find:777000];
+    
+    dispatch_block_t complete = ^{
+        if(user) {
+            TL_conversation *conversation = [[DialogsManager sharedManager] find:user.n_id];
+            
+            if(!conversation)
+                conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
+            if(!conversation)
+                conversation = user.dialog;
+            
+            
+            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from:nil reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:message media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 via_bot_id:0 edit_date:0 isViewed:YES state:DeliveryStateNormal];
+            
+            [MessagesManager addAndUpdateMessage:msg];
+        }
+    };
+    
+    if(!user) {
+        [[NewContactsManager sharedManager] importContact:[TL_inputPhoneContact createWithClient_id:rand_long() phone:@"42777" first_name:@"Telegram" last_name:@"Notifications"] callback:^(BOOL isAdd, TL_importedContact *contact, TLUser *importedUser) {
+            user = importedUser;
+            complete();
+        }];
+    } else
+        complete();
 }
 
 

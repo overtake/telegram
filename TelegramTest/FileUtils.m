@@ -240,7 +240,7 @@ NSDictionary *non_documents_mime_types() {
 void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
-        if(path)
+        if(path && message.dstate == DeliveryStateNormal && [path hasPrefix:[FileUtils path]])
             [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
 }
@@ -1205,49 +1205,21 @@ static inline NSString *hxURLEscape(NSString *v) {
                                                                                   kCFStringEncodingUTF8));
 }
 
-BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
+NSTask *zipDirectory(NSString *directory, NSString * archivePath)
 {
     //Delete existing zip
     if ( [[NSFileManager defaultManager] fileExistsAtPath:archivePath] ) {
         [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
     }
     
-    //Specify action
-    NSString *toolPath = @"/usr/bin/zip";
     
-    //Get directory contents
-    NSArray *pathsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[directoryURL path] error:nil];
+    NSTask *task = [[NSTask alloc] init];
+    [task setCurrentDirectoryPath:directory];
+    [task setLaunchPath:@"/usr/bin/zip"];
+    NSArray *argsArray = [NSArray arrayWithObjects:@"-r", @"-q", archivePath, @".", @"-i", @"*", nil];
+    [task setArguments:argsArray];
     
-    //Add arguments
-    NSMutableArray *arguments = [[NSMutableArray alloc] init];
-    [arguments insertObject:@"-r" atIndex:0];
-    [arguments insertObject:archivePath atIndex:0];
-    for ( NSString *filePath in pathsArray ) {
-        [arguments addObject:filePath]; //Maybe this would even work by specifying relative paths with ./ or however that works, since we set the working directory before executing the command
-        //[arguments insertObject:@"-j" atIndex:0];
-    }
-    
-    //Switch to a relative directory for working.
-    NSString *currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[directoryURL path]];
-    //MTLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
-    
-    //Create
-    NSTask *task = [[NSTask alloc] init] ;
-    [task setLaunchPath:toolPath];
-    [task setArguments:arguments];
-    
-    //Run
-    [task launch];
-    [task waitUntilExit];
-    
-    //Restore normal path
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDirectory];
-    
-    //Update filesystem
-    [[NSWorkspace sharedWorkspace] noteFileSystemChanged:archivePath];
-    
-    return ([task terminationStatus] == 0);
+    return task;
 }
 
 

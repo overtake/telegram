@@ -943,21 +943,12 @@ static NSArray *channelUpdates;
         
         if([update isKindOfClass:[TL_updateNewAuthorization class]]) {
             
-            
-            TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-            TLUser *user = [[UsersManager sharedManager] find:777000];
-            if(!conversation) {
-                conversation = [[DialogsManager sharedManager] createDialogForUser:user];
-                [conversation save];
-            }
-            
             NSString *displayDate = [[NSString alloc] initWithFormat:@"%@, %@ at %@", [TGDateUtils stringForDayOfWeek:update.date], [TGDateUtils stringForDialogTime:update.date], [TGDateUtils stringForShortTime:update.date]];
             
             NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
+
             
-            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from:nil reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 via_bot_id:0 edit_date:0 isViewed:YES state:DeliveryStateNormal];
-            
-            [MessagesManager addAndUpdateMessage:msg];
+            [MessageSender addServiceNotification:messageText];
             
             return;
         }

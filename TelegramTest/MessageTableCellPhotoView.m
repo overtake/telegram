@@ -62,7 +62,7 @@ NSImage *fireImage() {
         self.imageView.cornerRadius = 4;
         [self.imageView setContentMode:BTRViewContentModeScaleAspectFill];
         [self.imageView setTapBlock:^{
-            PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
+            PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.channelMsgId media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
             if(!weakSelf.item.isset)
                 return;

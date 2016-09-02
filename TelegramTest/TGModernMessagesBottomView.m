@@ -176,9 +176,11 @@ const float defYOffset = 8;
     [_messageActionsView setFrameSize:NSMakeSize(newSize.width, NSHeight(_messageActionsView.frame))];
     [_blockChatView setFrameSize:NSMakeSize(newSize.width, NSHeight(_blockChatView.frame))];
     
-    
-    
-    
+
+}
+
+-(NSString *)bot_start_var {
+    return _bot_start_var ? _bot_start_var : @"start";
 }
 
 -(void)performSendMessage {
@@ -664,13 +666,13 @@ const float defYOffset = 8;
             
             
             void (^callback)(NSString *name, id object) = ^(NSString *name,id object) {
-               
-                NSRange range = NSMakeRange(selectedRange.location - search.length, search.length);
+                
+                NSRange range = NSMakeRange(selectedRange.location - search.length - (type == TGHintViewShowEmojiType? 1 : 0), search.length + (type == TGHintViewShowEmojiType? 1 : 0));
                 
                 [_textView setSelectedRange:range];
                 
                 if(![object isKindOfClass:[TLUser class]]) {
-                    [_textView insertText:[name stringByAppendingString:@" "] replacementRange:range];
+                    [_textView insertText:type == TGHintViewShowEmojiType && selectedRange.location == search.length+1 ? name : [name stringByAppendingString:@" "] replacementRange:range];
                     
                 } else {
                     TLUser *user = object;
@@ -687,6 +689,8 @@ const float defYOffset = 8;
                 
                 [_messagesController.hintView showHashtagHintsWithQuery:search conversation:_messagesController.conversation peer_id:_messagesController.conversation.peer_id choiceHandler:callback];
                 
+            } else if(type == TGHintViewShowEmojiType) {
+                [_messagesController.hintView showEmojiHintsWithQuery:search conversation:_messagesController.conversation choiceHandler:callback];
             } else if(type == TGHintViewShowBotCommandType && [_textView.string rangeOfString:@"/"].location == 0) {
                 if([_messagesController.conversation.user isBot] || _messagesController.conversation.fullChat.bot_info != nil) {
                     
@@ -1030,6 +1034,7 @@ const float defYOffset = 8;
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
+
     [_imageAttachmentsController addItems:@[attachment] animated:YES];
     
     [self updateTextType];

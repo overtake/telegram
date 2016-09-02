@@ -248,8 +248,6 @@
 }
 
 - (void)cancel {
-    if(self.isCompressed)
-        [[NSFileManager defaultManager] removeItemAtPath:self.path_for_file error:nil];
     
     [self.uploader cancel];
     [super cancel];

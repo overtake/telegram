@@ -21,4 +21,10 @@ void setRemoteStickersLoaded(BOOL loaded);
 bool isRemoteStickersLoaded();
 
 +(BOOL)hasSticker:(TLDocument *)document;
+
+-(void)selectPrev;
+-(void)selectNext;
+
+-(TLDocument *)selectedSticker;
+
 @end

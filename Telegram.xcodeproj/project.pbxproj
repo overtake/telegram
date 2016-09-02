@@ -440,6 +440,8 @@
 		C25F91B91977EB17006868F3 /* TGImageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91B81977EB17006868F3 /* TGImageObject.m */; };
 		C25F91C4197858BF006868F3 /* LocationSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91C3197858BF006868F3 /* LocationSenderItem.m */; };
 		C25F91F0197D374F006868F3 /* TimeObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C25F91EF197D374F006868F3 /* TimeObserver.m */; };
+		C25FFC6B1D78861100EF0445 /* TGAttachFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = C25FFC6A1D78861100EF0445 /* TGAttachFolder.m */; };
+		C25FFC6E1D79808300EF0445 /* FolderAttachSender.m in Sources */ = {isa = PBXBuildFile; fileRef = C25FFC6D1D79808300EF0445 /* FolderAttachSender.m */; };
 		C261E3BD196EF1A80025A3F9 /* phone-x-format.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */; };
 		C261E3BF197031B90025A3F9 /* phone_numbers_for_OS_X.txt in Resources */ = {isa = PBXBuildFile; fileRef = C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */; };
 		C26752701A13D9F600152D9A /* TGPVUserBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C267526F1A13D9F600152D9A /* TGPVUserBehavior.m */; };
@@ -1996,6 +1998,10 @@
 		C25F91C3197858BF006868F3 /* LocationSenderItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSenderItem.m; sourceTree = "<group>"; };
 		C25F91EE197D374F006868F3 /* TimeObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeObserver.h; sourceTree = "<group>"; };
 		C25F91EF197D374F006868F3 /* TimeObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeObserver.m; sourceTree = "<group>"; };
+		C25FFC691D78861100EF0445 /* TGAttachFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGAttachFolder.h; sourceTree = "<group>"; };
+		C25FFC6A1D78861100EF0445 /* TGAttachFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGAttachFolder.m; sourceTree = "<group>"; };
+		C25FFC6C1D79808300EF0445 /* FolderAttachSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderAttachSender.h; sourceTree = "<group>"; };
+		C25FFC6D1D79808300EF0445 /* FolderAttachSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderAttachSender.m; sourceTree = "<group>"; };
 		C261E3BC196EF1A80025A3F9 /* phone-x-format.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "phone-x-format.txt"; sourceTree = "<group>"; };
 		C261E3BE197031B90025A3F9 /* phone_numbers_for_OS_X.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = phone_numbers_for_OS_X.txt; sourceTree = "<group>"; };
 		C267526E1A13D9F600152D9A /* TGPVUserBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGPVUserBehavior.h; sourceTree = "<group>"; };
@@ -3986,6 +3992,8 @@
 				C22A2A0E1C21C67A00678172 /* CompressedDocumentSenderItem.m */,
 				C2034BC61C31C8000080D023 /* ContextBotSenderItem.h */,
 				C2034BC71C31C8000080D023 /* ContextBotSenderItem.m */,
+				C25FFC6C1D79808300EF0445 /* FolderAttachSender.h */,
+				C25FFC6D1D79808300EF0445 /* FolderAttachSender.m */,
 			);
 			name = sender;
 			sourceTree = "<group>";
@@ -5261,6 +5269,8 @@
 				C2C85B831AE57D0100FBEABD /* TGAttachObject.m */,
 				C2C85B881AE9269B00FBEABD /* TGModalSetCaptionView.h */,
 				C2C85B891AE9269B00FBEABD /* TGModalSetCaptionView.m */,
+				C25FFC691D78861100EF0445 /* TGAttachFolder.h */,
+				C25FFC6A1D78861100EF0445 /* TGAttachFolder.m */,
 			);
 			name = "image-attach";
 			sourceTree = "<group>";
@@ -7124,6 +7134,7 @@
 				C2DF6A111D54A09D008B06D4 /* TGContactSelfUserRowView.m in Sources */,
 				C2A5BFFD18E03D150021BE68 /* MessageTableCellAudioView.m in Sources */,
 				C271525119B5C8AC00841C8A /* TMProgressModalView.m in Sources */,
+				C25FFC6E1D79808300EF0445 /* FolderAttachSender.m in Sources */,
 				C2753DC819DEAD0800752BAF /* SelectTextManager.m in Sources */,
 				C2ACCE591ADD2CD100ABEE78 /* TGConversationTableItem.m in Sources */,
 				0A9EDC5B1897BA0E0037E1BC /* RBLScrollView.m in Sources */,
@@ -7528,6 +7539,7 @@
 				C274C4201ACC09B0000DFDE4 /* XCDYouTubeVideoOperation.m in Sources */,
 				0A4A1A2218A153F800D756CD /* MessageTableItemDocument.m in Sources */,
 				C21C7B2C18D7044600253A7A /* MessageSenderItem.m in Sources */,
+				C25FFC6B1D78861100EF0445 /* TGAttachFolder.m in Sources */,
 				0A62CC8A181EFC1C0098720C /* Telegram.m in Sources */,
 				C2CE53C01BE2892E00BBEF5F /* ChatAdminsViewController.m in Sources */,
 				C24136381C64BFED00130D2E /* TL_documentAttributeAudio+Extension.m in Sources */,

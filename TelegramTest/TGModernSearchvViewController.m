@@ -172,6 +172,9 @@
     
     [_dispose dispose];
     
+    if(search.length == 0)
+        return;
+    
     SSignal *usersAndChats = [TGModernSearchSignals usersAndChatsSignal:search];
     SSignal *globalUsers = [TGModernSearchSignals globalUsersSignal:search];
     SSignal *messages = [TGModernSearchSignals messagesSignal:search];

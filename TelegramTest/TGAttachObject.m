@@ -45,6 +45,10 @@ static ASQueue *queue;
     });
 }
 
+-(ASQueue *)queue {
+    return queue;
+}
+
 
 -(void)prepareImage:(NSString *)file orData:(NSData *)data {
     
@@ -114,7 +118,7 @@ static ASQueue *queue;
             
             [_uploader setUploadComplete:^(UploadOperation *uploader, id input) {
                 
-                _uploader = nil;
+                weakSelf.uploader = nil;
                 
                 dispatch_after_seconds(0.3, ^{
                     [weakSelf.delegate didEndUploading:uploader];
@@ -247,6 +251,11 @@ static ASQueue *queue;
 
 -(Class)senderClass {
     return [ImageAttachSenderItem class];
+}
+
+-(void)cancel {
+    [_uploader cancel];
+    _uploader = nil;
 }
 
 -(void)save {

@@ -21,7 +21,10 @@
 #import "TGPVChatPhotoBehavior.h"
 #import "TGPipWindow.h"
 #import "TGAudioGlobalController.h"
-@interface TGPhotoViewer ()
+#import "MessageTableCellPhotoView.h"
+#import "MessageTableCellVideoView.h"
+#import "MessageTableCellDocumentView.h"
+@interface TGPhotoViewer () <TGPVContainerDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
 
@@ -122,7 +125,7 @@ static const int controlsHeight = 75;
     self.background.wantsLayer = YES;
     self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
-    
+    self.contentView.wantsLayer = YES;
     
     weak();
     
@@ -145,7 +148,7 @@ static const int controlsHeight = 75;
     
     
     _photoContainer = [[TGPVContainer alloc] initWithFrame:NSMakeRect(0, 0, 300, 600)];
-    
+    _photoContainer.delegate = self;
     
     [self.contentView addSubview:self.photoContainer];
     
@@ -163,6 +166,48 @@ static const int controlsHeight = 75;
     self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
     [self.contentView addSubview:self.zoomControl];
+}
+
+-(NSRect)requestShowRect:(TGPhotoViewerItem *)item {
+    
+//    if([item previewObject].reservedObject) {
+//        NSImageView * reserved = [item previewObject].reservedObject;
+//        
+//        if(!reserved || reserved.visibleRect.size.height <= 0)
+//            return NSZeroRect;
+//        
+//        NSRect viewFrameInWindowCoords = [reserved convertRect:reserved.bounds toView:nil];
+//        return [[NSApp mainWindow] convertRectToScreen:viewFrameInWindowCoords];
+//    }
+    
+    MessagesViewController *controller = appWindow().navigationController.messagesViewController;
+    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id randomId:0];
+    
+    NSInteger row = [controller indexOfObject:messageItem];
+    NSView *cellView = nil;
+    
+    @try {cellView = [controller.table viewAtColumn:0 row:row makeIfNecessary:NO];}@catch (NSException *exception) {}
+    
+    NSView *previewView = nil;
+    if(cellView) {
+        if([cellView isKindOfClass:[MessageTableCellPhotoView class]]) {
+            MessageTableCellPhotoView *photoView = (MessageTableCellPhotoView *)cellView;
+            previewView = photoView.imageView;
+        } else if([cellView isKindOfClass:[MessageTableCellVideoView class]]) {
+            MessageTableCellVideoView *videoView = (MessageTableCellVideoView *)cellView;
+            previewView = videoView.imageView;
+        } else if([cellView isKindOfClass:[MessageTableCellDocumentView class]]) {
+            MessageTableCellDocumentView *documentView = (MessageTableCellDocumentView *)cellView;
+            previewView = documentView.thumbView;
+        }
+    }
+    
+    if(previewView && previewView.visibleRect.size.height > 0) {
+        NSRect viewFrameInWindowCoords = [previewView convertRect:previewView.bounds toView:nil];
+        return [controller.table.window convertRectToScreen:viewFrameInWindowCoords];
+    }
+    
+    return NSZeroRect;
 }
 
 
@@ -700,6 +745,7 @@ static TGPhotoViewer *viewer;
     
     
     _currentItem = [self itemAtIndex:currentItemId];
+    
     
     [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
     

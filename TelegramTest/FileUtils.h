@@ -91,7 +91,7 @@ NSString *exportPath(long randomId,NSString *extension);
 void determinateURLLink(NSString *link);
 NSString *tg_domain_from_link(NSString *link);
 
-BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath);
+NSTask *zipDirectory(NSString *directory, NSString * archivePath);
 NSString *decodeCard(NSArray *card);
 NSArray *encodeCard(NSString *card);
 void open_user_by_name(NSDictionary * userName);

@@ -48,7 +48,7 @@ DYNAMIC_PROPERTY(DUser);
 
 @property (nonatomic,strong) id object;
 
-
+@property (nonatomic,strong) NSDictionary *emojiHint;
 @end
 
 @interface TGMessagesHintRowView : TMRowView
@@ -68,6 +68,17 @@ DYNAMIC_PROPERTY(DUser);
         _text = text;
         _desc = desc;
         _h = rand_long();
+    }
+    
+    return self;
+}
+
+-(id)initWithEmojiData:(NSDictionary *)emojiData {
+    if(self = [super init]) {
+        _emojiHint = emojiData;
+        _text = [NSString stringWithFormat:@"%@   %@",emojiData[@"obj"],emojiData[@"key"]];
+        _h = rand_long();
+        _result = emojiData[@"obj"];
     }
     
     return self;
@@ -430,6 +441,74 @@ DYNAMIC_PROPERTY(DUser);
     else
         [self hide];
     
+}
+
+
+-(void)showEmojiHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
+    
+    _choiceHandler = choiceHandler;
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
+    
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
+    test_start_group(@"emoji_find");
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    NSDictionary *emoji = [NSString emojiReplaceDictionary];
+
+    NSArray *recent = [Storage emoji];
+    
+    NSMutableDictionary *recentKeys = [NSMutableDictionary dictionary];
+    
+    [recent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        recentKeys[obj] = obj;
+    }];
+    
+    
+    NSMutableArray *recentlyUsed = [NSMutableArray array];
+    
+    [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        
+        if((query.length > 0 && [key rangeOfString:[query lowercaseString]].location != NSNotFound)) {
+            [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:@{@"key":key,@"obj":obj}]];
+        } else if(query.length == 0) {
+            if([obj isEqualToString:recentKeys[obj]]) {
+                [recentlyUsed addObject:@{@"key":key,@"obj":obj}];
+            }
+        }
+        
+    }];
+    
+    [recentlyUsed sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSUInteger index1 = [recent indexOfObject:obj1[@"obj"]];
+        NSUInteger index2 = [recent indexOfObject:obj2[@"obj"]];
+        return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        
+    }];
+    
+    [recentlyUsed enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
+    }];
+    
+    
+    test_step_group(@"emoji_find");
+    test_release_group(@"emoji_find");
+    
+    [self setCurrentTableView:_tableView];
+    
+    [_tableView removeAllItems:YES];
+    
+    [_tableView insert:items startIndex:0 tableRedraw:YES];
+    
+    if(items.count > 0)
+        [self show:NO];
+    else
+        [self hide];
+    
+    int bp = 0;
 }
 
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
@@ -974,7 +1053,6 @@ static NSMutableDictionary *inlineBotsExceptions;
         
         ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
         
-        weak();
         
         [behavior setComposeDone:^{
             //[weakSelf.messagesViewController.bottomView updateText];
@@ -1013,6 +1091,8 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     [self hide:YES];
 }
+
+
 
 -(void)selectNext {
     
@@ -1129,9 +1209,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     NSUInteger originalLength = string.length;
     
-    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound || (range = [string rangeOfString:@":"]).location != NSNotFound) {
         
-        type = [[string substringWithRange:range] isEqualToString:@"@"] ? TGHintViewShowMentionType : ([[string substringWithRange:range] isEqualToString:@"#"] ? TGHintViewShowHashtagType : TGHintViewShowBotCommandType);
+        type = [[string substringWithRange:range] isEqualToString:@"@"] ? TGHintViewShowMentionType : ([[string substringWithRange:range] isEqualToString:@"#"] ? TGHintViewShowHashtagType : ([[string substringWithRange:range] isEqualToString:@":"] ? TGHintViewShowEmojiType :TGHintViewShowBotCommandType));
         
         search = [string substringFromIndex:range.location + 1];
         

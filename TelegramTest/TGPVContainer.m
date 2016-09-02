@@ -576,6 +576,151 @@ static const int bottomHeight = 60;
 
 }
 
+
+/*
+ [self runAnimation:_currentViewerItem];
+ 
+ }
+ 
+ -(void)runAnimation:(TGPhotoViewerItem *)item {
+ 
+ 
+ NSRect oldRect = self.frame;
+ 
+ 
+ NSSize contentSize = [self contentFullSize:item];
+ 
+ // _imageContainerView.layer.anchorPoint = self.layer.anchorPoint = _imageView.layer.anchorPoint = NSMakePoint(0.5, 0.5);
+ 
+ 
+ // [self setFrameSize:NSMakeSize(contentSize.width, [self maxSize].height + 20)];
+ 
+ float x = (self.superview.bounds.size.width - contentSize.width) / 2;
+ float y = (self.superview.bounds.size.height - ([self maxSize].height + 20)) / 2;
+ 
+ 
+ NSRect contentRect = NSMakeRect(x, y, contentSize.width, [self maxSize].height + 20);
+ 
+ CAMediaTimingFunction *timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+ 
+ float duration = 0.125;
+ 
+ CABasicAnimation *anim = [TMAnimations postionWithDuration:duration fromValue:oldRect.origin toValue:contentRect.origin];
+ [self.layer addAnimation:anim forKey:@"position"];
+ 
+ CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
+ animation.duration = duration;
+ animation.timingFunction = timingFunction;
+ animation.removedOnCompletion = YES;
+ animation.fromValue = @(NSWidth(oldRect));
+ animation.toValue = @(NSWidth(contentRect));
+ [self.layer removeAnimationForKey:@"w"];
+ [self.layer addAnimation:animation forKey:@"w"];
+ 
+ 
+ animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.height"];
+ animation.duration = duration;
+ animation.timingFunction = timingFunction;
+ animation.removedOnCompletion = YES;
+ animation.fromValue = @(NSHeight(oldRect));
+ animation.toValue = @(NSHeight(contentRect));
+ [self.layer removeAnimationForKey:@"h"];
+ [self.layer addAnimation:animation forKey:@"h"];
+ 
+ 
+ [self setFrame:contentRect];
+ 
+ 
+ 
+ //  [_imageView setFrameSize:NSMakeSize(0, 0)];
+ 
+ // image container
+ 
+ 
+ animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.width"];
+ animation.duration = duration;
+ animation.timingFunction = timingFunction;
+ animation.removedOnCompletion = YES;
+ animation.fromValue = @(NSWidth(_imageContainerView.frame));
+ animation.toValue = @(contentSize.width);
+ [_imageContainerView.layer removeAnimationForKey:@"w"];
+ [_imageContainerView.layer addAnimation:animation forKey:@"w"];
+ 
+ 
+ animation = [CABasicAnimation animationWithKeyPath:@"bounds.size.height"];
+ animation.duration = duration;
+ animation.timingFunction = timingFunction;
+ animation.removedOnCompletion = YES;
+ animation.fromValue = @(NSHeight(_imageContainerView.frame));
+ animation.toValue = @(contentSize.height);
+ [_imageContainerView.layer removeAnimationForKey:@"h"];
+ [_imageContainerView.layer addAnimation:animation forKey:@"h"];
+ 
+ 
+ 
+ NSPoint icp = NSMakePoint(0, bottomHeight);
+ 
+ [_imageContainerView.layer addAnimation:[TMAnimations postionWithDuration:duration fromValue:NSMakePoint(0, 0) toValue:icp] forKey:@"position"];
+ 
+ 
+ [_imageContainerView setFrameSize:contentSize];
+ [_imageContainerView setFrameOrigin:icp];
+ 
+ 
+ {
+ POPBasicAnimation *animation = [POPBasicAnimation animation];
+ animation.property = [POPAnimatableProperty propertyWithName:@"width" initializer:^(POPMutableAnimatableProperty *prop) {
+ 
+ [prop setReadBlock:^(TGZoomableImage *image, CGFloat values[]) {
+ values[0] = NSWidth(image.frame);
+ }];
+ 
+ [prop setWriteBlock:^(TGZoomableImage *image, const CGFloat values[]) {
+ [image setFrameSize:NSMakeSize(values[0], NSHeight(image.frame))];
+ }];
+ 
+ prop.threshold = 0.01f;
+ }];
+ animation.repeatForever = NO;
+ animation.timingFunction = timingFunction;
+ animation.fromValue = @(NSWidth(_imageView.frame));
+ animation.toValue = @(contentSize.width);
+ animation.duration = duration;
+ animation.removedOnCompletion = YES;
+ [_imageView pop_addAnimation:animation forKey:@"width"];
+ 
+ 
+ animation = [POPBasicAnimation animation];
+ 
+ animation.property = [POPAnimatableProperty propertyWithName:@"height" initializer:^(POPMutableAnimatableProperty *prop) {
+ 
+ [prop setReadBlock:^(TGZoomableImage *image, CGFloat values[]) {
+ values[0] = NSHeight(image.frame);
+ }];
+ 
+ [prop setWriteBlock:^(TGZoomableImage *image, const CGFloat values[]) {
+ [image setFrameSize:NSMakeSize(NSWidth(image.frame), values[0])];
+ }];
+ 
+ prop.threshold = 0.01f;
+ }];
+ 
+ animation.repeatForever = NO;
+ animation.timingFunction = timingFunction;
+ animation.fromValue = @(NSHeight(_imageView.frame));
+ animation.toValue = @(contentSize.height);
+ animation.duration = duration;
+ animation.removedOnCompletion = YES;
+ [_imageView pop_addAnimation:animation forKey:@"height"];
+ 
+ }
+ 
+ 
+ 
+ }
+
+ */
+
 -(void)setCurrentViewerItem:(TGPhotoViewerItem *)currentViewerItem animated:(BOOL)animated {
     
     

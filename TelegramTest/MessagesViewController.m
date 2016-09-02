@@ -91,6 +91,7 @@
 #import "TGMessagesNavigationEditView.h"
 #import "TGModernMessagesBottomView.h"
 #import "TGAnimationBlockDelegate.h"
+#import "TGAttachFolder.h"
 #define HEADER_MESSAGES_GROUPING_TIME (10 * 60)
 
 #define SCROLLDOWNBUTTON_OFFSET 300
@@ -1237,7 +1238,7 @@ static NSTextAttachment *headerMediaIcon() {
         
         [ChatHistoryController dispatchOnChatQueue:^{
             
-            [weakSelf sendStartBot:startParam forConversation:conversation bot:bot];
+            [weakSelf sendStartBot:weakSelf.modernMessagesBottomView.bot_start_var forConversation:conversation bot:bot];
             
             [ASQueue dispatchOnMainQueue:^{
                 
@@ -2980,6 +2981,20 @@ static NSTextAttachment *headerMediaIcon() {
     
 }
 
+-(BOOL)selectNextStickerIfNeeded {
+    if(!_stickerPanel.isHidden) {
+        [_stickerPanel selectNext];
+    }
+    return !_stickerPanel.isHidden;
+}
+-(BOOL)selectPrevStickerIfNeeded {
+    if(!_stickerPanel.isHidden) {
+        [_stickerPanel selectPrev];
+    }
+    
+    return !_stickerPanel.isHidden;
+}
+
 
 -(void)paste:(id)sender {
     [_modernMessagesBottomView paste:sender];
@@ -3319,7 +3334,7 @@ static NSTextAttachment *headerMediaIcon() {
     
     
     if(self.conversation.user.isBot &&  (self.messages.count == 1 || (self.messages.count == 2 && [self.messages[1] isKindOfClass:[MessageTableItemServiceMessage class]]))) {
-        [self showBotStartButton:@"start" bot:self.conversation.user];
+        [self showBotStartButton:_modernMessagesBottomView.bot_start_var bot:self.conversation.user];
     } else if(self.conversation.user.isBot) {
         [_modernMessagesBottomView setActionState:TGModernMessagesBottomViewNormalState];
     }
@@ -3838,6 +3853,16 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         NSBeep();
         return;
     }
+    
+    if(!_stickerPanel.isHidden) {
+        TLDocument *sticker = [_stickerPanel selectedSticker];
+        if(sticker) {
+            [self sendSticker:sticker forConversation:_conversation addCompletionHandler:nil];
+            [_editTemplate updateTextAndSave:nil];
+            [_editTemplate performNotification];
+            return;
+        }
+    }
 
     if(_editTemplate.attributedString.length > 0) {
         if(_editTemplate.type == TGInputMessageTemplateTypeEditMessage) {
@@ -4050,6 +4075,34 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         
         [self.historyController addAndSendMessage:sender.message sender:sender];
     }];
+}
+
+- (void)sendFolder:(NSString *)file_path forConversation:(TL_conversation *)conversation {
+    if(self.conversation.type == DialogTypeSecretChat || !self.conversation.canSendMessage)
+        return;
+    
+    [[Storage yap] asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        NSMutableArray *attachments = [transaction objectForKey:conversation.cacheKey inCollection:ATTACHMENTS];
+        
+        if(!attachments) {
+            attachments = [[NSMutableArray alloc] init];
+        }
+        
+        TGAttachFolder *attach = [[TGAttachFolder alloc] initWithOriginFile:file_path orData:nil peer_id:conversation.peer_id];
+        
+        [attachments addObject:attach];
+        
+        [transaction setObject:attachments forKey:conversation.cacheKey inCollection:ATTACHMENTS];
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [_modernMessagesBottomView addAttachment:[[TGImageAttachment alloc] initWithItem:attach]];
+            
+        }];
+        
+    }];
+
 }
 
 

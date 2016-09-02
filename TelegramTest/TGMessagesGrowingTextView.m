@@ -299,6 +299,12 @@
     } else if(theEvent.keyCode == 126 && (self.string.length == 0)) {
         [self.weakd.messagesController forceSetEditSentMessage:NO];
         return;
+    } else if(theEvent.keyCode == 124) {
+        if([self.weakd.messagesController selectNextStickerIfNeeded])
+            return;
+    } else if(theEvent.keyCode == 123) {
+        if([self.weakd.messagesController selectPrevStickerIfNeeded])
+            return;
     }
     
     //MessagesBottomView

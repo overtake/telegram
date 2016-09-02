@@ -580,13 +580,17 @@ void exceptionHandler(NSException * exception)
 //                    
                     if(![appWindow().navigationController.currentController proccessEscAction]) {
                         
+                        
                         [appWindow().navigationController goBackWithAnimation:YES];
                         
                         
                     } else {
-                        return incomingEvent;
+                        if(appWindow().navigationController.currentController.messagesViewController == appWindow().navigationController.currentController) {
+                            if(appWindow().navigationController.currentController.messagesViewController.editTemplate.attributedString.length > 0) {
+                                return incomingEvent;
+                            }
+                        }
                     }
-//
 //                    
 //                }
                 

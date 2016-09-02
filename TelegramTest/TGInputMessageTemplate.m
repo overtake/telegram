@@ -342,7 +342,7 @@ static NSMutableDictionary *list;
 -(void)updateTextAndSave:(NSAttributedString *)nText {
     
     
-    NSAttributedString *newText = nText;
+    NSAttributedString *newText = nText ? nText : [[NSAttributedString alloc] init];
     
     if(newText.length > maxLength)
         newText = [newText attributedSubstringFromRange:NSMakeRange(0, MIN(newText.length,maxLength))];

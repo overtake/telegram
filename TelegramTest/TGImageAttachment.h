@@ -14,7 +14,7 @@
 
 @property (nonatomic,weak) TGImageAttachmentsController *controller;
 
-@property (nonatomic,strong,readonly) TGAttachObject *item;
+@property (nonatomic,weak,readonly) TGAttachObject *item;
 
 -(id)initWithItem:(TGAttachObject *)attach;
 

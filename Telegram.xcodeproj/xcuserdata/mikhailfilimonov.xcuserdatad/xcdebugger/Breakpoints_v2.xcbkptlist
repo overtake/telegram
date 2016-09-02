@@ -199,13 +199,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/Storage.m"
-            timestampString = "493904988.105008"
+            filePath = "TelegramTest/SelfDestructionController.m"
+            timestampString = "493901466.502958"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1417"
-            endingLineNumber = "1417"
-            landmarkName = "-deleteMessagesWithRandomIds:isChannelMessages:completeHandler:"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "-loopAndCheckMessages"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -215,13 +215,45 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/SelfDestructionController.m"
-            timestampString = "493901466.502958"
+            filePath = "TelegramTest/TGImageAttachment.m"
+            timestampString = "494440364.626081"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "-loopAndCheckMessages"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "-dealloc"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGAttachFolder.m"
+            timestampString = "494504648.961"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "213"
+            endingLineNumber = "213"
+            landmarkName = "-cancel"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/TGAttachFolder.m"
+            timestampString = "494504743.13576"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
+            landmarkName = "-dealloc"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

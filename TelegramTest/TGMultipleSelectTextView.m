@@ -70,8 +70,10 @@
     
     int index = [self currentIndexInLocation:[self convertPoint:[theEvent locationInWindow] fromView:nil]];
     
+    MessageTableItem *item = self.owner;
+
     
-    if([SelectTextManager count] > 0 && [self indexIsSelected:index]) {
+    if([SelectTextManager count] > 0 && [self indexIsSelected:index] && [item isKindOfClass:[MessageTableItem class]] && item.message.conversation.canSendMessage) {
         NSTextView *view = (NSTextView *) [self.window fieldEditor:YES forObject:self];
         [view setEditable:YES];
         [view setSelectable:YES];
@@ -135,7 +137,7 @@
         
         MessageTableItem *item = self.owner;
         
-        if(item.message.to_id.class == [TL_peerChat class] || item.message.to_id.class == [TL_peerUser class])  {
+        if(item.message.conversation.canSendMessage)  {
             
             [menu insertItem:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Reply", nil) withBlock:^(id sender) {
                 

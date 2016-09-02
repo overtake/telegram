@@ -17,6 +17,9 @@
 
 -(void)didStartUploading:(UploadOperation *)uploader;
 -(void)didEndUploading:(UploadOperation *)uploader;
+
+-(void)didUpdateProgress:(int)progress;
+
 @end
 
 @interface TGAttachObject : NSObject<NSCoding>
@@ -26,11 +29,11 @@
 
 @property (nonatomic,strong) UploadOperation *uploader;
 
-@property (nonatomic,assign,readonly) NSUInteger unique_id;
+@property (nonatomic,assign,readonly) long unique_id;
 
 @property (nonatomic,assign,readonly) int peer_id;
 
-@property (nonatomic,strong) id<TGAttachDelegate> delegate;
+@property (nonatomic,weak) id<TGAttachDelegate> delegate;
 
 @property (nonatomic,strong,readonly) NSImage *thumb;
 @property (nonatomic,strong,readonly) NSImage *image;
@@ -41,7 +44,7 @@
 -(NSString *)generatedPath;
 
 
-
+-(ASQueue *)queue;
 
 -(id)initWithOriginFile:(NSString *)file orData:(NSData *)data peer_id:(int)peer_id;
 
@@ -50,6 +53,8 @@
 -(Class)senderClass;
 
 -(void)save;
+
+-(void)cancel;
 
 -(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave;
 

@@ -477,10 +477,37 @@ static NSString *kDefaultDatacenter = @"default_dc";
             [_mtProto addMessageService:_requestService];
             [_mtProto addMessageService:_updateService];
             
+            if([self isAuth]) {
+                [self checkServerChangelog];
+            }
+            
         }
 
     }];
     
+}
+
+-(void)checkServerChangelog {
+    int local_v = (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"version"];
+    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+    int current_v = [[NSString stringWithFormat:@"%@%@",[version componentsSeparatedByString:@"."][0],[version componentsSeparatedByString:@"."][1]] intValue];
+    
+    if(local_v == 0 || current_v < local_v) {
+        [RPCRequest sendRequest:[TLAPI_help_getAppChangelog create] successHandler:^(id request, TL_help_appChangelog *response) {
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:current_v forKey:@"version"];
+            
+            if([response isKindOfClass:[TL_help_appChangelog class]]) {
+                [MessageSender addServiceNotification:response.text];
+            }
+                        
+            
+        } errorHandler:^(id request, RpcError *error) {
+        
+        }];
+    }
 }
 
 
