@@ -569,7 +569,7 @@ NSString * const PXListViewSelectionDidChange = @"PXListViewSelectionDidChange";
 	//Set the frames of the cells
 	for(id cell in _cellsInViewHierarchy)
 	{
-		NSInteger row = [cell row];
+		NSInteger row = [(PXListViewCell *)cell row];
 		[cell setFrame:[self rectOfRow:row]];
         [cell layoutSubviews];
 	}

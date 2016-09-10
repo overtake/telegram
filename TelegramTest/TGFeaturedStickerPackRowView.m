@@ -98,9 +98,6 @@
         
     }];
     
-    
-    
-
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {

@@ -90,7 +90,7 @@
     
     
     if(self.controller.navigationViewController == ((TelegramWindow *)[[Telegram delegate] mainWindow]).navigationController) {
-        if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout]) && ![[Telegram rightViewController] isModalViewActive]) {
+        if((self.controller.navigationViewController.viewControllerStack.count > 2 || [[Telegram mainViewController] isSingleLayout])) {
             [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
         } else if([[Telegram rightViewController] isModalViewActive] && [Telegram isSingleLayout]) {
             [self.field setStringValue:NSLocalizedString(@"Cancel", nil)];
@@ -98,19 +98,13 @@
             [self.field setStringValue:NSLocalizedString(@"Close", nil)];
         }
         
-        [self.imageView setHidden:(self.controller.navigationViewController.viewControllerStack.count <= 2 && ![Telegram isSingleLayout]) || [[Telegram rightViewController] isModalViewActive]];
+        [self.imageView setHidden:(self.controller.navigationViewController.viewControllerStack.count <= 2 && ![Telegram isSingleLayout]) ];
         
         
         [self.backUnreadMarkView setHidden:!([self.controller.navigationViewController.currentController isKindOfClass:[MessagesViewController class]] && [[Telegram mainViewController] isSingleLayout])];
     } else {
         [self.field setStringValue:[NSString stringWithFormat:@"   %@", NSLocalizedString(@"Compose.Back",nil)]];
         [self.imageView setHidden:NO];
-        [self.backUnreadMarkView setHidden:YES];
-    }
-   
-    if(self.controller.isDisclosureController && self.controller.navigationViewController.viewControllerStack.count <= 2) {
-        [self.field setStringValue:@""];
-        [self.imageView setHidden:YES];
         [self.backUnreadMarkView setHidden:YES];
     }
     

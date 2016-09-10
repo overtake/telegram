@@ -38,6 +38,8 @@ typedef enum {
 
 -(void)hide;
 
+-(BOOL)isVisibleAndHasSelected;
+
 -(void)performSelected;
 
 +(TGHintViewShowType)needShowHint:(NSString *)string selectedRange:(NSRange)selectedRange completeString:(NSString **)completeString searchString:(NSString **)searchString;

@@ -146,6 +146,21 @@
 
 }
 
+-(BOOL)isDone {
+    __block BOOL done = YES;
+    
+    [_containerView.subviews enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(!obj.item.isDone) {
+            done = NO;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return done;
+}
+
 -(void)mouseUp:(NSEvent *)theEvent {
     
 //    if([TMViewController isModalActive])
@@ -316,15 +331,7 @@
 }
 
 -(NSArray *)attachments {
-    NSMutableArray *a = [[NSMutableArray alloc] init];
-    
-    [_containerView.subviews enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
-        
-        [a insertObject:obj.item atIndex:0];
-        
-    }];
-    
-    return a;
+    return _containerView.subviews;
 }
 
 
@@ -364,12 +371,7 @@
         }];
         
 
-        int bp = 0;
-        
     }];
-    
-    
-    
     
     
     if(animated)

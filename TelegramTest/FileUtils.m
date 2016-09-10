@@ -90,7 +90,7 @@ NSString *const kBotInlineTypeVoice = @"voice";
     
     
     [openDlg setCanChooseFiles:YES];
-    [openDlg setCanChooseDirectories:NO];
+    [openDlg setCanChooseDirectories:types == nil];
     [openDlg setCanCreateDirectories:YES];
     if(types.count > 0)
         [openDlg setAllowedFileTypes:types];
@@ -921,6 +921,21 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
                     
                     
                     [navigationController.messagesViewController showMessage:msg fromMsg:fromMsg flags:ShowMessageTypeReply];
+                }
+                
+                return;
+            }
+            
+            if([command isEqualToString:@"startgame"]) {
+                
+                if(vars[@"game_id"] && vars[@"start_param"]) {
+                   
+                    TL_localMessage  *msg = [[TL_localMessage alloc] init];
+                    msg.n_id = [vars[@"message_id"] intValue];
+                    
+                    [MessageSender proccessInlineKeyboardButton:[TL_keyboardButtonGame createWithText:vars[@"text"] game_title:vars[@"game_title"] game_id:[vars[@"game_id"] intValue] start_param:vars[@"start_param"]] messagesViewController:navigationController.messagesViewController conversation:navigationController.messagesViewController.conversation message:msg handler:^(TGInlineKeyboardProccessType type) {
+                        
+                    }];
                 }
                 
                 return;

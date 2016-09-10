@@ -75,7 +75,7 @@
     
     
     if(unread.count > 0) {
-        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers create] successHandler:^(id request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers createWithN_id:unread.mutableCopy] successHandler:^(id request, id response) {
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [transaction removeObjectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];

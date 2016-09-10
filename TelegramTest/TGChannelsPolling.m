@@ -108,7 +108,7 @@ static int pollingDelay = 5;
                 }
                 
                  if(!repeat && !_isStoped)
-                    [self launchTimer:[response timeout] repeat:YES];
+                    [self launchTimer:[(TL_updates_channelDifference *)response timeout] repeat:YES];
                 
             }];
         

@@ -920,7 +920,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)invalidateChannelMessagesWithPts:(int)pts {
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:[NSString stringWithFormat:@"update %@ set invalidate = 1 where pts <= ?",tableChannelMessages],@(pts)];
+       // [db executeUpdate:[NSString stringWithFormat:@"update %@ set invalidate = 1 where pts <= ?",tableChannelMessages],@(pts)];
         
     }];
 }

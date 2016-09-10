@@ -41,6 +41,8 @@
 @property (nonatomic,assign,readonly) NSSize imageSize;
 
 
+@property (nonatomic,assign,readonly,getter=isDone) BOOL done;
+
 -(NSString *)generatedPath;
 
 
@@ -57,5 +59,7 @@
 -(void)cancel;
 
 -(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave;
+
+
 
 @end

@@ -147,10 +147,13 @@
     
     NSMenuItem *attachFileItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Attach.File", nil) withBlock:^(id sender) {
         [FileUtils showPanelWithTypes:nil completionHandler:^(NSArray *paths) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MessageSender sendFilesByPath:paths dialog:_messagesController.conversation isMultiple:YES asDocument:YES messagesViewController:_messagesController];
+            });
             
-            [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-                [self.messagesController sendDocument:obj forConversation:_messagesController.conversation];
-            }];
+//            [paths enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+//                [self.messagesController sendDocument:obj forConversation:_messagesController.conversation];
+//            }];
             
         }];
     }];

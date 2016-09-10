@@ -250,6 +250,10 @@ CACHE_IMAGE(MusicStandartCover_Active);
 
 CACHE_IMAGE(pip_on);
 CACHE_IMAGE(pip_off);
+
+CACHE_IMAGE(Folder);
+CACHE_IMAGE(trending);
+
 @interface ImageUtils : NSObject
 
 

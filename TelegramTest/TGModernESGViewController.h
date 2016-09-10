@@ -42,5 +42,5 @@
 +(void)reloadStickers;
 
 +(SSignal *)stickersSignal:(TLStickerSet *)stickerSet;
-
++(SSignal *)stickersSignal:(TLStickerSet *)stickerSet progress:(BOOL)progress;
 @end

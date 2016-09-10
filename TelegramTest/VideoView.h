@@ -1,6 +1,5 @@
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
-#import <QuickTime/QuickTime.h>
 
 #include <sys/types.h>
 #include <stdint.h>

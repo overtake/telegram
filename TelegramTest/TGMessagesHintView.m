@@ -453,7 +453,6 @@ DYNAMIC_PROPERTY(DUser);
     if(self.messagesViewController.state != MessagesViewControllerStateNone)
         return;
     
-    test_start_group(@"emoji_find");
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     NSDictionary *emoji = [NSString emojiReplaceDictionary];
@@ -493,9 +492,7 @@ DYNAMIC_PROPERTY(DUser);
         [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
     }];
     
-    
-    test_step_group(@"emoji_find");
-    test_release_group(@"emoji_find");
+
     
     [self setCurrentTableView:_tableView];
     
@@ -504,11 +501,10 @@ DYNAMIC_PROPERTY(DUser);
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
     if(items.count > 0)
-        [self show:NO];
+        [self show:NO selectNext:NO];
     else
         [self hide];
     
-    int bp = 0;
 }
 
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
@@ -547,9 +543,6 @@ DYNAMIC_PROPERTY(DUser);
         
     }
     
-    
-    
-    
     NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:allowUsernameless && ( self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]]))] : nil;
     
     
@@ -584,36 +577,6 @@ DYNAMIC_PROPERTY(DUser);
             
         }];
         
-        
-        
-        //        __block NSMutableDictionary *bots;
-        //
-        //        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        //
-        //            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
-        //
-        //        }];
-        //
-        //        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
-        //
-        //            int dateUsed = [bot[@"date"] intValue];
-        //            int botId = [bot[@"id"] intValue];
-        //
-        //            TLUser *user = [[UsersManager sharedManager] find:botId];
-        //            //two weeks
-        //            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
-        //                [botUsers addObject:user];
-        //            }
-        //
-        //        }];
-        //
-        //        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-        //
-        //            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
-        //
-        //            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-        //
-        //        }];
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
@@ -936,12 +899,11 @@ static NSMutableDictionary *inlineBotsExceptions;
     
 }
 
-
-
--(void)show:(BOOL)animated {
+-(void)show:(BOOL)animated selectNext:(BOOL)selectNext {
     if(self.alphaValue == 1.0f && !self.isHidden) {
         [self updateFrames:YES];
-        [self selectNext];
+        if(selectNext)
+            [self selectNext];
         return;
     }
     
@@ -962,8 +924,12 @@ static NSMutableDictionary *inlineBotsExceptions;
     }
     
     [self updateFrames:NO];
-    
-    [self selectNext];
+    if(selectNext)
+        [self selectNext];
+}
+
+-(void)show:(BOOL)animated {
+    [self show:animated selectNext:YES];
 }
 
 -(void)updateFrames:(BOOL)animated {
@@ -998,7 +964,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     
 }
 
-
+-(BOOL)isVisibleAndHasSelected {
+    return !self.isHidden && self.currentTableView.selectedItem != nil;
+}
 
 
 -(void)hide {

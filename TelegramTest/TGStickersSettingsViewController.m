@@ -114,7 +114,7 @@
     
     [Notification perform:STICKERS_REORDER data:@{KEY_ORDER:reoder}];
     
-    [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithOrder:reoder] successHandler:^(id request, id response) {
+    [RPCRequest sendRequest:[TLAPI_messages_reorderStickerSets createWithFlags:0 order:reoder] successHandler:^(id request, id response) {
         
         
     } errorHandler:^(id request, RpcError *error) {

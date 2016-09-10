@@ -12,7 +12,6 @@
 #import "TLPeer+Extensions.h"
 #import "UploadOperation.h"
 #import "ImageUtils.h"
-#import <QTKit/QTKit.h>
 #import "Crypto.h"
 #import "FileUtils.h"
 #import "QueueManager.h"
@@ -748,6 +747,7 @@ static NSMutableArray *wrong_files;
     if([[NSFileManager defaultManager] fileExistsAtPath:file isDirectory:&isDir]) {
         if(isDir) {
             
+#ifdef TGDEBUG
             confirm(NSLocalizedString(@"SendMessage.FolderFound",nil),NSLocalizedString(@"SendMessage.FolderFoundDesc",nil),^{
                 [messagesViewController sendFolder:file forConversation:messagesViewController.conversation];
                 next();
@@ -755,6 +755,9 @@ static NSMutableArray *wrong_files;
                 next();
             });
             
+#else
+            next();
+#endif
             return;
             
         }
@@ -795,6 +798,8 @@ static NSMutableArray *wrong_files;
 
 +(BOOL)sendDraggedFiles:(id <NSDraggingInfo>)sender dialog:(TL_conversation *)dialog asDocument:(BOOL)asDocument  messagesViewController:(MessagesViewController *)messagesViewController {
     NSPasteboard *pboard;
+    
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     
     if(![dialog canSendMessage])
         return NO;

@@ -187,6 +187,13 @@ const float defYOffset = 8;
     
     BOOL performSend = _inputTemplate.forwardMessages.count > 0 || _inputTemplate.attributedString.string.trim.length > 0 || _imageAttachmentsController.attachments.count > 0;
     
+    performSend = performSend && _imageAttachmentsController.isDone;
+    
+    if(!_imageAttachmentsController.isDone) {
+        NSBeep();
+        return;
+    }
+    
     if(_inputTemplate.attributedString.length == 0) {
         [_messagesController performForward:_messagesController.conversation];
     } else if(_inputTemplate.attributedString.string.trim.length > 0) {
@@ -810,6 +817,7 @@ const float defYOffset = 8;
     }
     [self updateTextType];
 }
+
 
 -(void)_didClickedOnBlockedView:(id)sender {
     if(_messagesController.conversation.isInvisibleChannel) {

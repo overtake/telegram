@@ -155,6 +155,9 @@
         
     }
     
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+    
     dispatch_block_t modal_caption_block = ^{
         TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
         
@@ -190,10 +193,14 @@
         {
             
             if(self.weakd.messagesController.conversation.type != DialogTypeSecretChat) {
-                modal_caption_block();
                 
-                break;
-            } else {
+                
+                if(isDir) {
+                    [MessageSender sendFilesByPath:@[path] dialog:self.weakd.messagesController.conversation isMultiple:YES asDocument:YES messagesViewController:self.weakd.messagesController];
+                } else
+                    modal_caption_block();
+                
+            } else if(!isDir) {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
                     if([result intValue] == 1000) {
                         
@@ -201,11 +208,11 @@
                         
                     }
                 }];
-                break;
+                
             }
             
             
-            
+            break;
             
         }
             
@@ -270,8 +277,6 @@
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    
-    
     TGMessagesHintView *hint = self.weakd.messagesController.hintView;
     
     
@@ -288,11 +293,12 @@
             
         }
         
-        
         if(isEnterAccess(theEvent)) {
+            if(hint.isVisibleAndHasSelected) {
+                [hint performSelected];
+                return;
+            }
             
-            [hint performSelected];
-            return;
             
         }
         
@@ -319,6 +325,7 @@
     
     return [super becomeFirstResponder];
 }
+
 
 @end
 

@@ -393,6 +393,7 @@ void exceptionHandler(NSException * exception)
 
 - (void)initializeKeyDownHandler {
     
+    
     static BOOL buttonRecordIsUp = YES;
     
     id block = ^(NSEvent *incomingEvent) {
@@ -876,6 +877,16 @@ void exceptionHandler(NSException * exception)
     };
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDraggedMask) handler:block3];
+    
+    
+    
+//    id block4 = ^(NSEvent *incomingEvent) {
+//        
+//        return incomingEvent;
+//    };
+//    
+//    [NSEvent addLocalMonitorForEventsMatchingMask:(NSEventMaskSwipe) handler:block4];
+
     
 }
 

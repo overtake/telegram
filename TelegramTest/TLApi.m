@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.08.16..
+//  Auto created by Mikhail Filimonov on 09.09.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -2401,13 +2401,17 @@
 @end
 
 @implementation TLAPI_messages_reorderStickerSets
-+(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order {
++(TLAPI_messages_reorderStickerSets*)createWithFlags:(int)flags  order:(NSMutableArray*)order {
     TLAPI_messages_reorderStickerSets* obj = [[TLAPI_messages_reorderStickerSets alloc] init];
-    obj.order = order;
+    obj.flags = flags;
+	
+	obj.order = order;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1613775824];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2016638777];
+	[stream writeInt:self.flags];
+	
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2915,14 +2919,26 @@
 @end
 
 @implementation TLAPI_messages_readFeaturedStickers
-+(TLAPI_messages_readFeaturedStickers*)create {
++(TLAPI_messages_readFeaturedStickers*)createWithN_id:(NSMutableArray*)n_id {
     TLAPI_messages_readFeaturedStickers* obj = [[TLAPI_messages_readFeaturedStickers alloc] init];
-    
+    obj.n_id = n_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:14818491];
-	
+	SerializedData* stream = [ClassStore streamWithConstuctor:1527873830];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
 	return [stream getOutput];
 }
 @end
@@ -2964,19 +2980,6 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:-1425873454];
 	
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_messages_getUnusedStickers
-+(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit {
-    TLAPI_messages_getUnusedStickers* obj = [[TLAPI_messages_getUnusedStickers alloc] init];
-    obj.limit = limit;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1124718171];
-	[stream writeInt:self.limit];
 	return [stream getOutput];
 }
 @end
@@ -3087,6 +3090,44 @@
 	[ClassStore TLSerialize:self.user_id stream:stream];
 	[stream writeInt:self.game_id];
 	[stream writeInt:self.score];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getMaskStickers
++(TLAPI_messages_getMaskStickers*)createWithN_hash:(int)n_hash {
+    TLAPI_messages_getMaskStickers* obj = [[TLAPI_messages_getMaskStickers alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1706608543];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_dropTempAuthKeys
++(TLAPI_auth_dropTempAuthKeys*)createWithExcept_auth_keys:(NSMutableArray*)except_auth_keys {
+    TLAPI_auth_dropTempAuthKeys* obj = [[TLAPI_auth_dropTempAuthKeys alloc] init];
+    obj.except_auth_keys = except_auth_keys;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1907842680];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.except_auth_keys count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.except_auth_keys count] > i) {
+                NSNumber* obj = [self.except_auth_keys objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
 	return [stream getOutput];
 }
 @end

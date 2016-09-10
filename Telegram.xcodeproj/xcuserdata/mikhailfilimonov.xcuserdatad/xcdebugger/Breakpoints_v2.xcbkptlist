@@ -16,7 +16,7 @@
             startingLineNumber = "14946"
             endingLineNumber = "14946"
             landmarkName = "sqlite3_rekey_v2()"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -128,7 +128,7 @@
             startingLineNumber = "393"
             endingLineNumber = "393"
             landmarkName = "-onStateChanged:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -144,23 +144,7 @@
             startingLineNumber = "399"
             endingLineNumber = "399"
             landmarkName = "-onStateChanged:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGStickerPackEmojiController.m"
-            timestampString = "493316798.948686"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "378"
-            endingLineNumber = "378"
-            landmarkName = "-didSelected:scrollToPack:selectItem:disableAnimation:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -231,13 +215,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGAttachFolder.m"
-            timestampString = "494504648.961"
+            filePath = "TelegramTest/TGImageAttachmentsController.m"
+            timestampString = "494514584.045794"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "213"
-            endingLineNumber = "213"
-            landmarkName = "-cancel"
+            startingLineNumber = "288"
+            endingLineNumber = "288"
+            landmarkName = "-removeItem:animated:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -247,13 +231,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGAttachFolder.m"
-            timestampString = "494504743.13576"
+            filePath = "TelegramTest/TGAllStickersTableView.m"
+            timestampString = "495119806.714973"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
-            landmarkName = "-dealloc"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "-redrawRow"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TelegramTest/MessageSender.m"
+            timestampString = "495204371.590923"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "875"
+            endingLineNumber = "875"
+            landmarkName = "+proccessInlineKeyboardButton:messagesViewController:conversation:message:handler:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

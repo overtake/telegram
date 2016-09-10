@@ -15,7 +15,7 @@
 #import "TGHorizontalTableView.h"
 #import "TGModernESGViewController.h"
 #import "TGGifKeyboardView.h"
-
+#import "TGHotPacksContainerView.h"
 @interface TGPackItem : NSObject
 @property (nonatomic,strong) TGImageObject *imageObject;
 @property (nonatomic,assign) long packId;
@@ -48,7 +48,7 @@
 
 @interface TGStickerPackView : PXListViewCell
 @property (nonatomic,assign,setter=setSelected:) BOOL isSelected;
-@property (nonatomic,strong) TGImageView *imageView;
+@property (nonatomic,strong) TGStickerImageView *imageView;
 @property (nonatomic,strong) id <TGStickerPackButtonDelegate> delegate;
 @property (nonatomic,strong) TMView *separator;
 @property (nonatomic,strong) TGPackItem *packItem;
@@ -62,7 +62,7 @@
 
 -(instancetype)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
-        _imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(2, 2, 28, 28)];
+        _imageView = [[TGStickerImageView alloc] initWithFrame:NSMakeRect(2, 2, 28, 28)];
         [_imageView setCenterByView:self];
         [self addSubview:_imageView];
         
@@ -156,6 +156,7 @@
 @property (nonatomic,strong) TGHorizontalTableView *tableView;
 @property (nonatomic,strong) NSMutableArray *packs;
 @property (nonatomic, strong) TGGifKeyboardView *gifContainer;
+@property (nonatomic,strong) TGHotPacksContainerView *hotPacksView;
 
 
 @end
@@ -185,17 +186,20 @@
         weak();
         
         _stickers = [[TGAllStickersTableView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
-        //[_stickers load:NO];
         [_stickers setDidNeedReload:^{
             [weakSelf reload:NO];
         }];
         
        [self addSubview:_stickers.containerView];
         
+        _hotPacksView = [[TGHotPacksContainerView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
+        [self addSubview:_hotPacksView.containerView];
+        [_hotPacksView.containerView setHidden:YES];
+        
+        
         _gifContainer = [[TGGifKeyboardView alloc] initWithFrame:NSMakeRect(0, NSHeight(_tableView.frame), NSWidth(frameRect), NSHeight(frameRect) - NSHeight(_tableView.frame))];
         [self addSubview:_gifContainer];
         [_gifContainer setHidden:YES];
-        
         
         _gifContainer.autoresizingMask = NSViewHeightSizable;
         [self addScrollEvent];
@@ -268,7 +272,6 @@
     
     [_gifContainer clear];
     
-   // [_packsContainerView removeAllSubviews];
     
 }
 
@@ -291,7 +294,12 @@
     }
     
     
+    __block BOOL hasUnread = NO;
+    
+    [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        hasUnread = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count] > 0;
 
+    }];
     
     if(_packs.count == 0)
     {
@@ -300,6 +308,14 @@
         gifpack.packId = -3;
         gifpack.image = [image_emojiGifContainer() imageTintedWithColor:GRAY_ICON_COLOR];
         [_packs addObject:gifpack];
+        
+        if(hasUnread && ACCEPT_FEATURE) {
+            TGPackItem *hotPack = [[TGPackItem alloc] init];
+            hotPack.packId = -4;
+            hotPack.image = [image_trending() imageTintedWithColor:GRAY_ICON_COLOR];
+            [_packs addObject:hotPack];
+        }
+        
         
         if(_stickers.hasRecentStickers) {
             TGPackItem *recent = [[TGPackItem alloc] init];
@@ -320,6 +336,13 @@
             
         }];
         
+        if(!hasUnread && ACCEPT_FEATURE) {
+            TGPackItem *hotPack = [[TGPackItem alloc] init];
+            hotPack.packId = -4;
+            hotPack.image = [image_trending() imageTintedWithColor:GRAY_ICON_COLOR];
+            [_packs addObject:hotPack];
+        }
+        
         TGPackItem *settings = [[TGPackItem alloc] init];
         settings.packId = -2;
         settings.image = [image_StickerSettings() imageTintedWithColor:GRAY_ICON_COLOR];
@@ -332,8 +355,19 @@
     
     
     [self.stickers scrollToBeginningOfDocument:nil];
-    if(_packs.count > 2 && reloadStickers)
+    if(_packs.count > 3 && reloadStickers) {
+        
+        if([_packs[2] packId] == -1) {
+            [self didSelected:_packs[2] scrollToPack:NO selectItem:YES disableAnimation:YES];
+        }
+        
+        if([_packs[1] packId] == -1) {
+            [self didSelected:_packs[1] scrollToPack:NO selectItem:YES disableAnimation:YES];
+        }
+        
+    } else if(reloadStickers) {
         [self didSelected:_packs[1] scrollToPack:NO selectItem:YES disableAnimation:YES];
+    }
     
 
 }
@@ -345,18 +379,24 @@
     _selectedItem = item;
     [_selectedItem setSelected:YES];
     
-
 }
 
 -(void)didSelected:(TGPackItem *)packItem scrollToPack:(BOOL)scrollToPack selectItem:(BOOL)selectItem disableAnimation:(BOOL)disableAnimation {
     
-
     
     if(packItem.packId == -3 && _selectedItem.packId != -3)
         [_gifContainer prepareSavedGifvs];
     else if(_selectedItem.packId == -3 && packItem.packId != -3)
         [_gifContainer clear];
     
+    if(packItem.packId == -4 && _selectedItem.packId != -4)
+        [_hotPacksView show];
+    else if(_selectedItem.packId == -4 && packItem.packId != -4)
+        [_hotPacksView clear];
+    
+    _esgViewController.sgViewController.hideEmoji = packItem.packId == -4;
+    
+    [_hotPacksView.containerView setHidden:packItem.packId != -4];
     [_gifContainer setHidden:packItem.packId != -3];
     [_stickers.containerView setHidden:packItem.packId == -3];
     

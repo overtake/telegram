@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.08.16.
+//  Auto created by Mikhail Filimonov on 09.09.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1019,9 +1019,11 @@
 @end
 
 @interface TLAPI_messages_reorderStickerSets : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMasks;
 @property (nonatomic, strong) NSMutableArray* order;
 
-+(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order;
++(TLAPI_messages_reorderStickerSets*)createWithFlags:(int)flags  order:(NSMutableArray*)order;
 @end
 
 @interface TLAPI_messages_getDocumentByHash : TLApiObject
@@ -1235,9 +1237,9 @@
 @end
 
 @interface TLAPI_messages_readFeaturedStickers : TLApiObject
+@property (nonatomic, strong) NSMutableArray* n_id;
 
-
-+(TLAPI_messages_readFeaturedStickers*)create;
++(TLAPI_messages_readFeaturedStickers*)createWithN_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_messages_getRecentStickers : TLApiObject
@@ -1257,12 +1259,6 @@
 
 
 +(TLAPI_messages_clearRecentStickers*)create;
-@end
-
-@interface TLAPI_messages_getUnusedStickers : TLApiObject
-@property int limit;
-
-+(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit;
 @end
 
 @interface TLAPI_messages_getArchivedStickers : TLApiObject
@@ -1315,5 +1311,17 @@
 @property int score;
 
 +(TLAPI_messages_setInlineGameScore*)createWithFlags:(int)flags  n_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id game_id:(int)game_id score:(int)score;
+@end
+
+@interface TLAPI_messages_getMaskStickers : TLApiObject
+@property int n_hash;
+
++(TLAPI_messages_getMaskStickers*)createWithN_hash:(int)n_hash;
+@end
+
+@interface TLAPI_auth_dropTempAuthKeys : TLApiObject
+@property (nonatomic, strong) NSMutableArray* except_auth_keys;
+
++(TLAPI_auth_dropTempAuthKeys*)createWithExcept_auth_keys:(NSMutableArray*)except_auth_keys;
 @end
 

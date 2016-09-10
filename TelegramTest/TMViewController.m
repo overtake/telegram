@@ -583,6 +583,8 @@ static TGModalSetCaptionView *setCaptionView;
 
 }
 
+
+
 - (void)loadViewIfNeeded {
     [self view];
 }
@@ -590,6 +592,7 @@ static TGModalSetCaptionView *setCaptionView;
 - (TMView *)view {
     if(!_view)
         [self loadView];
+    _view.viewController = self;
     return _view;
 }
 

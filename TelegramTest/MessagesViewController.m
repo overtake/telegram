@@ -2461,7 +2461,7 @@ static NSTextAttachment *headerMediaIcon() {
                 if(canMultiEdit) {
                     
                     
-                    TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:[[[NSApp delegate] mainWindow].contentView bounds]];
+                    TGModalDeleteChannelMessagesView *modalDeleteView = [[TGModalDeleteChannelMessagesView alloc] initWithFrame:appWindow().contentView.bounds];
                     
                     ComposeAction *action = [[ComposeAction alloc] initWithBehaviorClass:[ComposeActionDeleteChannelMessagesBehavior class] filter:@[] object:conversation.chat reservedObjects:@[array]];
                     
@@ -3184,8 +3184,14 @@ static NSTextAttachment *headerMediaIcon() {
     } else if(self.state == MessagesViewControllerStateEditable) {
         [self unSelectAll];
         return YES;
-    } else if(self.editTemplate.attributedString.length > 0)
+    } else if(self.editTemplate.attributedString.length > 0) {
+        
+        if(!_hintView.isHidden)
+            [_hintView hide];
+        
         return YES;
+    }
+    
     
     return NO;
 }
@@ -4273,9 +4279,9 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
         
         NSMutableArray *preparedMessages = [[NSMutableArray alloc] init];
         NSMutableArray *preparedSenders = [[NSMutableArray alloc] init];
-        [attachments enumerateObjectsUsingBlock:^(TGAttachObject *obj, NSUInteger idx, BOOL *stop) {
+        [attachments enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
             
-            SenderItem *sender = [[[obj senderClass] alloc] initWithConversation:conversation attachObject:obj additionFlags:self.senderFlags];
+            SenderItem *sender = [[[obj.item senderClass] alloc] initWithConversation:conversation attachObject:obj.item additionFlags:self.senderFlags];
             [preparedMessages addObject:sender.message];
             [preparedSenders addObject:sender];
  

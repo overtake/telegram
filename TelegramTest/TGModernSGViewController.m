@@ -53,6 +53,12 @@
     [self.view addSubview:_showGSControllerView];
 }
 
+-(void)setHideEmoji:(BOOL)hideEmoji {
+    _hideEmoji = hideEmoji;
+    
+    [_showGSControllerView setHidden:hideEmoji];
+}
+
 -(void)reloadStickers {
     [_stickersView.stickers load:YES];
 }

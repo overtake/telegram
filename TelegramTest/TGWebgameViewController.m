@@ -69,8 +69,6 @@ static NSString *kGameEventUnmute = @"unmute";
     _webView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
     
     
-    
-    
     [self addSubview:_webView];
     _webView.UIDelegate = self;
     _webView.frameLoadDelegate = self;
@@ -79,7 +77,9 @@ static NSString *kGameEventUnmute = @"unmute";
     
 }
 
-
+-(void)webView:(WebView *)sender didStartProvisionalLoadForFrame:(WebFrame *)frame {
+    
+}
 
 -(void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WebFrame *)frame {
     alert(_bot.fullName, message);
@@ -136,16 +136,15 @@ JSValueRef gameHandler (JSContextRef ctx, JSObjectRef function, JSObjectRef this
  */
 
 -(void)game_loaded:(NSString *)data {
-    [self pushEvent:@"game_start" data:@{@"event":@"game_loaded"}];
+   // [self pushEvent:@"game_start" data:@{@"event":@"game_loaded"}];
 }
 
 -(void)game_over:(NSString *)data {
-     [self pushEvent:@"game_start" data:@{@"event":@"game_over"}];
+   //  [self pushEvent:@"game_start" data:@{@"event":@"game_over"}];
 }
 
 -(void)share_game:(NSString *)data {
     [[Telegram rightViewController] showInlineBotSwitchModalView:_bot query:[NSString stringWithFormat:@"@%@ %@",_bot.username,data]];
-
 }
 
 -(void)share_score:(NSString *)data {

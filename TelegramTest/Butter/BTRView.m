@@ -123,7 +123,7 @@ static void BTRViewCommonInit(BTRView *self) {
 		return animation;
 	}
 	
-	return [super actionForLayer:layer forKey:event];
+	return nil;
 }
 
 #pragma mark - View controller

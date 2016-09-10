@@ -470,7 +470,7 @@ static void BTRTextFieldCommonInit(BTRTextField *textField) {
 			if (action.block != nil) {
 				action.block(events);
 			} else if (action.action != nil) { // the target can be nil
-				[NSApp sendAction:action.action to:action.target];
+				[NSApp sendAction:action.action to:action.target from:self];
 			}
 		}
 	}

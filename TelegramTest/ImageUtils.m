@@ -273,7 +273,8 @@ CACHE_IMAGE(MusicStandartCover_Active);
 
 CACHE_IMAGE(pip_on);
 CACHE_IMAGE(pip_off);
-
+CACHE_IMAGE(Folder);
+CACHE_IMAGE(trending);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

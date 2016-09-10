@@ -2,7 +2,7 @@
 //  MTProto.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.08.16.
+//  Auto created by Mikhail Filimonov on 09.09.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -1698,6 +1698,7 @@
 @property Boolean enabled;
 @property Boolean is_admin;
 @property (nonatomic, strong) TLmessages_StickerSet* stickerset;
+@property (nonatomic,assign,readonly) BOOL isMasks;
 @property (nonatomic, strong) NSMutableArray* order;
 @property long query_id;
 @property (nonatomic, strong) NSString* query;
@@ -1821,7 +1822,7 @@
 +(TL_updateNewStickerSet*)createWithStickerset:(TLmessages_StickerSet*)stickerset;
 @end
 @interface TL_updateStickerSetsOrder : TLUpdate<NSCoding>
-+(TL_updateStickerSetsOrder*)createWithOrder:(NSMutableArray*)order;
++(TL_updateStickerSetsOrder*)createWithFlags:(int)flags  order:(NSMutableArray*)order;
 @end
 @interface TL_updateStickerSets : TLUpdate<NSCoding>
 +(TL_updateStickerSets*)create;
@@ -2648,6 +2649,7 @@
 @property (nonatomic,assign,readonly) BOOL isInstalled;
 @property (nonatomic,assign,readonly) BOOL isArchived;
 @property (nonatomic,assign,readonly) BOOL isOfficial;
+@property (nonatomic,assign,readonly) BOOL isMasks;
 @property long n_id;
 @property long access_hash;
 @property (nonatomic, strong) NSString* title;
@@ -2657,7 +2659,7 @@
 @end
 
 @interface TL_stickerSet : TLStickerSet<NSCoding>
-+(TL_stickerSet*)createWithFlags:(int)flags    n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash;
++(TL_stickerSet*)createWithFlags:(int)flags     n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash;
 @end
 	
 @interface TLmessages_StickerSet()
@@ -3361,10 +3363,14 @@
 @interface TLStickerSetCovered()
 @property (nonatomic, strong) TLStickerSet* set;
 @property (nonatomic, strong) TLDocument* cover;
+@property (nonatomic, strong) NSMutableArray* covers;
 @end
 
 @interface TL_stickerSetCovered : TLStickerSetCovered<NSCoding>
 +(TL_stickerSetCovered*)createWithSet:(TLStickerSet*)set cover:(TLDocument*)cover;
+@end
+@interface TL_stickerSetMultiCovered : TLStickerSetCovered<NSCoding>
++(TL_stickerSetMultiCovered*)createWithSet:(TLStickerSet*)set covers:(NSMutableArray*)covers;
 @end
 	
 @interface TLAudio()

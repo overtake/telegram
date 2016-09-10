@@ -376,6 +376,7 @@
 		C23578A41C1CD3AB00F38698 /* TGGLVideoFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C23578A31C1CD3AB00F38698 /* TGGLVideoFrame.m */; };
 		C239A6C31D4925DE0086C0A1 /* TGConfirmPhoneModalView.m in Sources */ = {isa = PBXBuildFile; fileRef = C239A6C21D4925DE0086C0A1 /* TGConfirmPhoneModalView.m */; };
 		C239A6C61D4938000086C0A1 /* TGSignalUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C239A6C51D4938000086C0A1 /* TGSignalUtils.m */; };
+		C23A6B1F1D82A661006836C0 /* TGHotPacksContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23A6B1E1D82A661006836C0 /* TGHotPacksContainerView.m */; };
 		C240B1B51B627A3300912248 /* TGSharedLinksTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */; };
 		C240B1B81B627B3700912248 /* SharedLinksHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1B71B627B3700912248 /* SharedLinksHistoryFilter.m */; };
 		C240B1BB1B627E6F00912248 /* TGSharedLinkRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = C240B1BA1B627E6F00912248 /* TGSharedLinkRowView.m */; };
@@ -902,7 +903,6 @@
 		C2F07E151BBD7D3B00B3DB39 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E141BBD7D3B00B3DB39 /* AVKit.framework */; };
 		C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E161BBD7D5300B3DB39 /* JavaScriptCore.framework */; };
 		C2F07E191BBD7D9300B3DB39 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E181BBD7D9300B3DB39 /* libz.tbd */; };
-		C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1A1BBD7E0E00B3DB39 /* libsqlite3.tbd */; };
 		C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1C1BBDBABF00B3DB39 /* ImageIO.framework */; };
 		C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C2F07E1E1BBDBACD00B3DB39 /* libstdc++.tbd */; };
 		C2F07E251BC02F6200B3DB39 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A2576A4181D09E500FB386C /* SystemConfiguration.framework */; };
@@ -1865,6 +1865,8 @@
 		C239A6C21D4925DE0086C0A1 /* TGConfirmPhoneModalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGConfirmPhoneModalView.m; sourceTree = "<group>"; };
 		C239A6C41D4938000086C0A1 /* TGSignalUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSignalUtils.h; sourceTree = "<group>"; };
 		C239A6C51D4938000086C0A1 /* TGSignalUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSignalUtils.m; sourceTree = "<group>"; };
+		C23A6B1D1D82A661006836C0 /* TGHotPacksContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGHotPacksContainerView.h; sourceTree = "<group>"; };
+		C23A6B1E1D82A661006836C0 /* TGHotPacksContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGHotPacksContainerView.m; sourceTree = "<group>"; };
 		C240B1B31B627A3300912248 /* TGSharedLinksTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TGSharedLinksTableView.h; sourceTree = "<group>"; };
 		C240B1B41B627A3300912248 /* TGSharedLinksTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TGSharedLinksTableView.m; sourceTree = "<group>"; };
 		C240B1B61B627B3700912248 /* SharedLinksHistoryFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedLinksHistoryFilter.h; sourceTree = "<group>"; };
@@ -2963,7 +2965,6 @@
 				C2F07E1F1BBDBACD00B3DB39 /* libstdc++.tbd in Frameworks */,
 				C2F07E1D1BBDBABF00B3DB39 /* ImageIO.framework in Frameworks */,
 				0A2576A5181D09E500FB386C /* SystemConfiguration.framework in Frameworks */,
-				C2F07E1B1BBD7E0E00B3DB39 /* libsqlite3.tbd in Frameworks */,
 				CEB7AE05181419E5005CB6A1 /* QuartzCore.framework in Frameworks */,
 				0AB8F2BB1948BCF30074E4E7 /* AVFoundation.framework in Frameworks */,
 				C2F07E151BBD7D3B00B3DB39 /* AVKit.framework in Frameworks */,
@@ -4527,6 +4528,8 @@
 				C2D51C371B25F5A8009327C0 /* TGStickerPackEmojiController.m */,
 				C2ED75291C29861B00002ACF /* TGGifKeyboardView.h */,
 				C2ED752A1C29861B00002ACF /* TGGifKeyboardView.m */,
+				C23A6B1D1D82A661006836C0 /* TGHotPacksContainerView.h */,
+				C23A6B1E1D82A661006836C0 /* TGHotPacksContainerView.m */,
 			);
 			name = emoji;
 			sourceTree = "<group>";
@@ -7517,6 +7520,7 @@
 				C2FA78DF1923A3BB001A9D1B /* PhotoVideoHistoryFilter.m in Sources */,
 				0ACDB13B18CF45A5009FE910 /* LoginCountrySelectorView.m in Sources */,
 				C25A57EC1C0736D70038169F /* TGMovableTableView.m in Sources */,
+				C23A6B1F1D82A661006836C0 /* TGHotPacksContainerView.m in Sources */,
 				C2ED28041BFF7F0E00F19531 /* TGReportChannelModalView.m in Sources */,
 				C24F87941A0015BD00EC962E /* TGSecretAction.m in Sources */,
 				0A613C1A18AD7E49004096DD /* MessageTableCellGeoView.m in Sources */,
@@ -7685,7 +7689,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.11;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
@@ -7932,7 +7936,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.11;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
@@ -7983,7 +7987,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = ru.keepcoder.Telegram;
 				PRODUCT_NAME = Telegram;
 				PROVISIONING_PROFILE = "690325a6-fc14-4462-8d8c-d06ccc897909";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.11;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include ./MtProtoKit/** $(PROJECT_DIR)/";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;

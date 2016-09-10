@@ -281,10 +281,11 @@ NSString *const STICKERSCACHE = @"STICKERS_CACHE";
 -(void)removeAllCachedImages:(NSArray *)groups {
     [groups enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
         
-        [_groups[obj] removeAllObjects];
+        if([_groups[obj] count] > 0) {
+            [_groups[obj] removeAllObjects];
             
-        _groupMemoryTaken[obj] = @(0);
-        
+            _groupMemoryTaken[obj] = @(0);
+        }
     }];
 }
 

@@ -3,7 +3,7 @@
 //  ClassStore.m
 //  Telegram
 //
-    //  Created by keepcoder on 25.08.16.
+    //  Created by keepcoder on 09.09.16.
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
@@ -494,7 +494,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_channelParticipantsBots class] forKey:[NSNumber numberWithInt:-1328445861]];
    [cs_classes setObject:[TL_help_termsOfService class] forKey:[NSNumber numberWithInt:-236044656]];
    [cs_classes setObject:[TL_updateNewStickerSet class] forKey:[NSNumber numberWithInt:1753886890]];
-   [cs_classes setObject:[TL_updateStickerSetsOrder class] forKey:[NSNumber numberWithInt:-253774767]];
+   [cs_classes setObject:[TL_updateStickerSetsOrder class] forKey:[NSNumber numberWithInt:196268545]];
    [cs_classes setObject:[TL_updateStickerSets class] forKey:[NSNumber numberWithInt:1135492588]];
    [cs_classes setObject:[TL_foundGif class] forKey:[NSNumber numberWithInt:372165663]];
    [cs_classes setObject:[TL_foundGifCached class] forKey:[NSNumber numberWithInt:-1670052855]];
@@ -582,6 +582,7 @@ static NSMutableDictionary *cs_constuctors;
    [cs_classes setObject:[TL_inputMediaDocumentExternal class] forKey:[NSNumber numberWithInt:-437690244]];
    [cs_classes setObject:[TL_keyboardButtonGame class] forKey:[NSNumber numberWithInt:687616356]];
    [cs_classes setObject:[TL_messageActionGameScore class] forKey:[NSNumber numberWithInt:974442405]];
+   [cs_classes setObject:[TL_stickerSetMultiCovered class] forKey:[NSNumber numberWithInt:872932635]];
    [cs_classes setObject:[TL_userSelf class] forKey:[NSNumber numberWithInt:476112392]];
    [cs_classes setObject:[TL_userContact class] forKey:[NSNumber numberWithInt:-894214632]];
    [cs_classes setObject:[TL_userRequest class] forKey:[NSNumber numberWithInt:-640891665]];

@@ -13,10 +13,7 @@
 #import "TGStickerPreviewModalView.h"
 #import "TGModernStickRowItem.h"
 
-@interface TGAllStickerTableItemView : TMRowView
-@property (nonatomic,strong) TGStickerImageView *imageView;
 
-@end
 
 @interface TGAllStickersTableView ()<TMTableViewDelegate>
 @property (nonatomic,strong) TMView *noEmojiView;
@@ -30,12 +27,7 @@
 
 
 
-@interface TGAllStickersTableItem : TMRowItem
-@property (nonatomic,strong) NSMutableArray *stickers;
-@property (nonatomic,strong) NSMutableArray *objects;
 
-@property (nonatomic,assign) long packId;
-@end
 
 @implementation TGAllStickersTableItem
 
@@ -116,6 +108,11 @@
                 
                 TGAllStickersTableItem *item = (TGAllStickersTableItem *)[weakSelf rowItem];
                 
+                if([weakSelf.tableView.previewModal isKindOfClass:[NSNull class]]) {
+                    [weakSelf.tableView selectionDidChange:item.rowId item:item];
+                    return;
+                }
+                
                 if(weakSelf.tableView.previewModal.isShown) {
                     [weakSelf.tableView.previewModal close:YES];
                     weakSelf.tableView.previewModal = nil;
@@ -194,19 +191,26 @@ static NSImage *higlightedImage() {
         
     }];
    
+   
 
     [item.stickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         
-        BTRButton *button = self.subviews[idx];
-        TGStickerImageView *imageView = [button.subviews lastObject];
+        @try {
+            BTRButton *button = self.subviews[idx];
+            TGStickerImageView *imageView = [button.subviews lastObject];
+            
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
+            
+            [imageView setFrameSize:[item.objects[idx] imageSize]];
+            
+            imageView.object = item.objects[idx];
+            
+            [imageView setCenterByView:button];
+        } @catch (NSException *exception) {
+            int bp = 0;
+        }
         
-        [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
-        
-        [imageView setFrameSize:[item.objects[idx] imageSize]];
-        
-        imageView.object = item.objects[idx];
-        
-        [imageView setCenterByView:button];
+     
         
         
     }];
@@ -263,7 +267,7 @@ static NSImage *higlightedImage() {
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             
-            nhash = [[transaction objectForKey:@"featured_hash" inCollection:STICKERS_COLLECTION] intValue];
+            nhash = [[transaction objectForKey:@"featured_hash1" inCollection:STICKERS_COLLECTION] intValue];
             sets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
         }];
         
@@ -276,7 +280,7 @@ static NSImage *higlightedImage() {
                     
                     [transaction setObject:response.sets forKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
                     [transaction setObject:response.unread forKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
-                    [transaction setObject:@(response.n_hash) forKey:@"featured_hash" inCollection:STICKERS_COLLECTION];
+                    [transaction setObject:@(response.n_hash) forKey:@"featured_hash1" inCollection:STICKERS_COLLECTION];
                     
                     sets = response.sets;
                 }

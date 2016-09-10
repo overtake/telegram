@@ -92,6 +92,10 @@
         text = NSLocalizedString(@"MessageAction.Service.ChatMigrated", nil);
     } else if([action isKindOfClass:[TL_messageActionPinMessage class]]) {
         text = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
+    } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
+        NSString *fullName = [user fullName];
+        
+        text = [NSString stringWithFormat:@"%@ %@ %d", fullName,NSLocalizedString(@"Message.Action.GameScoredShort", nil), action.score];
     }
    
     return text;
@@ -531,15 +535,21 @@
             
         }];
         if(game) {
-            [attributedString appendString:@" "];
+            //[attributedString appendString:@" "];
             NSRange gameLink = [attributedString appendString:game.game_title withColor:LINK_COLOR];
-            [attributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(message.to_id.class),message.peer_id,message.reply_to_msg_id,message.n_id] forRange:gameLink];
+            [attributedString setLink:[NSString stringWithFormat:@"chat://startgame/?game_id=%d&start_param=%@&message_id=%d&game_title=%@&text=%@",game.game_id,game.start_param,message.replyMessage.n_id,game.game_title,game.text] forRange:gameLink];
             [attributedString setFont:[SettingsArchiver fontMedium125] forRange:gameLink];
         }
         
+        
         NSRange range = [attributedString.string rangeOfString:[NSString stringWithFormat:@"%d",action.score]];
-        if(range.location != NSNotFound)
+        if(range.location != NSNotFound) {
+            [attributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(message.to_id.class),message.peer_id,message.reply_to_msg_id,message.n_id] forRange:range];
             [attributedString setFont:[SettingsArchiver fontMedium125] forRange:range];
+            [attributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
+
+
+        }
         
     }
     

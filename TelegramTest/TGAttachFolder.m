@@ -52,18 +52,17 @@
     
     [self.queue dispatchOnQueue:^{
         
-        NSString *ep = exportPath(rand_long(),@"zip");
         
-        _task = zipDirectory(file, ep);
+        _task = zipDirectory(file, _generatedPath);
         
         [_task launch];
         [_task waitUntilExit];
         
         if(_task.terminationStatus == 0 && _task) {
-            _generatedPath = ep;
             _task = nil;
             
             [ASQueue dispatchOnMainQueue:^{
+                
                 
                 [self startUploader];
                 
@@ -151,6 +150,7 @@
         _unique_id = rand_long();
         _peer_id = peer_id;
         _caption = @"";
+        _generatedPath = exportPath(_unique_id, @"zip");
     }
     
     return self;
@@ -168,7 +168,7 @@
     if(self = [super init]) {
         _file = [aDecoder decodeObjectForKey:@"file"];
         _unique_id = [aDecoder decodeInt64ForKey:@"unique_id"];
-        _generatedPath = exportPath(_unique_id, @"jpg");
+        _generatedPath = exportPath(_unique_id, @"zip");
         _peer_id = [aDecoder decodeIntForKey:@"peer_id"];
         _caption = [aDecoder decodeObjectForKey:@"caption"];
     }
@@ -185,19 +185,17 @@
         [image lockFocus];
         [BLUE_COLOR set];
         NSBezierPath *path = [NSBezierPath bezierPath];
-        [path appendBezierPathWithRoundedRect:NSMakeRect(0, 0, rect.size.width, rect.size.height) xRadius:0 yRadius:0];
+        [path appendBezierPathWithRect:rect];
         [path fill];
         
-        [image_DocumentThumbIcon() drawInRect:NSMakeRect(roundf((NSWidth(rect) - image_DocumentThumbIcon().size.width)/2), roundf((NSHeight(rect) - image_DocumentThumbIcon().size.height)/2), image_DocumentThumbIcon().size.width, image_DocumentThumbIcon().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_Folder() drawInRect:NSMakeRect(roundf((NSWidth(rect) - image_Folder().size.width)/2.0), roundf((NSHeight(rect) - image_Folder().size.height)/2.0), image_Folder().size.width, image_Folder().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
         [image unlockFocus];
     });
     return isPathExists(_generatedPath) ? image : nil;
 }
 
 -(void)dealloc {
-    [_uploader cancel];
-    _uploader = nil;
-    [_task terminate];
+    [self cancel];
 }
 
 -(BOOL)isEqualTo:(TGAttachFolder *)object {
@@ -211,8 +209,8 @@
 -(void)cancel {
     [_uploader cancel];
     _uploader = nil;
-    [_task terminate];
-    _task = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:_generatedPath error:nil];
+    [_task interrupt];
 }
 
 -(void)changeCaption:(NSString *)caption needSave:(BOOL)needSave {

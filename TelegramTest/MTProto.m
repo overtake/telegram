@@ -2,7 +2,7 @@
 //  MTProto.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 25.08.16.
+//  Auto created by Mikhail Filimonov on 09.09.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -11178,7 +11178,9 @@
 @end
 
 @implementation TLUpdate
-
+            
+-(BOOL)isMasks {return NO;}
+            
 @end
         
 @implementation TL_updateNewMessage
@@ -13067,12 +13069,16 @@
 @end
 
 @implementation TL_updateStickerSetsOrder
-+(TL_updateStickerSetsOrder*)createWithOrder:(NSMutableArray*)order {
++(TL_updateStickerSetsOrder*)createWithFlags:(int)flags  order:(NSMutableArray*)order {
 	TL_updateStickerSetsOrder* obj = [[TL_updateStickerSetsOrder alloc] init];
+	obj.flags = flags;
+	
 	obj.order = order;
 	return obj;
 }
 -(void)serialize:(SerializedData*)stream {
+	[stream writeInt:self.flags];
+	
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -13088,6 +13094,8 @@
 	}
 }
 -(void)unserialize:(SerializedData*)stream {
+	super.flags = [stream readInt];
+	
 	//UNS ShortVector
 	[stream readInt];
 	{
@@ -13104,6 +13112,8 @@
 -(TL_updateStickerSetsOrder *)copy {
     
     TL_updateStickerSetsOrder *objc = [[TL_updateStickerSetsOrder alloc] init];
+    
+    objc.flags = self.flags;
     
     objc.order = [self.order copy];
     
@@ -13125,7 +13135,9 @@
     [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
 }
         
-
+            
+-(BOOL)isMasks {return (self.flags & (1 << 0)) > 0;}
+            
         
 @end
 
@@ -21273,13 +21285,16 @@
 -(BOOL)isArchived {return NO;}
                         
 -(BOOL)isOfficial {return NO;}
+                        
+-(BOOL)isMasks {return NO;}
             
 @end
         
 @implementation TL_stickerSet
-+(TL_stickerSet*)createWithFlags:(int)flags    n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash {
++(TL_stickerSet*)createWithFlags:(int)flags     n_id:(long)n_id access_hash:(long)access_hash title:(NSString*)title short_name:(NSString*)short_name n_count:(int)n_count n_hash:(int)n_hash {
 	TL_stickerSet* obj = [[TL_stickerSet alloc] init];
 	obj.flags = flags;
+	
 	
 	
 	
@@ -21296,6 +21311,7 @@
 	
 	
 	
+	
 	[stream writeLong:self.n_id];
 	[stream writeLong:self.access_hash];
 	[stream writeString:self.title];
@@ -21305,6 +21321,7 @@
 }
 -(void)unserialize:(SerializedData*)stream {
 	super.flags = [stream readInt];
+	
 	
 	
 	
@@ -21321,6 +21338,7 @@
     TL_stickerSet *objc = [[TL_stickerSet alloc] init];
     
     objc.flags = self.flags;
+    
     
     
     
@@ -21355,6 +21373,8 @@
 -(BOOL)isArchived {return (self.flags & (1 << 1)) > 0;}
                         
 -(BOOL)isOfficial {return (self.flags & (1 << 2)) > 0;}
+                        
+-(BOOL)isMasks {return (self.flags & (1 << 3)) > 0;}
             
         
 @end
@@ -28044,6 +28064,73 @@
     
     objc.set = [self.set copy];
     objc.cover = [self.cover copy];
+    
+    return objc;
+}
+        
+
+    
+-(id)initWithCoder:(NSCoder *)aDecoder {
+
+    if((self = [ClassStore deserialize:[aDecoder decodeObjectForKey:@"data"]])) {
+        
+    }
+    
+    return self;
+}
+        
+-(void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:[ClassStore serialize:self] forKey:@"data"];
+}
+        
+
+        
+@end
+
+@implementation TL_stickerSetMultiCovered
++(TL_stickerSetMultiCovered*)createWithSet:(TLStickerSet*)set covers:(NSMutableArray*)covers {
+	TL_stickerSetMultiCovered* obj = [[TL_stickerSetMultiCovered alloc] init];
+	obj.set = set;
+	obj.covers = covers;
+	return obj;
+}
+-(void)serialize:(SerializedData*)stream {
+	[ClassStore TLSerialize:self.set stream:stream];
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.covers count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLDocument* obj = [self.covers objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+}
+-(void)unserialize:(SerializedData*)stream {
+	self.set = [ClassStore TLDeserialize:stream];
+	//UNS FullVector
+	[stream readInt];
+	{
+		if(!self.covers)
+			self.covers = [[NSMutableArray alloc] init];
+		int count = [stream readInt];
+		for(int i = 0; i < count; i++) {
+			TLDocument* obj = [ClassStore TLDeserialize:stream];
+            if(obj != nil && [obj isKindOfClass:[TLDocument class]])
+                 [self.covers addObject:obj];
+            else
+                break;
+		}
+	}
+}
+        
+-(TL_stickerSetMultiCovered *)copy {
+    
+    TL_stickerSetMultiCovered *objc = [[TL_stickerSetMultiCovered alloc] init];
+    
+    objc.set = [self.set copy];
+    objc.covers = [self.covers copy];
     
     return objc;
 }
