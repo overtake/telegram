@@ -181,36 +181,35 @@ static NSMutableDictionary *list;
     
     if((![convesation.draft isKindOfClass:draftMessage.class] && !([draftMessage isKindOfClass:[TL_draftMessageEmpty class]] && convesation.draft == nil)) || ((draftMessage.message && ![draftMessage.message isEqualToString:convesation.draft.message]) || draftMessage.flags != draftMessage.flags)) {
         
-        
-        convesation.draft = draftMessage;
-        
-        if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]])
-            convesation.last_message_date = convesation.lastMessage ? convesation.lastMessage.date : convesation.last_message_date;
-        else
-            convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
-        
-       
-        [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
+        if (!convesation.isChannel || convesation.chat.isAdmin) {
+            convesation.draft = draftMessage;
+            
+            if (!convesation.isPinned) {
+                if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]])
+                    convesation.last_message_date = convesation.lastMessage ? convesation.lastMessage.date : convesation.last_message_date;
+                else
+                    convesation.last_message_date = MAX(draftMessage.date,convesation.last_message_date);
+            }
             
             
-            
-            [convesation save];
-            
-            dispatch_block_t block = ^{
-                [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
-            };
-            
-            if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]] || convesation.draft == nil)
-                block();
-            else
-                dispatch_after_seconds(1.5,block);
-
-            
-        } errorHandler:^(id request, RpcError *error) {
-            
-            
-        }];
-        
+            [RPCRequest sendRequest:[TLAPI_messages_saveDraft createWithFlags:flags reply_to_msg_id:_replyMessage.n_id peer:convesation.inputPeer message:text entities:entities] successHandler:^(id request, id response) {
+                
+                [convesation save];
+                
+                dispatch_block_t block = ^{
+                    [[DialogsManager sharedManager] notifyAfterUpdateConversation:convesation];
+                };
+                
+                if([convesation.draft isKindOfClass:[TL_draftMessageEmpty class]] || convesation.draft == nil)
+                    block();
+                else
+                    dispatch_after_seconds(1.5,block);
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            }];
+        }
     }
     
     
@@ -248,7 +247,9 @@ static NSMutableDictionary *list;
             
             conversation.draft = draft;
             
-            conversation.last_message_date = MAX(draft.date,conversation.last_message_date);
+            if (!conversation.isPinned) {
+                conversation.last_message_date = MAX(draft.date,conversation.last_message_date);
+            }
             
             [conversation save];
             [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
@@ -296,6 +297,7 @@ static NSMutableDictionary *list;
                     if(conversation.isChannel) {
                         request = [TLAPI_channels_getMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.chat.n_id access_hash:conversation.chat.access_hash] n_id:[@[@(draft.reply_to_msg_id)] mutableCopy]];
                     }
+                    
                     
                     [RPCRequest sendRequest:request successHandler:^(id request, TL_messages_messages *response) {
                         

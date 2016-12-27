@@ -6,7 +6,7 @@
  * Copyright Peter Iakovlev, 2013.
  */
 
-#import <MTProtoKit/MTMessageService.h>
+#import <MtProtoKitMac/MTMessageService.h>
 #import "TGProccessUpdates.h"
 @interface TGUpdateMessageService : NSObject <MTMessageService>
 -(void)drop;

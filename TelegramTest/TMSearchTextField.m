@@ -75,11 +75,7 @@
 //        if(accept) {
 //            return NO;
 //        }
-#ifdef TGDEBUG
-        if([[Telegram mainViewController] isMinimisze]) {
-            return NO;
-        }
-#endif
+
 
     } @catch (NSException *exception) {
         
@@ -220,12 +216,7 @@ const static int textFieldXOffset = 30;
         
         [self.containerView addSubview:self.textField];
         
-        
-        
-        
-        
-        
-        self.cancelButton = [[TMButton alloc] initWithFrame:NSZeroRect];
+       self.cancelButton = [[TMButton alloc] initWithFrame:NSZeroRect];
         [self.cancelButton setAutoresizingMask:NSViewMinXMargin];
         [self.cancelButton setImage:image_clear() forState:TMButtonNormalState];
         [self.cancelButton setImage:image_clearActive() forState:TMButtonPressedState];
@@ -289,6 +280,8 @@ const static int textFieldXOffset = 30;
     // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
+    
+    [self.cancelButton setFrameOrigin:NSMakePoint(self.frame.size.width - self.cancelButton.frame.size.width - 10, roundf((self.frame.size.height - self.cancelButton.frame.size.height) / 2) - 1)];
     
     if([self inLiveResize]) {
         if(self.textField.window.firstResponder != self.textField.textView) {

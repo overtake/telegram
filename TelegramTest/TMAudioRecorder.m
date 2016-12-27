@@ -106,7 +106,7 @@ double mappingRange(double x, double in_min, double in_max, double out_min, doub
     
     self.filePath = [NSString stringWithFormat:@"%@%@.wav",NSTemporaryDirectory(),[NSDate date].description];
     
-    NSDictionary *settings = @{AVSampleRateKey:@(48000.0),
+    NSDictionary *settings = @{AVSampleRateKey:@(16000),
                                AVFormatIDKey:@(kAudioFormatLinearPCM),
                                AVNumberOfChannelsKey:@1.0};
     

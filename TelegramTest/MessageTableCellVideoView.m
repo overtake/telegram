@@ -96,7 +96,7 @@
     
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    if (floor(NSAppKitVersionNumber) > 1187 && NSAppKitVersionNumber < 1485)  {
+    if (floor(NSAppKitVersionNumber) > 1187 )  {
     
         if(!self.item.message.isFake) {
             [[TGPhotoViewer viewer] show:previewObject conversation:self.item.message.conversation isReversed:YES];

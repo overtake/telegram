@@ -75,7 +75,14 @@
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:webpage.n_description withColor:NSColorFromRGB(0x000000)];
+            NSString *trimmedDesc = webpage.n_description;
+            static const int maxDesc = 300;
+            if (trimmedDesc.length > maxDesc) {
+                trimmedDesc = [trimmedDesc substringWithRange:NSMakeRange(0, MIN(maxDesc,trimmedDesc.length))];
+                trimmedDesc = [trimmedDesc stringByAppendingString:@"..."];
+            }
+            
+            [desc appendString:trimmedDesc withColor:NSColorFromRGB(0x000000)];
             [desc setFont:[SettingsArchiver font13] forRange:desc.range];
             
             

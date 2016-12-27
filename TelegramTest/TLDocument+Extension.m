@@ -81,7 +81,7 @@
 }
 
 -(BOOL)isSticker {
-    return [self attributeWithClass:[TL_documentAttributeSticker class]] != nil;
+    return self.stickerAttr != nil ;
 }
 
 -(BOOL)isVideo {
@@ -104,7 +104,7 @@
 }
 
 -(TL_documentAttributeSticker *)stickerAttr {
-    return (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker class]];
+    return (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker class]] != nil ? (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker class]] : (TL_documentAttributeSticker *) [self attributeWithClass:[TL_documentAttributeSticker_old55 class]];
 }
 
 

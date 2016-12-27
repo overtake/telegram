@@ -19,7 +19,7 @@
 		<key>Stable.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>17</integer>
 		</dict>
 		<key>TGKeeper.xcscheme</key>
 		<dict>
@@ -58,6 +58,11 @@
 			<true/>
 			<key>orderHint</key>
 			<integer>3</integer>
+		</dict>
+		<key>macos.telegram.org.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>16</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>

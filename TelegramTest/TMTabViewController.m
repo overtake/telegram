@@ -25,23 +25,6 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         [self initialize];
-        
-//        self.wantsLayer = YES;
-//        
-//        Class vibrantClass=NSClassFromString(@"NSVisualEffectView");
-//        if (vibrantClass)
-//        {
-//            
-//            
-//            NSVisualEffectView *vibrant=[[vibrantClass alloc] initWithFrame:self.bounds];
-//            [vibrant setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-//            [vibrant setMaterial:NSVisualEffectMaterialLight];
-//            // uncomment for dark mode instead of light mode
-//            // [vibrant setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameVibrantDark]];
-//            [vibrant setBlendingMode:NSVisualEffectBlendingModeBehindWindow];
-//            [self addSubview:vibrant];
-//            
-//        }
 
     }
     
@@ -138,8 +121,6 @@
     [self removeAllSubviews];
     
    
-    
-    
     __block int xOffset = 0;
     
     static const int minY = 5;
@@ -153,33 +134,15 @@
         view.wantsLayer = YES;
         
         
-    //    [view.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16777216).CGColor];
-        
         NSView *container = [[NSView alloc] initWithFrame:view.bounds];
         [container setWantsLayer:YES];
         
-     //   [container.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16777216).CGColor];
         
         [view setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewWidthSizable];
         [view setAutoresizesSubviews:YES];
         
         
         NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, obj.image.size.width, obj.image.size.height)];
-        
-//        TMTextField *field = [TMTextField defaultTextField];
-//        
-//        [field setFont:TGSystemFont(12)];
-//        [field setTextColor:obj.textColor];
-//        [field setAlignment:NSCenterTextAlignment];
-//        [field setStringValue:obj.title];
-//        
-//        
-//        
-//        [field sizeToFit];
-//        
-//        
-//        [container addSubview:field];
-        
         
         
         imageView.image = obj.image;
@@ -191,14 +154,7 @@
         [container setFrameSize:NSMakeSize(NSWidth(imageView.frame), NSHeight(container.frame))];
         
         [imageView setCenterByView:container];
-        
-      //  [imageView setFrameOrigin:NSMakePoint(imageView.frame.origin.x, imageView.frame.origin.y+minY)];
-        
-//        [field setCenterByView:container];
-//        
-//        [field setFrameOrigin:NSMakePoint(field.frame.origin.x, minY)];
-//        
-        
+
         [container setCenterByView:view];
         
         

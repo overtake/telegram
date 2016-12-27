@@ -495,10 +495,14 @@
             startRow = startRow - endRow;
         }
         
+        NSLog(@"start :: %lu, end :: %lu, reversed :: %d",(unsigned long)startRow,(unsigned long)endRow, reversed);
+
+        
         BOOL isMultiple = abs((int)endRow - (int)startRow) > 0;
         
         for (NSUInteger i = startRow; i <= endRow; i++) {
             
+           // NSLog(@"index : %lu",(unsigned long)i);
             
             MessageTableItem *item = self.viewController.messageList[i];
             

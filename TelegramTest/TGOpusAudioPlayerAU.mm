@@ -76,23 +76,6 @@ static volatile OSSpinLock audioPositionLock = OS_SPINLOCK_INIT;
 }
 
 + (NSTimeInterval)durationFile:(NSString *)path {
-    
-    
-//    int openError = OPUS_OK;
-//    _opusFile = op_open_file([_filePath UTF8String], &openError);
-//    if (_opusFile == NULL || openError != OPUS_OK)
-//    {
-//        MTLog(@"[TGOpusAudioPlayer#%p op_open_file failed: %d]", self, openError);
-//        [self cleanupAndReportError];
-//        
-//        return;
-//    }
-//    
-//    _isSeekable = op_seekable(_opusFile);
-//    _totalPcmDuration = op_pcm_total(_opusFile, -1);
-
-    
-    
     int error = OPUS_OK;
     
     

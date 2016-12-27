@@ -57,7 +57,7 @@
     
     _descSize = [self.desc coreTextSizeForTextFieldForWidth: width - self.tableItem.defaultOffset - _imageSize.width];
     
-    _size.width = _descSize.width + _imageSize.width + self.tableItem.defaultOffset;
+    _size.width = MAX(100,_descSize.width + _imageSize.width + self.tableItem.defaultOffset);
     _size.height = _descSize.height > 60 ? _descSize.height : _descSize.height + _imageSize.height + (_imageObject ? self.tableItem.defaultContentOffset : 0);
     
     

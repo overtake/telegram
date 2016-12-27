@@ -46,6 +46,7 @@ extern NSString *const kBotInlineTypeAudio;
 extern NSString *const kBotInlineTypeVideo;
 extern NSString *const kBotInlineTypeSticker;
 extern NSString *const kBotInlineTypeGif;
+extern NSString *const kBotInlineTypeGame;
 extern NSString *const kBotInlineTypePhoto;
 extern NSString *const kBotInlineTypeContact;
 extern NSString *const kBotInlineTypeVenue;
@@ -99,6 +100,7 @@ void open_user_by_name(NSDictionary * userName);
 void join_group_by_hash(NSString * hash);
 
 void add_sticker_pack_by_name(TLInputStickerSet *set);
+void shareGameResult(NSDictionary * obj, NSArray *conversastions, BOOL openLast);
 
 int64_t SystemIdleTime(void);
 NSData *passwordHash(NSString *password, NSData *salt);

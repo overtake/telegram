@@ -8,13 +8,13 @@
 
 #import "TGDatacenterWatchdogActor.h"
 
-#import <MTProtoKit/MTContext.h>
-#import <MTProtoKit/MTProto.h>
-#import <MTProtoKit/MTTimer.h>
-#import <MTProtoKit/MTRequestMessageService.h>
-#import <MTProtoKit/MTRequest.h>
-#import <MTProtoKit/MTDatacenterAddressSet.h>
-#import <MTProtoKit/MTDatacenterAddress.h>
+#import <MtProtoKitMac/MTContext.h>
+#import <MtProtoKitMac/MTProto.h>
+#import <MtProtoKitMac/MTTimer.h>
+#import <MtProtoKitMac/MTRequestMessageService.h>
+#import <MtProtoKitMac/MTRequest.h>
+#import <MtProtoKitMac/MTDatacenterAddressSet.h>
+#import <MtProtoKitMac/MTDatacenterAddress.h>
 
 #import "MTNetwork.h"
 @interface TGDatacenterWatchdogActor ()
@@ -168,6 +168,7 @@
     setMegagroupSizeMax(config.megagroup_size_max);
     set_edit_time_limit(config.edit_time_limit);
     set_rating_e_decay(config.rating_e_decay);
+    set_chat_pin_limit(config.pinned_dialogs_count_max);
     set_stickers_recent_limit(config.stickers_recent_limit);
     
 #if TARGET_IPHONE_SIMULATOR

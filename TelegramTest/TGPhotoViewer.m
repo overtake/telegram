@@ -85,6 +85,10 @@ static ASQueue *queue;
     return viewer.isVisibility;
 }
 
++(void)copyClipboard {
+    [viewer.photoContainer copy:nil];
+}
+
 +(void)increaseZoom {
     [viewer.photoContainer increaseZoom];
 }
@@ -115,7 +119,6 @@ static const int controlsHeight = 75;
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
     
-    //  [CATransaction begin];
     
     
     [(NSView *)self.contentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -645,7 +648,7 @@ static TGPhotoViewer *viewer;
     [super makeKeyAndOrderFront:nil];
     
     
-    [[NSApp mainWindow] makeFirstResponder:self.photoContainer];
+    //[[NSApp mainWindow] makeFirstResponder:self.photoContainer];
     
     
     _isVisibility = YES;

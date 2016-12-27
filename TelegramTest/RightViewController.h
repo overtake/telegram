@@ -94,6 +94,7 @@
 - (void)showForwardMessagesModalView:(TL_conversation *)dialog messagesCount:(NSUInteger)messagesCount;
 - (void)showInlineBotSwitchModalView:(TLUser *)user query:(NSString *)query;
 - (void)showShareLinkModalView:(NSString *)url text:(NSString *)text;
+- (void)showGameForwardView:(NSDictionary *)params;
 
 
 - (void)showComposeWithAction:(ComposeAction *)composeAction;

@@ -69,18 +69,18 @@ static NSTextField *testTextField() {
     bounds.size.width = MIN(ceil(bounds.size.width),width);
     bounds.size.height = floor(bounds.size.height);
     
-    if(expectType & CoreTextSizeExpectEmojiType) {
-        
-        CGFloat ascent;
-        CGFloat descent;
-        CGFloat leading;
-        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-        
-        if(ceil(descent) != 3) {
-            bounds.size.height-=3;
-        }
-        
-    }
+//    if(expectType & CoreTextSizeExpectEmojiType) {
+//        
+//        CGFloat ascent;
+//        CGFloat descent;
+//        CGFloat leading;
+//        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+//        
+//       // if(ceil(descent) != 3) {
+//       //     bounds.size.height-=3;
+//       // }
+//        
+//    }
     
     CFRelease(line);
     

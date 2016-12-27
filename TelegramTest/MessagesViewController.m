@@ -54,7 +54,7 @@
 #import "HackUtils.h"
 #import "SearchMessagesView.h"
 #import "TGPhotoViewer.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "StickersPanelView.h"
 #import "StickerSenderItem.h"
 #import "RequestKeySecretSenderItem.h"
@@ -2436,14 +2436,11 @@ static NSTextAttachment *headerMediaIcon() {
         NSMutableArray *array = obj[@"ids"];
         NSMutableArray *messages = obj[@"messages"];
         
-        id request = [TLAPI_messages_deleteMessages createWithN_id:array];
+        __block id request = [TLAPI_messages_deleteMessages createWithFlags:0 n_id:array];
+        
         
         if(conversation.type == DialogTypeChannel) {
-            
-            
             request = [TLAPI_channels_deleteMessages createWithChannel:[TL_inputChannel createWithChannel_id:conversation.peer.channel_id access_hash:conversation.chat.access_hash] n_id:array];
-            
-            
             if(array.count > 0 && ![[(MessageTableItem *)messages[0] message] n_out] && ![[(MessageTableItem *)messages[0] message] isPost]) {
                 
                 __block BOOL canMultiEdit = YES;
@@ -2477,8 +2474,15 @@ static NSTextAttachment *headerMediaIcon() {
                 
             }
             
-            
         }
+        
+        __block BOOL canDeleteForAll = true;
+        [messages enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (!obj.message.canDeleteForAll) {
+                canDeleteForAll = false;
+                *stop = true;
+            }
+        }];
         
         dispatch_block_t completeBlock = ^ {
             
@@ -2509,28 +2513,43 @@ static NSTextAttachment *headerMediaIcon() {
             
         } else {
             
-            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(array.count == 1 ? @"Messages.ConfirmDeleteMessage" : @"Messages.ConfirmDeleteMessages", nil), array.count], ^{
-                [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+            
+            NSAlert *alert = [NSAlert alertWithMessageText:appName() informativeText:[NSString stringWithFormat:NSLocalizedString(array.count == 1 ? @"Messages.ConfirmDeleteMessage" : @"Messages.ConfirmDeleteMessages", nil), array.count] block:^(id result) {
+                
+                BOOL success = [result intValue] == 1000 || [result intValue] == 1002;
+                if ([result intValue] == 1002) {
+                    request = [TLAPI_messages_deleteMessages createWithFlags:1 << 0 n_id:array];
+                }
+                if(success) {
                     
-                    if(conversation.type == DialogTypeChannel)
-                    {
-                        [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
-                    }
+                    [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, id response) {
+                        
+                        if(conversation.type == DialogTypeChannel)
+                        {
+                            [[MTNetwork instance].updateService.proccessor addUpdate:[TL_updateDeleteChannelMessages createWithChannel_id:conversation.peer.channel_id messages:array pts:[response pts] pts_count:[response pts_count]]];
+                        }
+                        
+                        completeBlock();
+                        
+                    } errorHandler:^(RPCRequest *request, RpcError *error) {
+                        completeBlock();
+                    }];
                     
-                    completeBlock();
+                    if(deleteAcceptBlock)
+                        deleteAcceptBlock();
                     
-                } errorHandler:^(RPCRequest *request, RpcError *error) {
-                    completeBlock();
-                }];
+                    [self unSelectAll];
+                }
                 
-                if(deleteAcceptBlock)
-                    deleteAcceptBlock();
-                
-                [self unSelectAll];
-                
-                
-                
-            }, nil);
+            }];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK", nil)];
+            [alert addButtonWithTitle:NSLocalizedString(@"Cancel", nil)];
+            
+            if (canDeleteForAll && ACCEPT_FEATURE) {
+                [alert addButtonWithTitle:NSLocalizedString(@"Messages.DeleteMessagesForAll", nil)];
+            }
+            [alert show];
+            
             
             
         }
@@ -2854,7 +2873,7 @@ static NSTextAttachment *headerMediaIcon() {
                     return res;
                 }];
                 
-                MessageTableItem *item = result[index];
+                MessageTableItem *item = result[MAX(MIN(result.count - 1, index),0)];
                 
                 if((flags & ShowMessageTypeUnreadMark) > 0) {
                     
@@ -3147,7 +3166,7 @@ static NSTextAttachment *headerMediaIcon() {
     if(message) {
         [self setState:MessagesViewControllerStateEditMessage];
         
-        _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:[[NSAttributedString alloc] initWithString:message.message.length > 0 ? message.message : message.media.caption] peer_id:message.peer_id postId:message.n_id];
+        _editTemplate = [[TGInputMessageTemplate alloc] initWithType:TGInputMessageTemplateTypeEditMessage text:[[NSAttributedString alloc] initWithString:message.message.length > 0 ? message.message : (!message.media.caption ? @"" : message.media.caption)] peer_id:message.peer_id postId:message.n_id];
         _editTemplate.editMessage = message;
         
         [_editTemplate setAutoSave:NO];
@@ -3747,7 +3766,7 @@ static BOOL scrolledAfterAddedUnreadMark = NO;
     }
     
     if(prevItem.message && item.message && ![item isReplyMessage] && (!item.message.media.webpage || [item.message.media.webpage isKindOfClass:[TL_webPageEmpty class]])) {
-        if(!prevItem.message.action && !item.message.action) {
+        if(!prevItem.message.action && !item.message.action && !item.message.media.game) {
             if(prevItem.message.from_id == item.message.from_id && ABS(prevItem.message.date - item.message.date) < HEADER_MESSAGES_GROUPING_TIME) {
                 item.isHeaderMessage = NO;
             }

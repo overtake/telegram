@@ -32,6 +32,7 @@
         _startSize = [[NSMutableDictionary alloc] init];
         _layoutProportions = [[NSMutableDictionary alloc] init];
         _canChangeState = YES;
+        [self setAutoresizesSubviews:false];
        // self = [[TGView alloc] initWithFrame:self.bounds];
        // [self addSubview:self];
         

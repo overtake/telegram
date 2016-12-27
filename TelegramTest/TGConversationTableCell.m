@@ -11,6 +11,8 @@
 #import "TGTimer.h"
 #import "TGSwipeTableControll.h"
 
+
+
 @interface ShortUnread : NSView
 @property (nonatomic, strong) NSString *unreadCount;
 @property (nonatomic) NSSize undreadSize;
@@ -100,6 +102,8 @@ static NSDictionary *attributes() {
 
 
 @implementation TGConversationTableCell
+
+
 
 
 -(NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
@@ -204,11 +208,22 @@ static NSDictionary *attributes() {
         
         dispatch_block_t block = ^{
             NSColor *color = nil;
+            
+            
+            static NSImage *pinned;
+            static NSImage *pinnedActive;
+            
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
+                pinned = image_chat_pinned();
+                pinnedActive = [image_chat_pinned() imageTintedWithColor:[NSColor whiteColor]];
+            });
+            
             if(!self.isSelected) {
                 
                  _swipe.layer.backgroundColor = [NSColor clearColor].CGColor;
                 
-                color = [NSColor whiteColor];
+                color = self.item.conversation.isPinned ?  NSColorFromRGB(0xF7F7F7) : [NSColor whiteColor];
                 [color set];
                 NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
                 
@@ -216,11 +231,20 @@ static NSDictionary *attributes() {
                 [DIALOG_BORDER_COLOR setFill];
                 NSRectFill(NSMakeRect(NSMinX(_nameTextField.frame) +2, 0, NSWidth(self.frame) - NSMinX(_nameTextField.frame), 1));
                 
+                
+                    //
+
+                
             } else {
                 color = [Telegram isSingleLayout] ? DIALOG_BORDER_COLOR : BLUE_COLOR_SELECT;
                 [color set];
                 NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
                  _swipe.layer.backgroundColor = color.CGColor;
+            }
+            
+            if (self.item.conversation.isPinned && self.item.message.dstate != DeliveryStateError && self.item.conversation.unread_count == 0) {
+                // point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
+                [self.isSelected && ![Telegram isSingleLayout] ? pinnedActive : pinned drawInRect:NSMakeRect(NSMaxX(self.dateField.frame) - image_chat_pinned().size.width, 11, image_chat_pinned().size.width, image_chat_pinned().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
             if(self.isActiveDragging)
@@ -234,14 +258,14 @@ static NSDictionary *attributes() {
                 
                 NSImage *image = self.isSelected ? image_VerifyWhite() : image_Verify();
                 
-                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
+                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + 2,NSMinY(self.nameTextField.frame) + 6, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
             
             if(self.item.conversation.isMute && self.style != ConversationTableCellShortStyle && self.class == [TGConversationTableCell class]) {
                 
                 NSImage *image = !self.isSelected ? image_muted() : image_mutedSld();
                 
-                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
+                [image drawInRect:NSMakeRect(NSMaxX(self.nameTextField.frame) + (self.item.conversation.isVerified ? image_Verify().size.width + 6 : 0), NSMinY(self.nameTextField.frame) + 7, image.size.width, image.size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }
     
             if(self.item.unreadText.length && self.style != ConversationTableCellShortStyle && self.item.conversation.unread_count > 0) {
@@ -282,11 +306,11 @@ static NSDictionary *attributes() {
     
     int width = MIN(NSWidth(self.frame) - NSMinX(_nameTextField.frame) - NSWidth(_dateField.frame) - 10 - (self.item.message.n_out ? 18 : 0) - (self.item.conversation.isVerified ? image_Verify().size.width + 2 : 0) - (self.item.conversation.isMute ? image_muted().size.width + 4 : 0), self.item.nameTextSize.width);
     
-    [_nameTextField setFrameSize:NSMakeSize(width, 23)];
+    [_nameTextField setFrame:NSMakeRect(68, 36, width, 23)];
     
     int unreadOffset = self.item.conversation.unread_count > 100 ? 50 : 40;
     
-    [_messageField setFrame:NSMakeRect(NSMinX(_messageField.frame), self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) - unreadOffset, self.item.typing.length > 0 ? 18 : 36)];
+    [_messageField setFrame:NSMakeRect(68, self.item.typing.length > 0 ? 21 : 3, NSWidth(self.frame) - NSMinX(_messageField.frame) - unreadOffset, self.item.typing.length > 0 ? 18 : 36)];
     
     [_dateField setFrameOrigin:NSMakePoint(self.bounds.size.width - self.item.dateSize.width - 10, _dateField.frame.origin.y)];
 

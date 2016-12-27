@@ -11,6 +11,7 @@
 #import "MessageTableItem.h"
 #import "TGSettingsTableView.h"
 #import "TGCirclularCounter.h"
+#import "ForwardSenterItem.h"
 @interface TGModalForwardView ()<SelectTableDelegate>
 @property (nonatomic,strong) SelectUsersTableView *tableView;
 @property (nonatomic,strong) TGCirclularCounter *counter;
@@ -27,7 +28,7 @@
     if(self = [super initWithFrame:frameRect]) {
         [self setContainerFrameSize:NSMakeSize(300, 370)];
         
-        [self initialize];
+        [self initializeModal];
     }
     
     return self;
@@ -52,7 +53,7 @@
     [self setContainerFrameSize:NSMakeSize(MAX(300,MIN(450,NSWidth(self.frame) - 60)), MAX(330,MIN(555,NSHeight(self.frame) - 60)))];
 }
 
--(void)initialize {
+-(void)initializeModal {
     _tableView = [[SelectUsersTableView alloc] initWithFrame:NSMakeRect(0, 50, self.containerSize.width, self.containerSize.height - 50)];
     
     _tableView.selectDelegate = self;
@@ -141,6 +142,24 @@
     }
     
     if(!_user) {
+        
+        if ([_messageCaller.media isKindOfClass:[TL_messageMediaGame class]]) {
+            
+            
+            [_tableView.selectedItems enumerateObjectsUsingBlock:^(SelectUserItem *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                TL_conversation *conversation = [obj.object dialog];
+                
+                ForwardSenterItem *forward = [[ForwardSenterItem alloc] initWithMessages:@[_messageCaller] forConversation:conversation additionFlags:0];
+                [forward send];
+                
+            }];
+            
+            [self close:YES];
+            
+            return;
+        }
+        
         NSMutableArray *ids = [[NSMutableArray alloc] init];
         for(MessageTableItem *item in _messagesViewController.selectedMessages)
             [ids addObject:item.message];
@@ -179,12 +198,20 @@
     
 }
 
+-(void)updateButtons:(CGFloat)addition {
+    [self.ok.titleLabel sizeToFit];
+    [self.ok setFrameSize:NSMakeSize(NSWidth(self.ok.titleLabel.frame), NSHeight(self.ok.frame))];
+    [self.ok setFrameOrigin:NSMakePoint(self.containerSize.width - NSWidth(self.ok.frame) - addition, 0)];
+    [self.cancel setFrameOrigin:NSMakePoint(NSMinX(self.ok.frame) - NSWidth(self.cancel.frame) - 20 , 0)];
+
+}
+
 -(void)selectTableDidChangedItem:(id)item {
     
-    
-    
-    
     [self.ok setTitle:_tableView.selectedItems.count == 0 && self.isShareModalType ? NSLocalizedString(@"Conversation.Action.CopyShareLink", nil) : NSLocalizedString(@"Conversation.Action.Share", nil) forControlState:BTRControlStateNormal];
+    
+    [self updateButtons:_tableView.selectedItems.count == 0 && self.isShareModalType ? 30 : 55];
+    
     
     [self updateCounterOrigin];
     
@@ -193,7 +220,8 @@
     [self.ok setTitleColor:_tableView.selectedItems.count > 0 || self.isShareModalType ? LINK_COLOR : GRAY_TEXT_COLOR forControlState:BTRControlStateNormal];
 
   
-    [[_counter animator] setAlphaValue:_tableView.selectedItems.count == 0 ? 0.0f : 1.0f];
+    id animator = _tableView.selectedItems.count < 2 ? _counter : [_counter animator];
+    [animator setAlphaValue:_tableView.selectedItems.count == 0 ? 0.0f : 1.0f];
     
     
     _counter.backgroundColor = _tableView.selectedItems.count > 0 ? NSColorFromRGB(0x5098d3) : DIALOG_BORDER_COLOR;

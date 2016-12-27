@@ -175,7 +175,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    if((theEvent.modifierFlags & 262401) == 262401) {
+    if((theEvent.modifierFlags & NSControlKeyMask) == NSControlKeyMask) {
         [self rightMouseDown:theEvent];
         return;
     }

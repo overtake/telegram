@@ -275,6 +275,7 @@ CACHE_IMAGE(pip_on);
 CACHE_IMAGE(pip_off);
 CACHE_IMAGE(Folder);
 CACHE_IMAGE(trending);
+CACHE_IMAGE(chat_pinned);
 @implementation ImageUtils
 
 NSImage *previewImageForDocument(NSString *path) {

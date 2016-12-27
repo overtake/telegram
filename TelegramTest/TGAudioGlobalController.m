@@ -197,6 +197,10 @@
     
     static NSUserNotification *sNotify;
     
+    if (audioItem.message.media.document.isVoice) {
+        return;
+    }
+    
     if(sNotify) {
         [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:sNotify];
     }

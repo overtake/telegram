@@ -186,7 +186,7 @@ static NSMutableDictionary *mimeTypes;
             [ex setObject:[single objectAtIndex:0] forKey:[single objectAtIndex:1]];
         }
         
-       extensions = ex;
+        extensions = ex;
         
         mimeTypes = types;
     });
@@ -197,7 +197,7 @@ NSString *mimetypefromExtension(NSString *extension) {
     
     [CFunctions initialize];
     
-    NSString *mimeType = [mimeTypes objectForKey:extension];
+    NSString *mimeType = [mimeTypes objectForKey:extension.lowercaseString];
     if(!mimeType)
         mimeType = [mimeTypes objectForKey:@"*"];
     return mimeType;

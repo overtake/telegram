@@ -108,6 +108,10 @@
         {
             TGFeaturedStickerPackRowItem *item = (TGFeaturedStickerPackRowItem *) self.rowItem;
             
+            if ([TGModernESGViewController setWithId:item.set.n_id]) {
+                return;
+            }
+            
             TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
             
             

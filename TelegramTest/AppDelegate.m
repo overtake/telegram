@@ -79,6 +79,8 @@
     return YES;
 }
 
+
+
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     
     
@@ -474,6 +476,11 @@ void exceptionHandler(NSException * exception)
             
             if(incomingEvent.keyCode == 27 || incomingEvent.keyCode == 78) {
                 [TGPhotoViewer decreaseZoom];
+                return [[NSEvent alloc] init];
+            }
+            
+            if (incomingEvent.keyCode == 8 && incomingEvent.modifierFlags & NSEventModifierFlagCommand) {
+                [TGPhotoViewer copyClipboard];
                 return [[NSEvent alloc] init];
             }
             
@@ -1031,7 +1038,15 @@ void exceptionHandler(NSException * exception)
     }
 }
 
+static BOOL canNextLogout = true;
+
 - (void)logoutWithForce:(BOOL)force {
+    
+    if (!canNextLogout) {
+        return;
+    }
+    
+    canNextLogout = false;
     
     dispatch_block_t block = ^ {
         
@@ -1063,6 +1078,7 @@ void exceptionHandler(NSException * exception)
                 [MessagesManager updateUnreadBadge];
                 
                 [self initializeLoginWindow];
+                canNextLogout = true;
             }];
             
         }];

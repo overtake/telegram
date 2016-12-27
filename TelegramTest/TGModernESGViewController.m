@@ -96,7 +96,7 @@ static NSMutableDictionary *stickers;
    // if(!stickers) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             stickers = info[@"serialized"];
             
@@ -114,10 +114,9 @@ static NSMutableDictionary *stickers;
     //if(!sets) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            NSDictionary *info = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             sets = info[@"sets"];
-            
         }];
    // }
     

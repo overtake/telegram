@@ -193,9 +193,7 @@
 
 
 -(void)loadAllPublicChannels {
-    
-    return;
-    
+
     CHECK_LOCKER(_isLoadedPublicNames)
 
     [[[MTNetwork instance] requestSignal:[TLAPI_channels_getAdminedPublicChannels create]] startWithNext:^(TL_messages_chats *next) {

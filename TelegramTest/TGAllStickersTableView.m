@@ -127,7 +127,12 @@
                 }
                 
                 if(!weakSelf.tableView.isCustomStickerPack || weakSelf.tableView.canSendStickerAlways)
-                    [weakSelf.tableView.messagesViewController sendSticker:item.stickers[i] forConversation:weakSelf.tableView.messagesViewController.conversation addCompletionHandler:nil];
+                {
+                    TLDocument *sticker = item.stickers[i];
+                    if (!sticker.stickerAttr.isMask)
+                        [weakSelf.tableView.messagesViewController sendSticker:sticker forConversation:weakSelf.tableView.messagesViewController.conversation addCompletionHandler:nil];
+
+                }
                 
                 if(weakSelf.tableView.canSendStickerAlways) {
                     [TMViewController closeAllModals];
@@ -308,7 +313,7 @@ static NSImage *higlightedImage() {
             stickers = [transaction objectForKey:@"remoteRecentStickers" inCollection:STICKERS_COLLECTION];
         }];
         
-        [RPCRequest sendRequest:[TLAPI_messages_getRecentStickers createWithN_hash:nhash] successHandler:^(RPCRequest *request, TL_messages_recentStickers *response) {
+        [RPCRequest sendRequest:[TLAPI_messages_getRecentStickers createWithFlags:0 n_hash:nhash] successHandler:^(RPCRequest *request, TL_messages_recentStickers *response) {
             
              if([response isKindOfClass:[TL_messages_recentStickers class]]) {
                  [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
@@ -370,7 +375,7 @@ static NSImage *higlightedImage() {
         
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             weakSelf.stickers = info[@"serialized"];
             
@@ -413,14 +418,13 @@ static NSImage *higlightedImage() {
 
 
 -(void)save:(NSArray *)sets stickers:(NSDictionary *)stickers n_hash:(int)n_hash saveSets:(BOOL)saveSets {
-    
     if(saveSets) {
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * __nonnull transaction) {
             
             @try {
-                NSMutableDictionary *serializedStickers = [_stickers mutableCopy];
+                NSMutableDictionary *serializedStickers = [stickers mutableCopy];
                 
-                NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION] mutableCopy];
+                NSMutableDictionary *data = [[transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION] mutableCopy];
                 
                 if(!data)
                 {
@@ -435,7 +439,8 @@ static NSImage *higlightedImage() {
                     data[@"sets"] = sets;
                 }
                 
-                [transaction setObject:data forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                
+                [transaction setObject:data forKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             } @catch (NSException *exception) {
                 
             }
@@ -474,13 +479,12 @@ static NSImage *higlightedImage() {
     _sets = [sets mutableCopy];
     
     
-    
     if(changed.count > 0) {
         [self loadChangedSets:changed sets:sets hash:n_hash];
     }
 
     
-    [self save:sets stickers:_stickers n_hash:n_hash saveSets:changed.count == 0];
+    [self save:sets stickers:_stickers n_hash:n_hash saveSets:YES];
     
     
     [self reloadData];
@@ -581,7 +585,7 @@ static NSImage *higlightedImage() {
         }
         
         if(!_isCustomStickerPack && _sets.count == 0) {
-            NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             _stickers = info[@"serialized"];
             

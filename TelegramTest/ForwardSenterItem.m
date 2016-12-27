@@ -65,8 +65,7 @@ static const int fwdUserFlag = 1 << 31;
             if (f.reply_markup != nil) {
                 
                 
-                
-                 __block TLKeyboardButton *game = nil;
+                  __block TLKeyboardButton *game = nil;
                 
                 [f.reply_markup.rows enumerateObjectsUsingBlock:^(TLKeyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     [obj.buttons enumerateObjectsUsingBlock:^(TLKeyboardButton *btn, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -81,7 +80,6 @@ static const int fwdUserFlag = 1 << 31;
                 
                 if(game) {
                     fake.reply_markup = f.reply_markup;
-                    fake.message = @"..........";
                 }
             }
             
@@ -182,6 +180,7 @@ static const int fwdUserFlag = 1 << 31;
                 TL_localMessage *stated = messages[k];
                 
                 fake.message = stated.message;
+                fake.entities = stated.entities;
                 fake.date = stated.date;
                 fake.n_id = stated.n_id;
                 fake.reply_markup = stated.reply_markup;

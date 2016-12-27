@@ -378,7 +378,7 @@
     } else if(self.sourceType == ChatAvatarSourceChannel) {
         request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatPhotoEmpty create]];
     } else {
-        request = [TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]];
+        request = [TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create]];
     }
     
     
@@ -397,11 +397,11 @@
         
         
         if(self.sourceType == ChatAvatarSourceGroup) {
-            request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
+            request = [TLAPI_messages_editChatPhoto createWithChat_id:lockId photo:[TL_inputChatUploadedPhoto createWithFile:input]];
         } else if(self.sourceType == ChatAvatarSourceChannel) {
-            request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatUploadedPhoto createWithFile:input crop:[TL_inputPhotoCropAuto create]]];
+            request = [TLAPI_channels_editPhoto createWithChannel:self.chat.inputPeer photo:[TL_inputChatUploadedPhoto createWithFile:input]];
         } else {
-            request = [TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]];
+            request = [TLAPI_photos_uploadProfilePhoto createWithFile:input];
         }
         
         if(self.sourceType == ChatAvatarSourceGroup || self.sourceType == ChatAvatarSourceChannel) {

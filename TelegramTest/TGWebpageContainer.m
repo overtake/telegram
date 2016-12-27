@@ -84,7 +84,7 @@
         [[_siteName cell] setTruncatesLastVisibleLine:YES];
         [[_author cell] setTruncatesLastVisibleLine:YES];
         [self.siteName setFrameOrigin:NSMakePoint(8, -4)];
-        [self.author setFrameOrigin:NSMakePoint(8, 10)];
+        [self.author setFrameOrigin:NSMakePoint(8, 12)];
         
         [super addSubview:_siteName];
     }

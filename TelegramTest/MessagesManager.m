@@ -137,6 +137,14 @@ static const int seconds_to_notify = 120;
             msg = [MessagesUtils mediaMessage:message];
         }
         
+        if ([message.media isKindOfClass:[TL_messageMediaGame class]]) {
+            if ([message.to_id isKindOfClass:[TL_peerUser class]]) {
+                msg = [NSString stringWithFormat:NSLocalizedString(@"Notification.GamePrivateInvite", nil),message.media.game.short_name];
+            } else {
+                msg = [NSString stringWithFormat:NSLocalizedString(@"Notification.GamePrivateGroup", nil),message.chat.title, message.media.game.short_name];
+            }
+        }
+        
 
         NSString *subTitle;
         
@@ -256,15 +264,18 @@ static const int seconds_to_notify = 120;
 
 +(void)clearNotifies:(TL_conversation *)conversation max_id:(int)max_id
 {
-    NSArray *deliveredNotifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
-    
-    [deliveredNotifications enumerateObjectsUsingBlock:^(NSUserNotification *notify, NSUInteger idx, BOOL * _Nonnull stop) {
-        
-        if([notify.userInfo[KEY_PEER_ID] intValue] == conversation.peer_id && [notify.userInfo[KEY_MESSAGE_ID] intValue] <= max_id) {
-            [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:notify];
-        }
-        
-    }];
+//    NSArray *deliveredNotifications = [[NSUserNotificationCenter defaultUserNotificationCenter] deliveredNotifications];
+//    
+//    int i = 0;
+//    
+//    [deliveredNotifications enumerateObjectsUsingBlock:^(NSUserNotification *notify, NSUInteger idx, BOOL * _Nonnull stop) {
+//        
+//        if([notify.userInfo[KEY_PEER_ID] intValue] == conversation.peer_id && [notify.userInfo[KEY_MESSAGE_ID] intValue] <= max_id) {
+//            [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:notify];
+//            
+//        }
+//        
+//    }];
 }
 
 +(void)notifyMessage:(TL_localMessage *)message update_real_date:(BOOL)update_real_date {

@@ -95,7 +95,7 @@
     } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
         NSString *fullName = [user fullName];
         
-        text = [NSString stringWithFormat:@"%@ %@ %d", fullName,NSLocalizedString(@"Message.Action.GameScoredShort", nil), action.score];
+        text = [NSString stringWithFormat:@"%@ %@", fullName,[NSString stringWithFormat:NSLocalizedString(action.score > 1 ? @"Message.Action.GameScoredShortPluar" : action.score == 0 ? @"Message.Action.GameScoredShortZero" : @"Message.Action.GameScoredShortSingular", nil),action.score]];
     }
    
     return text;
@@ -295,7 +295,9 @@
                 msgText = NSLocalizedString(@"MessageAction.Service.PinnedMessage", nil);
 
             } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
-                msgText = [NSString stringWithFormat:NSLocalizedString(@"Message.Action.ConversationGame", nil),action.score];
+                msgText = [NSString stringWithFormat:NSLocalizedString(action.score > 1 ? @"Message.Action.ConversationGamePluar" : action.score == 0 ? @"Message.Action.ConversationGameZero" : @"Message.Action.ConversationGameSingular", nil),action.score];
+            } else if([action isKindOfClass:[TL_messageActionPhoneCall class]]) {
+                msgText = NSLocalizedString(@"Message.Action.PhoneCall", nil);
             }
 
             
@@ -488,7 +490,17 @@
         
     } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
         
-       actionText = [NSString stringWithFormat:NSLocalizedString(@"Message.Action.GameScored", nil),action.score];
+        actionText = [NSString stringWithFormat:NSLocalizedString(action.score > 1 ? @"Message.Action.GameScoredPluar" : action.score == 0 ? @"Message.Action.GameScoredZero" : @"Message.Action.GameScoredSingular", nil),action.score];
+    } else if ([action isKindOfClass:[TL_messageActionPhoneCall class]]) {
+        NSString *name = action.reason.className;
+        if ([action.reason isKindOfClass:[TL_phoneCallDiscardReasonHangup class]]) {
+            name = [name stringByAppendingString:@"_incoming"];
+            actionText = NSLocalizedString(name, nil);
+            actionText = [NSString stringWithFormat:actionText, [NSString durationTransformedValue:action.duration],@""];
+        } else {
+            actionText = NSLocalizedString(name, nil);
+        }
+        user = nil;
     }
     
     if([action isKindOfClass:[TL_messageActionBotDescription class]]) {
@@ -520,36 +532,16 @@
     
     
     if([action isKindOfClass:[TL_messageActionGameScore class]]) {
-        __block TL_keyboardButtonGame *game = nil;
+        __block TLGame *game = message.replyMessage.media.game;
         
-        [message.replyMessage.reply_markup.rows enumerateObjectsUsingBlock:^(TL_keyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
-            [obj.buttons enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                if([obj isKindOfClass:[TL_keyboardButtonGame class]]) {
-                    game = obj;
-                    *stop = YES;
-                }
-                
-            }];
-            
-        }];
+       
         if(game) {
             //[attributedString appendString:@" "];
-            NSRange gameLink = [attributedString appendString:game.game_title withColor:LINK_COLOR];
-            [attributedString setLink:[NSString stringWithFormat:@"chat://startgame/?game_id=%d&start_param=%@&message_id=%d&game_title=%@&text=%@",game.game_id,game.start_param,message.replyMessage.n_id,game.game_title,game.text] forRange:gameLink];
+            NSRange gameLink = [attributedString appendString:game.short_name withColor:LINK_COLOR];
+            [attributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(message.to_id.class),message.peer_id,message.reply_to_msg_id,message.n_id] forRange:gameLink];
             [attributedString setFont:[SettingsArchiver fontMedium125] forRange:gameLink];
         }
         
-        
-        NSRange range = [attributedString.string rangeOfString:[NSString stringWithFormat:@"%d",action.score]];
-        if(range.location != NSNotFound) {
-            [attributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(message.to_id.class),message.peer_id,message.reply_to_msg_id,message.n_id] forRange:range];
-            [attributedString setFont:[SettingsArchiver fontMedium125] forRange:range];
-            [attributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:range];
-
-
-        }
         
     }
     
@@ -671,7 +663,10 @@
             return result;
         }
         
-        return [message.media.document isSticker] ? (((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",((TL_documentAttributeSticker *)[message.media.document attributeWithClass:[TL_documentAttributeSticker class]]).alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil)) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
+
+        return [message.media.document isSticker] ? message.media.document.stickerAttr.alt.length > 0 ? [NSString stringWithFormat:@"%@ %@",message.media.document.stickerAttr.alt,NSLocalizedString(@"Sticker", nil)] : NSLocalizedString(@"Sticker", nil) : (message.media.document.file_name.length == 0 ? NSLocalizedString(@"ChatMedia.File", nil) : message.media.document.file_name);
+    } else if([message.media isKindOfClass:[TL_messageMediaGame class]]) {
+         return [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"ChatMedia.Game", nil),message.media.game.title];
     } else {
         
         if([message.media.bot_result.send_message isKindOfClass:[TL_botInlineMessageText class]]) {
@@ -701,6 +696,8 @@
             return  NSLocalizedString(@"ChatMedia.Contact", nil);
         } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
             return NSLocalizedString(@"Sticker", nil);
+        } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeGame]) {
+            return [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"ChatMedia.Game", nil),message.media.bot_result.title];
         }
 
         
@@ -759,7 +756,7 @@
     
     NSAttributedString *messageText = [MessagesUtils conversationLastText:conversation.lastMessage conversation:conversation];
     
-    int time = conversation.last_message_date;
+    int time = conversation.isPinned ? conversation.lastMessage ? conversation.lastMessage.date : [[MTNetwork instance] getTime] : conversation.last_message_date;
     time -= [[MTNetwork instance] getTime] - [[NSDate date] timeIntervalSince1970];
     
     

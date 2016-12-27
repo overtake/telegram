@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "RpcError.h"
-#import <MTProtoKit/MTRpcError.h>
+#import <MtProtoKitMac/MTRpcError.h>
 @interface RpcErrorParser : NSObject
 +(RpcError *)parseRpcError:(MTRpcError *)error;
 @end

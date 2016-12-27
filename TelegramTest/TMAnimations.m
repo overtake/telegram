@@ -27,7 +27,7 @@
     animation.duration = duration;
     animation.repeatCount = 4;
     animation.autoreverses = YES;
-    animation.removedOnCompletion = YES;
+    animation.removedOnCompletion = YES; 
     NSValue *fromValueValue = [NSValue value:&fromValue withObjCType:@encode(CGPoint)];
     NSValue *toValueValue = [NSValue value:&toValue withObjCType:@encode(CGPoint)];
 

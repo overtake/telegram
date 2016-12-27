@@ -181,16 +181,20 @@
                     
                     TLUser *user = [[UsersManager sharedManager] find:peer.peer.user_id];
                     
-                    NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                    if (user != nil && user.username.length > 0) {
+                        NSMenuItem *botMenuItem = [NSMenuItem menuItemWithTitle:[NSString stringWithFormat:@"@%@",user.username] withBlock:^(id sender) {
+                            
+                            open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesController.navigationViewController);
+                            
+                        }];
                         
-                        open_link_with_controller([NSString stringWithFormat:@"chat://viabot/?username=@%@",user.username],weakSelf.messagesController.navigationViewController);
+                        __unused TGMenuItemPhoto *unuse = [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
                         
-                    }];
+                        
+                        [theMenu addItem:botMenuItem];
+                    }
                     
-                   __unused TGMenuItemPhoto *unuse = [[TGMenuItemPhoto alloc] initWithUser:user menuItem:botMenuItem];
-                    
-                    
-                    [theMenu addItem:botMenuItem];
+                   
                     
                 }];
                 

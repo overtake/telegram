@@ -22,6 +22,7 @@
 #import "TGUpdateChannels.h"
 #import "TGForceChannelUpdate.h"
 #import "TGModernESGViewController.h"
+#import "TGModernConversationHistoryController.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
@@ -712,7 +713,7 @@ static NSArray *channelUpdates;
             [MessagesManager addAndUpdateMessage:msg];
             
             
-            if(updateNotification.popup) {
+            if(updateNotification.isPopup) {
                 [ASQueue dispatchOnMainQueue:^{
                     alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
                 }];
@@ -816,6 +817,7 @@ static NSArray *channelUpdates;
                         TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerSecret createWithChat_id:chat.n_id]];
                         if(conversation) {
                             [[DialogsManager sharedManager] add:@[conversation]];
+                            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
                         }
                         
                     }
@@ -940,17 +942,59 @@ static NSArray *channelUpdates;
             
             [[BlockedUsersManager sharedManager] updateBlocked:user_id isBlocked:blocked];
         }
-        
-        if([update isKindOfClass:[TL_updateNewAuthorization class]]) {
-            
-            NSString *displayDate = [[NSString alloc] initWithFormat:@"%@, %@ at %@", [TGDateUtils stringForDayOfWeek:update.date], [TGDateUtils stringForDialogTime:update.date], [TGDateUtils stringForShortTime:update.date]];
-            
-            NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
 
+        if ([update isKindOfClass:[TL_updateDialogPinned class]]) {
+            TL_conversation *conversation = [[DialogsManager sharedManager] find:update.peer.peer_id];
+            if (update.isPinned) {
+                conversation.flags |= (1 << 2);
+                conversation.last_message_date = [DialogsManager pullPinnedNextTime:1];
+            } else {
+                 conversation.flags &= ~(1 << 2);
+                conversation.last_message_date = conversation.lastMessage != nil ? conversation.lastMessage.date : [[MTNetwork instance] getTime];
+            }
+            [conversation save];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
+        }
+        
+        if ([update isKindOfClass:[TL_updatePinnedDialogs class]]) {
             
-            [MessageSender addServiceNotification:messageText];
-            
-            return;
+            [RPCRequest sendRequest:[TLAPI_messages_getPinnedDialogs create] successHandler:^(id request, TL_messages_peerDialogs *response) {
+                [SharedManager proccessGlobalResponse:response];
+                
+                NSMutableDictionary *updated = [NSMutableDictionary dictionary];
+                
+                [[DialogsManager sharedManager] pinned:^(NSArray *conversations) {
+                    
+                    [conversations enumerateObjectsUsingBlock:^(TL_conversation *conversation, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if (conversation.type != DialogTypeSecretChat) {
+                            conversation.flags &= ~(1 << 2);
+                            conversation.last_message_date = conversation.lastMessage != nil ? conversation.lastMessage.date : [[MTNetwork instance] getTime];
+                            [conversation save];
+                            updated[@(conversation.peer_id)] = conversation;
+                        }
+                        
+                    }];
+                    
+                    NSArray *convesations = [TGModernConversationHistoryController parseDialogs:[TL_messages_dialogs createWithDialogs:response.dialogs messages:response.messages chats:response.chats users:response.users]];
+                    
+                    [[DialogsManager sharedManager] add:convesations];
+                    
+                    [convesations enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        TL_conversation *conversation = [[DialogsManager sharedManager] find:obj.peer_id];
+                        [conversation save];
+                        updated[@(conversation.peer_id)] = conversation;
+                    }];
+                    
+                    [[DialogsManager sharedManager] sortAndNotify:updated.allValues];
+                    
+
+                }];
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            } timeout:0 queue:queue.nativeQueue];
+
         }
         
         if([update isKindOfClass:[TL_updateContactRegistered class]]) {
@@ -1085,10 +1129,8 @@ static const int overpts = 5000;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
-    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:_updateState.date]);
     
-    
-    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
+    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithFlags:0 pts:_updateState.pts pts_total_limit:0 date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
         NSLog(@"start new updateDifference update update: %@",_updateState);

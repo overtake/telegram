@@ -128,7 +128,7 @@
             startingLineNumber = "393"
             endingLineNumber = "393"
             landmarkName = "-onStateChanged:"
-            landmarkType = "7">
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -144,7 +144,7 @@
             startingLineNumber = "399"
             endingLineNumber = "399"
             landmarkName = "-onStateChanged:"
-            landmarkType = "7">
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -231,30 +231,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TelegramTest/TGAllStickersTableView.m"
-            timestampString = "495119806.714973"
+            filePath = "TelegramTest/TMTableView.mm"
+            timestampString = "502395841.897896"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "210"
-            endingLineNumber = "210"
-            landmarkName = "-redrawRow"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TelegramTest/MessageSender.m"
-            timestampString = "495204371.590923"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "875"
-            endingLineNumber = "875"
-            landmarkName = "+proccessInlineKeyboardButton:messagesViewController:conversation:message:handler:"
-            landmarkType = "5">
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "-insert:startIndex:tableRedraw:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

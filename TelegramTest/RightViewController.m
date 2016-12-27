@@ -363,6 +363,19 @@
                 
         [self hideModalView:YES animation:YES];
         
+    } else if (self.modalView == [self forwardGameView]) {
+        NSDictionary *obj = self.modalObject;
+        
+
+        confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"ShareGameAlert", nil),(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) ? dialog.chat.title :  dialog.user.fullName], ^{
+            shareGameResult(obj,@[dialog],YES);
+            
+            [self hideModalView:YES animation:YES];
+
+            
+        },nil);
+       
+
     } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
@@ -524,7 +537,38 @@
     
 }
 
+- (void)showGameForwardView:(NSDictionary *)params {
+    [self hideModalView:YES animation:NO];
+    
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
+    
+    TMModalView *view = [self forwardGameView];
+    
+    self.modalView = view;
+    
+    self.modalObject = params;
+    
+    [view removeFromSuperview];
+    [view setFrameSize:view.bounds.size];
+    [view setHeaderTitle:NSLocalizedString(@"Messages.SharingGame", nil) text:params[@"game"]];
+    
+    [self hideModalView:NO animation:YES];
+
+}
+
 - (TMModalView *)forwardModalView {
+    static TMModalView *view;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        view = [[TMModalView alloc] initWithFrame:self.view.bounds];
+    });
+    return view;
+}
+
+- (TMModalView *)forwardGameView {
     static TMModalView *view;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

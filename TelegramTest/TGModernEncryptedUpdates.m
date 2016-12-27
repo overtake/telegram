@@ -12,7 +12,7 @@
 #import "SecretLayer20.h"
 #import "SecretLayer23.h"
 #import "SecretLayer45.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "Crypto.h"
 #import "SenderHeader.h"
 #import "MessagesUtils.h"
@@ -583,7 +583,7 @@ Class convertClass(NSString *c, int layer) {
         } else if([obj isKindOfClass:stickerAttr]) {
             
             if(layer < 45)
-                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
+                [attrs addObject:[TL_documentAttributeSticker createWithFlags:0 alt:@"" stickerset:[TL_inputStickerSetEmpty create] mask_coords:nil]];
             else {
                 
                 Secret45_DocumentAttribute_documentAttributeSticker *attr = obj;
@@ -594,7 +594,7 @@ Class convertClass(NSString *c, int layer) {
                     stickerset = [TL_inputStickerSetShortName createWithShort_name:((Secret45_InputStickerSet_inputStickerSetShortName *)attr.stickerset).short_name];
                 }
                 
-                [attrs addObject:[TL_documentAttributeSticker createWithAlt:attr.alt stickerset:stickerset]];
+                [attrs addObject:[TL_documentAttributeSticker createWithFlags:0 alt:attr.alt stickerset:stickerset mask_coords:nil]];
             }
             
             
@@ -728,7 +728,7 @@ Class convertClass(NSString *c, int layer) {
         
         NSMutableArray *size =  [NSMutableArray arrayWithObjects:s0,s1,nil];
         
-        return [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:[file n_id] access_hash:[file access_hash] date:[[MTNetwork instance] getTime] sizes:size] caption:@""];
+        return [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:[file n_id] access_hash:[file access_hash] date:[[MTNetwork instance] getTime] sizes:size] caption:@""];
         
     } else if([media isKindOfClass:convertClass(@"Secret%d_DecryptedMessageMedia_decryptedMessageMediaDocument", layer)]) {
         

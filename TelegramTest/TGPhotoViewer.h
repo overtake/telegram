@@ -53,6 +53,7 @@ typedef enum {
 
 +(BOOL)isVisibility;
 
++(void)copyClipboard;
 
 +(void)increaseZoom;
 +(void)decreaseZoom;

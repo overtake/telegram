@@ -10,18 +10,22 @@
 #import "TGSProfileMediaRowItem.h"
 #import "TGAudioPlayerWindow.h"
 #import "TGTextLabel.h"
+#import "TGCommonChatsViewController.h"
 @interface TGMediaCounterLoader : NSObject
 @property (nonatomic,assign) int photoAndVideoCounter;
 @property (nonatomic,assign) int filesCounter;
 @property (nonatomic,assign) int audioCounter;
 @property (nonatomic,assign) int linksCounter;
-
+@property (nonatomic,assign) int commonCounter;
 
 @property (nonatomic,copy) dispatch_block_t changeHandler;
 @property (nonatomic,strong) NSAttributedString *loaderString;
 
 
 @property (nonatomic,assign) BOOL isLoaded;
+
+@property (nonatomic,strong) NSArray *commonChats;
+@property (nonatomic,strong) NSArray *commonUsers;
 
 
 @end
@@ -35,6 +39,7 @@
         _filesCounter = 0;
         _audioCounter = 0;
         _linksCounter = 0;
+        _commonCounter = 0;
     }
     
     return self;
@@ -102,7 +107,30 @@
         
     }];
     
-    
+    if (conversation && conversation.type == DialogTypeUser) {
+        [_inwork addObject:@"commonCounter"];
+        
+        [RPCRequest sendRequest:[TLAPI_messages_getCommonChats createWithUser_id:conversation.user.inputUser max_id:0 limit:1000] successHandler:^(id request, TL_messages_chats *response) {
+            
+            [SharedManager proccessGlobalResponse:response];
+            
+            _commonCounter = (int)response.chats.count;
+            [_inwork removeObject:@"commonCounter"];
+            _isLoaded = _inwork.count == 0;
+            
+            self.commonChats = response.chats;
+            self.commonUsers = @[];
+            
+            [self updateCountersText];
+            
+            if( _changeHandler) {
+                _changeHandler();
+            }
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+    }
     
     
 }
@@ -192,7 +220,24 @@
         
     }
     
-    
+    if(_commonCounter > 0) {
+        
+        NSString *key = _commonCounter == 1 ? NSLocalizedString(@"Modern.SharedMedia.CommonGroup", nil) : NSLocalizedString(@"Modern.SharedMedia.CommonGroups", nil);
+        
+        if(attr.string.length > 0) {
+            [attr appendString:@"     "];
+        }
+        NSRange range = [attr appendString:[NSString stringWithFormat:@"%d",_commonCounter] withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemMediumFont(14) forRange:range];
+        [attr appendString:@" "];
+        NSRange secondRange = [attr appendString:key withColor:BLUE_UI_COLOR];
+        [attr setFont:TGSystemFont(14) forRange:secondRange];
+        
+        range.length+= (secondRange.location - range.length - range.location) + secondRange.length;
+        
+        [attr addAttribute:NSLinkAttributeName value:@"chat://commonGroups" range:range];
+        
+    }
     
     _loaderString = attr;
     
@@ -248,7 +293,16 @@ static NSMutableDictionary *loaders;
         [_countersTextField setLinkCallback:^(NSString *url) {
             
             if([url isEqualToString:@"chat://audio"]) {
-                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerGlobalStyleList  navigation:self.item.controller.navigationViewController];
+                [TGAudioPlayerWindow show:weakSelf.item.conversation playerState:TGAudioPlayerGlobalStyleList  navigation:weakSelf.item.controller.navigationViewController];
+                return;
+            } else if ([url isEqualToString:@"chat://commonGroups"]) {
+                TGCommonChatsViewController *common = [[TGCommonChatsViewController alloc] initWithFrame:NSZeroRect];
+                [common loadViewIfNeeded];
+                
+                TGMediaCounterLoader *loader = loaders[@(weakSelf.conversation.peer_id)];
+                
+                [common updateWithChats:loader.commonChats users:loader.commonUsers];
+                [weakSelf.item.controller.navigationViewController pushViewController:common animated:true];
                 return;
             }
             

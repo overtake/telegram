@@ -143,8 +143,8 @@
     
     [self.searchViewController viewWillAppear:animated];
     
-    //[self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
-    //[self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
+    [self.tableView.scrollView.contentView setFrameSize:[Telegram leftViewController].view.frame.size];
+    [self.tableView setFrameSize:[Telegram leftViewController].view.frame.size];
   //  dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
   //  });
@@ -220,6 +220,35 @@
     
     [MessagesManager updateUnreadBadge];
     _initedNext = YES;
+    
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:kPullPinnedOnce]) {
+        [RPCRequest sendRequest:[TLAPI_messages_getPinnedDialogs create] successHandler:^(id request, TL_messages_peerDialogs *response) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPullPinnedOnce];
+            [SharedManager proccessGlobalResponse:response];
+            
+            __block NSMutableArray *updated = [NSMutableArray array];
+            [response.dialogs enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_dialog *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                TL_conversation *conversation = [[DialogsManager sharedManager] find:obj.peer.peer_id];
+                
+                if (!conversation) {
+                    conversation = [[Storage manager] selectConversation:conversation.peer];
+                } else {
+                    [updated addObject:conversation];
+                }
+                conversation.last_message_date = [DialogsManager pullPinnedNextTime:1];
+                conversation.flags |= (1 << 2);
+                [conversation save];
+            }];
+            
+            [updated enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [[DialogsManager sharedManager] notifyAfterUpdateConversation:obj];
+            }];
+            
+        } errorHandler:^(id request, RpcError *error) {
+            
+        }];
+    }
 }
 
 - (void)addScrollEvent {
@@ -407,6 +436,7 @@
 
 -(void)move:(int)position conversation:(TL_conversation *)conversation {
     
+    
     if(!conversation.isAddToList || conversation.chat.isDeactivated)
         return;
     
@@ -415,7 +445,7 @@
     }
     
     if(position != 0 && position >= self.tableView.count)
-        position = (int) self.tableView.count-1;
+        position = MAX((int) self.tableView.count-1,0);
     
     TGConversationTableItem *object = (TGConversationTableItem *) [self.tableView itemByHash:[conversation peer_id]];
     if(object) {
@@ -497,6 +527,35 @@
     
     [menu addItem:openConversationMenuItem];
     
+    NSMenuItem *pinOrUnpin = [NSMenuItem menuItemWithTitle:NSLocalizedString(dialog.isPinned ? @"Conversation.Unpin" : @"Conversation.Pin", nil) withBlock:^(id sender) {
+        [[DialogsManager sharedManager] pinned:^(NSArray *pinned) {
+            if (dialog.type != DialogTypeSecretChat) {
+                NSArray *simplePinned = [pinned filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type != 2"]];
+
+                if (simplePinned.count < chat_pin_limit() || dialog.isPinned) {
+                    [RPCRequest sendRequest:[TLAPI_messages_toggleDialogPin createWithFlags:dialog.isPinned ? 0 : 1 << 0 peer:dialog.inputPeer] successHandler:^(id request, id response) {
+                        
+                        [[DialogsManager sharedManager] togglePinned:dialog];
+                    } errorHandler:^(id request, RpcError *error) {
+                        
+                    }];
+                } else {
+                    alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"Conversation.Alert.PinLimitError", nil),chat_pin_limit()]);
+                }
+            } else {
+                NSArray *secretPinned = [pinned filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.type == 2"]];
+                if (secretPinned.count < chat_pin_limit() || dialog.isPinned ) {
+                    [[DialogsManager sharedManager] togglePinned:dialog];
+                } else {
+                    alert(appName(), [NSString stringWithFormat:NSLocalizedString(@"Conversation.Alert.SecretPinLimitError", nil),chat_pin_limit()]);
+                }
+            }
+            
+        }];
+        
+    }];
+    [menu addItem:pinOrUnpin];
+    
     NSMenuItem *anotherWindow = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"ShowConversationWithAnotherWindow", nil) withBlock:^(id sender) {
         [TGHeadChatPanel showWithConversation:dialog];
     }];
@@ -505,7 +564,7 @@
     [menu addItem:anotherWindow];
     
     
-    
+   
     
     [menu addItem:[NSMenuItem separatorItem]];
     

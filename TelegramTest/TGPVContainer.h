@@ -36,5 +36,6 @@
 
 -(void)updateSize;
 
+-(void)copy:(id)sender;
 
 @end

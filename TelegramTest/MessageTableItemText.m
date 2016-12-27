@@ -30,14 +30,9 @@
 - (id) initWithObject:(TL_localMessage *)object {
     self = [super initWithObject:object];
     
-    
     self.textAttributed = [[NSMutableAttributedString alloc] init];
-    
     NSString *message = [object.message trim];
-        
-    
     [self.textAttributed appendString:message withColor:TEXT_COLOR];
-    
     [self.textAttributed setAlignment:NSLeftTextAlignment range:self.textAttributed.range];
     
     [self updateEntities];
@@ -249,12 +244,18 @@
 - (BOOL)makeSizeByWidth:(int)width {
     [_webpage makeSize:width - self.defaultOffset];
     
+    [_game makeSize:width - self.defaultOffset];
+    
     _allAttributedLinksSize = [_allAttributedLinks coreTextSizeForTextFieldForWidth:width];
     _textSize = [_textAttributed coreTextSizeForTextFieldForWidth:width];
     
     _textSize.width = width;
     
-    self.contentSize = self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0));
+    if ([self isGame]) {
+        width = self.game.size.width;
+    }
+    
+    self.contentSize = self.blockSize = NSMakeSize(width, _textSize.height + ([self isWebPage] ? [_webpage blockHeight] + self.defaultContentOffset : 0) + ([self isGame] ? _game.size.height + self.defaultContentOffset : 0));
     
     return [super makeSizeByWidth:width];
 }
@@ -267,7 +268,7 @@
         
         remove_global_dispatcher(_requestKey);
 
-         _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
+        _webpage = [TGWebpageObject objectForWebpage:self.message.media.webpage tableItem:self]; // its only youtube.
 
     } else if([self isWebPagePending]) {
         
@@ -340,8 +341,15 @@
             
         });
         
+    } else if ([self isGame]) {
+        _game = [[TGGameObject alloc] initWithGame:self.message.media.game message:self.message text:[self.textAttributed copy]];
+        self.textAttributed = nil;
     }
 
+}
+
+-(BOOL)isGame {
+    return [self.message.media isKindOfClass:[TL_messageMediaGame class]] || [self.message.media.bot_result.type isEqualToString:kBotInlineTypeGame];
 }
 
 -(BOOL)isWebPage {

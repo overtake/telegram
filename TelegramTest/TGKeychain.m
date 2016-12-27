@@ -17,8 +17,8 @@
 #define TG_SYNCHRONIZED_END(lock) pthread_mutex_unlock(&_TG_SYNCHRONIZED_##lock);
 
 #import <CommonCrypto/CommonCrypto.h>
-#import <MTProtoKit/MTEncryption.h>
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTEncryption.h>
+#import <MtProtoKitMac/MTLogging.h>
 #import "SSKeychain.h"
 #import <AppKit/AppKit.h>
 

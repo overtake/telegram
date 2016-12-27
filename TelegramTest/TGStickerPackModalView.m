@@ -186,7 +186,7 @@
     
     [_tableView showWithStickerPack:stickerPack];
 
-    [_bottomView setHidden:packIsset];
+    [_bottomView setHidden:packIsset || stickerPack.set.isMasks];
     
     [_addButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"StickerPack.AddStickerPack", nil),stickerPack.documents.count] forControlState:BTRControlStateNormal];
     

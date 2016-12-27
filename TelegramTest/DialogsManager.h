@@ -42,8 +42,10 @@
 -(void)updateLastMessageForDialog:(TL_conversation *)dialog;
 
 -(void)notifyAfterUpdateConversation:(TL_conversation *)conversation;
-
+-(void)togglePinned:(TL_conversation *)conversation;
+-(void)pinned:(void (^)(NSArray *conversations))callback;
++(int)pullPinnedNextTime:(int)count;
+-(void)sortAndNotify:(NSArray *)keyList;
 - (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent;
 - (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent autoStart:(BOOL)autoStart;
-
 @end

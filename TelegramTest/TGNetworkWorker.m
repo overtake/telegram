@@ -6,10 +6,10 @@
 
 #import "TGTimer.h"
 #import "ASQueue.h"
-#import <MTProtoKit/MTContext.h>
-#import <MTProtoKit/MTProto.h>
-#import <MTProtoKit/MTRequestMessageService.h>
-#import <MTProtoKit/MTRequest.h>
+#import <MtProtoKitMac/MTContext.h>
+#import <MtProtoKitMac/MTProto.h>
+#import <MtProtoKitMac/MTRequestMessageService.h>
+#import <MtProtoKitMac/MTRequest.h>
 
 
 static int workerCount = 0;

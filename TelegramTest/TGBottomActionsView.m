@@ -111,6 +111,7 @@
          [_emoji setCenteredYByView:self];
         
         
+        
         [self addSubview:_silentMode];
         [self addSubview:_botCommand];
         [self addSubview:_botKeyboard];

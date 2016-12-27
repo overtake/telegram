@@ -256,7 +256,6 @@ static TMViewController *changedController;
         }
     }
     
-    
    
     
     [self setCenterBarViewText:item.title];

@@ -124,7 +124,7 @@
             }
         };
         
-        if(template.webpage && !template.noWebpage) {
+        if(template.webpage && !template.noWebpage && conversation.type != DialogTypeSecretChat) {
             
             disposable = [[self webpageSignal:template.webpage] startWithNext:^(id next) {
                 

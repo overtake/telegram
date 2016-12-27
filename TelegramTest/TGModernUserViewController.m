@@ -12,7 +12,7 @@
 #import "TGProfileParamItem.h"
 #import "MessagesUtils.h"
 #import "TGProfileHeaderRowItem.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "ComposeActionInfoProfileBehavior.h"
 #import "TGShareContactModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"

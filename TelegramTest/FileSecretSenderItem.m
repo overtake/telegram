@@ -81,7 +81,7 @@
         [sizes addObject:cachedSize];
         [sizes addObject:photoSize];
         
-        media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:self.uploader.identify access_hash:0 date:[[MTNetwork instance] getTime] sizes:sizes] caption:@""];
+        media = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:self.uploader.identify access_hash:0 date:[[MTNetwork instance] getTime] sizes:sizes] caption:@""];
         
         
         [TGCache cacheImage:renderedImage(image, maxSize) forKey:photoSize.location.cacheKey groups:@[IMGCACHE]];

@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "TLObject.h"
 #import "RpcError.h"
-#import <MTProtoKit/MTRequest.h>
+#import <MtProtoKitMac/MTRequest.h>
 #import "TGNetworkWorker.h"
 @interface RPC : NSObject
 

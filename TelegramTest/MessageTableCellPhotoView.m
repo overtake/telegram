@@ -64,7 +64,7 @@ NSImage *fireImage() {
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.channelMsgId media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
-            if(!weakSelf.item.isset)
+            if(!weakSelf.item.isset || weakSelf.item.message.dstate != DeliveryStateNormal)
                 return;
             
             object.reservedObject = weakSelf.imageView.image;

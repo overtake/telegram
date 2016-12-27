@@ -58,7 +58,7 @@
     
     
     if(isNewDocument) {
-        media = [TL_inputMediaUploadedDocument createWithFile:inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
+        media = [TL_inputMediaUploadedDocument createWithFlags:0 file:inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption stickers:nil];
     } else {
         TLDocument *document = (TLDocument *)inputFile;
         media = [TL_inputMediaDocument createWithN_id:[TL_inputDocument createWithN_id:document.n_id access_hash:document.access_hash] caption:self.message.media.caption];

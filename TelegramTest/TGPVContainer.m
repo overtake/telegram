@@ -26,8 +26,7 @@
 
 
 -(void)mouseDown:(NSEvent *)theEvent {
-   
-    _startPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+   _startPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     _isDragged = NO;
 }
 
@@ -39,47 +38,27 @@
 
 -(void)mouseDragged:(NSEvent *)theEvent {
     [super mouseDragged:theEvent];
-    
     if(_startPoint.x == 0 || _startPoint.y == 0)
         return;
-    
-    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame))
-    {
-        
+    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame)){
         NSPoint currentPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        
-        
         NSSize addXY = NSMakeSize(currentPoint.x - _startPoint.x, currentPoint.y - _startPoint.y);
-        
         [self addSizeToScroll:addXY];
-        
-       
-        
     }
     
 }
 
 -(void)addSizeToScroll:(NSSize)size {
-    
     [self setFrameOrigin:NSMakePoint(NSMinX(self.frame) + size.width, NSMinY(self.frame) + size.height)];
-    
-     _isDragged = YES;
+    _isDragged = YES;
 }
 
 -(void)scrollWheel:(NSEvent *)event {
     [super scrollWheel:event];
-    
-    
-    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame))
-    {
-        
+    if(NSWidth(self.frame) > NSWidth(self.superview.frame) || NSHeight(self.frame) > NSHeight(self.superview.frame)){
         NSSize addXY = NSMakeSize([event scrollingDeltaX], -[event scrollingDeltaY]);
-        
         [self addSizeToScroll:addXY];
-        
     }
-    
-    
 }
 
 -(void)setFrameOrigin:(NSPoint)newOrigin {
@@ -419,7 +398,7 @@
     NSAttributedString *caption = [self caption];
     if(caption) {
         NSSize s = [caption sizeForTextFieldForWidth:size.width];
-        
+        s = NSMakeSize(s.width, MIN(s.height,40));
         maxSize.height-=(s.height+20);
     }
     
@@ -432,6 +411,10 @@
     
     TL_localMessage *msg = self.currentViewerItem.previewObject.media;
     
+    if ([msg isKindOfClass:[TLPhotoSize class]]) {
+        [pasteboard writeObjects:@[[NSURL fileURLWithPath:locationFilePath(((TL_photoSize *)msg).location, @"jpg")]]];
+        return;
+    }
     
     [pasteboard writeObjects:@[[NSURL fileURLWithPath:mediaFilePath(msg)]]];
 
@@ -549,7 +532,8 @@ static const int bottomHeight = 60;
         
         c_s = [caption sizeForTextFieldForWidth:size.width - 20];
         c_s.width = ceil(c_s.width + 6);
-        c_s.height = ceil(c_s.height + 5);
+        c_s.height = ceil(MIN(100,c_s.height) + 5);
+        
         
         [_photoCaptionView setString:caption];
         
@@ -773,7 +757,7 @@ static const int bottomHeight = 60;
         NSURL *url = item.url;
             
         AVPlayer *player = [AVPlayer playerWithURL:url];
-            
+        [player seekToTime:CMTimeMake(0, 0)];
         if(!_videoPlayerView ) {
             
             if(![_currentViewerItem.previewObject.reservedObject2 isKindOfClass:[AVPlayerView class]]) {

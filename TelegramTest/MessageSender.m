@@ -16,7 +16,7 @@
 #import "FileUtils.h"
 #import "QueueManager.h"
 #import "NSMutableData+Extension.h"
-#import <MTProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "SelfDestructionController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "Telegram.h"
@@ -486,13 +486,7 @@
                     
                 }];
 //                
-                if(!saved) {
-                    [transaction removeObjectForKey:@"categories" inCollection:TOP_PEERS];
-                    [transaction setObject:@(0) forKey:@"dt" inCollection:TOP_PEERS];
-                    [self syncTopCategories:^(NSArray *categories) {
-                        
-                    }];
-                }
+                
             }
 
         } @catch (NSException *exception) {
@@ -680,11 +674,11 @@
             
             [params save];
             
-            TL_conversation *dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
+            TL_conversation *dialog = [TL_conversation createWithFlags:0 peer:[TL_peerSecret createWithChat_id:params.n_id] top_message:-1 unread_count:0 last_message_date:[[MTNetwork instance] getTime] notify_settings:[TL_peerNotifySettingsEmpty create] last_marked_message:0 top_message_fake:-1 last_marked_date:[[MTNetwork instance] getTime] sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
             
             [[DialogsManager sharedManager] insertDialog:dialog];
             
-            [Notification perform:DIALOG_TO_TOP data:@{KEY_DIALOG:dialog}];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:dialog];
             
           //  [MessageSender insertEncryptedServiceMessage:NSLocalizedString(@"MessageAction.Secret.CreatedSecretChat", nil) chat:response];
          
@@ -844,7 +838,7 @@ static TGLocationRequest *locationRequest;
         
         handler(TGInlineKeyboardProccessingType);
         
-        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithFlags:(keyboard.data ? (1 << 0) : 0) | (keyboard.game_id ? (1 << 1) : 0) peer:conversation.inputPeer msg_id:message.n_id data:keyboard.data game_id:keyboard.game_id] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
+        return [RPCRequest sendRequest:[TLAPI_messages_getBotCallbackAnswer createWithFlags:(keyboard.data ? (1 << 0) : 0) | ([keyboard isKindOfClass:[TL_keyboardButtonGame class]] ? (1 << 1) : 0) peer:conversation.inputPeer msg_id:message.n_id data:keyboard.data] successHandler:^(id request, TL_messages_botCallbackAnswer *response) {
             
             if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.message.length > 0) {
                 if(response.isAlert)
@@ -853,19 +847,43 @@ static TGLocationRequest *locationRequest;
                     if(response.message.length > 0)
                         [Notification perform:SHOW_ALERT_HINT_VIEW data:@{@"text":response.message,@"color":BLUE_COLOR}];
             } else if([response isKindOfClass:[TL_messages_botCallbackAnswer class]] && response.url.length > 0) {
+                
+                if ([response.url rangeOfString:@"telegram.me"].location != NSNotFound) {
+                    open_link(response.url);
+                } else {
+                    TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
+                    
+                    dispatch_block_t block = ^{
+                        TGWebgameViewController *game = [[TGWebgameViewController alloc] init];
+                        
+                        [game startWithUrl:response.url bot:user keyboard:keyboard message:message];
+                        
+                        [appWindow().navigationController pushViewController:game animated:YES];
+                    };
+                    
+                    if (user.isVerified) {
+                        block();
+                    } else {
+                        
+                        NSString *key = [NSString stringWithFormat:@"accept_bot_sharing_%d",user.n_id];
+                        
+                        BOOL accept = [[NSUserDefaults standardUserDefaults] boolForKey:key];
+                        
+                        if (accept) {
+                            block();
+                        } else {
+                            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"BotSharingAlert", nil),user.fullName], ^{
+                                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+                                block();
+                            }, nil);
+                        }
+                    }
+                    
+                    
+                }
                
-                TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
-                TGWebgameViewController *game = [[TGWebgameViewController alloc] init];
+               
                 
-                [game startWithUrl:response.url bot:user keyboard:keyboard message:message];
-                
-                [appWindow().navigationController pushViewController:game animated:YES];
-                
-//                TGEmbedModalView *embedModal = [[TGEmbedModalView alloc] init];
-                
-//                [embedModal setWebpage:[TL_webPage createWithFlags:0 n_id:0 url:response.url display_url:response.url type:nil site_name:nil title:nil n_description:nil photo:nil embed_url:response.url embed_type:@"callback" embed_width:INT32_MAX embed_height:INT32_MAX duration:0 author:nil document:nil]];
-                
-//                [embedModal show:appWindow() animated:YES];
             }
             
             handler(TGInlineKeyboardSuccessType);
@@ -880,11 +898,15 @@ static TGLocationRequest *locationRequest;
         if([keyboard.url rangeOfString:@"telegram.me/"].location != NSNotFound || [keyboard.url hasPrefix:@"tg://"]) {
             open_link(keyboard.url);
         } else {
-            confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),keyboard.url], ^{
-                
+            TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
+            if (user.isVerified) {
                 open_link(keyboard.url);
-                
-            }, nil);
+            } else {
+                confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"Link.ConfirmOpenExternalLink", nil),keyboard.url], ^{
+                    open_link(keyboard.url);
+                }, nil);
+            }
+            
         }
         
         
@@ -980,7 +1002,7 @@ static TGLocationRequest *locationRequest;
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 
-                NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
                 
                 NSMutableDictionary *stickers = info[@"serialized"];
                 
@@ -1023,7 +1045,7 @@ static TGLocationRequest *locationRequest;
                     
                 }
                 
-                [transaction setObject:info forKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+                [transaction setObject:info forKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
                 
             }];
              
@@ -1074,7 +1096,7 @@ static TGLocationRequest *locationRequest;
             useCount = [[NSMutableDictionary alloc] init];
         }
         
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
+        TL_documentAttributeSticker *attr = sticker.stickerAttr;
         
         
         if(!useCount[@(attr.stickerset.n_id)]) {

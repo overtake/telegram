@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 keepcoder. All rights reserved.
 //
 
-#import <MTProtoKit/MTKeychain.h>
+#import <MtProtoKitMac/MTKeychain.h>
 
 @interface TGKeychain : NSObject<MTKeychain>
 {

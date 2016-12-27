@@ -12,9 +12,7 @@
 @class TGAudioPlayer;
 
 @protocol TGAudioPlayerDelegate <NSObject>
-
 @optional
-
 - (void)audioPlayerDidFinishPlaying:(TGAudioPlayer *)audioPlayer;
 - (void)audioPlayerDidStartPlaying:(TGAudioPlayer *)audioPlayer;
 @end

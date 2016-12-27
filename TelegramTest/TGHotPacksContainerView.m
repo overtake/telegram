@@ -72,7 +72,7 @@
                 TGHotStickerPackItem *testItem = (TGHotStickerPackItem *)self.rowItem;
                 
                 if(testItem.set.n_id == item.set.n_id) {
-                    [item redrawRow];
+                    [self redrawRow];
                 }
                 
             }

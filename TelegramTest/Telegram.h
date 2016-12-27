@@ -63,6 +63,9 @@ int edit_time_limit();
 void set_stickers_recent_limit(int limit);
 int stickers_recent_limit();
 
+int chat_pin_limit();
+void set_chat_pin_limit(int limit);
+
 @property (nonatomic) BOOL isWindowActive;
 @property (nonatomic, assign) BOOL isOnline;
 

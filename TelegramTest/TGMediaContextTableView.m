@@ -444,7 +444,7 @@ static NSMenu *deleteMenu;
             
             if(imageObject == nil)
                 imageObject = (TGImageObject *) [[NSNull alloc] init];
-            else if([botResult.document attributeWithClass:[TL_documentAttributeSticker class]]) {
+            else if(botResult.document.stickerAttr) {
                 
                 TL_documentAttributeImageSize *imageSize = (TL_documentAttributeImageSize *)[botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
                 

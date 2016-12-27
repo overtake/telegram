@@ -82,6 +82,11 @@
     __block NSImage *iconImage = nil;
     __block NSString *path = nil;
     
+    if (pasteboard.pasteboardItems.count == 0) {
+        return;
+    }
+    
+    
     NSString *url = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.file-url"];
     NSString *caption = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.utf8-plain-text"];
     if (url != nil) {

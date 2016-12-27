@@ -1,15 +1,15 @@
 
 #import "MTNetwork.h"
 
-#import <MTProtoKit/MTKeychain.h>
-#import <MTProtoKit/MTDatacenterAuthInfo.h>
+#import <MtProtoKitMac/MTKeychain.h>
+#import <MtProtoKitMac/MTDatacenterAuthInfo.h>
 #import "MTConnection.h"
-#import <MTProtoKit/MTProtoKit.h>
+#import <MtProtoKitMac/MtProtoKitMac.h>
 #import "TGNetworkWorker.h"
 #import "TGUpdateMessageService.h"
 #import "RpcErrorParser.h"
 #import "DatacenterArchiver.h"
-#import <MTProtoKit/MTApiEnvironment.h>
+#import <MtProtoKitMac/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
 #import "TGKeychain.h"
@@ -19,8 +19,8 @@
 #import "TGTLSerialization.h"
 #import "TGPasslock.h"
 #import <Security/SecRandom.h>
-#import <MTProtoKit/MTRequestErrorContext.h>
-#import <MTProtoKit/MTInternalId.h>
+#import <MtProtoKitMac/MTRequestErrorContext.h>
+#import <MtProtoKitMac/MTInternalId.h>
 
 
 static const int TGMaxWorkerCount = 6;
@@ -392,9 +392,9 @@ static NSString *kDefaultDatacenter = @"default_dc";
     _datacenterCount = 5;
     
     
-    NSString *address = isTestServer() ? @"149.154.175.40" : @"149.154.167.51";
+    NSString *address = isTestServer() ? @"149.154.167.40" : @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 1 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO restrictToTcp:NO]]]];
+    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 2 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO restrictToTcp:NO]]]];
     
     
     if(!isTestServer()) {
@@ -500,7 +500,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             [[NSUserDefaults standardUserDefaults] setInteger:current_v forKey:@"version"];
             
             if([response isKindOfClass:[TL_help_appChangelog class]]) {
-                [MessageSender addServiceNotification:response.text];
+                [MessageSender addServiceNotification:response.message];
             }
                         
             
@@ -929,9 +929,16 @@ void remove_global_dispatcher(id internalId) {
                 [request setCompleted:^(id result, __unused NSTimeInterval timestamp, id error)
                  {
                      
+
+                     
                      dispatch_block_t block = ^{
                          if (error == nil && ![result isKindOfClass:[RpcError class]])
                          {
+                             
+                             dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+                                 [self.updateService mtProto:_mtProto receivedParsedMessage:result];
+                             });
+
                              [subscriber putNext:result];
                              [subscriber putCompletion];
                          }
@@ -1029,6 +1036,11 @@ void remove_global_dispatcher(id internalId) {
                  {
                      if (error == nil)
                      {
+                         dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+                             [self.updateService mtProto:_mtProto receivedParsedMessage:result];
+                         });
+
+                         
                          [subscriber putNext:result];
                          [subscriber putCompletion];
                      }

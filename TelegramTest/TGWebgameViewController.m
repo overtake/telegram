@@ -11,12 +11,17 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import "WeakReference.h"
 #import "TGModalForwardView.h"
+#import "TGSignalUtils.h"
+#import "TGSendTypingManager.h"
 @interface TGWebgameViewController () <WebFrameLoadDelegate,WebUIDelegate>
 @property (nonatomic,strong) WebView *webView;
 @property (nonatomic,strong) TLUser *bot;
 @property (nonatomic,strong) TLKeyboardButton *keyboard;
 @property (nonatomic,strong) TL_localMessage *message;
 @property (nonatomic,strong) NSString *internalGameId;
+
+@property (nonatomic,strong) SMetaDisposable *disposable;
+
 @end
 
 
@@ -59,7 +64,7 @@ static NSString *kGameEventUnmute = @"unmute";
 
 -(void)loadView {
     [super loadView];
-    
+    _disposable = [[SMetaDisposable alloc] init];
     _internalGameId = [NSString stringWithFormat:@"%ld",rand_long()];
     
     [games addObject:[WeakReference weakReferenceWithObject:self]];
@@ -94,13 +99,17 @@ static NSString *kGameEventUnmute = @"unmute";
 }
 
 -(void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
-    [frame.windowObject evaluateWebScript:@"TelegramWebviewProxy = { postEvent:function(eventType, eventData) {gameHandler(eventType,eventData)}}"];
     
-    JSGlobalContextSetName(frame.globalContext, JSStringCreateWithCFString( (__bridge CFStringRef)(_internalGameId) ));
-    JSStringRef funcName = JSStringCreateWithUTF8CString("gameHandler");
-    JSObjectRef funcObj = JSObjectMakeFunctionWithCallback(frame.globalContext, funcName, gameHandler);
-    JSObjectSetProperty(_webView.mainFrame.globalContext, JSContextGetGlobalObject(frame.globalContext), funcName, funcObj, kJSPropertyAttributeNone, NULL);
-    JSStringRelease(funcName);
+    if (_internalGameId != nil) {
+        [frame.windowObject evaluateWebScript:@"TelegramWebviewProxy = { postEvent:function(eventType, eventData) {gameHandler(eventType,eventData)}}"];
+        
+        JSGlobalContextSetName(frame.globalContext, JSStringCreateWithCFString( (__bridge CFStringRef)(_internalGameId) ));
+        JSStringRef funcName = JSStringCreateWithUTF8CString("gameHandler");
+        JSObjectRef funcObj = JSObjectMakeFunctionWithCallback(frame.globalContext, funcName, gameHandler);
+        JSObjectSetProperty(_webView.mainFrame.globalContext, JSContextGetGlobalObject(frame.globalContext), funcName, funcObj, kJSPropertyAttributeNone, NULL);
+        JSStringRelease(funcName);
+    }
+    
 }
 
 
@@ -148,7 +157,6 @@ JSValueRef gameHandler (JSContextRef ctx, JSObjectRef function, JSObjectRef this
 }
 
 -(void)share_score:(NSString *)data {
-    [self pushEvent:@"game_start" data:@{@"event":@"share_score"}];
     TGModalForwardView *forward = [[TGModalForwardView alloc] init];
     forward.messagesViewController = self.navigationViewController.messagesViewController;
     
@@ -188,8 +196,34 @@ TGWebgameViewController *getController(NSString *controllerName) {
     return findOut;
 }
 
+-(void)viewWillDisappear:(BOOL)animated {
+    [_webView stopLoading:self];
+    [_webView removeFromSuperview];
+    _webView = nil;
+    
+    [TGSendTypingManager addAction:[TL_sendMessageCancelAction create] forConversation:_message.conversation];
+    [_disposable setDisposable:nil];
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [_disposable setDisposable:[[TGSignalUtils countdownSignal:INT32_MAX delay:8] startWithNext:^(id next) {
+        
+        [TGSendTypingManager addAction:[TL_sendMessageGamePlayAction create] forConversation:_message.conversation];
+
+    }]];
+    
+    [TGSendTypingManager addAction:[TL_sendMessageGamePlayAction create] forConversation:_message.conversation];
+}
+
 - (BOOL)webView:(WebView *)webView shouldPerformAction:(SEL)action fromSender:(id)sender {
     return YES;
+}
+
+-(void)_didStackRemoved {
+    [_disposable dispose];
 }
 
 - (void)webViewClose:(WebView *)sender {
@@ -197,8 +231,8 @@ TGWebgameViewController *getController(NSString *controllerName) {
 }
 
 -(void)webView:(WebView *)sender didReceiveTitle:(NSString *)title forFrame:(WebFrame *)frame {
-    if(frame == _webView.mainFrame)
-        [self setCenterBarViewText:title];
+    //if(frame == _webView.mainFrame)
+     //   [self setCenterBarViewText:title];
 }
 
 -(void)startWithUrl:(NSString *)urlString bot:(TLUser *)bot keyboard:(TLKeyboardButton *)keyboard message:(TL_localMessage *)message {

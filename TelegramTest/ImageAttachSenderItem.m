@@ -38,7 +38,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
         
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:attach.caption];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:attach.unique_id access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:attach.caption];
         
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -67,7 +67,7 @@
     if([uploadedFile isKindOfClass:[TL_inputPhoto class]]) {
         media = [TL_inputMediaPhoto createWithN_id:uploadedFile caption:self.message.media.caption];
     } else {
-        media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile caption:self.message.media.caption];
+        media = [TL_inputMediaUploadedPhoto createWithFlags:0 file:uploadedFile caption:self.message.media.caption stickers:nil];
     }
     
     id request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]] ;

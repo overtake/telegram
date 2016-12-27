@@ -215,7 +215,6 @@
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
-   
     
     return (CGRect) {
         .size.width = width,

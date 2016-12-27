@@ -253,6 +253,7 @@ CACHE_IMAGE(pip_off);
 
 CACHE_IMAGE(Folder);
 CACHE_IMAGE(trending);
+CACHE_IMAGE(chat_pinned);
 
 @interface ImageUtils : NSObject
 

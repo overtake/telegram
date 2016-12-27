@@ -71,6 +71,7 @@
 
 
 -(void)modalViewDidHide {
+    [[_webView mainFrame] loadRequest:nil];
     _webpage = nil;
 }
 

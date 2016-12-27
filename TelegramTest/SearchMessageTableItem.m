@@ -90,6 +90,10 @@
     
 }
 
+-(int)height {
+    return 66;
+}
+
 -(TL_localMessage *)message {
     return _message;
 }

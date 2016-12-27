@@ -27,7 +27,7 @@
 
 -(id)initWithObject:(TLDocument *)obj {
     if( self = [super init]) {
-        TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *)[obj attributeWithClass:[TL_documentAttributeSticker class]];
+        TL_documentAttributeSticker *attr = obj.stickerAttr;
         _packId = attr.stickerset.n_id;
         _imageObject = [[TGMessagesStickerImageObject alloc] initWithLocation:obj.thumb.location placeHolder:nil];
         _imageObject.imageSize = strongsize(NSMakeSize(obj.thumb.w, obj.thumb.h), 28);
@@ -244,13 +244,23 @@
             idx++;
         }
         
+
+        
         
         long packId = [[fItem valueForKey:@"packId"] longValue];
         
+
+        
         if(packId != _selectedItem.packId) {
+            
+           
+
+            
             [_packs enumerateObjectsUsingBlock:^(TGPackItem *obj, NSUInteger idx, BOOL *stop) {
                 
                 if(obj.packId == packId) {
+                    
+                    
                     [self didSelected:obj scrollToPack:NO selectItem:YES disableAnimation:NO];
                     
                     *stop = YES;
@@ -295,10 +305,22 @@
     
     
     __block BOOL hasUnread = NO;
+    __block NSArray *hots;
+    __block BOOL hasHots = NO;
     
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         hasUnread = [[transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION] count] > 0;
-
+        hots = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
+    }];
+    
+    [hots enumerateObjectsUsingBlock:^(TL_stickerSetCovered  *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        hasHots = [TGModernESGViewController setWithId:obj.set.n_id] == nil;
+        
+        if (hasHots) {
+            *stop = YES;
+        }
+        
     }];
     
     if(_packs.count == 0)
@@ -309,7 +331,7 @@
         gifpack.image = [image_emojiGifContainer() imageTintedWithColor:GRAY_ICON_COLOR];
         [_packs addObject:gifpack];
         
-        if(hasUnread && ACCEPT_FEATURE) {
+        if(hasUnread && hasHots) {
             TGPackItem *hotPack = [[TGPackItem alloc] init];
             hotPack.packId = -4;
             hotPack.image = [image_trending() imageTintedWithColor:GRAY_ICON_COLOR];
@@ -336,7 +358,7 @@
             
         }];
         
-        if(!hasUnread && ACCEPT_FEATURE) {
+        if(!hasUnread && hasHots) {
             TGPackItem *hotPack = [[TGPackItem alloc] init];
             hotPack.packId = -4;
             hotPack.image = [image_trending() imageTintedWithColor:GRAY_ICON_COLOR];
@@ -443,6 +465,8 @@
         NSRect prect = [_tableView rectOfRow:[_packs indexOfObject:packItem]];
         
         NSRect rect = NSMakeRect(MAX(NSMinX(prect) - (NSWidth(_tableView.frame) - NSWidth(prect))/2.0f,0), NSMinY(prect), NSWidth(_tableView.frame), NSHeight(_tableView.frame));
+      
+        
         [self.tableView.clipView scrollRectToVisible:rect animated:selectItem && animated completion:^(BOOL scrolled) {
            if(scrolled)
            {
@@ -451,8 +475,6 @@
            }
         }];
     };
-    
-
     
     
     if(scrollToPack)

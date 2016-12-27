@@ -45,7 +45,7 @@
         
         if(replyMessage != nil && !withoutCache) {
             TGReplyObject *cObj = [replyCache objectForKey:@(replyMessage.channelMsgId)];
-            if(cObj)
+            if(cObj && !cObj.isPinnedMessage)
                 return cObj;
         }
         
@@ -164,6 +164,16 @@ static NSCache *replyCache;
         
     }
     
+    if ([_replyMessage.media isKindOfClass:[TL_messageMediaGame class]]) {
+        
+        TLPhotoSize *photoSize = [_replyMessage.media.game.photo.sizes firstObject];
+        if (photoSize) {
+            _replyThumb = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:nil];
+            _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
+        }
+        
+    }
+    
     if([_replyMessage.media isKindOfClass:[TL_messageMediaGeo class]]) {
         
         _replyThumb = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", _replyMessage.media.geo.lat,  _replyMessage.media.geo.n_long, ([NSScreen mainScreen].backingScaleFactor == 2 ? @"100x100" : @"50x50")]];
@@ -256,8 +266,11 @@ static NSCache *replyCache;
                     
                     [[Storage manager] addSupportMessages:messages];
                     
-                    if(completionHandler)
-                        completionHandler(messages[0]);
+                    [ASQueue dispatchOnMainQueue:^{
+                        if(completionHandler)
+                            completionHandler(messages[0]);
+                    }];
+                   
                 }
                 
                 

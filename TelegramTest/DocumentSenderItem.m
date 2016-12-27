@@ -146,7 +146,7 @@
             int heigth = 0;
             if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 100 & heigth > 100)
             {
-                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
+                [attrs addObject:[TL_documentAttributeSticker createWithFlags:0 alt:@"" stickerset:[TL_inputStickerSetEmpty create] mask_coords:nil]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
                 
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],randomId];
@@ -274,9 +274,9 @@
    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedThumbDocument createWithFlags:0 file:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption stickers:nil];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedDocument createWithFlags:0 file:self.inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption stickers:nil];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;

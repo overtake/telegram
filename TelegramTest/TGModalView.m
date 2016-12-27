@@ -79,6 +79,10 @@
 -(void)enableCancelAndOkButton {
     weak();
     
+    if (_ok || _cancel) {
+        return;
+    }
+    
     _ok = [[BTRButton alloc] initWithFrame:NSZeroRect];
     _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
     

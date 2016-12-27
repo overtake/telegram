@@ -164,6 +164,11 @@ const NSTimeInterval typingIntervalSecond = 0.14;
     self.haveDots = 0;
 }
 
+-(void)layout {
+    [super layout];
+    [self.textField setFrameOrigin:NSMakePoint(20+36+8, 10)];
+}
+
 
 -(BOOL)isActive {
     return self.textField.attributedStringValue.length != 0;

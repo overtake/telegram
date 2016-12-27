@@ -1,13 +1,13 @@
 
 #import "TGS_MTNetwork.h"
 
-#import <MTProtoKit/MTKeychain.h>
-#import <MTProtoKit/MTDatacenterAuthInfo.h>
-#import <MTProtoKit/MTProtoKit.h>
+#import <MtProtoKitMac/MTKeychain.h>
+#import <MtProtoKitMac/MTDatacenterAuthInfo.h>
+#import <MtProtoKitMac/MTProtoKitMac.h>
 #import "TGNetworkWorker.h"
 #import "RpcErrorParser.h"
 #import "DatacenterArchiver.h"
-#import <MTProtoKit/MTApiEnvironment.h>
+#import <MtProtoKitMac/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
 #import "TGSKeychain.h"
@@ -16,7 +16,7 @@
 
 #import "TGTLSerialization.h"
 #import "ASQueue.h"
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 #import "TLApi.h"
 #import "CMath.h"
 #import "TGSAppManager.h"

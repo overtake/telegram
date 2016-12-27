@@ -6,7 +6,7 @@
  * Copyright Peter Iakovlev, 2013.
  */
 
-#import <MTProtoKit/MTSerialization.h>
+#import <MtProtoKitMac/MTSerialization.h>
 
 #import "TLClassStore.h"
 

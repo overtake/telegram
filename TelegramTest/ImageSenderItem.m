@@ -62,7 +62,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
 
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:caption];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:rand_long() access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:caption];
         
         
         [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -100,7 +100,7 @@
         if([input isKindOfClass:[TL_inputPhoto class]]) {
             media = [TL_inputMediaPhoto createWithN_id:input caption:self.message.media.caption];
         } else {
-            media = [TL_inputMediaUploadedPhoto createWithFile:input caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedPhoto createWithFlags:0 file:input caption:self.message.media.caption stickers:nil];
         }
         
         

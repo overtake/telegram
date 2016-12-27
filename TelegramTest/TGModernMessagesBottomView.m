@@ -649,16 +649,14 @@ const float defYOffset = 8;
         
         if(_textView.string.length > 0 && [_textView.string hasPrefix:@"@"] && type != 0) {
             NSRange split = [_textView.string rangeOfString:@" "];
-            if(split.location != NSNotFound && split.location != 1) {
-                
-                NSString *bot = [_textView.string substringWithRange:NSMakeRange(1,split.location-1)];
-                
-                TLUser *user = [UsersManager findUserByName:bot];
-                
-                if(user.isBot && user.isBotInlinePlaceholder) {
-                    search = nil;
-                }
+            NSString *bot = split.location == NSNotFound ? _textView.string : [_textView.string substringWithRange:NSMakeRange(1,split.location-1)];
+            
+            TLUser *user = [UsersManager findUserByName:bot];
+            
+            if(user.isBot && user.isBotInlinePlaceholder) {
+                search = nil;
             }
+            
         }
         
         [_textView setInline:NO placeHolder:self.placeholder];
@@ -747,28 +745,22 @@ const float defYOffset = 8;
             NSRange split = [value rangeOfString:@" "];
             
             
-            if(split.location != NSNotFound && split.location != 1) {
-                NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
-                NSString *query = [value substringFromIndex:split.location];
+            NSString *bot = split.location == NSNotFound ? value : [value substringWithRange:NSMakeRange(1,split.location-1)];
+            NSString *query = split.location == NSNotFound ? @"" : [value substringFromIndex:split.location];
+            
+            if([bot rangeOfString:@"\n"].location == NSNotFound) {
+                weak();
                 
-                if([bot rangeOfString:@"\n"].location == NSNotFound) {
-                    weak();
+                [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
+                    [weakSelf.textView setInline:query.length == 0 || [query isEqualToString:@" "] placeHolder:[weakSelf inline_placeholder:user space:query.length == 0]];
+                    [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
+                }] startWithNext:^(id next) {
                     
-                    [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
-                        [weakSelf.textView setInline:[query isEqualToString:@" "] placeHolder:[weakSelf inline_placeholder:user]];
-                         [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
-                    }] startWithNext:^(id next) {
-                        
-                        [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
-                        
-                    }];
-                } else {
-                    [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
-                }
-                
-                
+                    [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
+                    
+                }];
             } else {
-                  [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
+                [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
             }
             
             
@@ -794,8 +786,10 @@ const float defYOffset = 8;
     [self resignalActions];
 }
 
--(NSAttributedString *)inline_placeholder:(TLUser *)bot {
+-(NSAttributedString *)inline_placeholder:(TLUser *)bot space:(BOOL)space {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    if (space)
+        [attr appendString:@" "];
     
     [attr appendString:bot.bot_inline_placeholder withColor:GRAY_TEXT_COLOR];
     

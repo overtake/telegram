@@ -19,6 +19,7 @@
 #import "TMPreviewDocumentItem.h"
 #import "TGUserPopup.h"
 #import "TMMenuPopover.h"
+#import "TGGameView.h"
 @interface TestTextView : NSTextView
 @property (nonatomic, strong) NSString *rand;
 @property (nonatomic) BOOL isSelecedRange;
@@ -27,9 +28,7 @@
 
 
 @interface MessageTableCellTextView() <TMHyperlinkTextFieldDelegate>
-
-
-
+@property (nonatomic,strong) TGGameView *gameView;
 @property (nonatomic,strong) TGWebpageContainer *webpageContainerView;
 
 @end
@@ -127,6 +126,21 @@
     } else {
         [_webpageContainerView removeFromSuperview];
         _webpageContainerView = nil;
+        
+       
+    }
+    
+    if (item.isGame) {
+        if (_gameView == nil) {
+            _gameView = [[TGGameView alloc] initWithFrame:NSZeroRect];
+            [self.containerView addSubview:_gameView];
+        }
+        [_gameView setFrame:NSMakeRect(0, 0, item.game.size.width + item.defaultOffset, item.game.size.height)];
+        [_gameView setGame:item.game];
+        
+    } else {
+        [_gameView removeFromSuperview];
+        _gameView = nil;
     }
     
     [self updateCellState:NO];
@@ -196,6 +210,7 @@
      [super _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
     [_webpageContainerView _didChangeBackgroundColorWithAnimation:anim toColor:color];
+    [_gameView _didChangeBackgroundColorWithAnimation:anim toColor:color];
     
     if(!anim) {
         self.textView.backgroundColor = color;

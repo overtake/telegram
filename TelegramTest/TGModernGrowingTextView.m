@@ -7,19 +7,17 @@
 //
 
 #import "TGModernGrowingTextView.h"
-#import "TGTextLabel.h"
-#import "TGAnimationBlockDelegate.h"
-#import "NSAttributedStringCategory.h"
 
 @implementation TGGrowingTextView
 
 -(NSPoint)textContainerOrigin {
     
-    if([self numberOfLines] < 10) {
+    if([self numberOfLines] < 3) {
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         int yOffset = 1;
         
-        return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
+        if (NSHeight(self.frame) > NSHeight(newRect))
+            return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
     }
     
     return [super textContainerOrigin];
@@ -167,11 +165,15 @@
 }
 
 -(void)insertText:(id)insertString {
-    [super insertText:insertString];
+    if (insertString != nil) {
+        [super insertText:insertString];
+    }
 }
 
 -(void)insertText:(id)insertString replacementRange:(NSRange)replacementRange {
-    [super insertText:insertString replacementRange:replacementRange];
+    if (insertString != nil) {
+        [super insertText:insertString replacementRange:replacementRange];
+    }
 }
 
 -(void)paste:(id)sender {
@@ -181,7 +183,7 @@
 @end
 
 
-@interface TGModernGrowingTextView () <NSTextViewDelegate> {
+@interface TGModernGrowingTextView () <NSTextViewDelegate,CAAnimationDelegate> {
     int _last_height;
 }
 @property (nonatomic,strong) TGGrowingTextView *textView;
@@ -406,6 +408,10 @@
             float presentX = self._needShowPlaceholder ? self._endXPlaceholder : self._startXPlaceholder;
             float presentOpacity = self._needShowPlaceholder ? 0.0f : 1.0f;
             
+            if ((presentX - 34) == NSMinX(_placeholder.frame) || (presentX - 30) == NSMinX(_placeholder.frame)) {
+                return;
+            }
+            
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
             
             if(presentLayer && [_placeholder.layer animationForKey:@"position"]) {
@@ -418,14 +424,9 @@
             
             CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self._needShowPlaceholder ? 1.0f : 0.0f];
             
-            TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:_placeholder.layer];
+
             
-            [delegate setCompletion:^(BOOL completed) {
-                if(completed)
-                    [_placeholder setHidden:!self._needShowPlaceholder];
-            }];
-            
-            oAnim.delegate = delegate;
+            oAnim.delegate = self;
             
             [_placeholder.layer removeAnimationForKey:@"opacity"];
             [_placeholder.layer addAnimation:oAnim forKey:@"opacity"];
@@ -463,7 +464,15 @@
     
     [self refreshAttributes];
     
+    _textView.font = self.font;
+
+    
 }
+
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    [_placeholder setHidden:!self._needShowPlaceholder];
+}
+
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
@@ -697,7 +706,7 @@
         }
 
     } @catch (NSException *exception) {
-        int bp = 0;
+        
     }
     
 

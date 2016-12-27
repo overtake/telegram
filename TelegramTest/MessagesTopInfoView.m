@@ -72,22 +72,26 @@
             
             TL_conversation *conversation = weakSelf.conversation;
             
-            [weakSelf.controller showModalProgress];
-            
-            [RPCRequest sendRequest:[TLAPI_messages_hideReportSpam createWithPeer:weakSelf.conversation.inputPeer] successHandler:^(id request, id response) {
-                
+            dispatch_block_t hide = ^{
                 [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",conversation.peer_id]];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 if(weakSelf.conversation == conversation)
                     [weakSelf setConversation:conversation];
-                
-                [weakSelf.controller hideModalProgressWithSuccess];
-
-                
-            } errorHandler:^(id request, RpcError *error) {
-                [weakSelf.controller hideModalProgress];
-            }];
+            };
+            
+            if (weakSelf.conversation.type != DialogTypeSecretChat) {
+                [weakSelf.controller showModalProgress];
+                [RPCRequest sendRequest:[TLAPI_messages_hideReportSpam createWithPeer:weakSelf.conversation.inputPeer] successHandler:^(id request, id response) {
+                    [weakSelf.controller hideModalProgressWithSuccess];
+                    hide();
+                } errorHandler:^(id request, RpcError *error) {
+                    [weakSelf.controller hideModalProgress];
+                }];
+            } else {
+                hide();
+            }
+            
             
             
         } forControlEvents:BTRControlEventClick];
@@ -267,9 +271,8 @@ static NSMutableDictionary *cache;
         
     }
     
-    if(self.conversation.type != DialogTypeSecretChat) {
-        [self checkReportSpam];
-    }
+    [self checkReportSpam];
+
     
 }
 
@@ -316,23 +319,31 @@ static NSMutableDictionary *cache;
     if(!alwaysHide) {
         
         TL_conversation *conversation = self.conversation;
-        
-        [RPCRequest sendRequest:[TLAPI_messages_getPeerSettings createWithPeer:_conversation.inputPeer] successHandler:^(id request, TL_peerSettings *response) {
-            
-            if(response.isReport_spam) {
-                if(conversation == self.conversation) {
-                    [self setAction:MessagesTopInfoActionReportSpam];
-                    [self show:YES];
+        if (conversation.type != DialogTypeSecretChat) {
+            [RPCRequest sendRequest:[TLAPI_messages_getPeerSettings createWithPeer:_conversation.inputPeer] successHandler:^(id request, TL_peerSettings *response) {
+                
+                if(response.isReport_spam) {
+                    if(conversation == self.conversation) {
+                        [self setAction:MessagesTopInfoActionReportSpam];
+                        [self show:YES];
+                    }
+                } else {
+                    [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",conversation.peer_id]];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
                 }
-            } else {
-                [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:[NSString stringWithFormat:@"alwaysHideReportSpam_%d",conversation.peer_id]];
-                [[NSUserDefaults standardUserDefaults] synchronize];
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            }];
+        } else {
+            if (!conversation.user.isContact) {
+                [self setAction:MessagesTopInfoActionReportSpam];
+                [self show:YES];
             }
-
-            
-        } errorHandler:^(id request, RpcError *error) {
-            
-        }];
+        }
+        
+        
     }
     
 }
@@ -507,10 +518,10 @@ static NSMutableDictionary *cache;
     
     NSRange range = [string appendString:NSLocalizedString(buttonLocalization[action], nil) withColor:BLUE_UI_COLOR];
     
-    [string addAttributes:@{NSLinkAttributeName:@"first"} range:range];
-    
+    //[string addAttributes:@{NSLinkAttributeName:@"first"} range:range];
+    [string addAttribute:NSUnderlineStyleAttributeName value:@(0) range:range];
+
     [string setAlignment:NSCenterTextAlignment range:string.range];
-    
     [_cancel setHidden:action != MessagesTopInfoActionReportSpam];
     
     
@@ -588,18 +599,23 @@ static NSMutableDictionary *cache;
                 }];
             };
             
-            [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:conversation.user.inputPeer] successHandler:^(id request, id response) {
-                
-                proccessAfter();
-                
-                
-            } errorHandler:^(id request, RpcError *error) {
-                proccessAfter();
-            }];
+            if (conversation.type != DialogTypeSecretChat) {
+                [RPCRequest sendRequest:[TLAPI_messages_reportSpam createWithPeer:conversation.user.inputPeer] successHandler:^(id request, id response) {
+                    proccessAfter();
+                } errorHandler:^(id request, RpcError *error) {
+                    proccessAfter();
+                }];
+            } else {
+                [RPCRequest sendRequest:[TLAPI_messages_reportEncryptedSpam createWithPeer:conversation.encryptedChat.inputPeer] successHandler:^(id request, id response) {
+                    proccessAfter();
+                } errorHandler:^(id request, RpcError *error) {
+                    proccessAfter();
+                }];
+            }
             
-        }, ^{
             
-        });
+            
+        }, nil);
         
         
         

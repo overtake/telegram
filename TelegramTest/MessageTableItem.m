@@ -139,7 +139,7 @@ static NSCache *cItems;
                 }
                
                 
-                if(!self.isForwadedMessage)
+                if(!self.isForwadedMessage && viaBotUserName.length > 0)
                 {
                     _headerName = [_headerName mutableCopy];
                     
@@ -238,7 +238,6 @@ static NSCache *cItems;
     if(self.isChat && !self.message.isPost && self.user.n_id != [UsersManager currentUserId]) {
         
         int colorMask = [TMAvatarImageView colorMask:self.user];
-        
         nameColor = colors[colorMask % (sizeof(colors) / sizeof(colors[0]))];
         
     }
@@ -452,7 +451,7 @@ static NSTextAttachment *channelViewsCountAttachment() {
     @try {
         if(message.class == [TL_localMessage_old46 class] || message.class == [TL_localMessage class] || message.class == [TL_localMessage_old32 class] || message.class == [TL_localMessage_old34 class] || message.class == [TL_localMessage_old44 class] || message.class == [TL_destructMessage class] || message.class == [TL_destructMessage45 class]) {
             
-           if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0) {
+           if((message.media == nil || [message.media isKindOfClass:[TL_messageMediaEmpty class]]) || [message.media isMemberOfClass:[TL_messageMediaWebPage class]] || message.message.length > 0 || message.media.game != nil) {
                 
                 objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                 
@@ -523,6 +522,8 @@ static NSTextAttachment *channelViewsCountAttachment() {
                         objectReturn = [[MessageTableItemContact alloc] initWithObject:message];
                     } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeSticker]) {
                         objectReturn = [[MessageTableItemSticker alloc] initWithObject:message];
+                    } else if([message.media.bot_result.type isEqualToString:kBotInlineTypeGame]) {
+                        objectReturn = [[MessageTableItemText alloc] initWithObject:message];
                     }
 
                 }
