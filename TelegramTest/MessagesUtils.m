@@ -297,7 +297,7 @@
             } else if([action isKindOfClass:[TL_messageActionGameScore class]]) {
                 msgText = [NSString stringWithFormat:NSLocalizedString(action.score > 1 ? @"Message.Action.ConversationGamePluar" : action.score == 0 ? @"Message.Action.ConversationGameZero" : @"Message.Action.ConversationGameSingular", nil),action.score];
             } else if([action isKindOfClass:[TL_messageActionPhoneCall class]]) {
-                msgText = NSLocalizedString(@"Message.Action.PhoneCall", nil);
+                msgText = @"phone call";
             }
 
             
