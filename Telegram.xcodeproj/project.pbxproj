@@ -363,13 +363,17 @@
 		C22E3F6D1CECE38300E2A94F /* ChatPhotoHistoryFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = C22E3F6C1CECE38300E2A94F /* ChatPhotoHistoryFilter.m */; };
 		C22E3F701CECE51C00E2A94F /* TGPVChatPhotoBehavior.m in Sources */ = {isa = PBXBuildFile; fileRef = C22E3F6F1CECE51C00E2A94F /* TGPVChatPhotoBehavior.m */; };
 		C2303E561D982C8E00098E12 /* MtProtoKitMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */; };
-		C2303E571D982C9500098E12 /* MtProtoKitMac.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C230D85B1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m in Sources */ = {isa = PBXBuildFile; fileRef = C230D85A1CA6AE7100475FF5 /* TGMessagesViewAlertHintView.m */; };
 		C23223D21A024CC600E476E2 /* TGSecretInAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D11A024CC600E476E2 /* TGSecretInAction.m */; };
 		C23223D91A029ED600E476E2 /* FlushHistorySecretSenderItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23223D81A029ED600E476E2 /* FlushHistorySecretSenderItem.m */; };
 		C23298CA18CF1A34000826E5 /* TL_conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298C918CF1A34000826E5 /* TL_conversation.m */; };
 		C23298DB18CF61AE000826E5 /* TMPreviewPhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298DA18CF61AE000826E5 /* TMPreviewPhotoItem.m */; };
 		C23298DE18CF61DD000826E5 /* TMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298DD18CF61DD000826E5 /* TMMediaController.m */; };
+		C232EA091E1458FE00C4D38C /* MtProtoKitMac.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C232EA161E1680F600C4D38C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
+		C232EA171E1680F600C4D38C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C232EA181E1680FB00C4D38C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C232EA191E1680FB00C4D38C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = C233FB3318B661B6008C9A96 /* TMCheckBox.m */; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
@@ -542,10 +546,6 @@
 		C28261E219926C62004AC73E /* TL_peerBroadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E119926C62004AC73E /* TL_peerBroadcast.m */; };
 		C28261E9199291EF004AC73E /* TL_broadcast.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261E8199291EF004AC73E /* TL_broadcast.m */; };
 		C28261EC1992974C004AC73E /* BroadcastManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C28261EB1992974C004AC73E /* BroadcastManager.m */; };
-		C28BAB2D1DFA92720027CE3A /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
-		C28BAB2E1DFA92720027CE3A /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
-		C28BAB2F1DFA92750027CE3A /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C28BAB301DFA92750027CE3A /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C28C86771B98851300267C0B /* TGSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = C28C86761B98851300267C0B /* TGSKeychain.m */; };
 		C29194461DCCE45500359491 /* TGCommonChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C29194451DCCE45500359491 /* TGCommonChatsViewController.m */; };
 		C291C7BC1836C39900ABBB50 /* Background.m in Sources */ = {isa = PBXBuildFile; fileRef = C291C7B91836C39900ABBB50 /* Background.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1122,9 +1122,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C2303E571D982C9500098E12 /* MtProtoKitMac.framework in Copy Files (6 items) */,
-				C28BAB2F1DFA92750027CE3A /* Sparkle.framework in Copy Files (6 items) */,
-				C28BAB301DFA92750027CE3A /* HockeySDK.framework in Copy Files (6 items) */,
+				C232EA091E1458FE00C4D38C /* MtProtoKitMac.framework in Copy Files (6 items) */,
+				C232EA181E1680FB00C4D38C /* Sparkle.framework in Copy Files (6 items) */,
+				C232EA191E1680FB00C4D38C /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2977,8 +2977,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C28BAB2D1DFA92720027CE3A /* Sparkle.framework in Frameworks */,
-				C28BAB2E1DFA92720027CE3A /* HockeySDK.framework in Frameworks */,
+				C232EA161E1680F600C4D38C /* Sparkle.framework in Frameworks */,
+				C232EA171E1680F600C4D38C /* HockeySDK.framework in Frameworks */,
 				C2303E561D982C8E00098E12 /* MtProtoKitMac.framework in Frameworks */,
 				C2A4A64D1D74B760002C6320 /* pop.framework in Frameworks */,
 				C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */,
