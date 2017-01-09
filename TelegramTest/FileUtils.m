@@ -1115,7 +1115,7 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
     __block NSRange checkRange = NSMakeRange(NSNotFound, 0);
     
     [shortDomains enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (((checkRange = [link rangeOfString:obj]).location != NSNotFound) && (checkRange.location == 0 || [[link substringFromIndex:checkRange.location - 1] hasPrefix:@"/"])) {
+        if (((checkRange = [[link lowercaseString] rangeOfString:obj]).location != NSNotFound) && (checkRange.location == 0 || [[[link lowercaseString] substringFromIndex:checkRange.location - 1] hasPrefix:@"/"])) {
             shortDomain = obj;
             *stop = YES;
         }

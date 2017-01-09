@@ -148,24 +148,9 @@
     }
     
     
-    [copy enumerateObjectsUsingBlock:^(TL_topPeerCategoryPeers *obj, NSUInteger cidx, BOOL * _Nonnull stop) {
-        
-        
-        
-        
-        *stop = YES;
-        
-    }];
-
-    
-    
     
     if(_recentPeers.count > 0) {
-        
-        
-        
         NSArray *conversations = [[Storage manager] conversationsWithIds:_recentPeers];
-        
         conversations = [conversations sortedArrayUsingComparator:^NSComparisonResult(TL_conversation *obj1, TL_conversation *obj2) {
             
             NSNumber *idx1 = @([_recentPeers indexOfObject:@(obj1.peer_id)]);
@@ -175,7 +160,8 @@
             
         }];
         NSMutableArray *items = [NSMutableArray array];
-        
+        NSMutableArray *moreItems = [NSMutableArray array];
+        __block int less = 0;
         [conversations enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
             
             if(obj.type == DialogTypeChat && obj.chat.isDeactivated)
@@ -183,20 +169,61 @@
             
             TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
             
-            if(![self isItemInList:item])
-                [items addObject:item];
+            if(![self isItemInList:item]) {
+                if (less < 5) {
+                    [items addObject:item];
+                } else {
+                    [moreItems addObject:item];
+                }
+            }
+            less++;
             
         }];
         
-        if(self.count > 0 && items.count > 0) {
+        if((self.count > 0 && items.count > 0) || moreItems.count > 0) {
             TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(@"Recent.Recent", nil)];
-            
+            headerItem.otherItems = moreItems;
+            headerItem.isMore = NO;
+        
             [self addItem:headerItem tableRedraw:NO];
         }
         
         [self insert:items startIndex:self.count tableRedraw:NO];
         
         
+    }
+    
+    NSArray *unread = [[DialogsManager sharedManager] unreadList];
+    
+    if (unread.count > 0) {
+        
+        NSMutableArray *items = [NSMutableArray array];
+
+        NSMutableArray *moreItems = [NSMutableArray array];
+        
+        TGRecentHeaderItem *headerItem = [[TGRecentHeaderItem alloc] initWithObject:NSLocalizedString(@"Recent.UnreadChats", nil)];
+        [items addObject:headerItem];
+        __block int less = 0;
+        [unread enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL *stop) {
+            TGRecentSearchRowItem *item = [[TGRecentSearchRowItem alloc] initWithObject:obj];
+            item.disableRemoveButton = YES;
+            if(![self isItemInList:item]) {
+                if (less < 5) {
+                    [items addObject:item];
+                } else {
+                    [moreItems addObject:item];
+                }
+            }
+            less++;
+            
+        }];
+        
+        headerItem.otherItems = moreItems;
+        headerItem.isMore = NO;
+        
+        
+        [self insert:items startIndex:self.count tableRedraw:NO];
+
     }
     
     [self reloadData];
@@ -358,6 +385,9 @@
             self.defaultAnimation = NSTableViewAnimationEffectNone;
         }
         
+        headerItem.isMore = !headerItem.isMore;
+
+        
         if(headerItem.otherItems.count > 0) {
             
             TGRecentSearchRowItem *last = [self itemAtPosition:[self indexOfItem:item] + 5];
@@ -367,9 +397,8 @@
             [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:5] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
         }
         
-        headerItem.isMore= !headerItem.isMore;
         
-        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:row] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
+        [self reloadDataForRowIndexes:[NSIndexSet indexSetWithIndex:[self positionOfItem:headerItem]] columnIndexes:[NSIndexSet indexSetWithIndex:0]];
        
     }
     

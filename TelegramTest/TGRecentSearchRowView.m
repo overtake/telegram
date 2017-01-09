@@ -88,19 +88,22 @@
         [DIALOG_BORDER_COLOR set];
         NSRectFill(NSMakeRect(60, 0, NSWidth(dirtyRect) - 60, 1));
     }
-    
-  
+    if (item.unreadText.length > 0) {
+        [self drawUnreadCount];
+    }
 
-    
-        // Drawing code here.
 }
 
 
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
-    
-    [_textField setFrameSize:NSMakeSize(newSize.width - 70, NSHeight(_textField.frame))];
+    TGRecentSearchRowItem *item = (TGRecentSearchRowItem *)[self rowItem];
+    CGFloat addition = 0;
+    if ( item.unreadTextSize.width > 0) {
+        addition += item.unreadTextSize.width + 20;
+    }
+    [_textField setFrameSize:NSMakeSize(newSize.width - 70 - addition, NSHeight(_textField.frame))];
 }
 
 -(void)redrawRow {
@@ -115,5 +118,56 @@
     
     [_removeButton setHidden:YES];
 }
+
+static int unreadCountRadius = 10;
+static int unreadOffsetRight = 13;
+
+
+
+
+- (void)drawUnreadCount {
+    
+    TGRecentSearchRowItem *item = (TGRecentSearchRowItem *)[self rowItem];
+
+    
+    static int offsetY = 15;
+    
+    int sizeWidth = MAX(item.unreadTextSize.width + 12, unreadCountRadius * 2);
+    
+    int offset2 = self.bounds.size.width - unreadOffsetRight - unreadCountRadius;
+    int offset1 = offset2 - (sizeWidth - unreadCountRadius * 2);
+    
+    NSBezierPath * path = [NSBezierPath bezierPath];
+    NSPoint center1 = {
+        offset1,
+        offsetY + unreadCountRadius
+    };
+    [path moveToPoint: center1];
+    [path appendBezierPathWithArcWithCenter: center1 radius: unreadCountRadius startAngle: 90 endAngle: -90];
+    
+    NSPoint center2 = {
+        offset2,
+        offsetY + unreadCountRadius
+    };
+    [path moveToPoint: center2];
+    [path appendBezierPathWithArcWithCenter: center2 radius: unreadCountRadius startAngle: -90 endAngle: 90];
+    
+    [path appendBezierPathWithRect:NSMakeRect(center1.x, center1.y-unreadCountRadius, center2.x-center1.x, unreadCountRadius*2)];
+    if(self.isSelected) {
+        [NSColorFromRGB(0xffffff) set];
+        
+    } else {
+        if(!item.conversation.isMute || [SettingsArchiver checkMaskedSetting:IncludeMutedUnreadCount])
+            [BLUE_COLOR set];
+        else
+            [NSColorFromRGB(0xd7d7d7) set];
+    }
+    [path fill];
+    [path closePath];
+    
+    int offsetX = (sizeWidth - item.unreadTextSize.width)/2;
+    [item.unreadText drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: TGSystemBoldFont(11)}];
+}
+
 
 @end

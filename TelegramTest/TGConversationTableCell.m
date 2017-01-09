@@ -242,7 +242,7 @@ static NSDictionary *attributes() {
                  _swipe.layer.backgroundColor = color.CGColor;
             }
             
-            if (self.item.conversation.isPinned && self.item.message.dstate != DeliveryStateError && self.item.conversation.unread_count == 0) {
+            if (self.item.conversation.isPinned && self.item.message.dstate != DeliveryStateError && self.item.conversation.unread_count == 0 && self.style != ConversationTableCellShortStyle) {
                 // point = NSMakePoint(NSMinX(self.dateField.frame) - stateImage.size.width -2, NSHeight(self.frame) - stateImage.size.height - 11);
                 [self.isSelected && ![Telegram isSingleLayout] ? pinnedActive : pinned drawInRect:NSMakeRect(NSMaxX(self.dateField.frame) - image_chat_pinned().size.width, 11, image_chat_pinned().size.width, image_chat_pinned().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
             }

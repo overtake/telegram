@@ -718,6 +718,7 @@ void exceptionHandler(NSException * exception)
                     if(result.keyCode == 9 && (result.modifierFlags & NSCommandKeyMask) > 0) {
                         if([appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]]) {
                             [appWindow().navigationController.messagesViewController paste:nil];
+                            return [[NSEvent alloc]init];
                         }
                     }
                     

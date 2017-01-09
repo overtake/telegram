@@ -48,4 +48,5 @@
 -(void)sortAndNotify:(NSArray *)keyList;
 - (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent;
 - (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent autoStart:(BOOL)autoStart;
+- (NSArray *)unreadList;
 @end

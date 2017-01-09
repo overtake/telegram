@@ -8,7 +8,7 @@
 
 #import "TGRecentSearchRowItem.h"
 #import "TGRecentSearchRowView.h"
-
+#import "NSNumber+NumberFormatter.h"
 @interface TGRecentSearchRowItem ()
 @property (nonatomic,assign) long randKey;
 @end
@@ -20,10 +20,42 @@
         _conversation = [object copy];
         _conversation.fake = YES;
         _randKey = rand_long();
+        
+        
+        NSString *unreadText;
+        NSSize unreadTextSize;
+        
+        if(_conversation.unread_count > 0) {
+            NSString *unreadTextCount;
+            
+            if(_conversation.unread_count < 1000)
+                unreadTextCount = [NSString stringWithFormat:@"%d", _conversation.unread_count];
+            else
+                unreadTextCount = [@(_conversation.unread_count) prettyNumber];
+            
+            NSDictionary *attributes =@{
+                                        NSForegroundColorAttributeName: [NSColor whiteColor],
+                                        NSFontAttributeName: TGSystemBoldFont(10)
+                                        };
+            unreadText = unreadTextCount;
+            NSSize size = [unreadTextCount sizeWithAttributes:attributes];
+            size.width = ceil(size.width);
+            size.height = ceil(size.height);
+            unreadTextSize = size;
+            
+            
+            _unreadText = unreadText;
+            
+            _unreadTextSize = unreadTextSize;
+            
+        }
+        
     }
     
     return self;
 }
+
+
 
 -(NSUInteger)hash {
     return _randKey;

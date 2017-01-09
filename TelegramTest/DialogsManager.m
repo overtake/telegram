@@ -866,6 +866,21 @@
     
 }
 
+- (NSArray *)unreadList {
+    NSMutableArray *unread = [[NSMutableArray alloc] init];
+    [self.queue dispatchOnQueue:^{
+        
+        [self->list enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.unread_count > 0 && !obj.isMute && obj.type == DialogTypeUser) {
+                [unread addObject:obj];
+            }
+        }];
+        
+    } synchronous:YES];
+    
+    return unread;
+}
+
 - (void)insertDialog:(TL_conversation *)dialog {
     [self add:[NSArray arrayWithObject:dialog]];
     [dialog save];

@@ -371,9 +371,8 @@
 		C23298DE18CF61DD000826E5 /* TMMediaController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23298DD18CF61DD000826E5 /* TMMediaController.m */; };
 		C232EA091E1458FE00C4D38C /* MtProtoKitMac.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2D8261D1B6FA8A600434D37 /* MtProtoKitMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C232EA161E1680F600C4D38C /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; };
-		C232EA171E1680F600C4D38C /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
 		C232EA181E1680FB00C4D38C /* Sparkle.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2B775B11D5234E000A5F06F /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C232EA191E1680FB00C4D38C /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C232EA521E1C0FB000C4D38C /* TGShare.appex in Embed App Extensions (1 item) */ = {isa = PBXBuildFile; fileRef = C2CBF3B61AF38426006BF90A /* TGShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C233FB3418B661B6008C9A96 /* TMCheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = C233FB3318B661B6008C9A96 /* TMCheckBox.m */; };
 		C23536AD19CC64330044978E /* LoginBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536AC19CC64330044978E /* LoginBottomView.m */; };
 		C23536C619D453720044978E /* EncryptedKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C23536C519D453720044978E /* EncryptedKeyViewController.m */; };
@@ -417,6 +416,8 @@
 		C24A22AD1CF741D800D009ED /* TGInlineAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C24A22AC1CF741D800D009ED /* TGInlineAudioPlayer.m */; };
 		C24A22BB1CF8B4D100D009ED /* TGAudioGlobalController.m in Sources */ = {isa = PBXBuildFile; fileRef = C24A22BA1CF8B4D100D009ED /* TGAudioGlobalController.m */; };
 		C24BCB73186A2711000902BE /* NSNumber+NumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C24BCB72186A2711000902BE /* NSNumber+NumberFormatter.m */; };
+		C24D9FA41E2397B0002CD3F3 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; };
+		C24D9FA51E2397BA002CD3F3 /* HockeySDK.framework in Copy Files (6 items) */ = {isa = PBXBuildFile; fileRef = C2082B7219C1E1C4000005E2 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C24F877619FE7CAB00EC962E /* SecretLayer1.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877319FE7CAB00EC962E /* SecretLayer1.m */; };
 		C24F877719FE7CAB00EC962E /* SecretLayer17.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877519FE7CAB00EC962E /* SecretLayer17.m */; };
 		C24F877F19FE92FF00EC962E /* TGModernEncryptedUpdates.m in Sources */ = {isa = PBXBuildFile; fileRef = C24F877E19FE92FF00EC962E /* TGModernEncryptedUpdates.m */; };
@@ -994,6 +995,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C232EA501E1C0FA600C4D38C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEB09E5017DAFC240055F150 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C2CBF3B51AF38426006BF90A;
+			remoteInfo = TGShare;
+		};
 		C23A6B331D918B8C006836C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
@@ -1124,7 +1132,7 @@
 			files = (
 				C232EA091E1458FE00C4D38C /* MtProtoKitMac.framework in Copy Files (6 items) */,
 				C232EA181E1680FB00C4D38C /* Sparkle.framework in Copy Files (6 items) */,
-				C232EA191E1680FB00C4D38C /* HockeySDK.framework in Copy Files (6 items) */,
+				C24D9FA51E2397BA002CD3F3 /* HockeySDK.framework in Copy Files (6 items) */,
 			);
 			name = "Copy Files (6 items)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1145,6 +1153,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				C232EA521E1C0FB000C4D38C /* TGShare.appex in Embed App Extensions (1 item) */,
 			);
 			name = "Embed App Extensions (1 item)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2978,8 +2987,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C232EA161E1680F600C4D38C /* Sparkle.framework in Frameworks */,
-				C232EA171E1680F600C4D38C /* HockeySDK.framework in Frameworks */,
 				C2303E561D982C8E00098E12 /* MtProtoKitMac.framework in Frameworks */,
+				C24D9FA41E2397B0002CD3F3 /* HockeySDK.framework in Frameworks */,
 				C2A4A64D1D74B760002C6320 /* pop.framework in Frameworks */,
 				C2F07E171BBD7D5300B3DB39 /* JavaScriptCore.framework in Frameworks */,
 				C20A8A9B1D2A6E6E00C70134 /* SSignalKit.framework in Frameworks */,
@@ -6414,6 +6423,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C232EA511E1C0FA600C4D38C /* PBXTargetDependency */,
 			);
 			name = Telegram;
 			productName = TelegramTest;
@@ -7624,6 +7634,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C232EA511E1C0FA600C4D38C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C2CBF3B51AF38426006BF90A /* TGShare */;
+			targetProxy = C232EA501E1C0FA600C4D38C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A9EDC191897BA0E0037E1BC /* InfoPlist.strings */ = {

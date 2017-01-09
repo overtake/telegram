@@ -128,7 +128,7 @@
             startingLineNumber = "393"
             endingLineNumber = "393"
             landmarkName = "-onStateChanged:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -144,7 +144,7 @@
             startingLineNumber = "399"
             endingLineNumber = "399"
             landmarkName = "-onStateChanged:"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
