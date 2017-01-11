@@ -964,13 +964,16 @@ static TGLocationRequest *locationRequest;
     } else if([keyboard isKindOfClass:[TL_keyboardButtonSwitchInline class]]) {
         
         if(keyboard.isSame_peer) {
+            TLUser *user = message.via_bot_id != 0 ? message.via_bot_user : message.fromUser;
+
+            
             TGInputMessageTemplate *template = [TGInputMessageTemplate templateWithType:TGInputMessageTemplateTypeSimpleText ofPeerId:conversation.peer_id];
             
             if([conversation.chat isKindOfClass:[TLChat class]]) {
                 [template setReplyMessage:message save:YES];
             }
             
-            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@ %@",message.fromUser.username, keyboard.query]]];
+            [template updateTextAndSave:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"@%@ %@",user.username, keyboard.query]]];
             [template performNotification];
         } else {
             if(messagesViewController.class == [TGContextMessagesvViewController class]) {
