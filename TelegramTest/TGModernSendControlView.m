@@ -7,7 +7,6 @@
 //
 
 #import "TGModernSendControlView.h"
-#import "POPLayerExtras.h"
 #import "TGModernMessagesBottomView.h"
 
 
@@ -178,7 +177,7 @@
 
 -(void)setVoiceSelected:(BOOL)selected {
     [_voice setSelected:selected];
-    [_voice setImage:_voice.isSelected ? image_VoiceMicHighlighted() : image_VoiceMic() forControlState:BTRControlStateNormal];
+    [_voice setImage:_voice.isSelected ? image_VoiceMicHighlighted() : [ image_VoiceMic() imageTintedWithColor:GRAY_ICON_COLOR] forControlState:BTRControlStateNormal];
 
 }
 

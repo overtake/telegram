@@ -113,13 +113,13 @@
 -(void)audioControllerSetNeedDisplay {
     
     switch (self.item.audioController.state) {
-        case AudioStatePlaying:
+        case TGAudioPlayerGlobalStatePlaying:
             [self.loaderView setState:TMLoaderViewStateDownloading];
             break;
-        case AudioStatePaused:
+        case TGAudioPlayerGlobalStatePaused:
             [self.loaderView setState:TMLoaderViewStateUploading];
             break;
-        case AudioStateWaitPlaying:
+        case TGAudioPlayerGlobalStateWaitPlaying:
             [self updateDownloadState];
             break;
         default:
@@ -201,7 +201,7 @@
     
     [_loaderView setDisableRotating:self.item.downloadItem == nil];
     
-    [_loaderView setHidden:self.item.downloadItem == nil && (!self.item.audioController || self.item.audioController.state == AudioStateWaitPlaying) animated:NO];
+    [_loaderView setHidden:self.item.downloadItem == nil && (!self.item.audioController || self.item.audioController.state == TGAudioPlayerGlobalStateWaitPlaying) animated:NO];
     [_contentAssociationImageView setImage:!_loaderView.isHidden ? nil : [self contentAssociationImage:self.item] forControlState:BTRControlStateNormal];
     
     if(self.item.downloadItem) {

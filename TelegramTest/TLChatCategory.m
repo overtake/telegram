@@ -189,6 +189,37 @@ static NSTextAttachment *channelVerifySelectedAttachment() {
     return [self statusForMessagesHeaderView];
 }
 
+-(NSAttributedString *)statusForGroupInfo {
+    return nil;
+}
+
+DYNAMIC_PROPERTY(CHATINFOTITLE);
+
+
+- (NSAttributedString *)chatInfoTitle {
+    
+    NSMutableAttributedString *chatInfoTitleAttributedString = [[NSMutableAttributedString alloc] init];
+    
+    [chatInfoTitleAttributedString appendString:self.title withColor:DARK_BLACK];
+    [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:DARK_BLACK];
+    
+    [chatInfoTitleAttributedString setFont:TGSystemFont(12.5) forRange:chatInfoTitleAttributedString.range];
+    
+    return chatInfoTitleAttributedString;
+}
+
+- (NSAttributedString *)profileTitle {
+    NSMutableAttributedString *chatInfoTitleAttributedString = [[NSMutableAttributedString alloc] init];
+    
+    [chatInfoTitleAttributedString appendString:self.title withColor:TEXT_COLOR];
+    [chatInfoTitleAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:TEXT_COLOR];
+    [chatInfoTitleAttributedString setAlignment:NSLeftTextAlignment range:chatInfoTitleAttributedString.range];
+    [chatInfoTitleAttributedString setFont:TGSystemFont(18) forRange:chatInfoTitleAttributedString.range];
+    
+    return chatInfoTitleAttributedString;
+}
+
+
 
 - (NSAttributedString *)statusForMessagesHeaderView {
     

@@ -18,7 +18,8 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        actions = @[NSStringFromClass([TL_sendMessageTypingAction class]),
+        actions = @[NSStringFromClass([TL_sendMessageCancelAction class]),
+                    NSStringFromClass([TL_sendMessageTypingAction class]),
                     NSStringFromClass([TL_sendMessageUploadPhotoAction class]),
                     
                     NSStringFromClass([TL_sendMessageRecordVideoAction class]),
@@ -30,7 +31,7 @@
                     NSStringFromClass([TL_sendMessageUploadDocumentAction class]),
                     NSStringFromClass([TL_sendMessageGeoLocationAction class]),
                     NSStringFromClass([TL_sendMessageChooseContactAction class]),
-                    
+                    NSStringFromClass([TL_sendMessageGamePlayAction class]),
                     ];
     });
     
@@ -88,7 +89,9 @@
 
 - (void) addMember:(TLUser *)user withAction:(TLSendMessageAction *)action {
     
-    TGActionTyping *taction = [[TGActionTyping alloc] initWithAction:action time:[[NSDate date] timeIntervalSince1970] + 5 user:user];
+    int time = [[NSDate date] timeIntervalSince1970] + ([action isKindOfClass:[TL_sendMessageGamePlayAction class]] ? 10 : 5);
+    
+    TGActionTyping *taction = [[TGActionTyping alloc] initWithAction:action time:time user:user];
     
     
     NSMutableDictionary *actions = [self.actions objectForKey:@(user.n_id)];

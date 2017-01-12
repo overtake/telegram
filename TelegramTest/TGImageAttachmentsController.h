@@ -14,6 +14,7 @@
 
 -(void)didChangeAttachmentsCount:(int)futureCount;
 
+
 @end
 
 @interface TGImageAttachmentsController : TMView
@@ -34,6 +35,6 @@
 
 -(NSArray *)attachments;
 
-
+-(BOOL)isDone;
 
 @end

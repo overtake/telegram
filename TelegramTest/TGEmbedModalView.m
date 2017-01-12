@@ -71,6 +71,7 @@
 
 
 -(void)modalViewDidHide {
+    [[_webView mainFrame] loadRequest:nil];
     _webpage = nil;
 }
 
@@ -85,8 +86,15 @@
     
 }
 
+
+
+-(BOOL)becomeFirstResponder {
+    return [_webView becomeFirstResponder];
+}
+
 -(void)setContainerFrameSize:(NSSize)size {
     [super setContainerFrameSize:size];
+    
     
     [_webView setFrame:NSMakeRect(3, 3, self.containerSize.width - 6, self.containerSize.height - 6)];
     

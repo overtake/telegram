@@ -121,7 +121,10 @@
         [_bagdeLabel setCenteredYByView:self];
     }
     
-    [self setUser:item.user];
+    if(item.user)
+        [self setUser:item.user];
+    else
+        [self setChat:item.chat];
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -189,6 +192,23 @@
     
     if(item.status.length > 0) {
         [_statusTextField setUser:nil];
+        [_statusTextField setStringValue:item.status];
+    }
+    
+    [self.statusTextField sizeToFit];
+    [self.nameTextField sizeToFit];
+    
+}
+
+-(void)setChat:(TLChat *)chat {
+    [self.statusTextField setChat:chat];
+    [self.nameTextField setChat:chat];
+    [self.avatarImageView setChat:chat];
+    
+    TGUserContainerRowItem *item = (TGUserContainerRowItem *)[self rowItem];
+    
+    if(item.status.length > 0) {
+        [_statusTextField setChat:nil];
         [_statusTextField setStringValue:item.status];
     }
     

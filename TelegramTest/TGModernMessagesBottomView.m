@@ -58,7 +58,7 @@
 @implementation TGModernMessagesBottomView
 
 
-const float defYOffset = 12;
+const float defYOffset = 8;
 
 -(instancetype)initWithFrame:(NSRect)frameRect messagesController:(MessagesViewController *)messagesController {
     if(self = [super initWithFrame:frameRect]) {
@@ -176,14 +176,23 @@ const float defYOffset = 12;
     [_messageActionsView setFrameSize:NSMakeSize(newSize.width, NSHeight(_messageActionsView.frame))];
     [_blockChatView setFrameSize:NSMakeSize(newSize.width, NSHeight(_blockChatView.frame))];
     
-    
-    
-    
+
+}
+
+-(NSString *)bot_start_var {
+    return _bot_start_var ? _bot_start_var : @"start";
 }
 
 -(void)performSendMessage {
     
     BOOL performSend = _inputTemplate.forwardMessages.count > 0 || _inputTemplate.attributedString.string.trim.length > 0 || _imageAttachmentsController.attachments.count > 0;
+    
+    performSend = performSend && _imageAttachmentsController.isDone;
+    
+    if(!_imageAttachmentsController.isDone) {
+        NSBeep();
+        return;
+    }
     
     if(_inputTemplate.attributedString.length == 0) {
         [_messagesController performForward:_messagesController.conversation];
@@ -268,7 +277,7 @@ const float defYOffset = 12;
     
     height = self.defTextViewHeight;
     
-    NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 58);
+    NSSize topSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? _attachmentsHeight > 0 ? height + _attachmentsHeight : height : 50);
     
     NSSize bottomSize = NSMakeSize(NSWidth(self.frame), (_actionState != TGModernMessagesBottomViewActionsState && _actionState != TGModernMessagesBottomViewBlockChat) ? MAX(_bottomHeight,0) + (_imageAttachmentsController.isShown && _sendControlView.type != TGModernSendControlEditType ? NSHeight(_imageAttachmentsController.frame) : 0) : 0);
     NSSize fullSize = NSMakeSize(NSWidth(self.frame), topSize.height + bottomSize.height);
@@ -280,7 +289,7 @@ const float defYOffset = 12;
     [_attachmentsContainerView moveWithCAAnimation:NSMakePoint(20,topSize.height - NSHeight(_attachmentsContainerView.frame) -  defYOffset/2.0f) animated:animated];
     [_topContainerView moveWithCAAnimation:NSMakePoint(NSMinX(_topContainerView.frame),bottomSize.height) animated:animated];
     [_topContainerView heightWithCAAnimation:NSMakeRect(0, bottomSize.height, NSWidth(self.frame), topSize.height) animated:animated];
-    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
+    [_botkeyboard moveWithCAAnimation:NSMakePoint(0, _bottomHeight > 0 && _actionState != TGModernMessagesBottomViewActionsState ? 0 : -NSHeight(_botkeyboard.frame)) animated:animated];
 
 
     [_imageAttachmentsController moveWithCAAnimation:NSMakePoint(NSMinX(_imageAttachmentsController.frame), _imageAttachmentsController.isShown ? _bottomHeight : _bottomHeight - NSHeight(_imageAttachmentsController.frame)) animated:animated];
@@ -371,6 +380,7 @@ const float defYOffset = 12;
 
     
     _actionState = state;
+
     
     if(state == TGModernMessagesBottomViewActionsState) {
         [self addSubview:_messageActionsView positioned:NSWindowBelow relativeTo:_ts];
@@ -389,9 +399,9 @@ const float defYOffset = 12;
 
     
 
-    if(state != TGModernMessagesBottomViewNormalState && state != TGModernMessagesBottomViewRecordAudio)
+    if(state != TGModernMessagesBottomViewNormalState && state != TGModernMessagesBottomViewRecordAudio) {
         [_topContainerView removeFromSuperview:animated];
-    else if(!_topContainerView.superview) {
+    } else if(!_topContainerView.superview) {
         [self addSubview:_topContainerView positioned:NSWindowBelow relativeTo:_ts];
         [_topContainerView performCAShow:NO];
         
@@ -429,6 +439,7 @@ const float defYOffset = 12;
     
     if(_inputTemplate.peer_id != inputTemplate.peer_id)
         [self setOnClickToLockedView:nil];
+    
     
     _inputTemplate = inputTemplate;
     
@@ -638,16 +649,14 @@ const float defYOffset = 12;
         
         if(_textView.string.length > 0 && [_textView.string hasPrefix:@"@"] && type != 0) {
             NSRange split = [_textView.string rangeOfString:@" "];
-            if(split.location != NSNotFound && split.location != 1) {
-                
-                NSString *bot = [_textView.string substringWithRange:NSMakeRange(1,split.location-1)];
-                
-                TLUser *user = [UsersManager findUserByName:bot];
-                
-                if(user.isBot && user.isBotInlinePlaceholder) {
-                    search = nil;
-                }
+            NSString *bot = split.location == NSNotFound ? _textView.string : [_textView.string substringWithRange:NSMakeRange(1,split.location-1)];
+            
+            TLUser *user = [UsersManager findUserByName:bot];
+            
+            if(user.isBot && user.isBotInlinePlaceholder) {
+                search = nil;
             }
+            
         }
         
         [_textView setInline:NO placeHolder:self.placeholder];
@@ -662,13 +671,13 @@ const float defYOffset = 12;
             
             
             void (^callback)(NSString *name, id object) = ^(NSString *name,id object) {
-               
-                NSRange range = NSMakeRange(selectedRange.location - search.length, search.length);
+                
+                NSRange range = NSMakeRange(selectedRange.location - search.length - (type == TGHintViewShowEmojiType? 1 : 0), search.length + (type == TGHintViewShowEmojiType? 1 : 0));
                 
                 [_textView setSelectedRange:range];
                 
                 if(![object isKindOfClass:[TLUser class]]) {
-                    [_textView insertText:[name stringByAppendingString:@" "] replacementRange:range];
+                    [_textView insertText:type == TGHintViewShowEmojiType && selectedRange.location == search.length+1 ? name : [name stringByAppendingString:@" "] replacementRange:range];
                     
                 } else {
                     TLUser *user = object;
@@ -681,10 +690,12 @@ const float defYOffset = 12;
             if(type == TGHintViewShowMentionType) {
                 [_messagesController.hintView showMentionPopupWithQuery:search conversation:_messagesController.conversation chat:_messagesController.conversation.chat allowInlineBot:[_textView.string rangeOfString:@"@"].location == 0 choiceHandler:callback];
                 
-            } else if(type == TGHintViewShowHashtagType && [check isEqualToString:@" "]) {
+            } else if(type == TGHintViewShowHashtagType) {
                 
                 [_messagesController.hintView showHashtagHintsWithQuery:search conversation:_messagesController.conversation peer_id:_messagesController.conversation.peer_id choiceHandler:callback];
                 
+            } else if(type == TGHintViewShowEmojiType && ![_textView.string hasPrefix:@"@"]) {
+                [_messagesController.hintView showEmojiHintsWithQuery:search conversation:_messagesController.conversation choiceHandler:callback];
             } else if(type == TGHintViewShowBotCommandType && [_textView.string rangeOfString:@"/"].location == 0) {
                 if([_messagesController.conversation.user isBot] || _messagesController.conversation.fullChat.bot_info != nil) {
                     
@@ -734,28 +745,22 @@ const float defYOffset = 12;
             NSRange split = [value rangeOfString:@" "];
             
             
-            if(split.location != NSNotFound && split.location != 1) {
-                NSString *bot = [value substringWithRange:NSMakeRange(1,split.location-1)];
-                NSString *query = [value substringFromIndex:split.location];
+            NSString *bot = split.location == NSNotFound ? value : [value substringWithRange:NSMakeRange(1,split.location-1)];
+            NSString *query = split.location == NSNotFound ? @"" : [value substringFromIndex:split.location];
+            
+            if([bot rangeOfString:@"\n"].location == NSNotFound) {
+                weak();
                 
-                if([bot rangeOfString:@"\n"].location == NSNotFound) {
-                    weak();
+                [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
+                    [weakSelf.textView setInline:query.length == 0 || [query isEqualToString:@" "] placeHolder:[weakSelf inline_placeholder:user space:query.length == 0]];
+                    [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
+                }] startWithNext:^(id next) {
                     
-                    [[_messagesController.hintView showContextPopupWithQuery:bot query:[query trim] conversation:_messagesController.conversation acceptHandler:^(TLUser *user){
-                        [weakSelf.textView setInline:[query isEqualToString:@" "] placeHolder:[weakSelf inline_placeholder:user]];
-                         [weakSelf checkAndDisableSendingWithInlineBot:user animated:_animates];
-                    }] startWithNext:^(id next) {
-                        
-                        [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
-                        
-                    }];
-                } else {
-                    [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
-                }
-                
-                
+                    [_actionsView setInlineProgress:[next boolValue] ? 90 : 0];
+                    
+                }];
             } else {
-                  [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
+                [self checkAndDisableSendingWithInlineBot:nil animated:_animates];
             }
             
             
@@ -770,16 +775,21 @@ const float defYOffset = 12;
 
 -(void)checkAndDisableSendingWithInlineBot:(TLUser *)user animated:(BOOL)animated {
     
-    if(user)
+    if(user) {
+        _sendControlView.animates = NO;
         [_sendControlView setType:TGModernSendControlInlineRequestType];
-    else
+        _sendControlView.animates = self.animates;
+
+    }  else
         [self updateTextType];
     
     [self resignalActions];
 }
 
--(NSAttributedString *)inline_placeholder:(TLUser *)bot {
+-(NSAttributedString *)inline_placeholder:(TLUser *)bot space:(BOOL)space {
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    if (space)
+        [attr appendString:@" "];
     
     [attr appendString:bot.bot_inline_placeholder withColor:GRAY_TEXT_COLOR];
     
@@ -801,6 +811,7 @@ const float defYOffset = 12;
     }
     [self updateTextType];
 }
+
 
 -(void)_didClickedOnBlockedView:(id)sender {
     if(_messagesController.conversation.isInvisibleChannel) {
@@ -1025,6 +1036,7 @@ const float defYOffset = 12;
 }
 
 -(void)addAttachment:(TGImageAttachment *)attachment {
+
     [_imageAttachmentsController addItems:@[attachment] animated:YES];
     
     [self updateTextType];

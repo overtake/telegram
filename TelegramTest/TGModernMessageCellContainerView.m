@@ -11,7 +11,7 @@
 #import "TGTextLabel.h"
 #import "MessageReplyContainer.h"
 #import "TGModernMessageCellRightView.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGModalForwardView.h"
 #import "TGCaptionView.h"
 #import "TGBotCommandsKeyboard.h"
@@ -284,9 +284,9 @@
         if(!_keyboard) {
             _keyboard = [[TGBotCommandsKeyboard alloc] initWithFrame:NSZeroRect];
             [_keyboard setBackgroundColor:[NSColor clearColor]];
-            [_keyboard setButtonBorderColor:BLUE_COLOR];
-            [_keyboard setButtonColor:BLUE_COLOR];
-            [_keyboard setButtonTextColor:[NSColor whiteColor]];
+            [_keyboard setButtonBorderColor:LIGHT_GRAY_BORDER_COLOR];
+            [_keyboard setButtonColor:LIGHT_GRAY_BORDER_COLOR];
+            [_keyboard setButtonTextColor:TEXT_COLOR];
             [self.contentContainerView addSubview:_keyboard];
         }
         

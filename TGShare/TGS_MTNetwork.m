@@ -1,13 +1,13 @@
 
 #import "TGS_MTNetwork.h"
 
-#import <MTProtoKit/MTKeychain.h>
-#import <MTProtoKit/MTDatacenterAuthInfo.h>
-#import <MTProtoKit/MTProtoKit.h>
+#import <MtProtoKitMac/MTKeychain.h>
+#import <MtProtoKitMac/MTDatacenterAuthInfo.h>
+#import <MtProtoKitMac/MTProtoKitMac.h>
 #import "TGNetworkWorker.h"
 #import "RpcErrorParser.h"
 #import "DatacenterArchiver.h"
-#import <MTProtoKit/MTApiEnvironment.h>
+#import <MtProtoKitMac/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
 #import "TGSKeychain.h"
@@ -16,7 +16,7 @@
 
 #import "TGTLSerialization.h"
 #import "ASQueue.h"
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 #import "TLApi.h"
 #import "CMath.h"
 #import "TGSAppManager.h"
@@ -301,14 +301,14 @@ static int MAX_WORKER_POLL = 5;
         NSMutableArray *poll = [[NSMutableArray alloc] init];
         
         for (int j = 0; j < MAX_WORKER_POLL; j++) {
-            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId];
+            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId queue:_queue];
             [poll addObject:worker];
         }
         [_objectiveDatacenter setObject:poll forKey:@(i)];
     }
     
     for (int i = 1; i < _datacenterCount+1; i++) {
-        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
+        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId queue:_queue];
         [_pollConnections addObject:worker];
     }
 }

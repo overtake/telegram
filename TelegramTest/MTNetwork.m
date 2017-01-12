@@ -1,15 +1,15 @@
 
 #import "MTNetwork.h"
 
-#import <MTProtoKit/MTKeychain.h>
-#import <MTProtoKit/MTDatacenterAuthInfo.h>
+#import <MtProtoKitMac/MTKeychain.h>
+#import <MtProtoKitMac/MTDatacenterAuthInfo.h>
 #import "MTConnection.h"
-#import <MTProtoKit/MTProtoKit.h>
+#import <MtProtoKitMac/MtProtoKitMac.h>
 #import "TGNetworkWorker.h"
 #import "TGUpdateMessageService.h"
 #import "RpcErrorParser.h"
 #import "DatacenterArchiver.h"
-#import <MTProtoKit/MTApiEnvironment.h>
+#import <MtProtoKitMac/MTApiEnvironment.h>
 #import "TGDatacenterWatchdogActor.h"
 #import "TGTimer.h"
 #import "TGKeychain.h"
@@ -19,7 +19,15 @@
 #import "TGTLSerialization.h"
 #import "TGPasslock.h"
 #import <Security/SecRandom.h>
-#import <MTProtoKit/MTRequestErrorContext.h>
+#import <MtProtoKitMac/MTRequestErrorContext.h>
+#import <MtProtoKitMac/MTInternalId.h>
+
+
+static const int TGMaxWorkerCount = 6;
+
+MTInternalIdClass(TGDownloadWorker)
+
+
 @implementation MTRequest (LegacyTL)
 
 - (void)setBody:(TLApiObject *)body
@@ -51,14 +59,12 @@
 @end
 
 
-@interface MTNetwork ()
+@interface MTNetwork () <TGNetworkWorkerDelegate>
 {
     MTContext *_context;
     MTProto *_mtProto;
     MTRequestMessageService *_requestService;
     TGUpdateMessageService *_updateService;
-    NSMutableDictionary *_objectiveDatacenter;
-    NSMutableArray *_pollConnections;
     NSUInteger _datacenterCount;
     NSUInteger _masterDatacenter;
     DatacenterArchiver *_datacenterArchived;
@@ -68,6 +74,9 @@
     TGTimer *_globalTimer;
     NSMutableArray *_dispatchTimers;
     TGKeychain *_keychain;
+    
+    NSMutableDictionary *_workersByDatacenterId;
+    NSMutableDictionary *_awaitingWorkerTokensByDatacenterId;
 }
 
 @end
@@ -109,9 +118,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [self moveAndEncryptKeychain];
             
-            _objectiveDatacenter = [[NSMutableDictionary alloc] init];
-            _pollConnections = [[NSMutableArray alloc] init];
-            
             
             TGTLSerialization *serialization = [[TGTLSerialization alloc] init];
             
@@ -125,7 +131,8 @@ static NSString *kDefaultDatacenter = @"default_dc";
             _keychain = [self nKeychain];
             
             
-
+            _workersByDatacenterId = [[NSMutableDictionary alloc] init];
+            _awaitingWorkerTokensByDatacenterId = [[NSMutableDictionary alloc] init];
             
             [_keychain loadIfNeeded];
             
@@ -385,13 +392,13 @@ static NSString *kDefaultDatacenter = @"default_dc";
     _datacenterCount = 5;
     
     
-    NSString *address = isTestServer() ? @"149.154.175.10" : @"149.154.167.51";
+    NSString *address = isTestServer() ? @"149.154.167.40" : @"149.154.167.51";
     
-    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 1 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO restrictToTcp:NO]]]];
+    [_context setSeedAddressSetForDatacenterWithId:isTestServer() ? 2 : 2 seedAddressSet:[[MTDatacenterAddressSet alloc] initWithAddressList:@[[[MTDatacenterAddress alloc] initWithIp:address port:443 preferForMedia:NO restrictToTcp:NO]]]];
     
     
     if(!isTestServer()) {
-        _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] initWithPath:@"tg"];
+        _datacenterWatchdog = [[TGDatacenterWatchdogActor alloc] init];
         
         
         void (^execute)() = ^{
@@ -434,8 +441,13 @@ static NSString *kDefaultDatacenter = @"default_dc";
 }
 
 -(void)update {
-    [_mtProto pause];
-    [_mtProto resume];
+    [_queue dispatchOnQueue:^{
+        [_mtProto pause];
+        [_mtProto resume];
+    }];
+    
+    
+    
 }
 
 +(void)pause {
@@ -445,29 +457,6 @@ static NSString *kDefaultDatacenter = @"default_dc";
     [[self instance]->_mtProto resume];
 }
 
-static int MAX_WORKER_POLL = 3;
-
--(void)resetWorkers {
-    
-    [_objectiveDatacenter removeAllObjects];
-    [_pollConnections removeAllObjects];
-    
-    for (int i = 1; i < _datacenterCount+1; i++) {
-        NSMutableArray *poll = [[NSMutableArray alloc] init];
-        
-        for (int j = 0; j < MAX_WORKER_POLL; j++) {
-            TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:i masterDatacenterId:_mtProto.datacenterId];
-            [poll addObject:worker];
-        }
-        [_objectiveDatacenter setObject:poll forKey:@(i)];
-    }
-    
-    for (int i = 1; i < _datacenterCount+1; i++) {
-        TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:_mtProto.datacenterId masterDatacenterId:_mtProto.datacenterId];
-        [_pollConnections addObject:worker];
-    }
-    
-}
 
 
 -(void)initConnectionWithId:(NSInteger)dc_id {
@@ -488,11 +477,37 @@ static int MAX_WORKER_POLL = 3;
             [_mtProto addMessageService:_requestService];
             [_mtProto addMessageService:_updateService];
             
-            [self resetWorkers];
-        } 
+            if([self isAuth]) {
+                [self checkServerChangelog];
+            }
+            
+        }
 
     }];
     
+}
+
+-(void)checkServerChangelog {
+    int local_v = (int) [[NSUserDefaults standardUserDefaults] integerForKey:@"version"];
+    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+    int current_v = [[NSString stringWithFormat:@"%@%@",[version componentsSeparatedByString:@"."][0],[version componentsSeparatedByString:@"."][1]] intValue];
+    
+    if(local_v == 0 || current_v < local_v) {
+        [RPCRequest sendRequest:[TLAPI_help_getAppChangelog create] successHandler:^(id request, TL_help_appChangelog *response) {
+            
+            [[NSUserDefaults standardUserDefaults] setInteger:current_v forKey:@"version"];
+            
+            if([response isKindOfClass:[TL_help_appChangelog class]]) {
+                [MessageSender addServiceNotification:response.message];
+            }
+                        
+            
+        } errorHandler:^(id request, RpcError *error) {
+        
+        }];
+    }
 }
 
 
@@ -528,7 +543,6 @@ static int MAX_WORKER_POLL = 3;
         
         
     } synchronous:YES];
-    
     
 }
 
@@ -582,7 +596,14 @@ static int MAX_WORKER_POLL = 3;
 
 -(void)cancelRequest:(RPCRequest *)request {
     [_queue dispatchOnQueue:^{
-         [_requestService removeRequestByInternalId:request.mtrequest.internalId];
+        
+        if(request.guard) {
+            [request.guard.worker cancelRequestById:request.mtrequest.internalId];
+            request.guard = nil;
+        } else {
+            [_requestService removeRequestByInternalId:request.mtrequest.internalId];
+        }
+        
     }];
 }
 
@@ -594,18 +615,28 @@ static int MAX_WORKER_POLL = 3;
 
 -(void)sendRequest:(RPCRequest *)request forDatacenter:(int)datacenterId {
     [_queue dispatchOnQueue:^{
-        NSMutableArray *poll = [_objectiveDatacenter objectForKey:@(datacenterId)];
         
-        TGNetworkWorker *worker = [poll objectAtIndex:rand_limit(MAX_WORKER_POLL-1)];
-        [worker addRequest:[self constructRequest:request]];
+        
+        [self requestDownloadWorkerForDatacenterId:datacenterId completion:^(TGNetworkWorkerGuard *guard) {
+            request.guard = guard;
+            [guard.worker addRequest:[self constructRequest:request]];
+        }];
+        
     }];
   
 }
 
+
+
 -(void)sendRandomRequest:(RPCRequest *)request {
     [_queue dispatchOnQueue:^{
-        TGNetworkWorker *worker = [_pollConnections objectAtIndex:rand_limit((int)_pollConnections.count-1)];
-        [worker addRequest:[self constructRequest:request]];
+        
+        [self requestDownloadWorkerForDatacenterId:self.currentDatacenter completion:^(TGNetworkWorkerGuard *guard) {
+            request.guard = guard;
+            [guard.worker addRequest:[self constructRequest:request]];
+            
+        }];
+        
     }];
 }
 
@@ -717,7 +748,7 @@ static int MAX_WORKER_POLL = 3;
         [_context updateAuthTokenForDatacenterWithId:dc_id authToken:@(dc_id)];
         
         if(dc_id == _masterDatacenter) {
-            [self resetWorkers];
+           // [self resetWorkers];
         }
         
     }];
@@ -898,9 +929,16 @@ void remove_global_dispatcher(id internalId) {
                 [request setCompleted:^(id result, __unused NSTimeInterval timestamp, id error)
                  {
                      
+
+                     
                      dispatch_block_t block = ^{
                          if (error == nil && ![result isKindOfClass:[RpcError class]])
                          {
+                             
+                             dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+                                 [self.updateService mtProto:_mtProto receivedParsedMessage:result];
+                             });
+
                              [subscriber putNext:result];
                              [subscriber putCompletion];
                          }
@@ -998,6 +1036,11 @@ void remove_global_dispatcher(id internalId) {
                  {
                      if (error == nil)
                      {
+                         dispatch_async([_mtProto messageServiceQueue].nativeQueue, ^{
+                             [self.updateService mtProto:_mtProto receivedParsedMessage:result];
+                         });
+
+                         
                          [subscriber putNext:result];
                          [subscriber putCompletion];
                      }
@@ -1027,6 +1070,124 @@ void remove_global_dispatcher(id internalId) {
             }];
 }
 
+
+- (id)requestDownloadWorkerForDatacenterId:(NSInteger)datacenterId completion:(void (^)(TGNetworkWorkerGuard *))completion
+{
+    id token = [[MTInternalId(TGDownloadWorker) alloc] init];
+    [_queue dispatchOnQueue:^
+     {
+         NSMutableArray *awaitingWorkerTokenList = _awaitingWorkerTokensByDatacenterId[@(datacenterId)];
+         if (awaitingWorkerTokenList == nil)
+         {
+             awaitingWorkerTokenList = [[NSMutableArray alloc] init];
+             _awaitingWorkerTokensByDatacenterId[@(datacenterId)] = awaitingWorkerTokenList;
+         }
+         
+         [awaitingWorkerTokenList addObject:@[token, [completion copy]]];
+         
+         [self _processWorkerQueue];
+     }];
+    return token;
+}
+
+- (void)_processWorkerQueue
+{
+    [_queue dispatchOnQueue:^
+     {
+         [_awaitingWorkerTokensByDatacenterId enumerateKeysAndObjectsUsingBlock:^(__unused NSNumber *nDatacenterId, NSMutableArray *list, __unused BOOL *stop)
+          {
+              if (list.count != 0)
+              {
+                  NSMutableArray *workerList = _workersByDatacenterId[nDatacenterId];
+                  if (workerList == nil)
+                  {
+                      workerList = [[NSMutableArray alloc] init];
+                      _workersByDatacenterId[nDatacenterId] = workerList;
+                  }
+                  
+                  TGNetworkWorker *selectedWorker = nil;
+                  for (TGNetworkWorker *worker in workerList)
+                  {
+                      if (!worker.isBusy)
+                      {
+                          selectedWorker = worker;
+                          break;
+                      }
+                  }
+                  
+                  if (selectedWorker == nil && workerList.count < TGMaxWorkerCount)
+                  {
+                      TGNetworkWorker *worker = [[TGNetworkWorker alloc] initWithContext:_context datacenterId:[nDatacenterId integerValue] masterDatacenterId:_masterDatacenter queue:_queue];
+                      worker.delegate = self;
+                      [workerList addObject:worker];
+                      
+                      selectedWorker = worker;
+                  }
+                  
+                  if (selectedWorker != nil)
+                  {
+                      NSArray *desc = list[0];
+                      [list removeObjectAtIndex:0];
+                      
+                      [selectedWorker setIsBusy:true];
+                      TGNetworkWorkerGuard *guard = [[TGNetworkWorkerGuard alloc] initWithWorker:selectedWorker];
+                      ((void (^)(TGNetworkWorkerGuard *))desc[1])(guard);
+                  }
+              }
+          }];
+     }];
+}
+
+- (void)cancelDownloadWorkerRequestByToken:(id)token
+{
+    [_queue dispatchOnQueue:^
+     {
+         [_awaitingWorkerTokensByDatacenterId enumerateKeysAndObjectsUsingBlock:^(__unused NSNumber *nDatacenterId, NSMutableArray *list, __unused BOOL *stop)
+          {
+              NSInteger index = -1;
+              for (NSArray *desc in list)
+              {
+                  index++;
+                  if ([desc[0] isEqual:token])
+                  {
+                      [list removeObjectAtIndex:(NSUInteger)index];
+                      
+                      break;
+                  }
+              }
+          }];
+     }];
+}
+
+- (void)networkWorkerDidBecomeAvailable:(TGNetworkWorker *)__unused networkWorker
+{
+    [_queue dispatchOnQueue:^
+     {
+         [self _processWorkerQueue];
+     }];
+}
+
+- (void)networkWorkerReadyToBeRemoved:(TGNetworkWorker *)networkWorker
+{
+    [_queue dispatchOnQueue:^
+     {
+         [_workersByDatacenterId enumerateKeysAndObjectsUsingBlock:^(__unused NSNumber *nDatacenterId, NSMutableArray *workers, __unused BOOL *stop)
+          {
+              NSInteger index = -1;
+              for (TGNetworkWorker *worker in workers)
+              {
+                  index++;
+                  
+                  if (worker == networkWorker)
+                  {
+                      [workers removeObjectAtIndex:(NSUInteger)index];
+                      
+                      break;
+                  }
+              }
+          }];
+     }];
+}
 
 
 @end

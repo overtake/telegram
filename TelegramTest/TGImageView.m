@@ -9,7 +9,10 @@
 #import "TGImageView.h"
 #import "TLFileLocation+Extensions.h"
 #import "TGCache.h"
-@interface TGImageView ()
+#import "SpacemanBlocks.h"
+@interface TGImageView () {
+    SMDelayedBlockHandle _handle;
+}
 @property (nonatomic, strong) NSTrackingArea *trackingArea;
 @property (nonatomic,strong) CALayer *borderLayer;
 @end
@@ -121,10 +124,12 @@
     }
     
     
+    
+    
     NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     BOOL isInside = [self mouse:mouseLoc inRect:[self bounds]];
     
-    if(self.tapBlock && isInside) {
+    if(self.tapBlock && isInside && theEvent.clickCount == 1) {
         //  dispatch_async(dispatch_get_main_queue(), ^{
         self.tapBlock();
         //});

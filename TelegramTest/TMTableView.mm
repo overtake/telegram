@@ -255,21 +255,26 @@ static TMTableView *tableStatic;
     tableRedraw:(BOOL)tableRedraw {
     
     assert([NSThread currentThread] == [NSThread mainThread]);
-    
-    int count = 0;
-    for(NSObject* object in array) {
-        if([self insert:object atIndex:startIndex + count tableRedraw:NO]) {
-            count++;
-        } else {
-          //  MTLog(@"ne");
+    @try {
+        int count = 0;
+        for(NSObject* object in array) {
+            if([self insert:object atIndex:startIndex + count tableRedraw:NO]) {
+                count++;
+            } else {
+                //  MTLog(@"ne");
+            }
         }
+        
+        if(count && tableRedraw) {
+            [self beginUpdates];
+            [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, count)] withAnimation:self.defaultAnimation];
+            [self endUpdates];
+        }
+    } @catch (NSException *exception) {
+        int bp = 0;
+        bp += 1;
     }
     
-    if(count && tableRedraw) {
-        [self beginUpdates];
-        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(startIndex, count)] withAnimation:self.defaultAnimation];
-        [self endUpdates];
-    }
     return YES;
 }
 
@@ -285,20 +290,25 @@ static TMTableView *tableStatic;
 - (BOOL) insert:(NSObject *)item
         atIndex:(NSUInteger)atIndex
     tableRedraw:(BOOL)tableRedraw {
-    
-    if([self isItemInList:item] != nil)
-        return NO;
-    
-    self.listCacheHash->insert(std::pair<NSUInteger, id>([item hash], item));
-    [self.list insertObject:item atIndex:atIndex];
-    TMRowItem *rowItem = (TMRowItem *)(item);
-    rowItem.table = self;
-    rowItem.rowId = atIndex;
-    if(tableRedraw) {
-        [self beginUpdates];
-        [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:atIndex] withAnimation:self.defaultAnimation];
-        [self endUpdates];
+    @try {
+        if([self isItemInList:item] != nil)
+            return NO;
+        
+        self.listCacheHash->insert(std::pair<NSUInteger, id>([item hash], item));
+        [self.list insertObject:item atIndex:atIndex];
+        TMRowItem *rowItem = (TMRowItem *)(item);
+        rowItem.table = self;
+        rowItem.rowId = atIndex;
+        if(tableRedraw) {
+            [self beginUpdates];
+            [self insertRowsAtIndexes:[NSIndexSet indexSetWithIndex:atIndex] withAnimation:self.defaultAnimation];
+            [self endUpdates];
+        }
+    } @catch (NSException *exception) {
+        int bp = 0;
+        bp += 1;
     }
+    
     return YES;
 }
 
@@ -407,7 +417,7 @@ static TMTableView *tableStatic;
     
     if(theEvent.keyCode == 125 || theEvent.keyCode == 126 || theEvent.keyCode == 121 || theEvent.keyCode == 116) {
         
-        if((theEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+        if((theEvent.modifierFlags & NSAlternateKeyMask) > 0 || (theEvent.modifierFlags & NSControlKeyMask) > 0)  {
             if([NSClassFromString(@"TMViewController") performSelector:@selector(isModalActive) withObject:nil])
                 return;
             
@@ -676,8 +686,6 @@ static TMTableView *tableStatic;
         _currentStickView = nil;
     }
     
-   
-    
 }
 
 -(void)_didScrolledTableView:(NSNotification *)notification {
@@ -706,7 +714,7 @@ static TMTableView *tableStatic;
         __block id currentStick;
         
         [self.list enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, range.location + 1)] options:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            
+          
             if([obj isKindOfClass:_stickClass]) {
                 currentStick = obj;
                 *stop = YES;
@@ -730,9 +738,7 @@ static TMTableView *tableStatic;
             if([item isKindOfClass:_stickClass]) {
                
                 NSRect rect = [self rectOfRow:stickIndex]; 
-                
                 float dif = MAX(MIN(0,yScrollOffset - NSMinY(rect)),-item.height);
-                
                 float yTopOffset =  yScrollOffset  - (dif + item.height);
                 
 

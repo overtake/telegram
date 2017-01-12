@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "AttachTakePhoto.png"
+      "filename" : "Attac_Camera.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "AttachTakePhoto@2x.png"
+      "filename" : "Attac_Camera@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

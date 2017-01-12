@@ -10,7 +10,7 @@
 #import "CMath.h"
 #import "ASQueue.h"
 #import "TGS_MTNetwork.h"
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 @implementation TGS_RPCRequest
 
 - (id)init {

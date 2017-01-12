@@ -140,17 +140,23 @@ typedef enum {
     TMView *topContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(self.view.frame) - DIALOG_BORDER_WIDTH, 48)];
     
     topContainer.backgroundColor = [NSColor whiteColor];
+   
+    __weak TMView *top = topContainer;
+    [topContainer setDrawBlock:^{
+        [DIALOG_BORDER_COLOR set];
+        NSRectFill(NSMakeRect(top.frame.size.width - 1, 0, 1, top.frame.size.height));
+    }];
     
     topContainer.autoresizesSubviews = YES;
-    topContainer.autoresizingMask = NSViewWidthSizable;
+   // topContainer.autoresizingMask = NSViewWidthSizable;
     
     
     TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(topContainer.frame), 1)];
     
     [separator setBackgroundColor:DIALOG_BORDER_COLOR];
     
-    separator.autoresizingMask = NSViewHeightSizable | NSViewMinXMargin;
-    
+  //   separator.autoresizingMask = NSViewHeightSizable | NSViewMinXMargin;
+   
     [topContainer addSubview:separator];
     
     
@@ -169,7 +175,8 @@ typedef enum {
     
     [self.view setDrawBlock:^{
         [header setCenterByView:topContainer];
-        
+        [topContainer setFrameSize:NSMakeSize(weakSelf.view.frame.size.width, topContainer.frame.size.height)];
+        [separator setFrameSize:NSMakeSize(weakSelf.view.frame.size.width, 1)];
     }];
     
     

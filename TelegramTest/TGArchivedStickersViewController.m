@@ -106,7 +106,7 @@
 -(SSignal *)loadNext:(long)offsetId {
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        SSignal *signal = [[MTNetwork instance] requestSignal:[TLAPI_messages_getArchivedStickers createWithOffset_id:offsetId limit:1000]];
+        SSignal *signal = [[MTNetwork instance] requestSignal:[TLAPI_messages_getArchivedStickers createWithFlags:0 offset_id:offsetId limit:1000]];
         
         return [[signal map:^id(id response) {
             return [response isKindOfClass:[TL_messages_archivedStickers class]] ? response : nil;

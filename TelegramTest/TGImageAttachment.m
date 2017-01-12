@@ -169,8 +169,13 @@
     }];
     
     
+}
+
+-(void)didUpdateProgress:(int)progress {
     
+     assert([NSThread isMainThread]);
     
+    [_loaderView setCurrentProgress:progress];
 }
 
 static CAAnimation *thumbAnimation() {

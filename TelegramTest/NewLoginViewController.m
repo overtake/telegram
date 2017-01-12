@@ -279,7 +279,9 @@
     [self.bottomView setHidden:YES];
     [self.startMessagingView setHasImage:NO];
     
-    
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    int current_v = [[NSString stringWithFormat:@"%@%@",[version componentsSeparatedByString:@"."][0],[version componentsSeparatedByString:@"."][1]] intValue];
+    [[NSUserDefaults standardUserDefaults] setInteger:current_v forKey:@"version"];
 }
 
 

@@ -5,24 +5,24 @@
 #ifdef __OBJC__
     #import <Cocoa/Cocoa.h>
 
-#define TGDEBUG // UNDEF IN RELEASE
-//#define TGSTABLE // DEF IN stable version
-
-
 #ifdef TGDEBUG
+#ifndef TGSTABLE
 #import "TGUIMainThreadGuard.h"
 #endif
+#endif
+
+
 
 #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
-#import <MtProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 #import "ImageUtils.h"
-#import "POP.h"
+#import <POP/POP.h>
 #import "ASQueue.h"
 #import "TGDispatcher.h"
 #import "SelectTextManager.h"
 #import "CMath.h"
 #import "SharedManager.h"
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 #import "TL_destructMessage.h"
 #import "TL_destructMessage45.h"
 #import "TL_secretWebpage.h"
@@ -76,7 +76,7 @@
 
 #ifdef TGDEBUG
 #ifndef TGSTABLE
-#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb",@"izhukov",@"requilence",@"nadymov",@"kolar",@"asmico",@"Cooper1",@"MarkusRa"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
+#define ACCEPT_FEATURE ([@[@"vihor",@"Marvin",@"Ricdallaglio",@"Victor",@"Jdkdkdkdmdmdmx",@"dmitry",@"peter",@"Zlomch",@"MarcoK",@"VitocoEP",@"zinoviev",@"ecstasy",@"Gerardo",@"kondratyevdev",@"Markus",@"Telegrafm",@"doublespb",@"izhukov",@"requilence",@"nadymov",@"kolar",@"asmico",@"Cooper1",@"MarkusRa",@"keepcoder"] indexOfObject:[UsersManager currentUser].username] != NSNotFound)
 #else 
 #define ACCEPT_FEATURE YES
 #endif

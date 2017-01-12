@@ -9,7 +9,7 @@
 #import "ChatsManager.h"
 #import "TLFileLocation+Extensions.h"
 #import "Crypto.h"
-#import <MTProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "SecretChatAccepter.h"
 #import "TGSearchSignalKit.h"
 

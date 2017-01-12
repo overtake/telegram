@@ -4,6 +4,8 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "F2FE0AAE95F0B87896F2BEE0B176D4FC32D691A3" : 0,
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : 0,
     "7EC1C8EA9643E5D9E5CFB7785E6B7386F88D4D5C" : 0,
     "4A5BEE4DFE7777AFD5504E71EF990A207EDDC37A" : 0,
     "E860E73EA92362394DE531098D73ED96B22811B3" : 0,
@@ -11,6 +13,8 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "ABCC6397-1AF7-49D7-9751-8C02D795855C",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "F2FE0AAE95F0B87896F2BEE0B176D4FC32D691A3" : "osx-cipher\/pop\/",
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "osx-cipher\/YapDatabase\/",
     "7EC1C8EA9643E5D9E5CFB7785E6B7386F88D4D5C" : "osx-cipher\/MtProtoKit\/",
     "4A5BEE4DFE7777AFD5504E71EF990A207EDDC37A" : "osx-cipher\/",
     "E860E73EA92362394DE531098D73ED96B22811B3" : "osx-cipher\/Signals\/",
@@ -36,9 +40,19 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7EC1C8EA9643E5D9E5CFB7785E6B7386F88D4D5C"
     },
     {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/yapstudios\/YapDatabase.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784"
+    },
+    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/peter-iakovlev\/Signals",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E860E73EA92362394DE531098D73ED96B22811B3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/facebook\/pop.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F2FE0AAE95F0B87896F2BEE0B176D4FC32D691A3"
     }
   ]
 }

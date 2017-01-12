@@ -104,13 +104,8 @@
         dispatch_block_t block = ^{
             
 
-            id request = nil;
-            
-            if(strongSelf.conversation.type == DialogTypeBroadcast) {
-                request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
-            } else {
-                request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-            }
+            id request = [TLAPI_messages_sendMedia createWithFlags:[strongSelf senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+
             
             
             strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
@@ -186,7 +181,7 @@
                 UploadOperation *thumbUpload = [[UploadOperation alloc] init];
                 [thumbUpload setUploadComplete:^(UploadOperation *thumb, TL_inputFile *inputThumbFile) {
                     
-                    media = [TL_inputMediaUploadedThumbDocument createWithFile:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
+                    media = [TL_inputMediaUploadedThumbDocument createWithFlags:0 file:input thumb:inputThumbFile mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption stickers:nil];
                     
                     block();
                 }];
@@ -194,7 +189,7 @@
                 [thumbUpload setFileData:thumbData];
                 [thumbUpload ready:UploadImageType];
             } else {
-                media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption];
+                media = [TL_inputMediaUploadedDocument createWithFlags:0 file:input mime_type:@"video/mp4" attributes:self.message.media.document.attributes caption:self.message.media.caption stickers:nil];
                 block();
             }
         }
@@ -253,8 +248,6 @@
 }
 
 - (void)cancel {
-    if(self.isCompressed)
-        [[NSFileManager defaultManager] removeItemAtPath:self.path_for_file error:nil];
     
     [self.uploader cancel];
     [super cancel];

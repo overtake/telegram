@@ -2,7 +2,6 @@
 #import "TMSearchTextField.h"
 #import "SpacemanBlocks.h"
 #import "TGMediaContextTableView.h"
-#import "MessagesBottomView.h"
 #import "TGModernStickRowItem.h"
 #import "TGModernESGViewController.h"
 @interface TGGifKeyboardView () <TMSearchTextFieldDelegate> {

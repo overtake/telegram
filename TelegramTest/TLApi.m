@@ -2,7 +2,7 @@
 //  TLApi.m
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16..
+//  Auto created by Mikhail Filimonov on 22.12.16..
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -539,16 +539,20 @@
 @end
 
 @implementation TLAPI_messages_getDialogs
-+(TLAPI_messages_getDialogs*)createWithOffset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit {
++(TLAPI_messages_getDialogs*)createWithFlags:(int)flags  offset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit {
     TLAPI_messages_getDialogs* obj = [[TLAPI_messages_getDialogs alloc] init];
-    obj.offset_date = offset_date;
+    obj.flags = flags;
+	
+	obj.offset_date = offset_date;
 	obj.offset_id = offset_id;
 	obj.offset_peer = offset_peer;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1799878989];
+	SerializedData* stream = [ClassStore streamWithConstuctor:421243333];
+	[stream writeInt:self.flags];
+	
 	[stream writeInt:self.offset_date];
 	[stream writeInt:self.offset_id];
 	[ClassStore TLSerialize:self.offset_peer stream:stream];
@@ -646,13 +650,17 @@
 @end
 
 @implementation TLAPI_messages_deleteMessages
-+(TLAPI_messages_deleteMessages*)createWithN_id:(NSMutableArray*)n_id {
++(TLAPI_messages_deleteMessages*)createWithFlags:(int)flags  n_id:(NSMutableArray*)n_id {
     TLAPI_messages_deleteMessages* obj = [[TLAPI_messages_deleteMessages alloc] init];
-    obj.n_id = n_id;
+    obj.flags = flags;
+	
+	obj.n_id = n_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1510897371];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-443640366];
+	[stream writeInt:self.flags];
+	
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -770,9 +778,10 @@
 @end
 
 @implementation TLAPI_messages_forwardMessages
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags    from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer {
     TLAPI_messages_forwardMessages* obj = [[TLAPI_messages_forwardMessages alloc] init];
     obj.flags = flags;
+	
 	
 	
 	obj.from_peer = from_peer;
@@ -784,6 +793,7 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1888354709];
 	[stream writeInt:self.flags];
+	
 	
 	
 	[ClassStore TLSerialize:self.from_peer stream:stream];
@@ -995,16 +1005,20 @@
 @end
 
 @implementation TLAPI_updates_getDifference
-+(TLAPI_updates_getDifference*)createWithPts:(int)pts date:(int)date qts:(int)qts {
++(TLAPI_updates_getDifference*)createWithFlags:(int)flags pts:(int)pts pts_total_limit:(int)pts_total_limit date:(int)date qts:(int)qts {
     TLAPI_updates_getDifference* obj = [[TLAPI_updates_getDifference alloc] init];
-    obj.pts = pts;
+    obj.flags = flags;
+	obj.pts = pts;
+	obj.pts_total_limit = pts_total_limit;
 	obj.date = date;
 	obj.qts = qts;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:168039573];
+	SerializedData* stream = [ClassStore streamWithConstuctor:630429265];
+	[stream writeInt:self.flags];
 	[stream writeInt:self.pts];
+	if(self.flags & (1 << 0)) {[stream writeInt:self.pts_total_limit];}
 	[stream writeInt:self.date];
 	[stream writeInt:self.qts];
 	return [stream getOutput];
@@ -1012,35 +1026,27 @@
 @end
 
 @implementation TLAPI_photos_updateProfilePhoto
-+(TLAPI_photos_updateProfilePhoto*)createWithN_id:(TLInputPhoto*)n_id crop:(TLInputPhotoCrop*)crop {
++(TLAPI_photos_updateProfilePhoto*)createWithN_id:(TLInputPhoto*)n_id {
     TLAPI_photos_updateProfilePhoto* obj = [[TLAPI_photos_updateProfilePhoto alloc] init];
     obj.n_id = n_id;
-	obj.crop = crop;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-285902432];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-256159406];
 	[ClassStore TLSerialize:self.n_id stream:stream];
-	[ClassStore TLSerialize:self.crop stream:stream];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_photos_uploadProfilePhoto
-+(TLAPI_photos_uploadProfilePhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption geo_point:(TLInputGeoPoint*)geo_point crop:(TLInputPhotoCrop*)crop {
++(TLAPI_photos_uploadProfilePhoto*)createWithFile:(TLInputFile*)file {
     TLAPI_photos_uploadProfilePhoto* obj = [[TLAPI_photos_uploadProfilePhoto alloc] init];
     obj.file = file;
-	obj.caption = caption;
-	obj.geo_point = geo_point;
-	obj.crop = crop;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-720397176];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1328726168];
 	[ClassStore TLSerialize:self.file stream:stream];
-	[stream writeString:self.caption];
-	[ClassStore TLSerialize:self.geo_point stream:stream];
-	[ClassStore TLSerialize:self.crop stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1211,46 +1217,6 @@
 }
 @end
 
-@implementation TLAPI_messages_sendBroadcast
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media {
-    TLAPI_messages_sendBroadcast* obj = [[TLAPI_messages_sendBroadcast alloc] init];
-    obj.contacts = contacts;
-	obj.random_id = random_id;
-	obj.message = message;
-	obj.media = media;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1082919718];
-	//Serialize FullVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.contacts count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            TLInputUser* obj = [self.contacts objectAtIndex:i];
-            [ClassStore TLSerialize:obj stream:stream];
-		}
-	}
-	//Serialize ShortVector
-	[stream writeInt:0x1cb5c415];
-	{
-		NSInteger tl_count = [self.random_id count];
-		[stream writeInt:(int)tl_count];
-		for(int i = 0; i < (int)tl_count; i++) {
-            if([self.random_id count] > i) {
-                NSNumber* obj = [self.random_id objectAtIndex:i];
-			[stream writeLong:[obj longValue]];
-            }  else
-                break;
-		}
-	}
-	[stream writeString:self.message];
-	[ClassStore TLSerialize:self.media stream:stream];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_getDhConfig
 +(TLAPI_messages_getDhConfig*)createWithVersion:(int)version random_length:(int)random_length {
     TLAPI_messages_getDhConfig* obj = [[TLAPI_messages_getDhConfig alloc] init];
@@ -1405,6 +1371,19 @@
 - (NSData*)getData {
 	SerializedData* stream = [ClassStore streamWithConstuctor:1436924774];
 	[stream writeInt:self.max_qts];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_reportEncryptedSpam
++(TLAPI_messages_reportEncryptedSpam*)createWithPeer:(TLInputEncryptedChat*)peer {
+    TLAPI_messages_reportEncryptedSpam* obj = [[TLAPI_messages_reportEncryptedSpam alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1259113487];
+	[ClassStore TLSerialize:self.peer stream:stream];
 	return [stream getOutput];
 }
 @end
@@ -1628,21 +1607,6 @@
 	[stream writeString:self.phone_number];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
-	return [stream getOutput];
-}
-@end
-
-@implementation TLAPI_messages_getStickers
-+(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash {
-    TLAPI_messages_getStickers* obj = [[TLAPI_messages_getStickers alloc] init];
-    obj.emoticon = emoticon;
-	obj.n_hash = n_hash;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1373446075];
-	[stream writeString:self.emoticon];
-	[stream writeString:self.n_hash];
 	return [stream getOutput];
 }
 @end
@@ -2341,16 +2305,20 @@
 @end
 
 @implementation TLAPI_updates_getChannelDifference
-+(TLAPI_updates_getChannelDifference*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit {
++(TLAPI_updates_getChannelDifference*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit {
     TLAPI_updates_getChannelDifference* obj = [[TLAPI_updates_getChannelDifference alloc] init];
-    obj.channel = channel;
+    obj.flags = flags;
+	
+	obj.channel = channel;
 	obj.filter = filter;
 	obj.pts = pts;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1154295872];
+	SerializedData* stream = [ClassStore streamWithConstuctor:51854712];
+	[stream writeInt:self.flags];
+	
 	[ClassStore TLSerialize:self.channel stream:stream];
 	[ClassStore TLSerialize:self.filter stream:stream];
 	[stream writeInt:self.pts];
@@ -2439,13 +2407,17 @@
 @end
 
 @implementation TLAPI_messages_reorderStickerSets
-+(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order {
++(TLAPI_messages_reorderStickerSets*)createWithFlags:(int)flags  order:(NSMutableArray*)order {
     TLAPI_messages_reorderStickerSets* obj = [[TLAPI_messages_reorderStickerSets alloc] init];
-    obj.order = order;
+    obj.flags = flags;
+	
+	obj.order = order;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1613775824];
+	SerializedData* stream = [ClassStore streamWithConstuctor:2016638777];
+	[stream writeInt:self.flags];
+	
 	//Serialize ShortVector
 	[stream writeInt:0x1cb5c415];
 	{
@@ -2787,39 +2759,45 @@
 @end
 
 @implementation TLAPI_messages_getBotCallbackAnswer
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data {
++(TLAPI_messages_getBotCallbackAnswer*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data {
     TLAPI_messages_getBotCallbackAnswer* obj = [[TLAPI_messages_getBotCallbackAnswer alloc] init];
-    obj.peer = peer;
+    obj.flags = flags;
+	
+	obj.peer = peer;
 	obj.msg_id = msg_id;
 	obj.data = data;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1494659324];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-2130010132];
+	[stream writeInt:self.flags];
+	
 	[ClassStore TLSerialize:self.peer stream:stream];
 	[stream writeInt:self.msg_id];
-	[stream writeByteArray:self.data];
+	if(self.flags & (1 << 0)) {[stream writeByteArray:self.data];}
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_setBotCallbackAnswer
-+(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url {
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url cache_time:(int)cache_time {
     TLAPI_messages_setBotCallbackAnswer* obj = [[TLAPI_messages_setBotCallbackAnswer alloc] init];
     obj.flags = flags;
 	
 	obj.query_id = query_id;
 	obj.message = message;
 	obj.url = url;
+	obj.cache_time = cache_time;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-920136629];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-712043766];
 	[stream writeInt:self.flags];
 	
 	[stream writeLong:self.query_id];
 	if(self.flags & (1 << 0)) {[stream writeString:self.message];}
 	if(self.flags & (1 << 2)) {[stream writeString:self.url];}
+	[stream writeInt:self.cache_time];
 	return [stream getOutput];
 }
 @end
@@ -2949,40 +2927,60 @@
 @end
 
 @implementation TLAPI_messages_readFeaturedStickers
-+(TLAPI_messages_readFeaturedStickers*)create {
++(TLAPI_messages_readFeaturedStickers*)createWithN_id:(NSMutableArray*)n_id {
     TLAPI_messages_readFeaturedStickers* obj = [[TLAPI_messages_readFeaturedStickers alloc] init];
-    
+    obj.n_id = n_id;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:14818491];
-	
+	SerializedData* stream = [ClassStore streamWithConstuctor:1527873830];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.n_id count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.n_id count] > i) {
+                NSNumber* obj = [self.n_id objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_getRecentStickers
-+(TLAPI_messages_getRecentStickers*)createWithN_hash:(int)n_hash {
++(TLAPI_messages_getRecentStickers*)createWithFlags:(int)flags  n_hash:(int)n_hash {
     TLAPI_messages_getRecentStickers* obj = [[TLAPI_messages_getRecentStickers alloc] init];
-    obj.n_hash = n_hash;
+    obj.flags = flags;
+	
+	obj.n_hash = n_hash;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1726383060];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1587647177];
+	[stream writeInt:self.flags];
+	
 	[stream writeInt:self.n_hash];
 	return [stream getOutput];
 }
 @end
 
 @implementation TLAPI_messages_saveRecentSticker
-+(TLAPI_messages_saveRecentSticker*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave {
++(TLAPI_messages_saveRecentSticker*)createWithFlags:(int)flags  n_id:(TLInputDocument*)n_id unsave:(Boolean)unsave {
     TLAPI_messages_saveRecentSticker* obj = [[TLAPI_messages_saveRecentSticker alloc] init];
-    obj.n_id = n_id;
+    obj.flags = flags;
+	
+	obj.n_id = n_id;
 	obj.unsave = unsave;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:881736127];
+	SerializedData* stream = [ClassStore streamWithConstuctor:958863608];
+	[stream writeInt:self.flags];
+	
 	[ClassStore TLSerialize:self.n_id stream:stream];
 	[stream writeBool:self.unsave];
 	return [stream getOutput];
@@ -2990,40 +2988,33 @@
 @end
 
 @implementation TLAPI_messages_clearRecentStickers
-+(TLAPI_messages_clearRecentStickers*)create {
++(TLAPI_messages_clearRecentStickers*)createWithFlags:(int)flags  {
     TLAPI_messages_clearRecentStickers* obj = [[TLAPI_messages_clearRecentStickers alloc] init];
-    
+    obj.flags = flags;
+	
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1425873454];
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1986437075];
+	[stream writeInt:self.flags];
 	
 	return [stream getOutput];
 }
 @end
 
-@implementation TLAPI_messages_getUnusedStickers
-+(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit {
-    TLAPI_messages_getUnusedStickers* obj = [[TLAPI_messages_getUnusedStickers alloc] init];
-    obj.limit = limit;
-    return obj;
-}
-- (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:1124718171];
-	[stream writeInt:self.limit];
-	return [stream getOutput];
-}
-@end
-
 @implementation TLAPI_messages_getArchivedStickers
-+(TLAPI_messages_getArchivedStickers*)createWithOffset_id:(long)offset_id limit:(int)limit {
++(TLAPI_messages_getArchivedStickers*)createWithFlags:(int)flags  offset_id:(long)offset_id limit:(int)limit {
     TLAPI_messages_getArchivedStickers* obj = [[TLAPI_messages_getArchivedStickers alloc] init];
-    obj.offset_id = offset_id;
+    obj.flags = flags;
+	
+	obj.offset_id = offset_id;
 	obj.limit = limit;
     return obj;
 }
 - (NSData*)getData {
-	SerializedData* stream = [ClassStore streamWithConstuctor:-1871829985];
+	SerializedData* stream = [ClassStore streamWithConstuctor:1475442322];
+	[stream writeInt:self.flags];
+	
 	[stream writeLong:self.offset_id];
 	[stream writeInt:self.limit];
 	return [stream getOutput];
@@ -3060,6 +3051,348 @@
 	SerializedData* stream = [ClassStore streamWithConstuctor:1596029123];
 	[stream writeString:self.phone_code_hash];
 	[stream writeString:self.phone_code];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_channels_getAdminedPublicChannels
++(TLAPI_channels_getAdminedPublicChannels*)create {
+    TLAPI_channels_getAdminedPublicChannels* obj = [[TLAPI_channels_getAdminedPublicChannels alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1920105769];
+	
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getMaskStickers
++(TLAPI_messages_getMaskStickers*)createWithN_hash:(int)n_hash {
+    TLAPI_messages_getMaskStickers* obj = [[TLAPI_messages_getMaskStickers alloc] init];
+    obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1706608543];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getAttachedStickers
++(TLAPI_messages_getAttachedStickers*)createWithMedia:(TLInputStickeredMedia*)media {
+    TLAPI_messages_getAttachedStickers* obj = [[TLAPI_messages_getAttachedStickers alloc] init];
+    obj.media = media;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-866424884];
+	[ClassStore TLSerialize:self.media stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_auth_dropTempAuthKeys
++(TLAPI_auth_dropTempAuthKeys*)createWithExcept_auth_keys:(NSMutableArray*)except_auth_keys {
+    TLAPI_auth_dropTempAuthKeys* obj = [[TLAPI_auth_dropTempAuthKeys alloc] init];
+    obj.except_auth_keys = except_auth_keys;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1907842680];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.except_auth_keys count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.except_auth_keys count] > i) {
+                NSNumber* obj = [self.except_auth_keys objectAtIndex:i];
+			[stream writeLong:[obj longValue]];
+            }  else
+                break;
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setGameScore
++(TLAPI_messages_setGameScore*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id score:(int)score {
+    TLAPI_messages_setGameScore* obj = [[TLAPI_messages_setGameScore alloc] init];
+    obj.flags = flags;
+	
+	
+	obj.peer = peer;
+	obj.n_id = n_id;
+	obj.user_id = user_id;
+	obj.score = score;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1896289088];
+	[stream writeInt:self.flags];
+	
+	
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.score];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_setInlineGameScore
++(TLAPI_messages_setInlineGameScore*)createWithFlags:(int)flags   n_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id score:(int)score {
+    TLAPI_messages_setInlineGameScore* obj = [[TLAPI_messages_setInlineGameScore alloc] init];
+    obj.flags = flags;
+	
+	
+	obj.n_id = n_id;
+	obj.user_id = user_id;
+	obj.score = score;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:363700068];
+	[stream writeInt:self.flags];
+	
+	
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.score];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getGameHighScores
++(TLAPI_messages_getGameHighScores*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id {
+    TLAPI_messages_getGameHighScores* obj = [[TLAPI_messages_getGameHighScores alloc] init];
+    obj.peer = peer;
+	obj.n_id = n_id;
+	obj.user_id = user_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-400399203];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.n_id];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getInlineGameHighScores
++(TLAPI_messages_getInlineGameHighScores*)createWithN_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id {
+    TLAPI_messages_getInlineGameHighScores* obj = [[TLAPI_messages_getInlineGameHighScores alloc] init];
+    obj.n_id = n_id;
+	obj.user_id = user_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:258170395];
+	[ClassStore TLSerialize:self.n_id stream:stream];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getCommonChats
++(TLAPI_messages_getCommonChats*)createWithUser_id:(TLInputUser*)user_id max_id:(int)max_id limit:(int)limit {
+    TLAPI_messages_getCommonChats* obj = [[TLAPI_messages_getCommonChats alloc] init];
+    obj.user_id = user_id;
+	obj.max_id = max_id;
+	obj.limit = limit;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:218777796];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.max_id];
+	[stream writeInt:self.limit];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getAllChats
++(TLAPI_messages_getAllChats*)createWithExcept_ids:(NSMutableArray*)except_ids {
+    TLAPI_messages_getAllChats* obj = [[TLAPI_messages_getAllChats alloc] init];
+    obj.except_ids = except_ids;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-341307408];
+	//Serialize ShortVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.except_ids count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            if([self.except_ids count] > i) {
+                NSNumber* obj = [self.except_ids objectAtIndex:i];
+			[stream writeInt:[obj intValue]];
+            }  else
+                break;
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_help_setBotUpdatesStatus
++(TLAPI_help_setBotUpdatesStatus*)createWithPending_updates_count:(int)pending_updates_count message:(NSString*)message {
+    TLAPI_help_setBotUpdatesStatus* obj = [[TLAPI_help_setBotUpdatesStatus alloc] init];
+    obj.pending_updates_count = pending_updates_count;
+	obj.message = message;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-333262899];
+	[stream writeInt:self.pending_updates_count];
+	[stream writeString:self.message];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getWebPage
++(TLAPI_messages_getWebPage*)createWithUrl:(NSString*)url n_hash:(int)n_hash {
+    TLAPI_messages_getWebPage* obj = [[TLAPI_messages_getWebPage alloc] init];
+    obj.url = url;
+	obj.n_hash = n_hash;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:852135825];
+	[stream writeString:self.url];
+	[stream writeInt:self.n_hash];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_phone_requestCall
++(TLAPI_phone_requestCall*)createWithUser_id:(TLInputUser*)user_id random_id:(int)random_id g_a:(NSData*)g_a protocol:(TLPhoneCallProtocol*)protocol {
+    TLAPI_phone_requestCall* obj = [[TLAPI_phone_requestCall alloc] init];
+    obj.user_id = user_id;
+	obj.random_id = random_id;
+	obj.g_a = g_a;
+	obj.protocol = protocol;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1541757468];
+	[ClassStore TLSerialize:self.user_id stream:stream];
+	[stream writeInt:self.random_id];
+	[stream writeByteArray:self.g_a];
+	[ClassStore TLSerialize:self.protocol stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_phone_acceptCall
++(TLAPI_phone_acceptCall*)createWithPeer:(TLInputPhoneCall*)peer g_b:(NSData*)g_b key_fingerprint:(long)key_fingerprint protocol:(TLPhoneCallProtocol*)protocol {
+    TLAPI_phone_acceptCall* obj = [[TLAPI_phone_acceptCall alloc] init];
+    obj.peer = peer;
+	obj.g_b = g_b;
+	obj.key_fingerprint = key_fingerprint;
+	obj.protocol = protocol;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:571411232];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeByteArray:self.g_b];
+	[stream writeLong:self.key_fingerprint];
+	[ClassStore TLSerialize:self.protocol stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_phone_discardCall
++(TLAPI_phone_discardCall*)createWithPeer:(TLInputPhoneCall*)peer duration:(int)duration reason:(TLPhoneCallDiscardReason*)reason connection_id:(long)connection_id {
+    TLAPI_phone_discardCall* obj = [[TLAPI_phone_discardCall alloc] init];
+    obj.peer = peer;
+	obj.duration = duration;
+	obj.reason = reason;
+	obj.connection_id = connection_id;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:1576783324];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	[stream writeInt:self.duration];
+	[ClassStore TLSerialize:self.reason stream:stream];
+	[stream writeLong:self.connection_id];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_phone_receivedCall
++(TLAPI_phone_receivedCall*)createWithPeer:(TLInputPhoneCall*)peer {
+    TLAPI_phone_receivedCall* obj = [[TLAPI_phone_receivedCall alloc] init];
+    obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:399855457];
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_toggleDialogPin
++(TLAPI_messages_toggleDialogPin*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer {
+    TLAPI_messages_toggleDialogPin* obj = [[TLAPI_messages_toggleDialogPin alloc] init];
+    obj.flags = flags;
+	
+	obj.peer = peer;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:847887978];
+	[stream writeInt:self.flags];
+	
+	[ClassStore TLSerialize:self.peer stream:stream];
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_reorderPinnedDialogs
++(TLAPI_messages_reorderPinnedDialogs*)createWithFlags:(int)flags  order:(NSMutableArray*)order {
+    TLAPI_messages_reorderPinnedDialogs* obj = [[TLAPI_messages_reorderPinnedDialogs alloc] init];
+    obj.flags = flags;
+	
+	obj.order = order;
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-1784678844];
+	[stream writeInt:self.flags];
+	
+	//Serialize FullVector
+	[stream writeInt:0x1cb5c415];
+	{
+		NSInteger tl_count = [self.order count];
+		[stream writeInt:(int)tl_count];
+		for(int i = 0; i < (int)tl_count; i++) {
+            TLInputPeer* obj = [self.order objectAtIndex:i];
+            [ClassStore TLSerialize:obj stream:stream];
+		}
+	}
+	return [stream getOutput];
+}
+@end
+
+@implementation TLAPI_messages_getPinnedDialogs
++(TLAPI_messages_getPinnedDialogs*)create {
+    TLAPI_messages_getPinnedDialogs* obj = [[TLAPI_messages_getPinnedDialogs alloc] init];
+    
+    return obj;
+}
+- (NSData*)getData {
+	SerializedData* stream = [ClassStore streamWithConstuctor:-497756594];
+	
 	return [stream getOutput];
 }
 @end

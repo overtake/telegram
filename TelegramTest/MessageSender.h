@@ -23,6 +23,7 @@ typedef enum {
 
 +(TL_localMessage *)createOutMessage:(NSString *)msg media:(TLMessageMedia *)media conversation:(TL_conversation *)conversation  additionFlags:(int)additionFlags;
 +(int)getFutureMessageId;
++(int)getCurrentSecretMessageId;
 +(int)getFakeMessageId;
 +(void)drop;
 +(void)insertEncryptedServiceMessage:(NSString *)title chat:(TLEncryptedChat *)chat;
@@ -50,6 +51,8 @@ typedef enum {
 +(void)syncTopCategories:(void (^)(NSArray *categories))completeHandler;
 +(SSignal *)addStickerPack:(TL_messages_stickerSet *)pack;
 
-+(void)addRecentSticker:(TLDocument *)sticker ;
++(void)addRecentSticker:(TLDocument *)sticker;
+
++(void)addServiceNotification:(NSString *)message;
 
 @end

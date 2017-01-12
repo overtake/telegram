@@ -14,7 +14,7 @@
 #import "SelfDestructionController.h"
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGCaptionView.h"
 #import "TGExternalImageObject.h"
 
@@ -62,9 +62,9 @@ NSImage *fireImage() {
         self.imageView.cornerRadius = 4;
         [self.imageView setContentMode:BTRViewContentModeScaleAspectFill];
         [self.imageView setTapBlock:^{
-            PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
+            PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.channelMsgId media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
-            if(!weakSelf.item.isset)
+            if(!weakSelf.item.isset || weakSelf.item.message.dstate != DeliveryStateNormal)
                 return;
             
             object.reservedObject = weakSelf.imageView.image;

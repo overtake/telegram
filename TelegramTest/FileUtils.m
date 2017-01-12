@@ -14,7 +14,7 @@
 #include <IOKit/IOKitLib.h>
 
 #import <CoreFoundation/CoreFoundation.h>
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "NSData+Extensions.h"
 #import "TGStickerPackModalView.h"
 #import "ComposeActionAddUserToGroupBehavior.h"
@@ -66,6 +66,7 @@ NSString *const kBotInlineTypeAudio = @"audio";
 NSString *const kBotInlineTypeVideo = @"video";
 NSString *const kBotInlineTypeSticker = @"sticker";
 NSString *const kBotInlineTypeGif = @"gif";
+NSString *const kBotInlineTypeGame= @"game";
 NSString *const kBotInlineTypePhoto = @"photo";
 NSString *const kBotInlineTypeContact = @"contact";
 NSString *const kBotInlineTypeVenue = @"venue";
@@ -83,14 +84,9 @@ NSString *const kBotInlineTypeVoice = @"voice";
 + (void)showPanelWithTypes:(NSArray *)types completionHandler:(void (^)(NSArray *paths))handler forWindow:(NSWindow *)window {
     
     [[TMMediaController controller] close];
-    
-    
     NSOpenPanel* openDlg = [NSOpenPanel openPanel];
-    
-    
-    
     [openDlg setCanChooseFiles:YES];
-    [openDlg setCanChooseDirectories:NO];
+    [openDlg setCanChooseDirectories:types == nil];
     [openDlg setCanCreateDirectories:YES];
     if(types.count > 0)
         [openDlg setAllowedFileTypes:types];
@@ -240,7 +236,8 @@ NSDictionary *non_documents_mime_types() {
 void removeMessageMedia(TL_localMessage *message) {
     if(message) {
         NSString *path = mediaFilePath(message);
-        
+        if(path && message.dstate == DeliveryStateNormal && [path hasPrefix:[FileUtils path]])
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
     }
 }
 
@@ -689,6 +686,9 @@ void add_sticker_pack_by_name(TLInputStickerSet *set) {
     } errorHandler:^(id request, RpcError *error) {
         
         [TMViewController hideModalProgress];
+        if ([error.error_msg isEqualToString:@"STICKERSET_INVALID"]) {
+            alert(appName(),NSLocalizedString(@"Stickers.PackIsNotAvailable", nil));
+        }
         
     } timeout:5];
     
@@ -758,7 +758,7 @@ void open_user_by_name(NSDictionary *params) {
         
     };
     
-    if(obj) {
+    if(obj && ![obj isMin]) {
         
         perform();
         
@@ -806,7 +806,9 @@ void open_user_by_name(NSDictionary *params) {
 }
 
 void share_link(NSString *url, NSString *text) {
-    [[Telegram rightViewController] showShareLinkModalView:url text:text];
+    if (![url hasPrefix:@"@"]) {
+        [[Telegram rightViewController] showShareLinkModalView:url text:text];
+    }
 }
 
 void confirm_phone_by_link(NSString *phone, NSString *hash) {
@@ -830,6 +832,66 @@ void confirm_phone_by_link(NSString *phone, NSString *hash) {
     
 }
 
+
+void shareGameResult(NSDictionary * obj, NSArray *conversastions, BOOL openLast) {
+    [TMViewController showModalProgress];
+    
+    __block TLUser *bot = [UsersManager findUserByName:obj[@"domain"]];
+    
+    
+    dispatch_block_t dispatch = ^{
+        [TMViewController showModalProgress];
+        
+        NSMutableArray *signals = [NSMutableArray array];
+        
+        [conversastions enumerateObjectsUsingBlock:^(TL_conversation *conversation, NSUInteger idx, BOOL * _Nonnull stop) {
+            [signals addObject:[[MTNetwork instance] requestSignal:[TLAPI_messages_sendMedia createWithFlags:0 peer:conversation.inputPeer reply_to_msg_id:0 media:[TL_inputMediaGame createWithN_id:[TL_inputGameShortName createWithBot_id:bot.inputUser short_name:obj[@"game"]]] random_id:rand_long() reply_markup:nil]]];
+            
+        }];
+        
+        [[SSignal combineSignals:signals] startWithNext:^(id next) {
+            
+            [TMViewController hideModalProgressWithSuccess];
+            
+            if (openLast) {
+                [appWindow().navigationController showMessagesViewController:conversastions.lastObject];
+            }
+            
+        } error:^(id error) {
+            [TMViewController hideModalProgress];
+        } completed:^{
+            [TMViewController hideModalProgress];
+        }];
+        
+        
+    };
+    
+    
+    if (bot) {
+        dispatch();
+    } else {
+        [TMViewController showModalProgress];
+        
+        [RPCRequest sendRequest:[TLAPI_contacts_resolveUsername createWithUsername:obj[@"domain"]] successHandler:^(id request, TL_contacts_resolvedPeer * response) {
+            
+            if([response.peer isKindOfClass:[TL_peerUser class]]) {
+                bot = [response.users firstObject];
+            }
+            
+            if (bot) {
+                dispatch();
+            } else {
+                [TMViewController hideModalProgress];
+            }
+            
+            
+        } errorHandler:^(id request, RpcError *error) {
+            [TMViewController hideModalProgress];
+        }];
+    }
+
+}
+
 void determinateURLLink(NSString *link) {
     
     
@@ -837,7 +899,9 @@ void determinateURLLink(NSString *link) {
         
         NSDictionary *vars = getUrlVars(link);
         
-        if(vars[@"post"] && [vars[@"post"] intValue] > 0) {
+        if ([vars[@"domain"] hasSuffix:@"bot"] && vars[@"game"] != nil) {
+            [[Telegram rightViewController] showGameForwardView:vars];
+        } else if(vars[@"post"] && [vars[@"post"] intValue] > 0) {
             open_post(vars[@"domain"], [vars[@"post"] intValue]);
         } else {
             open_user_by_name(vars);
@@ -920,6 +984,22 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
                     
                     
                     [navigationController.messagesViewController showMessage:msg fromMsg:fromMsg flags:ShowMessageTypeReply];
+                }
+                
+                return;
+            }
+            
+            if([command isEqualToString:@"startgame"]) {
+                
+                if(vars[@"game_id"] && vars[@"start_param"]) {
+                   
+                    TL_localMessage  *msg = [[TL_localMessage alloc] init];
+                    msg.n_id = [vars[@"message_id"] intValue];
+                    msg.via_bot_id = [vars[@"via_bot_id"] intValue];
+                    
+                    [MessageSender proccessInlineKeyboardButton:[TL_keyboardButtonGame createWithText:vars[@"text"]] messagesViewController:navigationController.messagesViewController conversation:navigationController.messagesViewController.conversation message:msg handler:^(TGInlineKeyboardProccessType type) {
+                        
+                    }];
                 }
                 
                 return;
@@ -1029,9 +1109,17 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
     }
     
     
+    NSArray<NSString *> *shortDomains = @[@"telegram.me/",@"t.me/",@"telegram.dog/"];
     
-    NSRange checkRange = [link rangeOfString:@"telegram.me/"];
+    __block NSString *shortDomain = @"telegram.me/";
+    __block NSRange checkRange = NSMakeRange(NSNotFound, 0);
     
+    [shortDomains enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (((checkRange = [[link lowercaseString] rangeOfString:obj]).location != NSNotFound) && (checkRange.location == 0 || [[[link lowercaseString] substringFromIndex:checkRange.location - 1] hasPrefix:@"/"])) {
+            shortDomain = obj;
+            *stop = YES;
+        }
+    }];
     
     if(checkRange.location != NSNotFound) {
         
@@ -1065,6 +1153,11 @@ void open_link_with_controller(NSString *link, TMNavigationController *controlle
                     user[@"domain"] = [name substringToIndex:[name rangeOfString:@"?"].location];
                     
                     [user addEntriesFromDictionary:vars];
+                }
+                
+                if ([user[@"domain"] hasSuffix:@"bot"] && user[@"game"] != nil) {
+                    [[Telegram rightViewController] showGameForwardView:user];
+                    return;
                 }
                 
                 open_user_by_name(user);
@@ -1204,49 +1297,21 @@ static inline NSString *hxURLEscape(NSString *v) {
                                                                                   kCFStringEncodingUTF8));
 }
 
-BOOL zipDirectory(NSURL *directoryURL, NSString * archivePath)
+NSTask *zipDirectory(NSString *directory, NSString * archivePath)
 {
     //Delete existing zip
     if ( [[NSFileManager defaultManager] fileExistsAtPath:archivePath] ) {
         [[NSFileManager defaultManager] removeItemAtPath:archivePath error:nil];
     }
     
-    //Specify action
-    NSString *toolPath = @"/usr/bin/zip";
     
-    //Get directory contents
-    NSArray *pathsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[directoryURL path] error:nil];
+    NSTask *task = [[NSTask alloc] init];
+    [task setCurrentDirectoryPath:directory];
+    [task setLaunchPath:@"/usr/bin/zip"];
+    NSArray *argsArray = [NSArray arrayWithObjects:@"-r", @"-q", archivePath, @".", @"-i", @"*", nil];
+    [task setArguments:argsArray];
     
-    //Add arguments
-    NSMutableArray *arguments = [[NSMutableArray alloc] init];
-    [arguments insertObject:@"-r" atIndex:0];
-    [arguments insertObject:archivePath atIndex:0];
-    for ( NSString *filePath in pathsArray ) {
-        [arguments addObject:filePath]; //Maybe this would even work by specifying relative paths with ./ or however that works, since we set the working directory before executing the command
-        //[arguments insertObject:@"-j" atIndex:0];
-    }
-    
-    //Switch to a relative directory for working.
-    NSString *currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:[directoryURL path]];
-    //MTLog(@"dir %@", [[NSFileManager defaultManager] currentDirectoryPath]);
-    
-    //Create
-    NSTask *task = [[NSTask alloc] init] ;
-    [task setLaunchPath:toolPath];
-    [task setArguments:arguments];
-    
-    //Run
-    [task launch];
-    [task waitUntilExit];
-    
-    //Restore normal path
-    [[NSFileManager defaultManager] changeCurrentDirectoryPath:currentDirectory];
-    
-    //Update filesystem
-    [[NSWorkspace sharedWorkspace] noteFileSystemChanged:archivePath];
-    
-    return ([task terminationStatus] == 0);
+    return task;
 }
 
 

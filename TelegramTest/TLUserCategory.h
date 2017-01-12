@@ -59,6 +59,7 @@ typedef enum {
 - (NSAttributedString *)statusForProfile;
 
 
+
 - (NSAttributedString *)userNameTitle;
 - (NSAttributedString *)userNameProfileTitle;
 - (NSAttributedString *)userNameSearchTitle;

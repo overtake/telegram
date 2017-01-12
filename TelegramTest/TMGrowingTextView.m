@@ -273,15 +273,7 @@
 
 
 
-- (void)setContinuousSpellCheckingEnabled:(BOOL)flag
-{
-    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
-    [super setContinuousSpellCheckingEnabled: flag];
-}
 
--(BOOL)isContinuousSpellCheckingEnabled {
-    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
-}
 
 -(void)changeLayoutOrientation:(id)sender {
    
@@ -298,7 +290,15 @@
 }
 
 
+- (void)setContinuousSpellCheckingEnabled:(BOOL)flag
+{
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
+    [super setContinuousSpellCheckingEnabled: flag];
+}
 
+-(BOOL)isContinuousSpellCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
+}
 
 -(void)setGrammarCheckingEnabled:(BOOL)flag {
     

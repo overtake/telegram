@@ -15,7 +15,8 @@ typedef enum {
     TGHintViewShowTypeNone = 0,
     TGHintViewShowMentionType =1,
     TGHintViewShowHashtagType = 2,
-    TGHintViewShowBotCommandType = 3
+    TGHintViewShowBotCommandType = 3,
+    TGHintViewShowEmojiType = 4
 } TGHintViewShowType;
 
 @property (nonatomic,weak) MessagesViewController *messagesViewController;
@@ -27,12 +28,17 @@ typedef enum {
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result,id object))choiceHandler;
 
 -(SSignal *)showContextPopupWithQuery:(NSString *)bot query:(NSString *)query conversation:(TL_conversation *)conversation acceptHandler:(void (^)(TLUser *user))acceptHandler;
+
+-(void)showEmojiHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation choiceHandler:(void (^)(NSString *result,id object))choiceHandler;
+
 -(void)cancel;
 
 -(void)selectNext;
 -(void)selectPrev;
 
 -(void)hide;
+
+-(BOOL)isVisibleAndHasSelected;
 
 -(void)performSelected;
 

@@ -8,7 +8,7 @@
 
 #import "SerializedData.h"
 
-#import <MTProtoKit/MTLogging.h>
+#import <MtProtoKitMac/MTLogging.h>
 
 @implementation SerializedData
 

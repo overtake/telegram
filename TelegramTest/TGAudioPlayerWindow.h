@@ -25,7 +25,10 @@
 +(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalStyle)state navigation:(TMNavigationController *)navigation;
 +(void)showWithController:(TGAudioGlobalController *)controller;
 +(void)hide;
-+(MessageTableItemAudioDocument *)currentItem;
+
++(TGAudioGlobalController *)controller;
+
+//+(MessageTableItemAudioDocument *)currentItem;
 
 +(void)setCurrentItem:(MessageTableItemAudioDocument *)audioItem;
 

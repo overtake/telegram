@@ -10,7 +10,6 @@
 #import "TMAudioRecorder.h"
 #import "TGTextLabel.h"
 #import "TGTimer.h"
-#import "POPLayerExtras.h"
 #import "TGSendTypingManager.h"
 
 

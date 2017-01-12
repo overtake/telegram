@@ -20,8 +20,8 @@
     if(self = [super initWithObject:object]) {
         NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
         
-        [attr appendString:object withColor:GRAY_TEXT_COLOR];
-        [attr setFont:TGSystemFont(13) forRange:attr.range];
+        [attr appendString:object withColor:DARK_GRAY_TEXT_COLOR];
+        [attr setFont:TGSystemMediumFont(13) forRange:attr.range];
         
         _header = attr;
         

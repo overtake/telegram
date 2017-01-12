@@ -219,6 +219,13 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
     [self setNeedsDisplay:YES];
 }
 
+-(void)setRealMark:(TGCTextMark *)realMark {
+    if (realMark && realMark.range.location != NSNotFound) {
+        int bp = 0;
+    }
+    _realMark = realMark;
+}
+
 -(void)setSelectionRange:(NSRange)selectionRange {
     
     
@@ -449,7 +456,6 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
                 int startOffset = CTLineGetOffsetForStringIndex(line, startIndex, NULL);
                 int endOffset = CTLineGetOffsetForStringIndex(line, endIndex, NULL);
                 
-                
                 width = (endOffset -startOffset);
                 
                 CGRect runBounds = CGRectZero;
@@ -583,6 +589,8 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
 }
 
 -(int)currentIndexInLocation:(NSPoint)location {
+    if (CTFrame == nil)
+        return -1;
     
     CFArrayRef lines = CTFrameGetLines(CTFrame);
     
@@ -663,11 +671,7 @@ void (^linkOverHandle)(NSString *link, BOOL over, NSRect rect,TGCTextView *textV
         
         if([currentChar isEqualToString:@""])
             return NO;
-        
-        
-//        for (int i = 0; i < self.attributedString.length; i++) {
-//            MTLog(@"char = %@",[self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
-//        }
+
         
         BOOL valid = [[currentChar stringByTrimmingCharactersInSet:[NSCharacterSet alphanumericCharacterSet]] isEqualToString:@""];
         

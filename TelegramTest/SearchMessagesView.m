@@ -46,8 +46,6 @@
         
         self.searchField = [[TMSearchTextField alloc] initWithFrame:NSMakeRect(0, 0, NSWidth(frameRect) - 160, 30)];
         
-        self.searchField.autoresizingMask = NSViewWidthSizable;
-        
         self.searchField.wantsLayer = YES;
         
         [self addSubview:self.searchField];
@@ -143,13 +141,7 @@
         [_calendarButton setCenteredYByView:self];
         
         [self addSubview:_calendarButton];
-        
-        
-        // calendar
-       
-        
-        
-        
+
 
     }
     
@@ -164,8 +156,10 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
-    [_searchField setFrameSize:NSMakeSize(newSize.width - 200, NSHeight(_searchField.frame))];
     
+    [_searchField setFrame:NSMakeRect(0, 0, newSize.width - 200, NSHeight(_searchField.frame))];
+    [_searchField setCenterByView:self];
+    [_searchField setFrameOrigin:NSMakePoint(_searchField.frame.origin.x, 5)];
     [_calendarButton setFrameOrigin:NSMakePoint(NSMaxX(_searchField.frame) + 20, NSMinY(_calendarButton.frame))];
     
     
@@ -242,7 +236,6 @@
     [self.prevButton setBackgroundImage:_messages.count < 2 || _currentIdx >= _messages.count -1 ? image_SearchUpDisabled() : image_SearchUp() forControlState:BTRControlStateNormal];
     
     [self.nextButton setBackgroundImage:_messages.count < 2 || _currentIdx <= 0 ? image_SearchDownDisabled() : image_SearchDown() forControlState:BTRControlStateNormal];
-    
     
 }
 

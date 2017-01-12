@@ -12,6 +12,8 @@
 #import "TGEnterPasswordPanel.h"
 #import "NSString+FindURLs.h"
 #import "ASCommon.h"
+#import "TGModernConversationHistoryController.h"
+
 #define ONLINE_EXPIRE 120
 #define OFFLINE_AFTER 5
 
@@ -114,7 +116,7 @@ static int max_broadcast_users = 100;
 static int megagroup_size_max = 5000;
 static int rating_e_decay_l = 2419200;
 static int stickers_recent_limit_l = 30;
-
+static int _chat_pin_limit = 5;
 static int edit_time_limit_default = 2*24*60*60;
 
 void setMaxChatUsers(int c) {
@@ -162,6 +164,14 @@ void setMegagroupSizeMax(int b) {
 
 int megagroupSizeMax() {
     return megagroup_size_max;
+}
+
+int chat_pin_limit() {
+    return _chat_pin_limit;
+}
+
+void set_chat_pin_limit(int limit) {
+    _chat_pin_limit = MAX(5, limit);
 }
 
 - (BOOL)canBeOnline {
@@ -267,6 +277,7 @@ int megagroupSizeMax() {
 
 
 - (void)onAuthSuccess {
+    //[[NSUserDefaults standardUserDefaults] setBool:YES forKey:kPullPinnedOnce];
     [[MTNetwork instance] successAuthForDatacenter:[[MTNetwork instance] currentDatacenter]];
     [[Telegram delegate] initializeMainWindow];
     [[MTNetwork instance].updateService update];

@@ -163,7 +163,7 @@
     
     
     
-    if(NSAppKitVersionNumber >= 1485 || floor(NSAppKitVersionNumber) <= 1187)
+    if(floor(NSAppKitVersionNumber) <= 1187)
         embed_block();
     else
     {

@@ -29,7 +29,7 @@
     [super drawRect:dirtyRect];
     
     if(self.item.conversation.isVerified && !self.item.isEditable) {
-        [image_Verify() drawInRect:NSMakeRect(NSMaxX(_nameTextField.frame),NSMinY(_nameTextField.frame) , image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeHighlight fraction:1];
+        [image_Verify() drawInRect:NSMakeRect(NSMaxX(_nameTextField.frame),NSMinY(_nameTextField.frame) + 4, image_Verify().size.width, image_Verify().size.height) fromRect:NSZeroRect operation:NSCompositeCopy fraction:1];
     }
 }
 
@@ -39,7 +39,7 @@
         _nameTextField = [[TMNameTextField alloc] initWithFrame:NSZeroRect];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-        
+        [_nameTextField setSelector:@selector(profileTitle)];
         _statusTextField = [[TMStatusTextField alloc] init];
         [[_nameTextField cell] setTruncatesLastVisibleLine:YES];
         [[_nameTextField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -183,7 +183,7 @@
     
     int totalHeight = NSHeight(_nameTextField.frame) + NSHeight(_statusTextField.frame);
     
-    [_statusTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 8, roundf((newSize.height - totalHeight)/2))];
+    [_statusTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 10, roundf((newSize.height - totalHeight)/2))];
     [_nameTextField setFrameOrigin:NSMakePoint(NSMaxX(_imageView.frame) + 10, roundf((newSize.height - totalHeight)/2 + NSHeight(_statusTextField.frame)))];
     
     

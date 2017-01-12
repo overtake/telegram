@@ -146,7 +146,7 @@
             int heigth = 0;
             if (WebPGetInfo(data.bytes, data.length, &width, &heigth) && width > 100 & heigth > 100)
             {
-                [attrs addObject:[TL_documentAttributeSticker createWithAlt:@"" stickerset:[TL_inputStickerSetEmpty create]]];
+                [attrs addObject:[TL_documentAttributeSticker createWithFlags:0 alt:@"" stickerset:[TL_inputStickerSetEmpty create] mask_coords:nil]];
                 [attrs addObject:[TL_documentAttributeImageSize createWithW:width h:heigth]];
                 
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],randomId];
@@ -274,9 +274,9 @@
    
     if(isNewDocument) {
         if([self.thumbFile isKindOfClass:[TLInputFile class]]) {
-            media = [TL_inputMediaUploadedThumbDocument createWithFile:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedThumbDocument createWithFlags:0 file:self.inputFile thumb:self.thumbFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption stickers:nil];
         } else {
-            media = [TL_inputMediaUploadedDocument createWithFile:self.inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedDocument createWithFlags:0 file:self.inputFile mime_type:self.message.media.document.mime_type attributes:[self.message.media.document.serverAttributes mutableCopy] caption:self.message.media.caption stickers:nil];
         }
     } else {
         TLDocument *document = (TLDocument *)self.inputFile;
@@ -318,7 +318,7 @@
             
             
             
-            if([self.message.media.document.mime_type hasSuffix:@"webp"]) {
+            if([strongSelf.message.media.document.mime_type hasSuffix:@"webp"]) {
                 NSString *sp = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],message.media.document.n_id];
                 
                 NSString *np = [NSString stringWithFormat:@"%@/%ld.webp",[FileUtils path],[msg media].document.n_id];
@@ -342,13 +342,13 @@
                 message.media = [msg media];
             }
             
-            strongSelf.tableItem.message.media = message.media;
+            strongSelf.message.media = message.media;
             
             
-            NSString *ep = exportPath(self.message.randomId,extensionForMimetype(self.message.media.document.mime_type));
+            NSString *ep = exportPath(strongSelf.message.randomId,extensionForMimetype(strongSelf.message.media.document.mime_type));
             
             if([[NSFileManager defaultManager] fileExistsAtPath:ep isDirectory:NULL]) {
-                [[NSFileManager defaultManager] moveItemAtPath:ep toPath:mediaFilePath(self.message) error:nil];
+                [[NSFileManager defaultManager] moveItemAtPath:ep toPath:mediaFilePath(strongSelf.message) error:nil];
             }
             
             
@@ -358,12 +358,12 @@
             }
             
             
-            self.uploader = nil;
-            self.uploaderThumb = nil;
+            strongSelf.uploader = nil;
+            strongSelf.uploaderThumb = nil;
             
             message.dstate = DeliveryStateNormal;
             
-            [self.message save:YES];
+            [strongSelf.message save:YES];
             
             strongSelf.state = MessageSendingStateSent;
             

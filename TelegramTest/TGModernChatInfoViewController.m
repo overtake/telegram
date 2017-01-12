@@ -640,10 +640,6 @@
                 
             }
 
-            
-            
-            
-            
         } errorHandler:^(id request, RpcError *error) {
             [ASQueue dispatchOnMainQueue:^{
                 [self hideModalProgress];

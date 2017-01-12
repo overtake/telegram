@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "4.png"
+      "filename" : "Emoji_Food.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "4@2x.png"
+      "filename" : "Emoji_Food@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

@@ -25,7 +25,7 @@
 
 #define kDisabledBorderColor NSColorFromRGB(0xD7D7D7) // [NSColor colorWithCalibratedWhite:0.f alpha:0.2f]
 #define kDisabledBackgroundColor NSColorFromRGB(0xD7D7D7)// [NSColor clearColor]
-#define kDefaultTintColor [NSColor colorWithCalibratedRed:0.27f green:0.86f blue:0.36f alpha:1.f]
+#define kDefaultTintColor BLUE_COLOR_SELECT
 
 
 
@@ -215,7 +215,6 @@
     kBorderLineWidth :
     NSWidth(_backgroundLayer.bounds) - width - kBorderLineWidth;
     
-   
     
     return (CGRect) {
         .size.width = width,

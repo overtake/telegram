@@ -10,7 +10,6 @@
 #import "TGImageView.h"
 #import "SpacemanBlocks.h"
 #import "TGContextBotTableView.h"
-#import "MessagesBottomView.h"
 #import "TGMediaContextTableView.h"
 #import "TLBotInlineResult+Extension.h"
 #import "TGLocationRequest.h"
@@ -49,7 +48,7 @@ DYNAMIC_PROPERTY(DUser);
 
 @property (nonatomic,strong) id object;
 
-
+@property (nonatomic,strong) NSDictionary *emojiHint;
 @end
 
 @interface TGMessagesHintRowView : TMRowView
@@ -69,6 +68,17 @@ DYNAMIC_PROPERTY(DUser);
         _text = text;
         _desc = desc;
         _h = rand_long();
+    }
+    
+    return self;
+}
+
+-(id)initWithEmojiData:(NSDictionary *)emojiData {
+    if(self = [super init]) {
+        _emojiHint = emojiData;
+        _text = [NSString stringWithFormat:@"%@   %@",emojiData[@"obj"],emojiData[@"key"]];
+        _h = rand_long();
+        _result = emojiData[@"obj"];
     }
     
     return self;
@@ -146,7 +156,7 @@ DYNAMIC_PROPERTY(DUser);
     [_textField setTextColor:self.isSelected ? [NSColor whiteColor] : TEXT_COLOR];
     [_descField setTextColor:self.isSelected ? [NSColor whiteColor] : GRAY_TEXT_COLOR];
     
-    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 3 : -1) )];
+    [_textField setFrameOrigin:NSMakePoint(xOffset, roundf(NSHeight(self.frame)/2) - (_descField.isHidden ? roundf(NSHeight(_textField.frame)/2) - 2 : -1) )];
     
     [_descField setFrameOrigin:NSMakePoint(xOffset, NSMinY(_textField.frame) - NSHeight(_descField.frame) + 2)];
 }
@@ -433,6 +443,70 @@ DYNAMIC_PROPERTY(DUser);
     
 }
 
+
+-(void)showEmojiHintsWithQuery:(NSString *)query conversation:(TL_conversation *)conversation choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
+    
+    _choiceHandler = choiceHandler;
+    cancel_delayed_block(_handle);
+    [_contextRequest cancelRequest];
+    
+    if(self.messagesViewController.state != MessagesViewControllerStateNone)
+        return;
+    
+    
+    NSMutableArray *items = [[NSMutableArray alloc] init];
+    NSDictionary *emoji = [NSString emojiReplaceDictionary];
+
+    NSArray *recent = [Storage emoji];
+    
+    NSMutableDictionary *recentKeys = [NSMutableDictionary dictionary];
+    
+    [recent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        recentKeys[obj] = obj;
+    }];
+    
+    
+    NSMutableArray *recentlyUsed = [NSMutableArray array];
+    
+    [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        
+        if((query.length > 0 && [key rangeOfString:[query lowercaseString]].location != NSNotFound)) {
+            [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:@{@"key":key,@"obj":obj}]];
+        } else if(query.length == 0) {
+            if([obj isEqualToString:recentKeys[obj]]) {
+                [recentlyUsed addObject:@{@"key":key,@"obj":obj}];
+            }
+        }
+        
+    }];
+    
+    [recentlyUsed sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSUInteger index1 = [recent indexOfObject:obj1[@"obj"]];
+        NSUInteger index2 = [recent indexOfObject:obj2[@"obj"]];
+        return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        
+    }];
+    
+    [recentlyUsed enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
+    }];
+    
+
+    
+    [self setCurrentTableView:_tableView];
+    
+    [_tableView removeAllItems:YES];
+    
+    [_tableView insert:items startIndex:0 tableRedraw:YES];
+    
+    if(items.count > 0)
+        [self show:NO selectNext:NO];
+    else
+        [self hide];
+    
+}
+
 -(void)showMentionPopupWithQuery:(NSString *)query conversation:(TL_conversation *)conversation chat:(TLChat *)chat allowInlineBot:(BOOL)allowInlineBot allowUsernameless:(BOOL)allowUsernameless choiceHandler:(void (^)(NSString *result,id object))choiceHandler {
     
     _choiceHandler = choiceHandler;
@@ -469,9 +543,6 @@ DYNAMIC_PROPERTY(DUser);
         
     }
     
-    
-    
-    
     NSArray *users = chat ? [UsersManager findUsersByMention:query withUids:uids acceptContextBots:NO acceptNonameUsers:allowUsernameless && ( self.messagesViewController.state != MessagesViewControllerStateEditMessage || (self.messagesViewController.editTemplate.editMessage.media == nil || [self.messagesViewController.editTemplate.editMessage.media isKindOfClass:[TL_messageMediaWebPage class]]))] : nil;
     
     
@@ -506,36 +577,6 @@ DYNAMIC_PROPERTY(DUser);
             
         }];
         
-        
-        
-        //        __block NSMutableDictionary *bots;
-        //
-        //        [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        //
-        //            bots = [[transaction objectForKey:@"bots" inCollection:@"inlinebots"] mutableCopy];
-        //
-        //        }];
-        //
-        //        [bots enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, NSDictionary *bot, BOOL * _Nonnull stop) {
-        //
-        //            int dateUsed = [bot[@"date"] intValue];
-        //            int botId = [bot[@"id"] intValue];
-        //
-        //            TLUser *user = [[UsersManager sharedManager] find:botId];
-        //            //two weeks
-        //            if(user && dateUsed + 14*60*60*24 > [[MTNetwork instance] getTime] && ([[user.username lowercaseString] hasPrefix:[query lowercaseString]] || query.length == 0)) {
-        //                [botUsers addObject:user];
-        //            }
-        //
-        //        }];
-        //
-        //        [botUsers sortUsingComparator:^NSComparisonResult(TLUser *obj1, TLUser *obj2) {
-        //
-        //            NSComparisonResult result = [bots[@(obj1.n_id)][@"date"] compare:bots[@(obj2.n_id)][@"date"]];
-        //
-        //            return result == NSOrderedAscending ? NSOrderedDescending : result == NSOrderedDescending ? NSOrderedAscending : NSOrderedSame;
-        //
-        //        }];
         
         
         users = [botUsers arrayByAddingObjectsFromArray:users];
@@ -858,12 +899,11 @@ static NSMutableDictionary *inlineBotsExceptions;
     
 }
 
-
-
--(void)show:(BOOL)animated {
+-(void)show:(BOOL)animated selectNext:(BOOL)selectNext {
     if(self.alphaValue == 1.0f && !self.isHidden) {
         [self updateFrames:YES];
-        [self selectNext];
+        if(selectNext)
+            [self selectNext];
         return;
     }
     
@@ -884,8 +924,12 @@ static NSMutableDictionary *inlineBotsExceptions;
     }
     
     [self updateFrames:NO];
-    
-    [self selectNext];
+    if(selectNext)
+        [self selectNext];
+}
+
+-(void)show:(BOOL)animated {
+    [self show:animated selectNext:YES];
 }
 
 -(void)updateFrames:(BOOL)animated {
@@ -920,7 +964,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     
 }
 
-
+-(BOOL)isVisibleAndHasSelected {
+    return !self.isHidden && self.currentTableView.selectedItem != nil;
+}
 
 
 -(void)hide {
@@ -975,7 +1021,6 @@ static NSMutableDictionary *inlineBotsExceptions;
         
         ComposeActionCustomBehavior *behavior = (ComposeActionCustomBehavior *) action.behavior;
         
-        weak();
         
         [behavior setComposeDone:^{
             //[weakSelf.messagesViewController.bottomView updateText];
@@ -1014,6 +1059,8 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     [self hide:YES];
 }
+
+
 
 -(void)selectNext {
     
@@ -1130,9 +1177,9 @@ static NSMutableDictionary *inlineBotsExceptions;
     
     NSUInteger originalLength = string.length;
     
-    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound) {
+    while ((range = [string rangeOfString:@"@"]).location != NSNotFound || (range = [string rangeOfString:@"#"]).location != NSNotFound || (range = [string rangeOfString:@"/"]).location != NSNotFound || (range = [string rangeOfString:@":"]).location != NSNotFound) {
         
-        type = [[string substringWithRange:range] isEqualToString:@"@"] ? TGHintViewShowMentionType : ([[string substringWithRange:range] isEqualToString:@"#"] ? TGHintViewShowHashtagType : TGHintViewShowBotCommandType);
+        type = [[string substringWithRange:range] isEqualToString:@"@"] ? TGHintViewShowMentionType : ([[string substringWithRange:range] isEqualToString:@"#"] ? TGHintViewShowHashtagType : ([[string substringWithRange:range] isEqualToString:@":"] ? TGHintViewShowEmojiType :TGHintViewShowBotCommandType));
         
         search = [string substringFromIndex:range.location + 1];
         

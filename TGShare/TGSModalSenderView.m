@@ -261,9 +261,9 @@
             id media;
             
             if(operation.uploadType == UploadImageType)
-                media = [TL_inputMediaUploadedPhoto createWithFile:file caption:@""];
+                media = [TL_inputMediaUploadedPhoto createWithFlags:0 file:file caption:@"" stickers:nil];
             else
-                media = [TL_inputMediaUploadedDocument createWithFile:file mime_type:mimetypefromExtension([path pathExtension]) attributes:[@[[TL_documentAttributeFilename createWithFile_name:[path lastPathComponent]]] mutableCopy] caption:@""];
+                media = [TL_inputMediaUploadedDocument createWithFlags:0 file:file mime_type:mimetypefromExtension([path pathExtension]) attributes:[@[[TL_documentAttributeFilename createWithFile_name:[path lastPathComponent]]] mutableCopy] caption:@"" stickers:nil];
             
             [self performMediaRequest:media rowItem:rowItem path:path];
             

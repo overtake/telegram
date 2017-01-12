@@ -27,7 +27,7 @@
         {
             sticker = stickers[0];
             
-            TL_documentAttributeSticker *s_attr = (TL_documentAttributeSticker *) [sticker attributeWithClass:[TL_documentAttributeSticker class]];
+            TL_documentAttributeSticker *s_attr = sticker.stickerAttr;
             
             _inputSet = s_attr.stickerset;
             

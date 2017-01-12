@@ -42,7 +42,7 @@
             
             [author appendString:webpage.author withColor:DARK_BLACK];
             
-            [author setFont:TGSystemMediumFont(13) forRange:author.range];
+            [author setFont:[SettingsArchiver fontMedium13] forRange:author.range];
             
           //  [author addAttribute:NSParagraphStyleAttributeName value:style range:author.range];
             
@@ -57,7 +57,7 @@
             NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
             
             [title appendString:webpage.title withColor:[NSColor blackColor]];
-            [title setFont:TGSystemMediumFont(13) forRange:title.range];
+            [title setFont:[SettingsArchiver fontMedium13] forRange:title.range];
             
             _title = title;
         }
@@ -65,7 +65,7 @@
         
         [siteName appendString:webpage.site_name ? webpage.site_name : webpage.document ? NSLocalizedString(webpage.type, nil) : @"Link Preview" withColor:LINK_COLOR];
 
-        [siteName setFont:TGSystemMediumFont(13) forRange:siteName.range];
+        [siteName setFont:[SettingsArchiver fontMedium13] forRange:siteName.range];
       //  [siteName addAttribute:NSParagraphStyleAttributeName value:style range:siteName.range];
         _siteName = siteName;
         
@@ -75,8 +75,15 @@
             
             NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] init];
             
-            [desc appendString:webpage.n_description withColor:NSColorFromRGB(0x000000)];
-            [desc setFont:TGSystemFont(13) forRange:desc.range];
+            NSString *trimmedDesc = webpage.n_description;
+            static const int maxDesc = 300;
+            if (trimmedDesc.length > maxDesc) {
+                trimmedDesc = [trimmedDesc substringWithRange:NSMakeRange(0, MIN(maxDesc,trimmedDesc.length))];
+                trimmedDesc = [trimmedDesc stringByAppendingString:@"..."];
+            }
+            
+            [desc appendString:trimmedDesc withColor:NSColorFromRGB(0x000000)];
+            [desc setFont:[SettingsArchiver font13] forRange:desc.range];
             
             
             NSMutableParagraphStyle *style = [NSMutableParagraphStyle new];
@@ -86,13 +93,14 @@
             [desc addAttribute:NSParagraphStyleAttributeName value:style range:desc.range];
             
             
+            
             NSString *t = webpage.title.length > 0 ? webpage.title : webpage.author;
             
             if(t.length > 0 && _author == nil)  {
                 NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
                 
                 [title appendString:[NSString stringWithFormat:@"%@\n",t] withColor:NSColorFromRGB(0x000000)];
-                [title setFont:TGSystemMediumFont(13) forRange:title.range];
+                [title setFont:[SettingsArchiver fontMedium13] forRange:title.range];
                 
                 
                 [desc insertAttributedString:title atIndex:0];

@@ -125,13 +125,7 @@
                value = "responder">
             </PersistentString>
             <PersistentString
-               value = "result.modifierFlags">
-            </PersistentString>
-            <PersistentString
-               value = "result.window">
-            </PersistentString>
-            <PersistentString
-               value = "result.keyCode">
+               value = "incomingEvent.keyCode">
             </PersistentString>
             <PersistentString
                value = "result.responder">
@@ -535,13 +529,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "+[Storage findWebpage:]:Storage.m">
+         contextName = "__57-[ChatHistoryController addAndSendMessages:senders:sync:]_block_invoke:ChatHistoryController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesBottomView setTemplate:checkElements:]:MessagesBottomView.m">
       </ContextState>
       <ContextState
          contextName = "__30-[TGVTVideoView displayFrame:]_block_invoke:TGVTVideoView.m">
+      </ContextState>
+      <ContextState
+         contextName = "+[Storage findWebpage:]:Storage.m">
       </ContextState>
       <ContextState
          contextName = "-[RBLPopover showRelativeToRect:ofView:preferredEdge:]:RBLPopover.m">
@@ -602,6 +599,9 @@
                value = "currentViewerItem.imageObject">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[MessagesUtils conversationLastText:conversation:]:MessagesUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[TL_userFull unserialize:]:MTProto.m">
@@ -759,6 +759,17 @@
       </ContextState>
       <ContextState
          contextName = "-[ChannelImportantFilter remoteRequest:max_id:hole:callback:]:ChannelImportantFilter.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGPhotoViewer requestShowRect:]:TGPhotoViewer.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.previewObject.msg_id">
+            </PersistentString>
+            <PersistentString
+               value = "item.previewObject">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellMpegView setCellState:animated:]:MessageTableCellMpegView.m">
@@ -984,10 +995,13 @@
          contextName = "__32-[MessagesBottomView setDialog:]_block_invoke140:MessagesBottomView.m">
       </ContextState>
       <ContextState
-         contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke_3:UsersManager.m">
+         contextName = "__32-[MTNetwork _processWorkerQueue]_block_invoke_2:MTNetwork.m">
       </ContextState>
       <ContextState
          contextName = "+[SearchItem hash:]:SearchItem.m">
+      </ContextState>
+      <ContextState
+         contextName = "__41-[UsersManager add:withCustomKey:update:]_block_invoke_3:UsersManager.m">
       </ContextState>
       <ContextState
          contextName = "__67-[TGMessagesHintView showContextPopupWithQuery:query:conversation:]_block_invoke_4:TGMessagesHintView.m">
@@ -1063,6 +1077,12 @@
                value = "self.chat.photo">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__31-[TGHotPacksContainerView show]_block_invoke.145:TGHotPacksContainerView.m">
+      </ContextState>
+      <ContextState
+         contextName = "__98+[MessageSender proccessInlineKeyboardButton:messagesViewController:conversation:message:handler:]_block_invoke.627:MessageSender.m">
       </ContextState>
       <ContextState
          contextName = "__54-[TGMessagesHintView showContextPopupWithQuery:query:]_block_invoke368:TGMessagesHintView.m">
@@ -1368,6 +1388,9 @@
          contextName = "-[TGPhotoViewer performNextItem]:TGPhotoViewer.m">
       </ContextState>
       <ContextState
+         contextName = "__52-[HistoryFilter remoteRequest:max_id:hole:callback:]_block_invoke.154:HistoryFilter.m">
+      </ContextState>
+      <ContextState
          contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke.666:Storage.m">
          <PersistentStrings>
             <PersistentString
@@ -1478,16 +1501,19 @@
                value = "object">
             </PersistentString>
             <PersistentString
-               value = "self.isForwadedMessage">
-            </PersistentString>
-            <PersistentString
                value = "self.message.media.document.mime_type">
             </PersistentString>
             <PersistentString
-               value = "self.user ">
+               value = "object.from_id">
             </PersistentString>
             <PersistentString
-               value = "object.from_id">
+               value = "self.isForwadedMessage">
+            </PersistentString>
+            <PersistentString
+               value = "self.message.media.caption">
+            </PersistentString>
+            <PersistentString
+               value = "self.user ">
             </PersistentString>
             <PersistentString
                value = "self.message.fwd_from_id">
@@ -1582,6 +1608,9 @@
                value = "response.updates">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[TMTypingObject addMember:withAction:]:TMTypingObject.m">
       </ContextState>
       <ContextState
          contextName = "__46-[TGPVMediaBehavior load:next:limit:callback:]_block_invoke_2:TGPVMediaBehavior.m">
@@ -1973,6 +2002,9 @@
          contextName = "-[TGProccessUpdates isLastUpdate:inUpdates:]:TGProccessUpdates.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModalForwardView okAction]:TGModalForwardView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellMpegView _didScrolledTableView:]:MessageTableCellMpegView.m">
          <PersistentStrings>
             <PersistentString
@@ -1984,16 +2016,16 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessageSenderItem performRequest]:MessageSenderItem.m">
-      </ContextState>
-      <ContextState
          contextName = "__72-[Storage loadChannelMessages:localMaxId:limit:next:maxDate:filterMask:]_block_invoke:Storage.m">
       </ContextState>
       <ContextState
-         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke.365:NewLoginViewController.m">
+         contextName = "-[MessageSenderItem performRequest]:MessageSenderItem.m">
       </ContextState>
       <ContextState
          contextName = "-[TGModernUserViewController configure]:TGModernUserViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__47-[NewLoginViewController getSMSCodeSendRequest]_block_invoke.365:NewLoginViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageTableCellContainerView setSelected:animation:]:MessageTableCellContainerView.m">
@@ -2057,6 +2089,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "+[TGModernESGViewController allSets]:TGModernESGViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "sets">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2390,6 +2430,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGBottomActionsView setInlineProgress:]:TGBottomActionsView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_progressView.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernEncryptedUpdates proccessServiceMessage:withLayer:]:TGModernEncryptedUpdates.m">
       </ContextState>
       <ContextState
@@ -2498,6 +2546,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TLUser(Category) statusForChatHeader]:TLUserCategory.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.lastSeen">
+            </PersistentString>
+            <PersistentString
+               value = "self.status.lastSeenTime">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[StickerSenderItem performRequest]:StickerSenderItem.m">
          <PersistentStrings>
             <PersistentString
@@ -2506,15 +2565,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__41-[TGDocumentsController setConversation:]_block_invoke:TGDocumentsMediaTableView.m">
+      </ContextState>
+      <ContextState
          contextName = "__37-[TGUpdateChannels addWaitingUpdate:]_block_invoke103:TGUpdateChannels.m">
          <PersistentStrings>
             <PersistentString
                value = "updates">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__41-[TGDocumentsController setConversation:]_block_invoke:TGDocumentsMediaTableView.m">
       </ContextState>
       <ContextState
          contextName = "-[POPAnimator _renderTime:item:]:POPAnimator.mm">
@@ -2554,6 +2613,9 @@
          <PersistentStrings>
             <PersistentString
                value = "self.view.bounds.size.height">
+            </PersistentString>
+            <PersistentString
+               value = "animNewFrom">
             </PersistentString>
             <PersistentString
                value = "newViewController.navigationBarView">
@@ -2664,6 +2726,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "+[TGAudioPlayerWindow controller]:TGAudioPlayerWindow.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[self instance].audioController">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[SearchMessagesView initWithFrame:]:SearchMessagesView.m">
          <PersistentStrings>
             <PersistentString
@@ -2751,10 +2821,10 @@
                value = "selectedDate.timeIntervalSince1970">
             </PersistentString>
             <PersistentString
-               value = "obj.date">
+               value = "response.messages">
             </PersistentString>
             <PersistentString
-               value = "response.messages">
+               value = "obj.date">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -2809,10 +2879,10 @@
          contextName = "-[MessageTableCell rightMouseDown:]:MessageTableCell.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.item.fromUser">
+               value = "self.item.messageSender">
             </PersistentString>
             <PersistentString
-               value = "self.item.messageSender">
+               value = "self.item.fromUser">
             </PersistentString>
             <PersistentString
                value = "self.item.message">
@@ -2968,6 +3038,9 @@
                value = "listeners">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__33-[MTNetwork checkServerChangelog]_block_invoke:MTNetwork.m">
       </ContextState>
       <ContextState
          contextName = "+[NSString(NSString_FindURLs) textCheckingResultsForText:highlightMentionsAndTags:highlightCommands:]:NSString+FindURLs.m">
@@ -3170,6 +3243,14 @@
          contextName = "-[TGMessagesStickerImageObject initDownloadItem]:TGMessagesStickerImageObject.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModalView setFrameSize:]:TGModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "modals">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGModernChatInfoViewController checkSupergroup]:TGModernChatInfoViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -3249,10 +3330,10 @@
          contextName = "__33-[DocumentSenderItem sendMessage]_block_invoke:DocumentSenderItem.m">
          <PersistentStrings>
             <PersistentString
-               value = "strongSelf.message.media.document">
+               value = "message.media.document.size">
             </PersistentString>
             <PersistentString
-               value = "message.media.document.size">
+               value = "strongSelf.message.media.document">
             </PersistentString>
             <PersistentString
                value = "[msg media].document.size">
@@ -3463,10 +3544,10 @@
          contextName = "-[MessagesViewController loadhistory:toEnd:prev:isFirst:]:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.historyController.prevState">
+               value = "self.conversation">
             </PersistentString>
             <PersistentString
-               value = "self.conversation">
+               value = "self.historyController.prevState">
             </PersistentString>
             <PersistentString
                value = "prev">
@@ -3703,6 +3784,12 @@
          contextName = "-[ForwardSenterItem senderFlags]:ForwardSenterItem.m">
          <PersistentStrings>
             <PersistentString
+               value = "msg.reply_markup">
+            </PersistentString>
+            <PersistentString
+               value = "msg.via_bot_id">
+            </PersistentString>
+            <PersistentString
                value = "msg.isPost">
             </PersistentString>
          </PersistentStrings>
@@ -3728,7 +3815,7 @@
          contextName = "__51-[NewContactsManager importCloudContacts:callback:]_block_invoke:NewContactsManager.m">
          <PersistentStrings>
             <PersistentString
-               value = "importedSet.count">
+               value = "abset.count">
             </PersistentString>
             <PersistentString
                value = "count">
@@ -3737,10 +3824,10 @@
                value = "import">
             </PersistentString>
             <PersistentString
-               value = "changedSet.count">
+               value = "importedSet.count">
             </PersistentString>
             <PersistentString
-               value = "abset.count">
+               value = "changedSet.count">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -3838,6 +3925,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGImageView mouseDown:]:TGImageView.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TL_outDocument unserialize:]:TL_outDocument.m">
       </ContextState>
       <ContextState
@@ -3854,6 +3944,9 @@
       </ContextState>
       <ContextState
          contextName = "__join_group_by_hash_block_invoke:FileUtils.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGAudioGlobalController nextTrack]:TGAudioGlobalController.m">
       </ContextState>
       <ContextState
          contextName = "-[PrivacyArchiver _save]:PrivacyArchiver.m">
@@ -3988,6 +4081,14 @@
             </PersistentString>
             <PersistentString
                value = "item.itemCount">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__37-[HistoryFilter filterAndAdd:latest:]_block_invoke:HistoryFilter.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "filterItems">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4219,6 +4320,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__30-[TGSendTypingManager perform]_block_invoke:TGSendTypingManager.m">
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableItemAudio initWithObject:]:MessageTableItemAudio.m">
          <PersistentStrings>
             <PersistentString
@@ -4269,10 +4373,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__39-[SearchViewController searchByString:]_block_invoke_3:SearchViewController.m">
+         contextName = "-[MessagesViewController findMessageItemById:randomId:]:MessagesViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.messagesKeys">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__33-[PhoneChangeController loadView]_block_invoke103:PhoneChangeController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__39-[SearchViewController searchByString:]_block_invoke_3:SearchViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TGProccessUpdates proccessStatefulMessage:needSave:]:TGProccessUpdates.m">
@@ -4580,10 +4692,10 @@
                value = "obj.fake">
             </PersistentString>
             <PersistentString
-               value = "obj.chat">
+               value = "obj.isAddToList">
             </PersistentString>
             <PersistentString
-               value = "obj.isAddToList">
+               value = "obj.chat">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4630,6 +4742,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.isHidden">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__49-[MTTcpTransport _requestTransactionFromDelegate]_block_invoke_3:MTTcpTransport.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "transaction.payload">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -4804,6 +4924,14 @@
          contextName = "__59-[TGStickersSettingsViewController tableViewDidChangeOrder]_block_invoke368:TGStickersSettingsViewController.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGModernMessagesBottomView setInputTemplate:animated:]:TGModernMessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "inputTemplate.attributedString">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__32-[MessagesManager TGsetMessage:]_block_invoke:MessagesManager.m">
       </ContextState>
       <ContextState
@@ -4906,10 +5034,10 @@
                value = "self.item.downloadItem">
             </PersistentString>
             <PersistentString
-               value = "self.progressView.isHidden">
+               value = "self.item.downloadListener">
             </PersistentString>
             <PersistentString
-               value = "self.item.downloadListener">
+               value = "self.progressView.isHidden">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5026,13 +5154,13 @@
          contextName = "-[TGTextLabel setText:maxWidth:needsContentUpdate:]:TGTextLabel.m">
          <PersistentStrings>
             <PersistentString
-               value = "CTLineGetTypographicBounds(_line, NULL, NULL, NULL)">
-            </PersistentString>
-            <PersistentString
                value = "_textLayer.frame">
             </PersistentString>
             <PersistentString
                value = "_textLayer">
+            </PersistentString>
+            <PersistentString
+               value = "CTLineGetTypographicBounds(_line, NULL, NULL, NULL)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5237,6 +5365,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__55-[TGMediaCounterLoader loadWithConversation:inputPeer:]_block_invoke.80:TGSProfileMediaRowView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_commonCounter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__69-[DialogsManager markChannelMessagesAsRead:max_id:completionHandler:]_block_invoke_3:DialogsManager.m">
       </ContextState>
       <ContextState
@@ -5335,6 +5471,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__33-[TGHotStickerPackView redrawRow]_block_invoke:TGHotPacksContainerView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "copy.objects">
+            </PersistentString>
+            <PersistentString
+               value = "item.objects">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__46-[TMCollectionPageController setConversation:]_block_invoke:TMCollectionPageController.m">
       </ContextState>
       <ContextState
@@ -5422,15 +5569,15 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "__85-[MessagesViewController showMessage:fromMsgId:animated:selectText:switchDiscussion:]_block_invoke_2:MessagesViewController.m">
-      </ContextState>
-      <ContextState
          contextName = "-[TGContactSelfUserRowView initWithFrame:]:TGContactSelfUserRowView.m">
          <PersistentStrings>
             <PersistentString
                value = "frameRect">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__85-[MessagesViewController showMessage:fromMsgId:animated:selectText:switchDiscussion:]_block_invoke_2:MessagesViewController.m">
       </ContextState>
       <ContextState
          contextName = "-[TMTableView _didScrolledTableView:]:TMTableView.mm">
@@ -5510,6 +5657,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__38-[TGModalView enableCancelAndOkButton]_block_invoke.84:TGModalView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_cancel">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGCalendarView monthDay:]:TGCalendarView.m">
          <PersistentStrings>
             <PersistentString
@@ -5552,6 +5707,14 @@
       </ContextState>
       <ContextState
          contextName = "__98+[MessageSender proccessInlineKeyboardButton:messagesViewController:conversation:message:handler:]_block_invoke:MessageSender.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "message.fromUser">
+            </PersistentString>
+            <PersistentString
+               value = "message.via_bot_id">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[Storage insertMessages:completeHandler:]:Storage.m">
@@ -5825,10 +5988,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[TMGrowingTextView validateUserInterfaceItem:]:TMGrowingTextView.m">
+         contextName = "-[MessageTableCellAudioView playerDidChangeTime:]:MessageTableCellAudioView.m">
          <PersistentStrings>
             <PersistentString
-               value = "[anItem action];">
+               value = "controller.currentItem">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -5853,15 +6016,23 @@
          contextName = "__23-[DownloadItem notify:]_block_invoke_2:DownloadItem.m">
       </ContextState>
       <ContextState
+         contextName = "-[TMGrowingTextView validateUserInterfaceItem:]:TMGrowingTextView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[anItem action];">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[MTProto initWithContext:datacenterId:]:MTProto.m">
+      </ContextState>
+      <ContextState
          contextName = "-[TGMessagesHintRowView redrawRow]:TGMessagesHintView.m">
          <PersistentStrings>
             <PersistentString
                value = "_descField.isHidden">
             </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[MTProto initWithContext:datacenterId:]:MTProto.m">
       </ContextState>
       <ContextState
          contextName = "-[MessageInputGrowingTextView checkAndReplaceCustomMentions]:MessageInputGrowingTextView.m">
@@ -6090,6 +6261,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGImageAttachmentsController removeItem:animated:]:TGImageAttachmentsController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.delegate">
+            </PersistentString>
+            <PersistentString
+               value = "animated">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__45-[MessageTableCellContactView initWithFrame:]_block_invoke:MessageTableCellContactView.m">
          <PersistentStrings>
             <PersistentString
@@ -6160,6 +6342,14 @@
       </ContextState>
       <ContextState
          contextName = "__35-[TGPVImageObject initDownloadItem]_block_invoke:TGPVImageObject.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGModernMessagesBottomView textViewHeightChanged:height:animated:]:TGModernMessagesBottomView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "topSize">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "__52-[ChatHistoryController notificationReceiveMessage:]_block_invoke_3:ChatHistoryController.m">
@@ -6402,9 +6592,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[MessagesViewController updateMessageTemplate:]:MessagesViewController.m">
-      </ContextState>
-      <ContextState
          contextName = "__49-[TGPasswosdMainViewController rebuildController]_block_invoke262:TGPasswosdMainViewController.m">
       </ContextState>
       <ContextState
@@ -6439,19 +6626,10 @@
          contextName = "__86-[Storage loadMessages:min_id:max_id:minDate:maxDate:limit:next:filterMask:isChannel:]_block_invoke:Storage.m">
          <PersistentStrings>
             <PersistentString
-               value = "holeSql">
-            </PersistentString>
-            <PersistentString
-               value = "next">
-            </PersistentString>
-            <PersistentString
-               value = "allHoles">
+               value = "limit">
             </PersistentString>
             <PersistentString
                value = "conversationId">
-            </PersistentString>
-            <PersistentString
-               value = "sql">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -6598,6 +6776,14 @@
          contextName = "__40-[TGChannelsPolling launchTimer:repeat:]_block_invoke_2:TGChannelsPolling.m">
       </ContextState>
       <ContextState
+         contextName = "__43-[TGAudioGlobalController setProgressView:]_block_invoke:TGAudioGlobalController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "weakSelf.currentTime">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGImageObject _didDownloadImage:]:TGImageObject.m">
       </ContextState>
       <ContextState
@@ -6727,6 +6913,9 @@
       </ContextState>
       <ContextState
          contextName = "__32-[NewLoginViewController signIn]_block_invoke227:NewLoginViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__42-[_TMSearchTextField becomeFirstResponder]_block_invoke:TMSearchTextField.m">
       </ContextState>
       <ContextState
          contextName = "__69-[MTDiscoverDatacenterAddressAction askForAnAddressDatacenterWithId:]_block_invoke:MTDiscoverDatacenterAddressAction.m">
@@ -6912,6 +7101,14 @@
          contextName = "__26-[TGCompressGifItem start]_block_invoke_247:TGCompressGifItem.m">
       </ContextState>
       <ContextState
+         contextName = "+[TMAvatarImageView generateTextAvatar:size:text:type:font:offsetY:corners:]:TMAvatarImageView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TMTableView initialize]:TMTableView.mm">
          <PersistentStrings>
             <PersistentString
@@ -6962,6 +7159,17 @@
          contextName = "__35-[TGInputMessageTemplate saveForce]_block_invoke:TGInputMessageTemplate.m">
       </ContextState>
       <ContextState
+         contextName = "-[TL_localMessage unread]:TL_localMessage.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.conversation.read_inbox_max_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.conversation.read_outbox_max_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[TGReplyObject initWithReplyMessage:]:TGReplyObject.m">
          <PersistentStrings>
             <PersistentString
@@ -6987,6 +7195,9 @@
                value = "self.navigationViewController.viewControllerStack">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__shareGameResult_block_invoke.662:FileUtils.m">
       </ContextState>
       <ContextState
          contextName = "-[TGUpdateChannels failUpdateWithChannelId:limit:withCallback:errorCallback:]:TGUpdateChannels.m">
@@ -7026,6 +7237,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.filter.botHole.max_id">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[NoMessagesView setConversation:]:NoMessagesView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "conversation.type">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -7128,6 +7347,9 @@
             <PersistentString
                value = "_selectedItem">
             </PersistentString>
+            <PersistentString
+               value = "packItem.packId">
+            </PersistentString>
          </PersistentStrings>
       </ContextState>
       <ContextState
@@ -7220,10 +7442,10 @@
          contextName = "__39-[SearchViewController searchByString:]_block_invoke_2:SearchViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "self.type">
+               value = "tags">
             </PersistentString>
             <PersistentString
-               value = "tags">
+               value = "self.type">
             </PersistentString>
             <PersistentString
                value = "self.type &amp; SearchTypeGlobalUsers">
@@ -7364,6 +7586,17 @@
          contextName = "-[TGRaceEmoji initWithFrame:emoji:]:TGRaceEmoji.m">
       </ContextState>
       <ContextState
+         contextName = "-[TGMessagesHintView showEmojiHintsWithQuery:conversation:choiceHandler:]:TGMessagesHintView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "result">
+            </PersistentString>
+            <PersistentString
+               value = "emoji">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__46-[PhotoCollectionImageObject initDownloadItem]_block_invoke:PhotoCollectionImageObject.m">
          <PersistentStrings>
             <PersistentString
@@ -7450,13 +7683,13 @@
                value = "((TelegramWindow *)[NSApp mainWindow]).navigationController">
             </PersistentString>
             <PersistentString
-               value = "self.controller.navigationViewController">
+               value = "self.field">
             </PersistentString>
             <PersistentString
                value = "self.controller.navigationViewController.viewControllerStack">
             </PersistentString>
             <PersistentString
-               value = "self.field">
+               value = "self.controller">
             </PersistentString>
             <PersistentString
                value = "[NSApp mainWindow]">
@@ -7765,6 +7998,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGCTextView setRealMark:]:TGCTextView.m">
+      </ContextState>
+      <ContextState
          contextName = "__49-[TGProccessUpdates uptodateWithConnectionState:]_block_invoke_2:TGProccessUpdates.m">
          <PersistentStrings>
             <PersistentString
@@ -7798,16 +8034,16 @@
          contextName = "-[TGGifSearchRowView redrawRow]:TGMediaContextTableView.m">
          <PersistentStrings>
             <PersistentString
-               value = "item.gifs.count">
+               value = "self.subviews.count">
             </PersistentString>
             <PersistentString
                value = "self.subviews.count ">
             </PersistentString>
             <PersistentString
-               value = "self.subviews.count">
+               value = "self.rowItem.table">
             </PersistentString>
             <PersistentString
-               value = "self.rowItem.table">
+               value = "item.gifs.count">
             </PersistentString>
             <PersistentString
                value = "self.rowItem.table.frame">
@@ -7925,6 +8161,12 @@
       </ContextState>
       <ContextState
          contextName = "+[SharedManager proccessGlobalResponse:]:SharedManager.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGStickerPackEmojiController reload:]:TGStickerPackEmojiController.m">
+      </ContextState>
+      <ContextState
+         contextName = "__33-[TGAudioPlayerListView loadNext]_block_invoke:TGAudioPlayerListView.m">
       </ContextState>
       <ContextState
          contextName = "-[DownloadExternalOperation start:selector:]:DownloadExternalOperation.m">
@@ -8100,6 +8342,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[TGAudioPlayerListView selectPrev]_block_invoke:TGAudioPlayerListView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_fullList">
+            </PersistentString>
+            <PersistentString
+               value = "_list">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__57-[MessagesViewController messagTableEditedMessageUpdate:]_block_invoke_3:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -8144,6 +8397,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[TGGameObject makeSize:]:TGGameObject.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_descSize">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "__33-[TGImageObject initDownloadItem]_block_invoke:TGImageObject.m">
          <PersistentStrings>
             <PersistentString
@@ -8170,6 +8431,9 @@
                value = "media.document.mime_type">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__55-[TGMediaCounterLoader loadWithConversation:inputPeer:]_block_invoke.76:TGSProfileMediaRowView.m">
       </ContextState>
       <ContextState
          contextName = "+[TL_localMessage convertReceivedMessage:]:TL_localMessage.m">
@@ -8221,6 +8485,14 @@
       </ContextState>
       <ContextState
          contextName = "-[MessageTablecellAudioDocumentView setItem:]:MessageTablecellAudioDocumentView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[TGAudioGlobalController globalController:self.messagesViewController.navigationViewController].currentItem">
+            </PersistentString>
+            <PersistentString
+               value = "[TGAudioGlobalController globalController:self.messagesViewController.navigationViewController]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[TGImageView setImage:]:TGImageView.m">
@@ -8248,6 +8520,23 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[MessageTableCellAudioView updateCellState:]:MessageTableCellAudioView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.currentItem">
+            </PersistentString>
+            <PersistentString
+               value = "self.item.message.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.controller.currentItem.message.n_id">
+            </PersistentString>
+            <PersistentString
+               value = "self.controller">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[MessageTableCellWebPageView setItem:]:MessageTableCellWebPageView.m">
       </ContextState>
       <ContextState
@@ -8257,6 +8546,9 @@
                value = "[self contentViewRect]">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ForwardSenterItem setMsg_ids:]:ForwardSenterItem.m">
       </ContextState>
       <ContextState
          contextName = "__36-[MessageTableCell defaultMenuItems]_block_invoke189:MessageTableCell.m">
@@ -8398,6 +8690,12 @@
       </ContextState>
       <ContextState
          contextName = "-[ContactsViewController selectionDidChange:item:]:ContactsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "cut_messages:CFunctions.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGHotPacksContainerView show]:TGHotPacksContainerView.m">
       </ContextState>
       <ContextState
          contextName = "+[EncryptedParams findAndCreate:]:EncryptedParams.m">
@@ -8593,6 +8891,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__35-[ForwardSenterItem performRequest]_block_invoke.133:ForwardSenterItem.m">
+      </ContextState>
+      <ContextState
          contextName = "__89-[MessagesViewController showMessage:fromMsg:animated:selectText:switchDiscussion:flags:]_block_invoke1320:MessagesViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -8608,6 +8909,9 @@
       </ContextState>
       <ContextState
          contextName = "__38-[ChatAdminsViewController reloadData]_block_invoke_2:ChatAdminsViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[TGHotHeaderItemView performAddRequest]:TGHotPacksContainerView.m">
       </ContextState>
       <ContextState
          contextName = "-[MessagesViewController updateScrollBtn]:MessagesViewController.m">

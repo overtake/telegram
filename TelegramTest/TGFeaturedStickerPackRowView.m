@@ -88,14 +88,16 @@
     
     [TMViewController showModalProgress];
     
-    
-    [[MessageSender addStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:[item.stickers mutableCopy]]] startWithNext:^(id next) {
+    [[TGModernESGViewController stickersSignal:item.set] startWithNext:^(id next) {
         
-        complete([next boolValue]);
+        [[MessageSender addStickerPack:[TL_messages_stickerSet createWithSet:item.set packs:nil documents:next]] startWithNext:^(id next) {
+            
+            complete([next boolValue]);
+            
+        }];
         
     }];
     
-
 }
 
 -(void)mouseDown:(NSEvent *)theEvent {
@@ -105,6 +107,10 @@
         if(![TMViewController isModalActive])
         {
             TGFeaturedStickerPackRowItem *item = (TGFeaturedStickerPackRowItem *) self.rowItem;
+            
+            if ([TGModernESGViewController setWithId:item.set.n_id]) {
+                return;
+            }
             
             TGStickerPackModalView *modalView = [[TGStickerPackModalView alloc] init];
             

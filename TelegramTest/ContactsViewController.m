@@ -13,11 +13,11 @@
 #import "SelectUserRowView.h"
 #import "RBLPopover.h"
 #import "TLPeer+Extensions.h"
-#import "AddContactViewController.h"
 #import "TGConversationsTableView.h"
 #import "TGContactSelfUserItem.h"
 #import "TGSettingsTableView.h"
 #import "SearchSeparatorItem.h"
+#import "TGAddContactModalView.h"
 @interface ContactFirstItem : TMRowItem
 
 @end
@@ -78,20 +78,15 @@
 }
 
 -(void)checkSelected:(BOOL)isSelected {
-    self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
-    [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : LINK_COLOR];
+   // self.imageView.image = isSelected ? image_ContactsAddContactActive() : image_ContactsAddContact();
+   // [self.field setTextColor:isSelected ? NSColorFromRGB(0xffffff) : LINK_COLOR];
 }
 
 -(void)drawRect:(NSRect)dirtyRect {
 	
-   if(self.isSelected) {
-        [BLUE_COLOR_SELECT setFill];
-        NSRectFill(NSMakeRect(0, 0, self.bounds.size.width, self.bounds.size.height));
-    } else {
-        [LIGHT_GRAY_BORDER_COLOR setFill];
-        
-        NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 , 1));
-    }
+    [LIGHT_GRAY_BORDER_COLOR setFill];
+    
+    NSRectFill(NSMakeRect(55, 0, NSWidth(self.frame) - 55 , 1));
 
 
 }
@@ -272,34 +267,27 @@
 }
 
 -(void)willChangedController:(TMViewController *)controller {
-    if([controller isKindOfClass:[AddContactViewController class]]) {
-        [self.tableView setSelectedByHash:0];
+    __block BOOL ret = NO;
+    
+    [[Telegram rightViewController].navigationViewController.viewControllerStack enumerateObjectsUsingBlock:^(TMViewController *obj, NSUInteger idx, BOOL *stop) {
         
-        return;
-        
-    } else {
-        
-        __block BOOL ret = NO;
-        
-        [[Telegram rightViewController].navigationViewController.viewControllerStack enumerateObjectsUsingBlock:^(TMViewController *obj, NSUInteger idx, BOOL *stop) {
-            
-            if([obj isKindOfClass:[MessagesViewController class]]) {
-                MessagesViewController *messagesController = (MessagesViewController *)obj;
-                if(messagesController.conversation.type == DialogTypeUser) {
-                    [self.tableView setSelectedByHash:messagesController.conversation.peer.peer_id];
-                    
-                    *stop = YES;
-                    ret = YES;
-                }
+        if([obj isKindOfClass:[MessagesViewController class]]) {
+            MessagesViewController *messagesController = (MessagesViewController *)obj;
+            if(messagesController.conversation.type == DialogTypeUser) {
+                [self.tableView setSelectedByHash:messagesController.conversation.peer.peer_id];
+                
+                *stop = YES;
+                ret = YES;
             }
-            
-            
-            
-        }];
+        }
         
-        if(ret)
-            return;
-    }
+        
+        
+    }];
+    
+    if(ret)
+        return;
+    
     
     [self.tableView cancelSelection];
 }
@@ -425,6 +413,10 @@
         [[Telegram rightViewController] modalViewSendAction:item.user.dialog];
         return NO;
     }
+    
+    if(row == 0 && [[Telegram rightViewController] isModalViewActive]) {
+        [[Telegram rightViewController] modalViewSendAction:[UsersManager currentUser].dialog];
+    }
     return ![Telegram rightViewController].navigationViewController.isLocked;
 }
 
@@ -437,7 +429,9 @@
         
     } else if([item isKindOfClass:[ContactFirstItem class]]) {
         
-        [[Telegram rightViewController] showAddContactController];
+        TGAddContactModalView *modalView = [[TGAddContactModalView alloc] init];
+        
+        [modalView show:self.view.window animated:YES];
 
     } else if([item isKindOfClass:[TGContactSelfUserItem class]]) {
         [appWindow().navigationController showMessagesViewController:[UsersManager currentUser].dialog];

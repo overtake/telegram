@@ -96,7 +96,7 @@ static NSMutableDictionary *stickers;
    // if(!stickers) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             stickers = info[@"serialized"];
             
@@ -114,10 +114,9 @@ static NSMutableDictionary *stickers;
     //if(!sets) {
         [[Storage yap] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             
-            NSDictionary *info = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+            NSDictionary *info = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
             
             sets = info[@"sets"];
-            
         }];
    // }
     
@@ -231,7 +230,7 @@ static NSMutableDictionary *stickers;
     _emojiViewController.epopover = epopover;
 }
 
-+(SSignal *)stickersSignal:(TLStickerSet *)stickerSet {
++(SSignal *)stickersSignal:(TLStickerSet *)stickerSet progress:(BOOL)progress {
     return [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
         
@@ -242,22 +241,29 @@ static NSMutableDictionary *stickers;
             [subscriber putCompletion];
         } else {
             
-            [TMViewController showModalProgress];
+            if(progress)
+                [TMViewController showModalProgress];
             
             [[[MTNetwork instance] requestSignal:[TLAPI_messages_getStickerSet createWithStickerset:[TL_inputStickerSetID createWithN_id:stickerSet.n_id access_hash:stickerSet.access_hash]]] startWithNext:^(TL_messages_stickerSet *next) {
+                if(progress)
+                    [TMViewController hideModalProgressWithSuccess];
                 
-                [TMViewController hideModalProgressWithSuccess];
-
                 
                 [subscriber putNext:next.documents];
                 [subscriber putCompletion];
             } error:^(id error) {
-                [TMViewController hideModalProgress];
+                if(progress)
+                    [TMViewController hideModalProgress];
             } completed:nil];
         }
         
         return nil;
     }];
+
+}
+
++(SSignal *)stickersSignal:(TLStickerSet *)stickerSet {
+    return [self stickersSignal:stickerSet progress:YES];
 }
 
 @end

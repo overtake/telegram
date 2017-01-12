@@ -1,7 +1,6 @@
 #import "TGMediaContextTableView.h"
 #import "TMTableView.h"
 #import "TMSearchTextField.h"
-#import "UIImageView+AFNetworking.h"
 #import "SpacemanBlocks.h"
 #import "TGImageView.h"
 #import "TGExternalImageObject.h"
@@ -10,7 +9,6 @@
 #import "DownloadQueue.h"
 #import "DownloadDocumentItem.h"
 #import "DownloadExternalItem.h"
-#import "MessagesBottomView.h"
 #import "TGContextImportantRowItem.h"
 #import "TGModernStickRowItem.h"
 @interface TGGifSearchRowView : TMRowView
@@ -446,7 +444,7 @@ static NSMenu *deleteMenu;
             
             if(imageObject == nil)
                 imageObject = (TGImageObject *) [[NSNull alloc] init];
-            else if([botResult.document attributeWithClass:[TL_documentAttributeSticker class]]) {
+            else if(botResult.document.stickerAttr) {
                 
                 TL_documentAttributeImageSize *imageSize = (TL_documentAttributeImageSize *)[botResult.document attributeWithClass:[TL_documentAttributeImageSize class]];
                 

@@ -195,6 +195,62 @@ static NSString *kArchivedSettings = @"kArchivedSettings";
     return [SettingsArchiver checkMaskedSetting:BigFontSetting] ? TGSystemFont(15) : TGSystemFont(13);
 }
 
++(NSFont *)font11 {
+    return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 13 : 11);
+}
++(NSFont *)font12 {
+    return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 14 : 12);
+}
++(NSFont *)font13 {
+    return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13);
+}
++(NSFont *)font14 {
+    return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 16 : 14);
+}
++(NSFont *)font15 {
+    return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 17 : 15);
+}
+
++(NSFont *)font125 {
+  return TGSystemFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 13 : 12.5);
+}
++(NSFont *)fontMedium125 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 13 : 12.5);
+}
+
++(NSFont *)fontMedium11 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 12 : 11);
+}
++(NSFont *)fontMedium12 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 13 : 12);
+}
++(NSFont *)fontMedium13 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 14 : 13);
+}
++(NSFont *)fontMedium14 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 14);
+}
++(NSFont *)fontMedium15 {
+    return TGSystemMediumFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 16 : 15);
+}
+
++(NSFont *)fontBold11 {
+    return TGSystemBoldFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 13 : 11);
+}
++(NSFont *)fontBold12 {
+    return TGSystemBoldFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 14 : 12);
+}
++(NSFont *)fontBold13 {
+    return TGSystemBoldFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 15 : 13);
+}
++(NSFont *)fontBold14 {
+    return TGSystemBoldFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 16 : 14);
+}
++(NSFont *)fontBold15 {
+    return TGSystemBoldFont([SettingsArchiver checkMaskedSetting:BigFontSetting] ? 17 : 15);
+}
+
+
 + (BOOL)setDocumentsFolder:(NSString *)folder {
    
     NSError *error;

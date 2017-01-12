@@ -177,7 +177,7 @@ NSString *const tableInSecretActions = @"in_secret_actions";
 NSString *const tableSupportMessages = @"support_messages2";
 NSString *const tableMessageHoles = @"message_holes_v1";
 NSString *const tableMessagesMedia = @"messages_media_v1";
-NSString *const tableModernDialogs = @"modern_dialogs";
+NSString *const tableModernDialogs = @"modern_dialogs_v1";
 
 
 +(NSString *)dbpath {
@@ -338,7 +338,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         
         // modern dialogs
         {
-            [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count integer,last_message_date integer, type integer, last_marked_message integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, mute_until integer, pts integer, is_invisible integer, top_important_message blob, read_outbox_max_id integer)",tableModernDialogs]];
+            [db executeUpdate:[NSString stringWithFormat:@"create table if not exists %@ (peer_id INTEGER PRIMARY KEY, top_message blob, unread_count integer,last_message_date integer, type integer, last_marked_message integer,last_marked_date integer,last_real_message_date integer, read_inbox_max_id integer, mute_until integer, pts integer, is_invisible integer, top_important_message blob, read_outbox_max_id integer, flags integer)",tableModernDialogs]];
             
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_l_idx ON %@(last_real_message_date)",tableModernDialogs]];
             [db executeUpdate:[NSString stringWithFormat:@"CREATE INDEX if not exists c_t_idx ON %@(top_message)",tableModernDialogs]];
@@ -355,10 +355,20 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         {
             [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN draft blob",tableModernDialogs]];
         }
+        
+        if (![db columnExists:@"flags" inTableWithName:tableModernDialogs])
+        {
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN flags integer",tableModernDialogs]];
+        }
+        
+        if (![db columnExists:@"date" inTableWithName:tableFiles])
+        {
+            [db executeUpdate:[NSString stringWithFormat:@"ALTER TABLE %@ ADD COLUMN date blob",tableFiles]];
+        }
 
 
         
-        [self upgradeDialogsTo42Layer:db];
+        [self upgradeTo61Layer:db];
         
        
         
@@ -387,10 +397,9 @@ NSString *const tableModernDialogs = @"modern_dialogs";
    
 }
 
--(BOOL)upgradeDialogsTo42Layer:(FMDatabase *)db {
+-(BOOL)upgradeTo61Layer:(FMDatabase *)db {
     
-    NSString *oTable = @"dialogs";
-    NSString *ocTable = @"channel_dialogs";
+    NSString *oTable = @"modern_dialogs";
    
     BOOL exist = [db tableExists:oTable];
     
@@ -403,6 +412,7 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         while ([result next]) {
             
             TL_conversation *conversation = [[TL_conversation alloc] init];
+            conversation.flags =  [result intForColumn:@"flags"];
             conversation.peer = [self peerWithType:[result intForColumn:@"type"] peer_id:[result intForColumn:@"peer_id"]];
             conversation.unread_count = [result intForColumn:@"unread_count"];
             conversation.top_message = [result intForColumn:@"top_message"];
@@ -424,7 +434,8 @@ NSString *const tableModernDialogs = @"modern_dialogs";
         [self insertDialogs:secretChats];
         
         [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",oTable]];
-        [db executeUpdate:[NSString stringWithFormat:@"drop table if exists %@",ocTable]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableMessageHoles]];
+        [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableChannelMessages]];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableChats]];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableChatsFull]];
         [db executeUpdate:[NSString stringWithFormat:@"delete from %@ where 1=1",tableSupportMessages]];
@@ -682,7 +693,9 @@ static NSString *encryptionKey;
         
         if([result next]) {
             @try {
-                file = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                if ([result intForColumn:@"date"] + 3*60*60 > [[MTNetwork instance] getTime]) {
+                    file = [TLClassStore deserialize:[result dataForColumn:@"serialized"]];
+                }
             }
             @catch (NSException *exception) {
                 
@@ -698,7 +711,7 @@ static NSString *encryptionKey;
 - (void)setFileInfo:(id)file forPathHash:(NSString *)pathHash {
         
     [queue inDatabase:^(FMDatabase *db) {
-        [db executeUpdate:@"insert or replace into files (hash, serialized) values (?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO]];
+        [db executeUpdate:@"insert or replace into files (hash, serialized,date) values (?,?,?)", pathHash, [TLClassStore serialize:file isCacheSerialize:NO],@([[MTNetwork instance] getTime])];
     }];
 }
 
@@ -837,6 +850,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
         
         NSMutableArray *holes = [NSMutableArray array];
         
+        
         NSString *holeSql = [NSString stringWithFormat:@"select * from %@ where peer_id = %@ and max_id > %@ and min_id < %@ and (type & 2 = 2) order by date asc",tableMessageHoles,@(conversationId),@(next ? min : min_id),@(next ? max_id : max)];
         
         
@@ -915,11 +929,10 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 }
 
 
-
 -(void)invalidateChannelMessagesWithPts:(int)pts {
     [queue inDatabase:^(FMDatabase *db) {
         
-        [db executeUpdate:[NSString stringWithFormat:@"update %@ set invalidate = 1 where pts <= ?",tableChannelMessages],@(pts)];
+       // [db executeUpdate:[NSString stringWithFormat:@"update %@ set invalidate = 1 where pts <= ?",tableChannelMessages],@(pts)];
         
     }];
 }
@@ -1256,9 +1269,6 @@ TL_localMessage *parseMessage(FMResultSet *result) {
     [queue inDatabase:^(FMDatabase *db) {
         
         NSMutableDictionary *peers = [NSMutableDictionary dictionary];
-        
-        
-        
         
         void (^proccessResult)(NSString *tableName, FMResultSet *result) = ^(NSString *tableName, FMResultSet *result){
             
@@ -1869,7 +1879,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
         }
         
-        TL_conversation *dialog = [TL_conversation createWithPeer:peer top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TL_peerNotifySettings createWithFlags:0 mute_until:[result intForColumn:@"mute_until"] sound:@""] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:0 read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] read_outbox_max_id:[result intForColumn:@"read_outbox_max_id"] draft:draft lastMessage:nil pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"]];
+        TL_conversation *dialog = [TL_conversation createWithFlags:[result intForColumn:@"flags"] peer:peer top_message:[result intForColumn:@"top_message"] unread_count:[result intForColumn:@"unread_count"] last_message_date:[result intForColumn:@"last_message_date"] notify_settings:[TL_peerNotifySettings createWithFlags:0 mute_until:[result intForColumn:@"mute_until"] sound:@""] last_marked_message:[result intForColumn:@"last_marked_message"] top_message_fake:0 last_marked_date:[result intForColumn:@"last_marked_date"] sync_message_id:0 read_inbox_max_id:[result intForColumn:@"read_inbox_max_id"] read_outbox_max_id:[result intForColumn:@"read_outbox_max_id"] draft:draft lastMessage:nil pts:[result intForColumn:@"pts"] isInvisibleChannel:[result boolForColumn:@"is_invisible"]];
         
         [dialogs addObject:dialog];
 
@@ -1939,7 +1949,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
             
             if([result next]) {
                 obj.lastMessage = parseMessage(result);
-                obj.last_message_date = obj.lastMessage.date;
+                if (!obj.isPinned)
+                    obj.last_message_date = obj.lastMessage.date;
             }
             
             
@@ -1991,7 +2002,7 @@ TL_localMessage *parseMessage(FMResultSet *result) {
                 return;
             
             
-            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (peer_id,top_message,type,last_message_date,unread_count,last_marked_message,last_marked_date,last_real_message_date,read_inbox_max_id, read_outbox_max_id, pts,is_invisible,mute_until,draft) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",tableModernDialogs],
+            [db executeUpdate:[NSString stringWithFormat:@"insert or replace into %@ (peer_id,top_message,type,last_message_date,unread_count,last_marked_message,last_marked_date,last_real_message_date,read_inbox_max_id, read_outbox_max_id, pts,is_invisible,mute_until,draft,flags) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",tableModernDialogs],
              @(dialog.peer_id),
              @(dialog.channel_top_message_id),
              @(dialog.type),
@@ -2005,7 +2016,8 @@ TL_localMessage *parseMessage(FMResultSet *result) {
              @(dialog.pts),
              @(dialog.isInvisibleChannel),
              @(dialog.notify_settings.mute_until),
-             [ClassStore serialize:dialog.draft]
+             [ClassStore serialize:dialog.draft],
+             @(dialog.flags)
              ];
 
         }];
@@ -3009,6 +3021,9 @@ TL_localMessage *parseMessage(FMResultSet *result) {
 -(void)addHolesAroundMessage:(TL_localMessage *)message completionHandler:(void (^)(TGMessageHole *hole, BOOL next))completionHandler {
     
     dispatch_queue_t dqueue = dispatch_get_current_queue();
+    
+    if([message isKindOfClass:[TL_destructMessage class]])
+        return;
     
     [queue inDatabase:^(FMDatabase *db) {
         

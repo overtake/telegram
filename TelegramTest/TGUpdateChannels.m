@@ -240,6 +240,22 @@
         
     }
     
+    if ([update isKindOfClass:[TL_updateChannelWebPage class]]) {
+        
+        TLWebPage *page = [update webpage];
+        
+        TLMessageMedia *media = [TL_messageMediaWebPage createWithWebpage:page];
+        
+        [[Storage manager] messagesWithWebpage:media callback:^(NSDictionary *peers) {
+            
+            [Notification perform:UPDATE_WEB_PAGES data:@{KEY_WEBPAGE:page}];
+            
+            [Notification perform:UPDATE_WEB_PAGE_ITEMS data:@{KEY_DATA:peers,KEY_WEBPAGE:page}];
+        }];
+        
+        return YES;
+    }
+    
     if([update isKindOfClass:[TL_updateNewChannelMessage class]])
     {
         
@@ -463,10 +479,12 @@
         
         if(addInviteMessage) {
             
-            _channelsInUpdating[@(channel.peer_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:chat.inputPeer filter:[TL_channelMessagesFilterEmpty create] pts:1 limit:INT32_MAX] successHandler:^(id request, TL_updates_channelDifference *response) {
+            _channelsInUpdating[@(channel.peer_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithFlags:(1 << 0) channel:chat.inputPeer filter:[TL_channelMessagesFilterEmpty create] pts:1 limit:INT32_MAX] successHandler:^(id request, TL_updates_channelDifference *response) {
                 
                 channel.pts = response.pts;
-                channel.last_message_date = channel.lastMessage.date;
+                if (!channel.isPinned) {
+                    channel.last_message_date = channel.lastMessage.date;
+                }
                 
                 channel.last_marked_message = [response top_message];
                 channel.last_marked_date = [[MTNetwork instance] getTime];
@@ -547,7 +565,7 @@
         
         
         if(request == nil) {
-            _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithChannel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
+            _channelsInUpdating[@(channel_id)] = [RPCRequest sendRequest:[TLAPI_updates_getChannelDifference createWithFlags:(1 << 0) channel:[TL_inputChannel createWithChannel_id:channel_id access_hash:channel.access_hash] filter:[TL_channelMessagesFilterEmpty create] pts:[self ptsWithChannelId:channel_id] limit:limit] successHandler:^(id request, id response) {
                 
                 
                if(channel && channel.isLeft)
@@ -618,7 +636,9 @@
                         
                         conversation.top_message = [response top_message];
                         conversation.lastMessage = importantMsg;
-                        conversation.last_message_date = conversation.lastMessage.date;
+                        if(!conversation.isPinned) {
+                            conversation.last_message_date = conversation.lastMessage.date;
+                        }
                         
                         conversation.last_marked_message = [response read_inbox_max_id];
                         

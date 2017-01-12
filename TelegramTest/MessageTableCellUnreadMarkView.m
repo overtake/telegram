@@ -23,7 +23,6 @@
         [self.textField setEnabled:NO];
         [self.textField setEditable:NO];
         [self.textField setStringValue:@"2 unread messages"];
-        [self.textField setFont:TGSystemFont(13)];
         [self.textField setTextColor:NSColorFromRGB(0x9b9b9b)];
         [self.textField setDrawsBackground:NO];
         [self.textField setAlignment:NSCenterTextAlignment];
@@ -36,7 +35,7 @@
 
 - (void)setItem:(MessageTableItemUnreadMark *)item {
     [super setItem:item];
-    
+    [self.textField setFont:[SettingsArchiver font13]];
     [self.textField setStringValue:item.text];
     
     [self.textField sizeToFit];

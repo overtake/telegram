@@ -51,7 +51,7 @@ typedef enum {
 -(void)saveViews;
 
 -(BOOL)canEdit;
-
+-(BOOL)canDeleteForAll;
 +(TL_localMessage *)convertReceivedMessage:(TLMessage *)msg;
 +(void)convertReceivedMessages:(NSMutableArray *)messages;
 

@@ -2,7 +2,7 @@
 //  TLApi.h
 //  Telegram
 //
-//  Auto created by Mikhail Filimonov on 27.07.16.
+//  Auto created by Mikhail Filimonov on 22.12.16.
 //  Copyright (c) 2013 Telegram for OS X. All rights reserved.
 //
 
@@ -228,12 +228,14 @@
 @end
 
 @interface TLAPI_messages_getDialogs : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isExclude_pinned;
 @property int offset_date;
 @property int offset_id;
 @property (nonatomic, strong) TLInputPeer* offset_peer;
 @property int limit;
 
-+(TLAPI_messages_getDialogs*)createWithOffset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit;
++(TLAPI_messages_getDialogs*)createWithFlags:(int)flags  offset_date:(int)offset_date offset_id:(int)offset_id offset_peer:(TLInputPeer*)offset_peer limit:(int)limit;
 @end
 
 @interface TLAPI_messages_getHistory : TLApiObject
@@ -279,9 +281,11 @@
 @end
 
 @interface TLAPI_messages_deleteMessages : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isRevoke;
 @property (nonatomic, strong) NSMutableArray* n_id;
 
-+(TLAPI_messages_deleteMessages*)createWithN_id:(NSMutableArray*)n_id;
++(TLAPI_messages_deleteMessages*)createWithFlags:(int)flags  n_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_messages_receivedMessages : TLApiObject
@@ -331,12 +335,13 @@
 @property int flags;
 @property (nonatomic,assign,readonly) BOOL isSilent;
 @property (nonatomic,assign,readonly) BOOL isBackground;
+@property (nonatomic,assign,readonly) BOOL isWith_my_score;
 @property (nonatomic, strong) TLInputPeer* from_peer;
 @property (nonatomic, strong) NSMutableArray* n_id;
 @property (nonatomic, strong) NSMutableArray* random_id;
 @property (nonatomic, strong) TLInputPeer* to_peer;
 
-+(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags   from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
++(TLAPI_messages_forwardMessages*)createWithFlags:(int)flags    from_peer:(TLInputPeer*)from_peer n_id:(NSMutableArray*)n_id random_id:(NSMutableArray*)random_id to_peer:(TLInputPeer*)to_peer;
 @end
 
 @interface TLAPI_messages_reportSpam : TLApiObject
@@ -412,27 +417,25 @@
 @end
 
 @interface TLAPI_updates_getDifference : TLApiObject
+@property int flags;
 @property int pts;
+@property int pts_total_limit;
 @property int date;
 @property int qts;
 
-+(TLAPI_updates_getDifference*)createWithPts:(int)pts date:(int)date qts:(int)qts;
++(TLAPI_updates_getDifference*)createWithFlags:(int)flags pts:(int)pts pts_total_limit:(int)pts_total_limit date:(int)date qts:(int)qts;
 @end
 
 @interface TLAPI_photos_updateProfilePhoto : TLApiObject
 @property (nonatomic, strong) TLInputPhoto* n_id;
-@property (nonatomic, strong) TLInputPhotoCrop* crop;
 
-+(TLAPI_photos_updateProfilePhoto*)createWithN_id:(TLInputPhoto*)n_id crop:(TLInputPhotoCrop*)crop;
++(TLAPI_photos_updateProfilePhoto*)createWithN_id:(TLInputPhoto*)n_id;
 @end
 
 @interface TLAPI_photos_uploadProfilePhoto : TLApiObject
 @property (nonatomic, strong) TLInputFile* file;
-@property (nonatomic, strong) NSString* caption;
-@property (nonatomic, strong) TLInputGeoPoint* geo_point;
-@property (nonatomic, strong) TLInputPhotoCrop* crop;
 
-+(TLAPI_photos_uploadProfilePhoto*)createWithFile:(TLInputFile*)file caption:(NSString*)caption geo_point:(TLInputGeoPoint*)geo_point crop:(TLInputPhotoCrop*)crop;
++(TLAPI_photos_uploadProfilePhoto*)createWithFile:(TLInputFile*)file;
 @end
 
 @interface TLAPI_photos_deletePhotos : TLApiObject
@@ -502,15 +505,6 @@
 @property long random_id;
 
 +(TLAPI_messages_forwardMessage*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id random_id:(long)random_id;
-@end
-
-@interface TLAPI_messages_sendBroadcast : TLApiObject
-@property (nonatomic, strong) NSMutableArray* contacts;
-@property (nonatomic, strong) NSMutableArray* random_id;
-@property (nonatomic, strong) NSString* message;
-@property (nonatomic, strong) TLInputMedia* media;
-
-+(TLAPI_messages_sendBroadcast*)createWithContacts:(NSMutableArray*)contacts random_id:(NSMutableArray*)random_id message:(NSString*)message media:(TLInputMedia*)media;
 @end
 
 @interface TLAPI_messages_getDhConfig : TLApiObject
@@ -585,6 +579,12 @@
 @property int max_qts;
 
 +(TLAPI_messages_receivedQueue*)createWithMax_qts:(int)max_qts;
+@end
+
+@interface TLAPI_messages_reportEncryptedSpam : TLApiObject
+@property (nonatomic, strong) TLInputEncryptedChat* peer;
+
++(TLAPI_messages_reportEncryptedSpam*)createWithPeer:(TLInputEncryptedChat*)peer;
 @end
 
 @interface TLAPI_upload_saveBigFilePart : TLApiObject
@@ -679,13 +679,6 @@
 @property (nonatomic, strong) NSString* phone_code;
 
 +(TLAPI_account_changePhone*)createWithPhone_number:(NSString*)phone_number phone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code;
-@end
-
-@interface TLAPI_messages_getStickers : TLApiObject
-@property (nonatomic, strong) NSString* emoticon;
-@property (nonatomic, strong) NSString* n_hash;
-
-+(TLAPI_messages_getStickers*)createWithEmoticon:(NSString*)emoticon n_hash:(NSString*)n_hash;
 @end
 
 @interface TLAPI_messages_getAllStickers : TLApiObject
@@ -981,12 +974,14 @@
 @end
 
 @interface TLAPI_updates_getChannelDifference : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isForce;
 @property (nonatomic, strong) TLInputChannel* channel;
 @property (nonatomic, strong) TLChannelMessagesFilter* filter;
 @property int pts;
 @property int limit;
 
-+(TLAPI_updates_getChannelDifference*)createWithChannel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit;
++(TLAPI_updates_getChannelDifference*)createWithFlags:(int)flags  channel:(TLInputChannel*)channel filter:(TLChannelMessagesFilter*)filter pts:(int)pts limit:(int)limit;
 @end
 
 @interface TLAPI_messages_toggleChatAdmins : TLApiObject
@@ -1027,9 +1022,11 @@
 @end
 
 @interface TLAPI_messages_reorderStickerSets : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMasks;
 @property (nonatomic, strong) NSMutableArray* order;
 
-+(TLAPI_messages_reorderStickerSets*)createWithOrder:(NSMutableArray*)order;
++(TLAPI_messages_reorderStickerSets*)createWithFlags:(int)flags  order:(NSMutableArray*)order;
 @end
 
 @interface TLAPI_messages_getDocumentByHash : TLApiObject
@@ -1173,11 +1170,13 @@
 @end
 
 @interface TLAPI_messages_getBotCallbackAnswer : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isGame;
 @property (nonatomic, strong) TLInputPeer* peer;
 @property int msg_id;
 @property (nonatomic, strong) NSData* data;
 
-+(TLAPI_messages_getBotCallbackAnswer*)createWithPeer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
++(TLAPI_messages_getBotCallbackAnswer*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer msg_id:(int)msg_id data:(NSData*)data;
 @end
 
 @interface TLAPI_messages_setBotCallbackAnswer : TLApiObject
@@ -1186,8 +1185,9 @@
 @property long query_id;
 @property (nonatomic, strong) NSString* message;
 @property (nonatomic, strong) NSString* url;
+@property int cache_time;
 
-+(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url;
++(TLAPI_messages_setBotCallbackAnswer*)createWithFlags:(int)flags  query_id:(long)query_id message:(NSString*)message url:(NSString*)url cache_time:(int)cache_time;
 @end
 
 @interface TLAPI_contacts_getTopPeers : TLApiObject
@@ -1241,41 +1241,42 @@
 @end
 
 @interface TLAPI_messages_readFeaturedStickers : TLApiObject
+@property (nonatomic, strong) NSMutableArray* n_id;
 
-
-+(TLAPI_messages_readFeaturedStickers*)create;
++(TLAPI_messages_readFeaturedStickers*)createWithN_id:(NSMutableArray*)n_id;
 @end
 
 @interface TLAPI_messages_getRecentStickers : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAttached;
 @property int n_hash;
 
-+(TLAPI_messages_getRecentStickers*)createWithN_hash:(int)n_hash;
++(TLAPI_messages_getRecentStickers*)createWithFlags:(int)flags  n_hash:(int)n_hash;
 @end
 
 @interface TLAPI_messages_saveRecentSticker : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAttached;
 @property (nonatomic, strong) TLInputDocument* n_id;
 @property Boolean unsave;
 
-+(TLAPI_messages_saveRecentSticker*)createWithN_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
++(TLAPI_messages_saveRecentSticker*)createWithFlags:(int)flags  n_id:(TLInputDocument*)n_id unsave:(Boolean)unsave;
 @end
 
 @interface TLAPI_messages_clearRecentStickers : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isAttached;
 
-
-+(TLAPI_messages_clearRecentStickers*)create;
-@end
-
-@interface TLAPI_messages_getUnusedStickers : TLApiObject
-@property int limit;
-
-+(TLAPI_messages_getUnusedStickers*)createWithLimit:(int)limit;
++(TLAPI_messages_clearRecentStickers*)createWithFlags:(int)flags ;
 @end
 
 @interface TLAPI_messages_getArchivedStickers : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isMasks;
 @property long offset_id;
 @property int limit;
 
-+(TLAPI_messages_getArchivedStickers*)createWithOffset_id:(long)offset_id limit:(int)limit;
++(TLAPI_messages_getArchivedStickers*)createWithFlags:(int)flags  offset_id:(long)offset_id limit:(int)limit;
 @end
 
 @interface TLAPI_account_sendConfirmPhoneCode : TLApiObject
@@ -1292,5 +1293,150 @@
 @property (nonatomic, strong) NSString* phone_code;
 
 +(TLAPI_account_confirmPhone*)createWithPhone_code_hash:(NSString*)phone_code_hash phone_code:(NSString*)phone_code;
+@end
+
+@interface TLAPI_channels_getAdminedPublicChannels : TLApiObject
+
+
++(TLAPI_channels_getAdminedPublicChannels*)create;
+@end
+
+@interface TLAPI_messages_getMaskStickers : TLApiObject
+@property int n_hash;
+
++(TLAPI_messages_getMaskStickers*)createWithN_hash:(int)n_hash;
+@end
+
+@interface TLAPI_messages_getAttachedStickers : TLApiObject
+@property (nonatomic, strong) TLInputStickeredMedia* media;
+
++(TLAPI_messages_getAttachedStickers*)createWithMedia:(TLInputStickeredMedia*)media;
+@end
+
+@interface TLAPI_auth_dropTempAuthKeys : TLApiObject
+@property (nonatomic, strong) NSMutableArray* except_auth_keys;
+
++(TLAPI_auth_dropTempAuthKeys*)createWithExcept_auth_keys:(NSMutableArray*)except_auth_keys;
+@end
+
+@interface TLAPI_messages_setGameScore : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isEdit_message;
+@property (nonatomic,assign,readonly) BOOL isForce;
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int score;
+
++(TLAPI_messages_setGameScore*)createWithFlags:(int)flags   peer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id score:(int)score;
+@end
+
+@interface TLAPI_messages_setInlineGameScore : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isEdit_message;
+@property (nonatomic,assign,readonly) BOOL isForce;
+@property (nonatomic, strong) TLInputBotInlineMessageID* n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int score;
+
++(TLAPI_messages_setInlineGameScore*)createWithFlags:(int)flags   n_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id score:(int)score;
+@end
+
+@interface TLAPI_messages_getGameHighScores : TLApiObject
+@property (nonatomic, strong) TLInputPeer* peer;
+@property int n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+
++(TLAPI_messages_getGameHighScores*)createWithPeer:(TLInputPeer*)peer n_id:(int)n_id user_id:(TLInputUser*)user_id;
+@end
+
+@interface TLAPI_messages_getInlineGameHighScores : TLApiObject
+@property (nonatomic, strong) TLInputBotInlineMessageID* n_id;
+@property (nonatomic, strong) TLInputUser* user_id;
+
++(TLAPI_messages_getInlineGameHighScores*)createWithN_id:(TLInputBotInlineMessageID*)n_id user_id:(TLInputUser*)user_id;
+@end
+
+@interface TLAPI_messages_getCommonChats : TLApiObject
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int max_id;
+@property int limit;
+
++(TLAPI_messages_getCommonChats*)createWithUser_id:(TLInputUser*)user_id max_id:(int)max_id limit:(int)limit;
+@end
+
+@interface TLAPI_messages_getAllChats : TLApiObject
+@property (nonatomic, strong) NSMutableArray* except_ids;
+
++(TLAPI_messages_getAllChats*)createWithExcept_ids:(NSMutableArray*)except_ids;
+@end
+
+@interface TLAPI_help_setBotUpdatesStatus : TLApiObject
+@property int pending_updates_count;
+@property (nonatomic, strong) NSString* message;
+
++(TLAPI_help_setBotUpdatesStatus*)createWithPending_updates_count:(int)pending_updates_count message:(NSString*)message;
+@end
+
+@interface TLAPI_messages_getWebPage : TLApiObject
+@property (nonatomic, strong) NSString* url;
+@property int n_hash;
+
++(TLAPI_messages_getWebPage*)createWithUrl:(NSString*)url n_hash:(int)n_hash;
+@end
+
+@interface TLAPI_phone_requestCall : TLApiObject
+@property (nonatomic, strong) TLInputUser* user_id;
+@property int random_id;
+@property (nonatomic, strong) NSData* g_a;
+@property (nonatomic, strong) TLPhoneCallProtocol* protocol;
+
++(TLAPI_phone_requestCall*)createWithUser_id:(TLInputUser*)user_id random_id:(int)random_id g_a:(NSData*)g_a protocol:(TLPhoneCallProtocol*)protocol;
+@end
+
+@interface TLAPI_phone_acceptCall : TLApiObject
+@property (nonatomic, strong) TLInputPhoneCall* peer;
+@property (nonatomic, strong) NSData* g_b;
+@property long key_fingerprint;
+@property (nonatomic, strong) TLPhoneCallProtocol* protocol;
+
++(TLAPI_phone_acceptCall*)createWithPeer:(TLInputPhoneCall*)peer g_b:(NSData*)g_b key_fingerprint:(long)key_fingerprint protocol:(TLPhoneCallProtocol*)protocol;
+@end
+
+@interface TLAPI_phone_discardCall : TLApiObject
+@property (nonatomic, strong) TLInputPhoneCall* peer;
+@property int duration;
+@property (nonatomic, strong) TLPhoneCallDiscardReason* reason;
+@property long connection_id;
+
++(TLAPI_phone_discardCall*)createWithPeer:(TLInputPhoneCall*)peer duration:(int)duration reason:(TLPhoneCallDiscardReason*)reason connection_id:(long)connection_id;
+@end
+
+@interface TLAPI_phone_receivedCall : TLApiObject
+@property (nonatomic, strong) TLInputPhoneCall* peer;
+
++(TLAPI_phone_receivedCall*)createWithPeer:(TLInputPhoneCall*)peer;
+@end
+
+@interface TLAPI_messages_toggleDialogPin : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isPinned;
+@property (nonatomic, strong) TLInputPeer* peer;
+
++(TLAPI_messages_toggleDialogPin*)createWithFlags:(int)flags  peer:(TLInputPeer*)peer;
+@end
+
+@interface TLAPI_messages_reorderPinnedDialogs : TLApiObject
+@property int flags;
+@property (nonatomic,assign,readonly) BOOL isForce;
+@property (nonatomic, strong) NSMutableArray* order;
+
++(TLAPI_messages_reorderPinnedDialogs*)createWithFlags:(int)flags  order:(NSMutableArray*)order;
+@end
+
+@interface TLAPI_messages_getPinnedDialogs : TLApiObject
+
+
++(TLAPI_messages_getPinnedDialogs*)create;
 @end
 

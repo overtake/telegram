@@ -4,7 +4,6 @@
 #import "TMNavigationBar.h"
 #import "ConnectionStatusViewControllerView.h"
 #import "TGSplitViewController.h"
-
 @class TGAudioGlobalController;
 
 @class MessagesViewController;
@@ -67,5 +66,6 @@ typedef enum {
 
 -(void)hideInlinePlayer:(TGAudioGlobalController *)controller;
 -(void)showInlinePlayer:(TGAudioGlobalController *)controller;
+-(TGAudioGlobalController *)inlineController;
 
 @end

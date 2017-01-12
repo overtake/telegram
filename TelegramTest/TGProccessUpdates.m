@@ -22,6 +22,7 @@
 #import "TGUpdateChannels.h"
 #import "TGForceChannelUpdate.h"
 #import "TGModernESGViewController.h"
+#import "TGModernConversationHistoryController.h"
 @interface TGProccessUpdates ()
 @property (nonatomic,strong) TGUpdateState *updateState;
 @property (nonatomic,strong) NSMutableArray *statefulUpdates;
@@ -712,7 +713,7 @@ static NSArray *channelUpdates;
             [MessagesManager addAndUpdateMessage:msg];
             
             
-            if(updateNotification.popup) {
+            if(updateNotification.isPopup) {
                 [ASQueue dispatchOnMainQueue:^{
                     alert(NSLocalizedString(@"UpdateNotification.Alert", nil), (NSString *)updateNotification.message);
                 }];
@@ -816,6 +817,7 @@ static NSArray *channelUpdates;
                         TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerSecret createWithChat_id:chat.n_id]];
                         if(conversation) {
                             [[DialogsManager sharedManager] add:@[conversation]];
+                            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
                         }
                         
                     }
@@ -865,7 +867,7 @@ static NSArray *channelUpdates;
         if([update isKindOfClass:[TL_updateEncryptedMessagesRead class]]) {
             TL_conversation *dialog = [[DialogsManager sharedManager] findBySecretId:update.chat_id];
             if(dialog) {
-                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog.peer max_id:INT32_MAX out:YES];
+                [[DialogsManager sharedManager] markAllMessagesAsRead:dialog.peer max_id:[MessageSender getCurrentSecretMessageId] out:YES];
             }
             return;
         }
@@ -940,26 +942,59 @@ static NSArray *channelUpdates;
             
             [[BlockedUsersManager sharedManager] updateBlocked:user_id isBlocked:blocked];
         }
-        
-        if([update isKindOfClass:[TL_updateNewAuthorization class]]) {
-            
-            
-            TL_conversation *conversation = [[Storage manager] selectConversation:[TL_peerUser createWithUser_id:777000]];
-            TLUser *user = [[UsersManager sharedManager] find:777000];
-            if(!conversation) {
-                conversation = [[DialogsManager sharedManager] createDialogForUser:user];
-                [conversation save];
+
+        if ([update isKindOfClass:[TL_updateDialogPinned class]]) {
+            TL_conversation *conversation = [[DialogsManager sharedManager] find:update.peer.peer_id];
+            if (update.isPinned) {
+                conversation.flags |= (1 << 2);
+                conversation.last_message_date = [DialogsManager pullPinnedNextTime:1];
+            } else {
+                 conversation.flags &= ~(1 << 2);
+                conversation.last_message_date = conversation.lastMessage != nil ? conversation.lastMessage.date : [[MTNetwork instance] getTime];
             }
+            [conversation save];
+            [[DialogsManager sharedManager] notifyAfterUpdateConversation:conversation];
+        }
+        
+        if ([update isKindOfClass:[TL_updatePinnedDialogs class]]) {
             
-            NSString *displayDate = [[NSString alloc] initWithFormat:@"%@, %@ at %@", [TGDateUtils stringForDayOfWeek:update.date], [TGDateUtils stringForDialogTime:update.date], [TGDateUtils stringForShortTime:update.date]];
-            
-            NSString *messageText = [[NSString alloc] initWithFormat:NSLocalizedString(@"Notification.NewAuthDetected",nil), [UsersManager currentUser].first_name, displayDate, update.device, update.location];;
-            
-            TL_localMessage *msg = [TL_localMessage createWithN_id:0 flags:TGUNREADMESSAGE from_id:777000 to_id:[TL_peerUser createWithUser_id:[UsersManager currentUserId]] fwd_from:nil reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:messageText media:[TL_messageMediaEmpty create] fakeId:[MessageSender getFakeMessageId] randomId:rand_long() reply_markup:nil entities:nil views:0 via_bot_id:0 edit_date:0 isViewed:YES state:DeliveryStateNormal];
-            
-            [MessagesManager addAndUpdateMessage:msg];
-            
-            return;
+            [RPCRequest sendRequest:[TLAPI_messages_getPinnedDialogs create] successHandler:^(id request, TL_messages_peerDialogs *response) {
+                [SharedManager proccessGlobalResponse:response];
+                
+                NSMutableDictionary *updated = [NSMutableDictionary dictionary];
+                
+                [[DialogsManager sharedManager] pinned:^(NSArray *conversations) {
+                    
+                    [conversations enumerateObjectsUsingBlock:^(TL_conversation *conversation, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if (conversation.type != DialogTypeSecretChat) {
+                            conversation.flags &= ~(1 << 2);
+                            conversation.last_message_date = conversation.lastMessage != nil ? conversation.lastMessage.date : [[MTNetwork instance] getTime];
+                            [conversation save];
+                            updated[@(conversation.peer_id)] = conversation;
+                        }
+                        
+                    }];
+                    
+                    NSArray *convesations = [TGModernConversationHistoryController parseDialogs:[TL_messages_dialogs createWithDialogs:response.dialogs messages:response.messages chats:response.chats users:response.users]];
+                    
+                    [[DialogsManager sharedManager] add:convesations];
+                    
+                    [convesations enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        TL_conversation *conversation = [[DialogsManager sharedManager] find:obj.peer_id];
+                        [conversation save];
+                        updated[@(conversation.peer_id)] = conversation;
+                    }];
+                    
+                    [[DialogsManager sharedManager] sortAndNotify:updated.allValues];
+                    
+
+                }];
+                
+                
+            } errorHandler:^(id request, RpcError *error) {
+                
+            } timeout:0 queue:queue.nativeQueue];
+
         }
         
         if([update isKindOfClass:[TL_updateContactRegistered class]]) {
@@ -1022,25 +1057,27 @@ static const int overpts = 5000;
 
 -(void)updateDifference {
     
+    [self updateDifference:NO updateConnectionState:YES];
     
-    [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
-        if(_updateState.pts == 0 || (_updateState.pts + overpts) > state.pts) {
-            [self updateDifference:NO updateConnectionState:YES];
-        } else {
-            [[[Storage manager] runDestroyer] startWithNext:^(id next) {
-                
-                _updateState = [[TGUpdateState alloc] initWithPts:state.pts qts:state.qts date:state.date seq:state.seq pts_count:0];
-                [self saveUpdateState];
-                
-                [SharedManager drop];
-                [Notification perform:DIALOGS_FLUSH_AND_RELOAD data:@{}];
-            }];
-            
-        }
-    } errorHandler:^(id request, RpcError *error) {
-        _holdUpdates = NO;
-        [self updateDifference:NO updateConnectionState:YES];
-    } timeout:0 queue:queue.nativeQueue];
+    
+//    [RPCRequest sendRequest:[TLAPI_updates_getState create] successHandler:^(RPCRequest *request, TL_updates_state * state) {
+//        if(_updateState.pts == 0 || (_updateState.pts + overpts) > state.pts) {
+//            [self updateDifference:NO updateConnectionState:YES];
+//        } else {
+//            [[[Storage manager] runDestroyer] startWithNext:^(id next) {
+//                
+//                _updateState = [[TGUpdateState alloc] initWithPts:state.pts qts:state.qts date:state.date seq:state.seq pts_count:0];
+//                [self saveUpdateState];
+//                
+//                [SharedManager drop];
+//                [Notification perform:DIALOGS_FLUSH_AND_RELOAD data:@{}];
+//            }];
+//            
+//        }
+//    } errorHandler:^(id request, RpcError *error) {
+//        _holdUpdates = NO;
+//        [self updateDifference:NO updateConnectionState:YES];
+//    } timeout:0 queue:queue.nativeQueue];
 
     
 }
@@ -1092,10 +1129,8 @@ static const int overpts = 5000;
         [Telegram setConnectionState:ConnectingStatusTypeUpdating];
     
     
-    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:_updateState.date]);
     
-    
-    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithPts:_updateState.pts date:_updateState.date qts:_updateState.qts];
+    TLAPI_updates_getDifference *dif = [TLAPI_updates_getDifference createWithFlags:0 pts:_updateState.pts pts_total_limit:0 date:_updateState.date qts:_updateState.qts];
     [RPCRequest sendRequest:dif successHandler:^(RPCRequest *request, id response)  {
         
         NSLog(@"start new updateDifference update update: %@",_updateState);

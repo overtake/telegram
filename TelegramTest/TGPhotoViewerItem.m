@@ -42,7 +42,7 @@
 }
 
 -(NSSize)size {
-    return self.imageObject.imageSize;
+    return NSMakeSize(MAX(150,self.imageObject.imageSize.width), self.imageObject.imageSize.height);
 }
 
 @end

@@ -67,7 +67,7 @@
     
     weak();
     
-    [super show:[[NSApp delegate] mainWindow] animated:YES];
+    [super show:appWindow() animated:YES];
     
     
     GeneralSettingsBlockHeaderItem *header = [[GeneralSettingsBlockHeaderItem alloc] initWithString:NSLocalizedString(@"Channel.DeleteMessagesModalHeader", nil) height:42 flipped:NO];

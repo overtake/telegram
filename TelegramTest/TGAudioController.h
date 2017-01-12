@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "MessageTableItemAudio.h"
 #import "TGTimer.h"
+#import "TGAudioGlobalController.h"
 @protocol TGAudioControllerDelegate <NSObject>
 
 @required
@@ -30,6 +31,6 @@
 
 -(void)playOrPause;
 
--(AudioState)state;
+-(TGAudioPlayerGlobalState)state;
 
 @end

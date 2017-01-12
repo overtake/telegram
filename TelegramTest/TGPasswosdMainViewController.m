@@ -12,7 +12,7 @@
 #import "GeneralSettingsRowItem.h"
 #import "TGSetPasswordAction.h"
 #import "NSMutableData+Extension.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "TGTimer.h"
 @interface TGPasswosdMainViewController ()<TMTableViewDelegate>
 

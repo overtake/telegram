@@ -25,9 +25,14 @@
 -(id)initWithFrame:(NSRect)frameRect {
     if(self = [super initWithFrame:frameRect]) {
         [self initialize];
+
     }
     
     return self;
+}
+
+-(BOOL)allowsVibrancy {
+    return YES;
 }
 
 
@@ -40,6 +45,7 @@
 
 -(void)drawRect:(NSRect)dirtyRect {
    
+   // [super drawRect:dirtyRect];
     
     if(self.backgroundColor) {
         [[NSColor whiteColor] setFill];
@@ -115,8 +121,6 @@
     [self removeAllSubviews];
     
    
-    
-    
     __block int xOffset = 0;
     
     static const int minY = 5;
@@ -130,33 +134,15 @@
         view.wantsLayer = YES;
         
         
-    //    [view.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16777216).CGColor];
-        
         NSView *container = [[NSView alloc] initWithFrame:view.bounds];
         [container setWantsLayer:YES];
         
-     //   [container.layer setBackgroundColor:NSColorFromRGB(arc4random() % 16777216).CGColor];
         
         [view setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewWidthSizable];
         [view setAutoresizesSubviews:YES];
         
         
         NSImageView *imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0, 0, obj.image.size.width, obj.image.size.height)];
-        
-        TMTextField *field = [TMTextField defaultTextField];
-        
-        [field setFont:TGSystemFont(12)];
-        [field setTextColor:obj.textColor];
-        [field setAlignment:NSCenterTextAlignment];
-        [field setStringValue:obj.title];
-        
-        
-        
-        [field sizeToFit];
-        
-        
-        [container addSubview:field];
-        
         
         
         imageView.image = obj.image;
@@ -165,17 +151,10 @@
         [container addSubview:imageView];
         
 
-        [container setFrameSize:NSMakeSize(MAX(NSWidth(imageView.frame),NSWidth(field.frame)), NSHeight(container.frame))];
+        [container setFrameSize:NSMakeSize(NSWidth(imageView.frame), NSHeight(container.frame))];
         
         [imageView setCenterByView:container];
-        
-        [imageView setFrameOrigin:NSMakePoint(imageView.frame.origin.x, imageView.frame.origin.y+minY)];
-        
-        [field setCenterByView:container];
-        
-        [field setFrameOrigin:NSMakePoint(field.frame.origin.x, minY)];
-        
-        
+
         [container setCenterByView:view];
         
         
@@ -191,10 +170,11 @@
                         
             [self.chatTabView setCenterByView:view];
             
-            [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX([view.subviews[0] frame])+15, NSHeight(view.bounds) - NSHeight(self.chatTabView.frame) - 3)];
+            [self.chatTabView setFrameOrigin:NSMakePoint(NSMinX([view.subviews[0] frame])+20, NSHeight(view.bounds) - NSHeight(self.chatTabView.frame) - 3)];
             
             [view addSubview:self.chatTabView];
         }
+        
         
         
         [self addSubview:view];
@@ -229,7 +209,7 @@
     
     int height = NSHeight(self.bounds);
     
-    int defWidth = width/self.tabs.count;
+    int defWidth = width/MAX(1,self.tabs.count);
     
     
     __block int xOffset = 0;
@@ -258,6 +238,9 @@
 
 -(void)setSelectedIndex:(NSUInteger)selectedIndex respondToDelegate:(BOOL)respondToDelegate {
     
+    
+    
+    
     if(selectedIndex > self.tabs.count || self.tabs.count == 0)
         return;
     
@@ -267,13 +250,11 @@
     NSView *deselectView = self.subviews[self.selectedIndex];
     
     
-    TMTextField *field = [deselectView.subviews[0] subviews][0];
     
-    NSImageView *image = [deselectView.subviews[0] subviews][1];
+    NSImageView *image = [deselectView.subviews[0] subviews][0];
     
     [image setImage:deselectItem.image];
     
-    [field setTextColor:deselectItem.textColor];
     
     self->_selectedIndex = selectedIndex;
     
@@ -286,12 +267,10 @@
     
     
     
-    field = [selectView.subviews[0] subviews][0];
-    image = [selectView.subviews[0] subviews][1];
+    image = [selectView.subviews[0] subviews][0];
     
     [image setImage:selectItem.selectedImage];
-    
-    [field setTextColor:selectItem.selectedTextColor];
+//
     
     if(respondToDelegate)
         [self.delegate tabItemDidChanged:selectItem index:selectedIndex];
@@ -301,6 +280,7 @@
 -(void)redrawSelectedItem {
     
 }
+
 
 
 

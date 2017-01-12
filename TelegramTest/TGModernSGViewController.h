@@ -12,8 +12,12 @@
 
 @property (nonatomic,weak) TGModernESGViewController *esgViewController;
 
+@property (nonatomic,assign) BOOL hideEmoji;
+
+
 -(void)show;
 -(void)close;
+
 
 -(void)reloadStickers;
 

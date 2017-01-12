@@ -32,7 +32,7 @@
         
         self.scrollAnimation = [[TMScrollAnimation alloc] init];
         self.scrollAnimation.scrollView = self;
-        
+        self.scrollAnimation.duration = 0.4;
         [self setScrollerStyle:NSScrollerStyleOverlay];
         
 //        [self setPostsBoundsChangedNotifications:YES];
@@ -117,19 +117,6 @@
     return self.isScrollToEnd || [self documentOffset].y == 0;
 }
 
-- (BOOL) isNeedUpdateTop {
-    BOOL result = self.lastScrollTop < 0;
-    if(self.lastScrollTop > (int)[self documentOffset].y) {
-        
-       // NSLog(@"offset:%f height:%f",[self documentOffset].y,self.documentSize.height);
-        
-        result = [self documentOffset].y  <= 1500; // эт бред если что
-    }
-    
-    
-    self.lastScrollTop = [self documentOffset].y;
-    return  result;
-}
 
 
 -(void)dropScrollData {
@@ -147,6 +134,21 @@
     
     
     self.lastScrollRight = [self documentOffset].x;
+    return  result;
+}
+
+
+- (BOOL) isNeedUpdateTop {
+    BOOL result = self.lastScrollTop < 0;
+    if(self.lastScrollTop > (int)[self documentOffset].y) {
+        
+        // NSLog(@"offset:%f height:%f",[self documentOffset].y,self.documentSize.height);
+        
+        result = [self documentOffset].y  <= 1500; // эт бред если что
+    }
+    
+    
+    self.lastScrollTop = [self documentOffset].y;
     return  result;
 }
 
@@ -235,6 +237,7 @@
         [self.clipView scrollRectToVisible:NSMakeRect(point.x, point.y, NSWidth(self.frame), NSHeight(self.frame)) animated:NO];
         
     } else {
+        
         
         
         if(self.scrollAnimation.isAnimating) {

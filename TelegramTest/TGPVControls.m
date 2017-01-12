@@ -253,7 +253,7 @@
             } else {
                 
                 
-                [RPCRequest sendRequest:[TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create] crop:[TL_inputPhotoCropAuto create]] successHandler:^(RPCRequest *request, id response) {
+                [RPCRequest sendRequest:[TLAPI_photos_updateProfilePhoto createWithN_id:[TL_inputPhotoEmpty create]] successHandler:^(RPCRequest *request, id response) {
                     
                     [SharedManager proccessGlobalResponse:response];
                     
@@ -302,8 +302,7 @@
              }
              
          }];
-        
-        
+
     }];
     //  [photoSave setImage:image_AttachFile()];
     // [photoSave setHighlightedImage:image_AttachFileHighlighted()];

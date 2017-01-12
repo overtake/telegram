@@ -19,14 +19,9 @@ CACHE_IMAGE(AddSharedContact)
 CACHE_IMAGE(AddSharedContactHighlighted)
 CACHE_IMAGE(AppIcon)
 CACHE_IMAGE(AttachFile)
-CACHE_IMAGE(AttachFileHighlighted)
-CACHE_IMAGE(AttachHighlighted)
 CACHE_IMAGE(AttachLocation)
-CACHE_IMAGE(AttachLocationHighlighted)
 CACHE_IMAGE(AttachPhotoVideo)
-CACHE_IMAGE(AttachPhotoVideoHighlighted)
 CACHE_IMAGE(AttachTakePhoto)
-CACHE_IMAGE(AttachTakePhotoHighlighted)
 CACHE_IMAGE(BottomAttach)
 CACHE_IMAGE(boxBack)
 CACHE_IMAGE(chat)
@@ -77,8 +72,6 @@ CACHE_IMAGE(secretHiglighted)
 CACHE_IMAGE(select)
 CACHE_IMAGE(selectPopup)
 CACHE_IMAGE(smile)
-CACHE_IMAGE(smileActive)
-CACHE_IMAGE(smileHover)
 CACHE_IMAGE(typingGIF)
 CACHE_IMAGE(unchecked)
 CACHE_IMAGE(uncheckedHover)
@@ -248,6 +241,20 @@ CACHE_IMAGE(draftIcon);
 CACHE_IMAGE(AudioPlayerVisibility);
 CACHE_IMAGE(AudioPlayerVisibilityActive);
 CACHE_IMAGE(ic_send);
+
+CACHE_IMAGE(Player_Repeat);
+CACHE_IMAGE(Player_RepeatActive);
+CACHE_IMAGE(StickerLink);
+CACHE_IMAGE(emojiGifContainer);
+CACHE_IMAGE(MusicStandartCover_Active);
+
+CACHE_IMAGE(pip_on);
+CACHE_IMAGE(pip_off);
+
+CACHE_IMAGE(Folder);
+CACHE_IMAGE(trending);
+CACHE_IMAGE(chat_pinned);
+
 @interface ImageUtils : NSObject
 
 

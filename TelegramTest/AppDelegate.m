@@ -12,9 +12,7 @@
 //#import "AFnetworkActivityIndicatorManager.h"
 #import "SSKeychain.h"
 #import "TGSecretAction.h"
-#ifdef TGDEBUG
-#import <Sparkle/Sparkle.h>
-#endif
+
 
 #import "FileUtils.h"
 #import "MTNetwork.h"
@@ -42,8 +40,6 @@
 #import "TGPasslockModalView.h"
 #import "ASCommon.h"
 #import "TGModalView.h"
-#import "MessageInputGrowingTextView.h"
-#import "MessagesBottomView.h"
 #import "TGAudioPlayerWindow.h"
 #import "TGHeadChatPanel.h"
 #import "NSArrayCategory.h"
@@ -82,6 +78,8 @@
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
     return YES;
 }
+
+
 
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     
@@ -363,12 +361,20 @@ void exceptionHandler(NSException * exception)
 - (void)initializeUpdater {
     
 
+#ifdef TGHUETA
+   
+    int bp = 0;
+    
+#endif
+    
     
 #ifdef TGDEBUG
     
     [self.updater setAutomaticallyChecksForUpdates:YES];
     
     [self.updater setFeedURL:[NSURL URLWithString:[NSBundle mainBundle].infoDictionary[@"SUFeedURL"]]];
+    
+
     
     NSLog(@"%@",self.updater.feedURL.absoluteString);
     
@@ -383,14 +389,12 @@ void exceptionHandler(NSException * exception)
     [NSTimer scheduledTimerWithTimeInterval:60.f target:self selector:@selector(checkUpdates) userInfo:nil repeats:YES];
     [self.updater checkForUpdatesInBackground];
     
-    
-    
-    
 #endif
     
 }
 
 - (void)initializeKeyDownHandler {
+    
     
     static BOOL buttonRecordIsUp = YES;
     
@@ -398,6 +402,14 @@ void exceptionHandler(NSException * exception)
 
         
         NSEvent *result = incomingEvent;
+        
+        TelegramWindow *window = ((TelegramWindow *)result.window);
+        
+        if([window isKindOfClass:[TelegramWindow class]] && [window.navigationController.currentController isKindOfClass:NSClassFromString(@"TGWebgameViewController")]) {
+           // [window.navigationController.currentController becomeFirstResponder];
+            [window.firstResponder keyDown:incomingEvent];
+            return [[NSEvent alloc] init];
+        }
         
         if(result.window != self.mainWindow) {
             
@@ -467,6 +479,11 @@ void exceptionHandler(NSException * exception)
                 return [[NSEvent alloc] init];
             }
             
+            if (incomingEvent.keyCode == 8 && incomingEvent.modifierFlags & NSEventModifierFlagCommand) {
+                [TGPhotoViewer copyClipboard];
+                return [[NSEvent alloc] init];
+            }
+            
             return result;
         }
         
@@ -491,9 +508,26 @@ void exceptionHandler(NSException * exception)
         }
         
        
+        /*
+         typedef NS_OPTIONS(NSUInteger, NSEventModifierFlags) {
+         NSAlphaShiftKeyMask         = 1 << 16,
+         NSShiftKeyMask              = 1 << 17,
+         NSControlKeyMask            = 1 << 18,
+         NSAlternateKeyMask          = 1 << 19,
+         NSCommandKeyMask            = 1 << 20,
+         NSNumericPadKeyMask         = 1 << 21,
+         NSHelpKeyMask               = 1 << 22,
+         NSFunctionKeyMask           = 1 << 23,
+         NSDeviceIndependentModifierFlagsMask    = 0xffff0000UL
+         };
+         */
+        
+        if((incomingEvent.modifierFlags & (NSControlKeyMask)) == NSControlKeyMask) {
+            NSLog(@"keyCode:%d",incomingEvent.keyCode);
+        }
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            if((incomingEvent.modifierFlags & NSAlternateKeyMask) > 0) {
+            if(((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0 )&& incomingEvent.modifierFlags != 10617090) {
                 BOOL result = YES;
                 
 //                if([responder isKindOfClass:[NSTextField class]]) {
@@ -529,7 +563,7 @@ void exceptionHandler(NSException * exception)
             if([Telegram rightViewController].navigationViewController.currentController == [Telegram rightViewController].currentEmptyController && ![responder isKindOfClass:NSClassFromString(@"_NSPopoverWindow")]) {
                 
                 if(![responder isKindOfClass:[NSTextView class]] || ![((NSTextView *)responder).superview.superview isKindOfClass:NSClassFromString(@"_TMSearchTextField")]) {
-                    [[Telegram leftViewController] becomeFirstResponder];
+                    [[Telegram leftViewController].currentTabController becomeFirstResponder:YES];
                     
                     return [[NSEvent alloc] init];
                 } 
@@ -554,18 +588,17 @@ void exceptionHandler(NSException * exception)
 //                    
                     if(![appWindow().navigationController.currentController proccessEscAction]) {
                         
+                        
                         [appWindow().navigationController goBackWithAnimation:YES];
                         
-                        if(appWindow().navigationController.messagesViewController.conversation.inputTemplate.attributedString.length > 0) {
-                            return incomingEvent;
-                        } else {
-                            
-                            [appWindow().navigationController goBackWithAnimation:YES];
-                            
-                           // [[[Telegram sharedInstance] firstController] backOrClose:[[NSMenuItem alloc] initWithTitle:@"Profile.Back" action:@selector(backOrClose:) keyEquivalent:@""]];
+                        
+                    } else {
+                        if(appWindow().navigationController.currentController.messagesViewController == appWindow().navigationController.currentController) {
+                            if(appWindow().navigationController.currentController.messagesViewController.editTemplate.attributedString.length > 0) {
+                                return incomingEvent;
+                            }
                         }
                     }
-//
 //                    
 //                }
                 
@@ -657,11 +690,24 @@ void exceptionHandler(NSException * exception)
         
         if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 3) {
             
-            if([Telegram rightViewController].navigationViewController.currentController == [[Telegram rightViewController] messagesViewController]) {
-                [[[Telegram rightViewController] messagesViewController] showSearchBox];
+            if(appWindow().navigationController.currentController == [appWindow().navigationController messagesViewController]) {
+                [[appWindow().navigationController messagesViewController] showSearchBox];
             }
             
              return [[NSEvent alloc]init];
+            
+        }
+        
+        if((result.modifierFlags & 1048840 ) == 1048840 && result.keyCode == 29) {
+            
+            
+            if([[Telegram rightViewController] isModalViewActive]) {
+                [[Telegram rightViewController] modalViewSendAction:[UsersManager currentUser].dialog];
+            } else {
+                [appWindow().navigationController showMessagesViewController:[UsersManager currentUser].dialog];
+            }
+            
+            return [[NSEvent alloc]init];
             
         }
         
@@ -672,6 +718,7 @@ void exceptionHandler(NSException * exception)
                     if(result.keyCode == 9 && (result.modifierFlags & NSCommandKeyMask) > 0) {
                         if([appWindow().navigationController.currentController isKindOfClass:[MessagesViewController class]]) {
                             [appWindow().navigationController.messagesViewController paste:nil];
+                            return [[NSEvent alloc]init];
                         }
                     }
                     
@@ -839,6 +886,16 @@ void exceptionHandler(NSException * exception)
     
     [NSEvent addLocalMonitorForEventsMatchingMask:(NSLeftMouseDraggedMask) handler:block3];
     
+    
+    
+//    id block4 = ^(NSEvent *incomingEvent) {
+//        
+//        return incomingEvent;
+//    };
+//    
+//    [NSEvent addLocalMonitorForEventsMatchingMask:(NSEventMaskSwipe) handler:block4];
+
+    
 }
 
 
@@ -982,7 +1039,15 @@ void exceptionHandler(NSException * exception)
     }
 }
 
+static BOOL canNextLogout = true;
+
 - (void)logoutWithForce:(BOOL)force {
+    
+    if (!canNextLogout) {
+        return;
+    }
+    
+    canNextLogout = false;
     
     dispatch_block_t block = ^ {
         
@@ -1014,6 +1079,7 @@ void exceptionHandler(NSException * exception)
                 [MessagesManager updateUnreadBadge];
                 
                 [self initializeLoginWindow];
+                canNextLogout = true;
             }];
             
         }];

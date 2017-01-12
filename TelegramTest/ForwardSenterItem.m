@@ -59,7 +59,30 @@ static const int fwdUserFlag = 1 << 31;
             TL_localMessageFwdHeader *fwdHeader = [TL_localMessageFwdHeader createWithFlags:![f.to_id isKindOfClass:[TL_peerChannel class]] && fwdChannel ? fwdUserFlag : 0 from_id:f.fwd_from ? f.fwd_from.from_id : f.from_id date:f.date channel_id:fwdChannel ? fwdChannel.n_id  : [f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0 channel_post:[f.to_id isKindOfClass:[TL_peerChannel class]] && !f.chat.isMegagroup ? f.n_id : 0 channel_original_id:fwdChannel && [f.to_id isKindOfClass:[TL_peerChannel class]] ? f.to_id.channel_id : 0];
             
             
-            TL_localMessage *fake = [TL_localMessage createWithN_id:0 flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:[MessageSender getFakeMessageId] randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
+            TL_localMessage *fake = [TL_localMessage createWithN_id:[MessageSender getFakeMessageId] flags:TGOUTUNREADMESSAGE | TGFWDMESSAGE | TGREADEDCONTENT from_id:[UsersManager currentUserId] to_id:conversation.peer fwd_from:fwdHeader reply_to_msg_id:0 date:[[MTNetwork instance] getTime] message:f.message media:f.media fakeId:f.n_id randomId:random reply_markup:nil entities:f.entities views:f.views via_bot_id:f.via_bot_id edit_date:0 isViewed:NO state:DeliveryStatePending];
+            
+            
+            if (f.reply_markup != nil) {
+                
+                
+                  __block TLKeyboardButton *game = nil;
+                
+                [f.reply_markup.rows enumerateObjectsUsingBlock:^(TLKeyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [obj.buttons enumerateObjectsUsingBlock:^(TLKeyboardButton *btn, NSUInteger idx, BOOL * _Nonnull stop) {
+                        
+                        if([btn isKindOfClass:[TL_keyboardButtonGame class]]) {
+                            game = btn;
+                            *stop = YES;
+                        }
+                        
+                    }];
+                }];
+                
+                if(game) {
+                    fake.reply_markup = f.reply_markup;
+                }
+            }
+            
             
             if(additionFlags & (1 << 4) || f.isPost & (1 << 4))
                 fake.flags|= (1 << 14);
@@ -86,12 +109,19 @@ static const int fwdUserFlag = 1 << 31;
 }
 
 
+-(void)setFakes:(NSArray *)fakes {
+    [fakes enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self setMessage:obj];
+    }];
+    
+    [self setMessage:nil];
+    
+    _fakes = fakes;
+}
 
--(void)setTableItems:(NSArray *)tableItems {
-    self->_tableItems = tableItems;
-    for (MessageTableItem *item in tableItems) {
-        item.messageSender = self;
-    }
+
+-(void)setMsg_ids:(NSArray *)msg_ids {
+    _msg_ids = msg_ids;
 }
 
 -(void)performRequest {
@@ -149,8 +179,11 @@ static const int fwdUserFlag = 1 << 31;
                 TL_localMessage *fake = self.fakes[i];
                 TL_localMessage *stated = messages[k];
                 
+                fake.message = stated.message;
+                fake.entities = stated.entities;
                 fake.date = stated.date;
                 fake.n_id = stated.n_id;
+                fake.reply_markup = stated.reply_markup;
                 fake.dstate = DeliveryStateNormal;
                 
                 [fake save:i == 0];
@@ -178,6 +211,28 @@ static const int fwdUserFlag = 1 << 31;
         int flags = 0;
         
         flags|=msg.isPost ? 1 << 4 : 0;
+        
+        if(self.fakes.count == 1 && msg.reply_markup != nil) {
+            
+            flags|=(1 << 8);
+           
+            __block TLKeyboardButton *game = nil;
+            
+            [msg.reply_markup.rows enumerateObjectsUsingBlock:^(TLKeyboardButtonRow *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [obj.buttons enumerateObjectsUsingBlock:^(TLKeyboardButton *btn, NSUInteger idx, BOOL * _Nonnull stop) {
+                    
+                    if([btn isKindOfClass:[TL_keyboardButtonGame class]]) {
+                        game = btn;
+                        *stop = YES;
+                    }
+                    
+                }];
+            }];
+            
+            if(game) {
+                
+            }
+        }
         
         return flags;
         

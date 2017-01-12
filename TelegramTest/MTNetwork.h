@@ -1,12 +1,12 @@
 #import <Foundation/Foundation.h>
-#import <MtProtoKit/MTContext.h>
-#import <MtProtoKit/MTProto.h>
-#import <MTProtoKit/MTDatacenterAddressSet.h>
-#import <MTProtoKit/MTDatacenterAddress.h>
-#import <MtProtoKit/MTRequestMessageService.h>
-#import <MTProtoKit/MTKeychain.h>
+#import <MtProtoKitMac/MTContext.h>
+#import <MtProtoKitMac/MTProto.h>
+#import <MtProtoKitMac/MTDatacenterAddressSet.h>
+#import <MtProtoKitMac/MTDatacenterAddress.h>
+#import <MtProtoKitMac/MTRequestMessageService.h>
+#import <MtProtoKitMac/MTKeychain.h>
 #import "TGUpdateMessageService.h"
-#import <MtProtoKit/MTQueue.h>
+#import <MtProtoKitMac/MTQueue.h>
 
 @interface MTRequest (LegacyTL)
 -(void)setBody:(TLApiObject *)body;

@@ -62,7 +62,7 @@
         [sizes addObject:size];
         [sizes addObject:size1];
 
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:rand_long() access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:caption];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:rand_long() access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:caption];
         
         
         [TGCache cacheImage:renderedImage([[NSImage alloc] initWithData:jpegNormalizedData(image)], maxSize) forKey:size.location.cacheKey groups:@[IMGCACHE]];
@@ -100,17 +100,12 @@
         if([input isKindOfClass:[TL_inputPhoto class]]) {
             media = [TL_inputMediaPhoto createWithN_id:input caption:self.message.media.caption];
         } else {
-            media = [TL_inputMediaUploadedPhoto createWithFile:input caption:self.message.media.caption];
+            media = [TL_inputMediaUploadedPhoto createWithFlags:0 file:input caption:self.message.media.caption stickers:nil];
         }
         
         
-        id request = nil;
-        
-        if(strongSelf.conversation.type == DialogTypeBroadcast) {
-            request = [TLAPI_messages_sendBroadcast createWithContacts:[strongSelf.conversation.broadcast inputContacts] random_id:[strongSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
-        } else {
-            request = [TLAPI_messages_sendMedia createWithFlags:[strongSelf senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-        }
+        id request = [TLAPI_messages_sendMedia createWithFlags:[strongSelf senderFlags] peer:strongSelf.conversation.inputPeer reply_to_msg_id:strongSelf.message.reply_to_msg_id media:media random_id:strongSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+
         
         strongSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
             
@@ -155,9 +150,9 @@
             
             // fix file location for download image after clearing cache.
             {
-                MessageTableItemPhoto *item = (MessageTableItemPhoto *)strongSelf.tableItem;
-                
-                item.imageObject.location = newSize.location;
+//                MessageTableItemPhoto *item = (MessageTableItemPhoto *)strongSelf.tableItem;
+//                
+//                item.imageObject.location = newSize.location;
             }
             
              [[NSFileManager defaultManager] moveItemAtPath:strongSelf.filePath toPath:mediaFilePath(strongSelf.message) error:nil];

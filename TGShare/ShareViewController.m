@@ -287,7 +287,7 @@ static ShareViewController *shareViewController;
     }
 
     
-    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithOffset_date:date offset_id:0 offset_peer:[TL_inputPeerEmpty create] limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
+    [TGS_RPCRequest sendRequest:[TLAPI_messages_getDialogs createWithFlags:0 offset_date:date offset_id:0 offset_peer:[TL_inputPeerEmpty create] limit:100] successHandler:^(TGS_RPCRequest *request, TL_messages_dialogsSlice *response) {
         
         
         NSMutableArray *items = [[NSMutableArray alloc] init];

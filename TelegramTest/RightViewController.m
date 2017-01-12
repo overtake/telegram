@@ -92,7 +92,6 @@
     self.aboutViewController = [[AboutViewController alloc] initWithFrame:rect];
     self.userNameViewController = [[UserNameViewController alloc] initWithFrame:rect];
     
-    self.addContactViewController = [[AddContactViewController alloc] initWithFrame:rect];
     
     self.lastSeenViewController = [[PrivacySettingsViewController alloc] initWithFrame:rect];
     
@@ -364,6 +363,19 @@
                 
         [self hideModalView:YES animation:YES];
         
+    } else if (self.modalView == [self forwardGameView]) {
+        NSDictionary *obj = self.modalObject;
+        
+
+        confirm(appName(), [NSString stringWithFormat:NSLocalizedString(@"ShareGameAlert", nil),(dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) ? dialog.chat.title :  dialog.user.fullName], ^{
+            shareGameResult(obj,@[dialog],YES);
+            
+            [self hideModalView:YES animation:YES];
+
+            
+        },nil);
+       
+
     } else  {
         
      //   confirm(NSLocalizedString(@"Alert.Forward", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.ForwardTo", nil),(dialog.type == DialogTypeChat) ? dialog.chat.title : (dialog.type == DialogTypeBroadcast) ? dialog.broadcast.title : dialog.user.fullName], ^{
@@ -455,13 +467,13 @@
     
 }
 
-- (void)showInlineBotSwitchModalView:(TLUser *)user keyboard:(TLKeyboardButton *)keyboard {
+- (void)showInlineBotSwitchModalView:(TLUser *)user query:(NSString *)query {
     [self hideModalView:YES animation:NO];
     
     TMModalView *view = [self shareInlineModalView];
     
     self.modalView = view;
-    self.modalObject = [NSString stringWithFormat:@"@%@ %@",user.username, keyboard.query];
+    self.modalObject = query;
     
     
     if([Telegram isSingleLayout]) {
@@ -525,7 +537,38 @@
     
 }
 
+- (void)showGameForwardView:(NSDictionary *)params {
+    [self hideModalView:YES animation:NO];
+    
+    
+    if([Telegram isSingleLayout]) {
+        [self.navigationViewController pushViewController:[self currentEmptyController] animated:YES];
+    }
+    
+    TMModalView *view = [self forwardGameView];
+    
+    self.modalView = view;
+    
+    self.modalObject = params;
+    
+    [view removeFromSuperview];
+    [view setFrameSize:view.bounds.size];
+    [view setHeaderTitle:NSLocalizedString(@"Messages.SharingGame", nil) text:params[@"game"]];
+    
+    [self hideModalView:NO animation:YES];
+
+}
+
 - (TMModalView *)forwardModalView {
+    static TMModalView *view;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        view = [[TMModalView alloc] initWithFrame:self.view.bounds];
+    });
+    return view;
+}
+
+- (TMModalView *)forwardGameView {
     static TMModalView *view;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -718,7 +761,7 @@
     [self hideModalView:YES animation:NO];
     
     
-    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
+    [self.navigationViewController pushViewController:self.generalSettingsViewController animated:[Telegram isSingleLayout]];
 }
 
 
@@ -758,15 +801,6 @@
 
 }
 
--(void)showAddContactController {
-    if(self.navigationViewController.currentController == self.addContactViewController)
-        return;
-    
-    [self hideModalView:YES animation:NO];
-    
-    
-    [self.navigationViewController pushViewController:self.addContactViewController animated:self.navigationViewController.currentController != [self noDialogsSelectedViewController]];
-}
 
 - (void)showPrivacyController {
     if(self.navigationViewController.currentController == self.privacyViewController)

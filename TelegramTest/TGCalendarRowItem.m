@@ -29,7 +29,7 @@
         NSDateComponents *components = [cal components:unitFlags fromDate:_month];
         
         
-        _startDay = [TGCalendarUtils weekDay:[NSDate dateWithTimeIntervalSince1970:_month.timeIntervalSince1970 - ((components.day - 1) * 24*60*60)]];
+        _startDay = [TGCalendarUtils weekDay:[NSDate dateWithTimeIntervalSince1970:_month.timeIntervalSince1970 - ((components.day ) * 24*60*60)]];
         
     }
     

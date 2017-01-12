@@ -9,7 +9,7 @@
 #import "TGSharedLinkRowView.h"
 #import "MessageTableItemText.h"
 #import "TGWebpageContainer.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGEmbedModalView.h"
 #import "TGSharedLinksTableView.h"
 #import "NSAttributedString+Hyperlink.h"

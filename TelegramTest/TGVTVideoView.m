@@ -734,6 +734,7 @@ static NSImage *TGVTThumbCap() {
         if (![[NSFileManager defaultManager] fileExistsAtPath:realPath]) {
             realPath = nil;
         }
+        
     
         if (![realPath isEqualToString:_path]) {
             

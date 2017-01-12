@@ -24,8 +24,11 @@ typedef enum {
 
 @end
 
+
+
 @interface TGModernConversationHistoryController : NSObject
 
+extern NSString *const kPullPinnedOnce;
 
 @property (nonatomic,strong,readonly) ASQueue *queue;
 
@@ -40,5 +43,7 @@ typedef enum {
 -(void)requestNextConversation;
 
 -(void)clear;
+
++(NSArray*)parseDialogs:(TL_messages_dialogs *)response;
 
 @end

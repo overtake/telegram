@@ -11,6 +11,7 @@
 #import "NSString+Extended.h"
 #import "MessageTableItem.h"
 #import "TGArticleImageObject.h"
+#import "TGExternalImageObject.h"
 @interface TGReplyObject ()
 @property (nonatomic,strong) RPCRequest *request;
 @end
@@ -44,7 +45,7 @@
         
         if(replyMessage != nil && !withoutCache) {
             TGReplyObject *cObj = [replyCache objectForKey:@(replyMessage.channelMsgId)];
-            if(cObj)
+            if(cObj && !cObj.isPinnedMessage)
                 return cObj;
         }
         
@@ -55,7 +56,7 @@
         _fromMessage = fromMessage;
         _replyMessage = replyMessage;
         
-        _containerHeight = 33;
+        _containerHeight = 30;
         
         if(_replyMessage != nil) {
             [self updateObject];
@@ -98,7 +99,7 @@ static NSCache *replyCache;
     
     [replyHeader appendString:name withColor:nameColor];
     
-    [replyHeader setFont:TGSystemMediumFont(12.5) forRange:replyHeader.range];
+    [replyHeader setFont:[SettingsArchiver fontMedium125] forRange:replyHeader.range];
     
   //  [replyHeader addAttribute:NSLinkAttributeName value:[TMInAppLinks peerProfile:_replyMessage.fwd_from_id != nil ? _replyMessage.fwd_from_id : [TL_peerUser createWithUser_id:_replyMessage.from_id]] range:replyHeader.range];
     
@@ -131,7 +132,7 @@ static NSCache *replyCache;
     
     [replyText addAttribute:NSParagraphStyleAttributeName value:style range:replyText.range];
     
-    [replyText setFont:TGSystemFont(12.5) forRange:replyText.range];
+    [replyText setFont:[SettingsArchiver font125] forRange:replyText.range];
     
     _replyText = replyText;
     
@@ -163,9 +164,22 @@ static NSCache *replyCache;
         
     }
     
+    if ([_replyMessage.media isKindOfClass:[TL_messageMediaGame class]]) {
+        
+        TLPhotoSize *photoSize = [_replyMessage.media.game.photo.sizes firstObject];
+        if (photoSize) {
+            _replyThumb = [[TGArticleImageObject alloc] initWithLocation:photoSize.location placeHolder:nil];
+            _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
+        }
+        
+    }
+    
     if([_replyMessage.media isKindOfClass:[TL_messageMediaGeo class]]) {
         
-        
+        _replyThumb = [[TGExternalImageObject alloc] initWithURL:[NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=15&size=%@&sensor=true", _replyMessage.media.geo.lat,  _replyMessage.media.geo.n_long, ([NSScreen mainScreen].backingScaleFactor == 2 ? @"100x100" : @"50x50")]];
+        _replyThumb.imageSize = NSMakeSize(_containerHeight-2, _containerHeight-2);
+        _replyThumb.placeholder = gray_resizable_placeholder();
+
     }
     
     if([_replyMessage.media isKindOfClass:[TL_messageMediaVideo class]]) {
@@ -252,8 +266,11 @@ static NSCache *replyCache;
                     
                     [[Storage manager] addSupportMessages:messages];
                     
-                    if(completionHandler)
-                        completionHandler(messages[0]);
+                    [ASQueue dispatchOnMainQueue:^{
+                        if(completionHandler)
+                            completionHandler(messages[0]);
+                    }];
+                   
                 }
                 
                 

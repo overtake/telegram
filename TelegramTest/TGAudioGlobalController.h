@@ -11,6 +11,7 @@
 #import "TGAudioPlayerListView.h"
 #import "TGAudioProgressView.h"
 typedef enum {
+    TGAudioPlayerGlobalStateWaitPlaying = 3,
     TGAudioPlayerGlobalStatePlaying = 0,
     TGAudioPlayerGlobalStatePaused = 1,
     TGAudioPlayerGlobalStateForcePaused = 2
@@ -38,14 +39,18 @@ typedef enum {
 @property (nonatomic,weak) TGAudioProgressView *progressView;
 
 @property (nonatomic,assign) BOOL autoStart;
+@property (nonatomic,assign,getter=isRepeat) BOOL repeat;
 
+@property (nonatomic,assign) Class filterClass;
+@property (nonatomic,assign,getter=isReversed) BOOL reversed;
 
 
 @property (nonatomic,strong,readonly) MessageTableItemAudioDocument *currentItem;
 @property (nonatomic,weak,readonly) TMNavigationController *navigationController;
 
 -(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation;
--(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalState)state navigation:(TMNavigationController *)navigation;;
+-(void)show:(TL_conversation *)conversation navigation:(TMNavigationController *)navigation currentItem:(MessageTableItemAudioDocument *)currentItem;
+-(void)show:(TL_conversation *)conversation playerState:(TGAudioPlayerGlobalState)state navigation:(TMNavigationController *)navigation;
 -(void)hide;
 -(MessageTableItemAudioDocument *)currentItem;
 
@@ -53,6 +58,8 @@ typedef enum {
 
 -(TGAudioPlayerGlobalState)pState;
 
+
++(TGAudioGlobalController *)globalController:(TMNavigationController *)nav;
 
 -(void)pause;
 -(void)resume;

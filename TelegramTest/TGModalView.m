@@ -10,12 +10,16 @@
 #import "TGAllStickersTableView.h"
 #import "CAMediaTimingFunction+AdditionalEquations.h"
 #import "TGAnimationBlockDelegate.h"
+#import "TGTextLabel.h"
 @interface TGModalView ()
 @property (nonatomic,strong) TMView *containerView;
 @property (nonatomic,strong) TMView *backgroundView;
 
 @property (nonatomic,strong) TMView *animationContainerView;
 @property (nonatomic,strong) NSTrackingArea *trackingArea;
+
+@property (nonatomic,strong) TGTextLabel *textLabel;
+@property (nonatomic,strong) TMView *headerContainer;
 
 @end
 
@@ -36,16 +40,57 @@
     return self;
 }
 
+-(void)setDrawHeaderSeparator:(BOOL)drawHeaderSeparator {
+    _drawHeaderSeparator = drawHeaderSeparator;
+    [_headerContainer setNeedsDisplay:YES];
+}
+
+-(void)enableHeader:(NSString *)header {
+    
+    _headerContainer = [[TMView alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width, 50)];
+    
+    weak();
+    
+    [_headerContainer setDrawBlock:^{
+        
+        if(weakSelf.isDrawHeaderSeparator) {
+            [GRAY_BORDER_COLOR set];
+            NSRectFill(NSMakeRect(0, 0, NSWidth(weakSelf.headerContainer.frame), DIALOG_BORDER_WIDTH));
+        }
+        
+    }];
+    
+    TGTextLabel *textLabel = [[TGTextLabel alloc] init];
+    
+    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] init];
+    [attr appendString:header withColor:TEXT_COLOR];
+    [attr setFont:TGSystemMediumFont(15) forRange:attr.range];
+    
+    [textLabel setText:attr maxWidth:self.containerSize.width];
+    
+    _textLabel = textLabel;
+    
+    [_headerContainer addSubview:_textLabel];
+    
+    [self addSubview:_headerContainer];
+    
+}
+
 -(void)enableCancelAndOkButton {
     weak();
     
-    _ok = [[BTRButton alloc] initWithFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
-    _ok.autoresizingMask = NSViewWidthSizable;
+    if (_ok || _cancel) {
+        return;
+    }
+    
+    _ok = [[BTRButton alloc] initWithFrame:NSZeroRect];
     _ok.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_ok setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-    [_ok setTitleFont:TGSystemFont(15) forControlState:BTRControlStateNormal];
-    [_ok setTitle:NSLocalizedString(@"OK", nil) forControlState:BTRControlStateNormal];
+    [_ok setTitleFont:TGSystemMediumFont(15) forControlState:BTRControlStateNormal];
+    [_ok setTitle:NSLocalizedString(@"Modal.Done", nil) forControlState:BTRControlStateNormal];
+    [_ok.titleLabel sizeToFit];
+    [_ok setFrameSize:NSMakeSize(NSWidth(_ok.titleLabel.frame), 50)];
     
     [_ok addBlock:^(BTRControlEvents events) {
         
@@ -56,31 +101,32 @@
     
     [self addSubview:_ok];
     
-    
-    
-    _cancel = [[BTRButton alloc] initWithFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
-    _cancel.autoresizingMask = NSViewWidthSizable;
+     _cancel = [[BTRButton alloc] initWithFrame:NSZeroRect];
     _cancel.layer.backgroundColor = [NSColor whiteColor].CGColor;
     
     [_cancel setTitleColor:LINK_COLOR forControlState:BTRControlStateNormal];
-    [_cancel setTitleFont:TGSystemFont(15) forControlState:BTRControlStateNormal];
+    [_cancel setTitleFont:TGSystemMediumFont(15) forControlState:BTRControlStateNormal];
     [_cancel setTitle:NSLocalizedString(@"Cancel", nil) forControlState:BTRControlStateNormal];
+    
+    [_cancel.titleLabel sizeToFit];
+    [_cancel setFrameSize:NSMakeSize(NSWidth(_cancel.titleLabel.frame), 50)];
     
     [_cancel addBlock:^(BTRControlEvents events) {
         
         [weakSelf cancelAction];
-        
         
     } forControlEvents:BTRControlEventMouseDownInside];
     
     [self addSubview:_cancel];
     
     
-    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, self.containerSize.width, 1)];
-    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
     
-    separator.autoresizingMask = NSViewWidthSizable;
-    [self addSubview:separator];
+    
+//    TMView *separator = [[TMView alloc] initWithFrame:NSMakeRect(0, 49, self.containerSize.width, 1)];
+//    [separator setBackgroundColor:DIALOG_BORDER_COLOR];
+//    
+//    separator.autoresizingMask = NSViewWidthSizable;
+//    [self addSubview:separator];
 
 }
 
@@ -131,6 +177,30 @@
 
 }
 
+-(int)topOffset {
+    return NSHeight(_headerContainer.frame);
+}
+-(int)bottomOffset {
+    return _ok ? 50 : 0;
+}
+
+
+-(void)addScrollEvent:(TMTableView *)table {
+    id clipView = [[table enclosingScrollView] contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(_didScrolledTableView:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:clipView];
+}
+
+-(void)removeScrollEvent {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)_didScrolledTableView:(NSNotification *)notification {
+    
+}
+
 -(void)mouseDown:(NSEvent *)theEvent {
     
     
@@ -142,7 +212,23 @@
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     
+    
+    NSArray *modals = [TMViewController modalsView];
+    
+    [modals enumerateObjectsUsingBlock:^(TGModalView *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if([obj isKindOfClass:[TGModalView class]]) {
+            // TO DO
+            //NSLog(@"%@",obj);
+        }
+        
+    }];
+
+    
+    
     [_backgroundView setFrameSize:newSize];
+    
+    [_backgroundView setCenterByView:self];
     
     [self setContainerFrameSize:self.containerSize];
     
@@ -166,12 +252,12 @@
 
 -(void)show:(NSWindow *)window animated:(BOOL)animated {
     
+    [window.contentView.subviews[0] addSubview:self];
 
     [self setFrameSize:window.contentView.frame.size];
     
     [self setContainerFrameSize:self.containerSize];
     
-    [window.contentView.subviews[0] addSubview:self];
     
     [window makeFirstResponder:self];
     
@@ -280,12 +366,8 @@
         [self modalViewDidHide];
     }
     
-    
-    
-    
-    
-    
 }
+
 
 -(void)setOpaqueContent:(BOOL)opaqueContent {
     _opaqueContent = opaqueContent;
@@ -369,12 +451,28 @@
     [_animationContainerView setFrameOrigin:NSMakePoint(x,y)];
     
     
-    [_ok setFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
-    [_cancel setFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
+//    [_ok setFrame:NSMakeRect(self.containerSize.width/2, 0, self.containerSize.width/2, 49)];
+//    [_cancel setFrame:NSMakeRect(0, 0, self.containerSize.width/2, 50)];
+//
+    [_headerContainer setFrameSize:NSMakeSize(size.width, NSHeight(_headerContainer.frame))];
+    
+    [_textLabel setText:_textLabel.text maxWidth:size.width - 100];
+    [_textLabel setCenterByView:_textLabel.superview];
+    
+    [_headerContainer setFrameOrigin:NSMakePoint(0, size.height - NSHeight(_headerContainer.frame))];
+
+    
+    [_ok setFrameOrigin:NSMakePoint(size.width - NSWidth(_ok.frame) - 30, 0)];
+    [_cancel setFrameOrigin:NSMakePoint(NSMinX(_ok.frame) - NSWidth(_cancel.frame) -30 , 0)];
+
 }
 
 -(NSSize)containerSize {
     return _containerView.frame.size;
+}
+
+-(void)dealloc {
+    [self removeScrollEvent];
 }
 
 @end

@@ -14,7 +14,6 @@
 @property (nonatomic,strong,readonly) TGImageObject *replyThumb;
 @property (nonatomic,strong,readonly) NSAttributedString *replyText;
 
-@property (nonatomic,strong,readonly) NSURL *geoURL;
 
 @property (nonatomic,assign,readonly) int replyHeight;
 @property (nonatomic,assign,readonly) int replyHeaderHeight;

@@ -7,7 +7,6 @@
 //
 
 #import "TMLoaderView.h"
-#import "POPLayerExtras.h"
 @interface TMLoaderView ()
 @property (nonatomic,weak) id target;
 @property (nonatomic,assign) SEL selector;
@@ -51,6 +50,9 @@
         
         self.stateImages = [[NSMutableDictionary alloc] init];
         [self addSubview:self.imageView];
+        
+        
+        
     }
     
     return self;

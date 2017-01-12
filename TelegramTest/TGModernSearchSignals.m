@@ -17,25 +17,29 @@
      
     SSignal *s = [[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber *subscriber) {
         
-        
-        NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:search selector:@"title username" checker:^BOOL(TLChat *chat) {
-            return !chat.isDeactivated && !chat.isLeft && !chat.dialog.isInvisibleChannel;
-        }];
-        
-        
-        NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:search selector:@"fullName username" checker:^BOOL(TLUser *user) {
-            
-            if(!user.isMin) {
-                TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
-                return (dialog && !dialog.fake) || user.isContact;
-            }
-            
-            return NO;
+        if(search.length > 0) {
+            NSArray *searchChats = [[ChatsManager sharedManager] searchWithString:search selector:@"title username" checker:^BOOL(TLChat *chat) {
+                return !chat.isDeactivated && !chat.isLeft && !chat.dialog.isInvisibleChannel;
+            }];
             
             
-        }];
-        
-        [subscriber putNext:[searchChats arrayByAddingObjectsFromArray:searchUsers]];
+            NSArray *searchUsers = [[UsersManager sharedManager] searchWithString:search selector:@"fullName username" checker:^BOOL(TLUser *user) {
+                
+                if(!user.isMin) {
+                    TL_conversation *dialog = [[DialogsManager sharedManager] find:user.n_id];
+                    return (dialog && !dialog.fake) || user.isContact;
+                }
+                
+                return NO;
+                
+                
+            }];
+            
+            [subscriber putNext:[searchChats arrayByAddingObjectsFromArray:searchUsers]];
+        } else {
+            [subscriber putNext:nil];
+        }
+       
         
         return [[SBlockDisposable alloc] initWithBlock:^{
             

@@ -83,9 +83,12 @@
 
 
 - (IBAction)openSettings:(id)sender {
+    if (![Telegram isSingleLayout]) {
+        [[Telegram leftViewController] showTabControllerAtIndex:2];
+    } else {
+        [[Telegram rightViewController] showGeneralSettings];
+    }
     
-    [[Telegram leftViewController] showTabControllerAtIndex:2];
-        
 }
 
 - (IBAction)clearChatHistory:(NSMenuItem *)sender {

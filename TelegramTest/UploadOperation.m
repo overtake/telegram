@@ -12,7 +12,7 @@
 #import "QueueManager.h"
 #import "NSMutableData+Extension.h"
 #import "TGTimer.h"
-#import <MTProtoKit/MTProtoKit.h>
+#import <MtProtoKitMac/MtProtoKitMac.h>
 #import <openssl/md5.h>
 #import <CommonCrypto/CommonCrypto.h>
 #define CONCURENT 3

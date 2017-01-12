@@ -207,6 +207,7 @@
             break;
         case DialogTypeUser:
             [self setUser:conversation.user];
+            break;
         default:
             [self setBroadcast:nil];
             [self setUser:nil];

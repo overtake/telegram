@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 keepcoder. All rights reserved.
 //
 
-#import <MtProtoKit/MtProtoKit.h>
+#import <MtProtoKitMac.h>
 
 @interface MTConnection : MTProto<MTProtoDelegate>
 

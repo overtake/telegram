@@ -492,7 +492,7 @@
     
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
         
-        [RPCRequest sendRequest:[TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_photos_uploadProfilePhoto createWithFile:input] successHandler:^(RPCRequest *request, id response) {
             
             [SharedManager proccessGlobalResponse:response];
             
@@ -526,7 +526,7 @@
     
     [operation setUploadComplete:^(UploadOperation *operation, id input) {
         
-        [RPCRequest sendRequest:[TLAPI_photos_uploadProfilePhoto createWithFile:input caption:@"me" geo_point:[TL_inputGeoPointEmpty create] crop:[TL_inputPhotoCropAuto create]] successHandler:^(RPCRequest *request, id response) {
+        [RPCRequest sendRequest:[TLAPI_photos_uploadProfilePhoto createWithFile:input] successHandler:^(RPCRequest *request, id response) {
             
             
             [SharedManager proccessGlobalResponse:response];

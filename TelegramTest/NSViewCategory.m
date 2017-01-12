@@ -88,7 +88,7 @@
 
 -(void)removeFromSuperview:(BOOL)animated {
     
-    if(animated) {
+    if(false) {
         CAAnimation *animation = [TMAnimations fadeWithDuration:0.2 fromValue:1.0f toValue:0.0];
         
         TGAnimationBlockDelegate *block = [[TGAnimationBlockDelegate alloc] initWithLayer:self.layer];
@@ -96,6 +96,7 @@
         block.completion = ^(BOOL completed){
             if(completed)
                 [self removeFromSuperview];
+            self.layer.opacity = 1.0;
         };
         
         animation.delegate = block;
@@ -104,7 +105,7 @@
         
         [self.layer addAnimation:animation forKey:@"opacity"];
         
-        self.layer.opacity = 1.0;
+        self.layer.opacity = 0.0;
 
     } else {
         [self removeFromSuperview];
@@ -113,7 +114,9 @@
 }
 
 
--(void)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
+-(CABasicAnimation *)moveWithCAAnimation:(NSPoint)position animated:(BOOL)animated {
+    
+    CABasicAnimation *anim = nil;
     
     if(animated) {
         int presentX = NSMinX(self.frame);
@@ -126,7 +129,7 @@
             presentX = [[presentLayer valueForKeyPath:@"frame.origin.x"] floatValue];
         }
         
-        CABasicAnimation *anim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, presentY) toValue:position];
+        anim = [TMAnimations postionWithDuration:0.2 fromValue:NSMakePoint(presentX, presentY) toValue:position];
         
         
         [self.layer removeAnimationForKey:@"position"];
@@ -134,10 +137,11 @@
         [self.layer setPosition:position];
 
     }
-
-    
-    
+ 
     [self setFrameOrigin:position];
+    
+    return anim;
+
 }
 
 -(void)heightWithCAAnimation:(NSRect)rect animated:(BOOL)animated {
@@ -222,6 +226,21 @@
     }
     
     self.layer.opacity = 1.0f;
+}
+
+-(instancetype)insertVibrancyViewBlendingMode:(int)mode
+{
+    Class vibrantClass=NSClassFromString(@"NSVisualEffectView");
+    if (vibrantClass)
+    {
+        NSVisualEffectView *vibrant=[[vibrantClass alloc] initWithFrame:self.bounds];
+        [vibrant setBlendingMode:mode];
+        [self addSubview:vibrant positioned:NSWindowBelow relativeTo:nil];
+        
+        return vibrant;
+    }
+    
+    return nil;
 }
 
 static CALAyerAnimationInstance *instance() {

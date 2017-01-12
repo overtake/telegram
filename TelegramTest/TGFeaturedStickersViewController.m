@@ -39,7 +39,7 @@
         
         sets = [transaction objectForKey:@"featuredSets" inCollection:STICKERS_COLLECTION];
         
-        NSDictionary *info  = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+        NSDictionary *info  = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
         
         unread = [transaction objectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];
 
@@ -65,7 +65,7 @@
             
         }] != NSNotFound;
         
-       TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject: @{@"set":obj.set,@"stickers":@[obj.cover],@"added":@(isAdded),@"unread":@(isUnread)}];
+        TGFeaturedStickerPackRowItem *item = [[TGFeaturedStickerPackRowItem alloc] initWithObject: @{@"set":obj.set,@"stickers":obj.cover ? @[obj.cover] : @[],@"added":@(isAdded),@"unread":@(isUnread)}];
         
         [_tableView addItem:item tableRedraw:NO];
         
@@ -75,7 +75,7 @@
     
     
     if(unread.count > 0) {
-        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers create] successHandler:^(id request, id response) {
+        [RPCRequest sendRequest:[TLAPI_messages_readFeaturedStickers createWithN_id:unread.mutableCopy] successHandler:^(id request, id response) {
             
             [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
                 [transaction removeObjectForKey:@"featuredUnreadSets" inCollection:STICKERS_COLLECTION];

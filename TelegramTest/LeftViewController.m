@@ -92,7 +92,7 @@
 @implementation LeftViewController
 
 
-static const int bottomOffset = 58;
+static const int bottomOffset = 50;
 
 - (void)loadView {
     [super loadView];
@@ -250,12 +250,11 @@ static TMViewController *changedController;
             
             [[Telegram rightViewController].navigationViewController.viewControllerStack removeObjectsInRange:NSMakeRange(idx, [Telegram rightViewController].navigationViewController.viewControllerStack.count - idx)];
             
-            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:changedController != [[Telegram rightViewController] currentEmptyController]];
+            [[Telegram rightViewController].navigationViewController pushViewController:changedController animated:NO];
             changedController = nil;
             
         }
     }
-    
     
    
     
@@ -273,9 +272,6 @@ static TMViewController *changedController;
     
     [self.tabController setFrameSize:NSMakeSize(NSWidth(self.view.frame), NSHeight(self.tabController.frame))];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.conversationsViewController viewWillAppear:NO];
-    });
     
 //    
 //    self.tabController.selectedIndex = self.tabController.selectedIndex;

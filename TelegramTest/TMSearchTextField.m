@@ -56,16 +56,26 @@
 - (BOOL)becomeFirstResponder {
     
     @try {
-//        NSString *sourceString = [[NSThread callStackSymbols] objectAtIndex:4];
-//        // Example: 1   UIKit                               0x00540c89 -[UIApplication _callInitializationDelegatesForURL:payload:suspended:] + 1163
-//        NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
-//        NSMutableArray *array = [NSMutableArray arrayWithArray:[sourceString  componentsSeparatedByCharactersInSet:separatorSet]];
-//        [array removeObject:@""];
 //        
-//        if(array.count > 4 && [[array objectAtIndex:4] isEqualToString:@"_selectFirstKeyView"])
+//        __block BOOL accept = YES;
+//        
+//        [[NSThread callStackSymbols] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            
+//            NSCharacterSet *separatorSet = [NSCharacterSet characterSetWithCharactersInString:@" -[]+?.,"];
+//            NSMutableArray *array = [NSMutableArray arrayWithArray:[obj  componentsSeparatedByCharactersInSet:separatorSet]];
+//            [array removeObject:@""];
+//
+//            if([array[4] hasPrefix:@"sendEvent:"] || ([array[4] hasPrefix:@"initializeMainWindow"])) {
+//                accept = NO;
+//                *stop = YES;
+//            }
+//        }];
+//        
+//        
+//        if(accept) {
 //            return NO;
-        
-       
+//        }
+
 
     } @catch (NSException *exception) {
         
@@ -186,11 +196,11 @@ const static int textFieldXOffset = 30;
         self.textField = [[_TMSearchTextField alloc] initWithFrame:NSZeroRect];
         [self.textField setDelegate:self];
         [self.textField setSearchDelegate:self];
-        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemLightFont(12)}];
+        NSAttributedString *placeholderAttributed = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search", nil) attributes:@{NSForegroundColorAttributeName: NSColorFromRGB(0xaeaeae), NSFontAttributeName: TGSystemFont(12)}];
         [[self.textField cell] setPlaceholderAttributedString:placeholderAttributed];
         
         [self.textField setBackgroundColor:[NSColor clearColor]];
-        [self.textField setFont:TGSystemLightFont(12)];
+        [self.textField setFont:TGSystemFont(12)];
         [self.textField setStringValue:NSLocalizedString(@"Search", nil)];
         [self.textField sizeToFit];
         [self.textField setStringValue:@""];
@@ -206,12 +216,7 @@ const static int textFieldXOffset = 30;
         
         [self.containerView addSubview:self.textField];
         
-        
-        
-        
-        
-        
-        self.cancelButton = [[TMButton alloc] initWithFrame:NSZeroRect];
+       self.cancelButton = [[TMButton alloc] initWithFrame:NSZeroRect];
         [self.cancelButton setAutoresizingMask:NSViewMinXMargin];
         [self.cancelButton setImage:image_clear() forState:TMButtonNormalState];
         [self.cancelButton setImage:image_clearActive() forState:TMButtonPressedState];
@@ -275,6 +280,8 @@ const static int textFieldXOffset = 30;
     // [self.textField setFrameOrigin:NSMakePoint(30, NSMinY(self.textField.frame))];
     
     [self.textField setFrameSize:NSMakeSize(self.containerView.frame.size.width - 30 - NSMinX(self.textField.frame), NSHeight(self.textField.frame))];
+    
+    [self.cancelButton setFrameOrigin:NSMakePoint(self.frame.size.width - self.cancelButton.frame.size.width - 10, roundf((self.frame.size.height - self.cancelButton.frame.size.height) / 2) - 1)];
     
     if([self inLiveResize]) {
         if(self.textField.window.firstResponder != self.textField.textView) {

@@ -10,6 +10,7 @@
 #import "TGSettingsTableView.h"
 #import "TGChangeUserNameContainerView.h"
 #import "NSAttributedString+Hyperlink.h"
+#import "TGChatContainerItem.h"
 @interface TGUserNameContainerRowItem : TGGeneralRowItem
 @property (nonatomic,strong) TGChangeUserObserver *observer;
 @end
@@ -67,6 +68,7 @@
 @property (nonatomic,strong) TGSettingsTableView *tableView;
 @property (nonatomic,strong) TGUserNameContainerRowItem *userNameContainerItem;
 @property (nonatomic,strong) GeneralSettingsBlockHeaderItem *joinLinkItem;
+@property (nonatomic,assign) BOOL isLoadedPublicNames;
 @end
 
 @implementation TGChannelTypeSettingViewController
@@ -120,9 +122,13 @@
         } else if([error isEqualToString:@"CHANNELS_ADMIN_PUBLIC_TOO_MUCH"]) {
             TL_channel *channel = weakSelf.action.object;
             
+            
+            [weakSelf loadAllPublicChannels];
+            
             if(channel.isMegagroup) {
                 return NSLocalizedString(@"MEGAGROUPS_ADMIN_PUBLIC_TOO_MUCH", nil);
             }
+            
         }
         
         return NSLocalizedString(error, nil);
@@ -185,6 +191,64 @@
     [self reload];
 }
 
+
+-(void)loadAllPublicChannels {
+
+    CHECK_LOCKER(_isLoadedPublicNames)
+
+    [[[MTNetwork instance] requestSignal:[TLAPI_channels_getAdminedPublicChannels create]] startWithNext:^(TL_messages_chats *next) {
+                
+        [_tableView addItem:[[TGGeneralRowItem alloc] initWithHeight:40] tableRedraw:YES];
+        
+        [next.chats enumerateObjectsUsingBlock:^(TLChat *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            TGChatContainerItem *chat = [[TGChatContainerItem alloc] initWithObject:obj];
+            chat.height = 50;
+            chat.type = SettingsRowItemTypeNone;
+            chat.status = [NSString stringWithFormat:@"telegram.me/%@",obj.username];
+            chat.editable = YES;
+            
+            [chat setStateback:^id(TGGeneralRowItem * item) {
+                
+                return @(YES);
+            }];
+            
+            __weak TGChatContainerItem *item = chat;
+            
+            [chat setStateCallback:^{
+                
+                confirm(NSLocalizedString(@"Alert.RevokeLink", nil), [NSString stringWithFormat:NSLocalizedString(@"Alert.RevokeLinkInfo", nil),obj.username,obj.title], ^{
+                    
+                    [self showModalProgress];
+                    
+                    [RPCRequest sendRequest:[TLAPI_channels_updateUsername createWithChannel:obj.inputPeer username:@""] successHandler:^(id request, id response) {
+                        [self hideModalProgressWithSuccess];
+                        
+                        [_tableView removeItem:item tableRedraw:YES];
+                        
+                        TGUserNameContainerRowView *view = [_tableView rowViewAtRow:[_tableView indexOfItem:_userNameContainerItem] makeIfNecessary:NO].subviews[0];
+                        
+                        [view.container forceUpdate];
+                        
+                        
+                    } errorHandler:^(id request, RpcError *error) {
+                        [self hideModalProgress];
+                    } timeout:10];
+                    
+                    
+                }, nil);
+
+                
+            }];
+            
+            [_tableView addItem:chat tableRedraw:YES];
+            
+        }];
+        
+        
+    }];
+    
+}
 
 -(BOOL)becomeFirstResponder {
     if([self.action.result.singleObject boolValue]) {

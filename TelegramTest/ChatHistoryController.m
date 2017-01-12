@@ -412,9 +412,7 @@ static ChatHistoryController *observer;
 -(void)setProccessing:(BOOL)isProccessing {
     
     
-    [queue dispatchOnQueue:^{
-        _proccessing = isProccessing;
-    }];
+    
     
     
     [ASQueue dispatchOnMainQueue:^{
@@ -585,12 +583,18 @@ static const int maxCacheCount = 30;
 
 -(void)performCallback:(selectHandler)selectHandler result:(NSArray *)result range:(NSRange )range controller:(id)controller {
    
-    self.proccessing = NO;
+    
+    [queue dispatchOnQueue:^{
+        _proccessing = NO;
+    }];
     
    [ASQueue dispatchOnMainQueue:^{
-        
+       
        if(selectHandler)
             selectHandler(result,range,controller);
+       
+       [self.controller updateLoading];
+
     }];
 
 }
@@ -934,30 +938,77 @@ static const int maxCacheCount = 30;
     
 }
 
+
+-(void)addAndSendMessage:(nonnull TL_localMessage *)message sender:(nonnull SenderItem *)sender {
+    [self addAndSendMessages:@[message] senders:@[sender] sync:YES];
+}
+
+-(void)addAndSendMessages:(NSArray *)messages senders:(NSArray *)senders {
+    [self addAndSendMessages:messages senders:senders sync:NO];
+}
+
+-(void)addAndSendMessages:(NSArray *)messages senders:(NSArray *)senders sync:(BOOL)sync {
+    [queue dispatchOnQueue:^{
+        
+        [listeners enumerateObjectsUsingBlock:^(WeakReference *weak, NSUInteger idx, BOOL *stop) {
+            
+            ChatHistoryController *controller = weak.nonretainedObjectValue;
+            
+            NSArray *filtred = [controller.filter filterAndAdd:messages latest:YES];
+            
+            if(filtred.count > 0) {
+                
+                NSArray *copyItems = [controller.controller messageTableItemsFromMessages:filtred];
+                
+                [controller updateMessageIds:filtred];
+                
+                [ASQueue dispatchOnMainQueue:^{
+                    
+                    [controller.controller receivedMessageList:copyItems inRange:NSMakeRange(0, copyItems.count) itsSelf:YES];
+                
+                }];
+            }
+        }];
+        
+        [messages enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            obj.conversation.last_marked_message = obj.n_id;
+            obj.conversation.last_marked_date = obj.date+1;
+        }];
+        
+        [senders enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(SenderItem *sender, NSUInteger idx, BOOL *stop) {
+            [sender addEventListener:self];
+            [sender send];
+        }];
+        
+    } synchronous:sync];
+}
+
 -(void)onStateChanged:(SenderItem *)sender {
     if(sender.state == MessageSendingStateSent) {
         
-        void (^checkItem)(MessageTableItem *checkItem) = ^(MessageTableItem *checkItem) {
-            
-            
+        void (^checkItem)(TL_localMessage *checkMessage) = ^(TL_localMessage *checkMessage) {
             
             [queue dispatchOnQueue:^{
                 
-                if(self.conversation.last_marked_message > TGMINFAKEID || self.conversation.last_marked_message < checkItem.message.n_id) {
+                [listeners enumerateObjectsUsingBlock:^(WeakReference *obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     
-                    checkItem.messageSender.conversation.last_marked_message = checkItem.message.n_id;
-                    checkItem.messageSender.conversation.last_marked_date = checkItem.message.date;
+                    ChatHistoryController *controller = obj.nonretainedObjectValue;
                     
-                    [self.conversation save];
+                    if(controller.conversation.peer_id == checkMessage.peer_id) {
+                        
+                        if(controller.conversation.last_marked_message > TGMINFAKEID || controller.conversation.last_marked_message < checkMessage.n_id) {
+                            checkMessage.conversation.last_marked_message = checkMessage.n_id;
+                            checkMessage.conversation.last_marked_date = checkMessage.date;
+                            
+                            [self.conversation save];
+                        }
+                        
+                        if(![checkMessage isKindOfClass:[TL_destructMessage class]]) {
+                            [self updateItemId:checkMessage.randomId withId:checkMessage.n_id];
+                        }
+                    }
                     
-               }
-                
-                if(![checkItem.message isKindOfClass:[TL_destructMessage class]]) {
-                    
-                     [self updateItemId:checkItem.message.randomId withId:checkItem.message.n_id];
-                    
-                }
-                
+                }];
                 
             } synchronous:YES];
             
@@ -972,12 +1023,12 @@ static const int maxCacheCount = 30;
         if([sender isKindOfClass:[ForwardSenterItem class]]) {
             ForwardSenterItem *fSender = (ForwardSenterItem *) sender;
             
-            [fSender.tableItems enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+            [fSender.fakes enumerateObjectsUsingBlock:^(TL_localMessage *obj, NSUInteger idx, BOOL *stop) {
                 checkItem(obj);
             }];
             
         } else {
-            checkItem(sender.tableItem);
+            checkItem(sender.message);
         }
         
         

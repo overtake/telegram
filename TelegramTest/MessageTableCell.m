@@ -9,7 +9,7 @@
 #import "MessageTableCell.h"
 #import "MessageTableCellTextView.h"
 #import "TGMessageViewSender.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 @interface MessageTableCell()<NSMenuDelegate>
 
 @end
@@ -35,7 +35,6 @@
         
         if(sender && sender.state != MessageSendingStateSent) {
             item.messageSender = sender;
-            item.messageSender.tableItem = item;
             if(item.messageSender.state == MessageStateWaitSend) {
                 [item.messageSender send];
             }
@@ -261,6 +260,7 @@
             
             [weakSelf.messagesViewController setCellsEditButtonShow:YES animated:YES];
             [weakSelf setSelected:YES animated:YES];
+            [weakSelf.messagesViewController setSelectedMessage:weakSelf.item selected:YES];
             
         }]];
     }

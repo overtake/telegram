@@ -17,7 +17,7 @@
 
 #import "TGPhotoViewer.h"
 #import "TGCTextView.h"
-#import "POPCGUtils.h"
+#import <pop/POPCGUtils.h>
 #import "TGCaptionView.h"
 @interface MessageTableCellVideoView()
 @property (nonatomic, strong) NSImageView *playImage;
@@ -25,6 +25,8 @@
 @property (nonatomic, strong) MessageCellDescriptionView *videoTimeView;
 
 @property (nonatomic,assign) NSPoint startDragLocation;
+
+@property (nonatomic,strong) NSView *visualView;
 @end
 
 @implementation MessageTableCellVideoView
@@ -43,6 +45,8 @@
         
         self.imageView = [[TGImageView alloc] initWithFrame:NSMakeRect(0, 0, 100, 100)];
         [self.imageView setCornerRadius:4];
+        
+
         
         [self.imageView setTapBlock:^{
            
@@ -92,7 +96,7 @@
     
     PreviewObject *previewObject = [[PreviewObject alloc] initWithMsdId:self.item.message.n_id media:self.item.message peer_id:self.item.message.peer_id];
     
-    if (floor(NSAppKitVersionNumber) > 1187 && NSAppKitVersionNumber < 1485)  {
+    if (floor(NSAppKitVersionNumber) > 1187 )  {
     
         if(!self.item.message.isFake) {
             [[TGPhotoViewer viewer] show:previewObject conversation:self.item.message.conversation isReversed:YES];

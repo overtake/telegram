@@ -78,6 +78,14 @@
             
             if([error.error_msg isEqualToString:@"USER_ALREADY_PARTICIPANT"] && user.isBot) {
                 localizedString = NSLocalizedString(@"Bot.AlreadyInGroup", nil);
+                if([self.action.reservedObject1 isKindOfClass:[NSDictionary class]] && self.action.reservedObject1[@"startgroup"]) {
+                    [self.action.currentViewController.navigationViewController showMessagesViewController:chat.dialog];
+                    [self.action.currentViewController.messagesViewController sendStartBot:self.action.reservedObject1[@"startgroup"] forConversation:chat.dialog bot:user];
+
+                  //  [self.action.currentViewController.messagesViewController showBotStartButton:self.action.reservedObject1[@"startgroup"] bot:user];
+                    return;
+                }
+                
             } else if([error.error_msg isEqualToString:@"USER_PRIVACY_RESTRICTED"]) {
                 localizedString = [NSString stringWithFormat:localizedString, user.first_name,NSLocalizedString(@"groups", nil), user.first_name];
             }

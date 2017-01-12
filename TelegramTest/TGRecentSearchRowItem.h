@@ -12,4 +12,7 @@
 @property (nonatomic,strong,readonly) TL_conversation *conversation;
 @property (nonatomic,assign) BOOL disableBottomSeparator;
 @property (nonatomic,assign) BOOL disableRemoveButton;
+
+@property (nonatomic, strong,readonly) NSString *unreadText;
+@property (nonatomic,assign,readonly) NSSize unreadTextSize;
 @end

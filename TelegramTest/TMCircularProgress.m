@@ -122,6 +122,9 @@ float ease(float t, float b, float c, float d) {
     return c*(t*t*t + 1) + b;
 };
 
+-(int)topPadding {
+    return 4;
+}
 
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -146,7 +149,7 @@ float ease(float t, float b, float c, float d) {
         return;
     
     
-    const int topPadding = 4;
+    int topPadding = self.topPadding;
     
     int radius = roundf(self.frame.size.width / 2 - topPadding);
     

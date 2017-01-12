@@ -13,6 +13,7 @@
 #import "SenderHeader.h"
 #import "TGTransformScrollView.h"
 #import "TGStickerPreviewModalView.h"
+#import "RBLPopover.h"
 @interface StickersPanelView ()
 @property (nonatomic,strong) TGTransformScrollView *scrollView;
 
@@ -21,6 +22,10 @@
 
 @property (nonatomic,strong) TGStickerPreviewModalView *previewModal;
 @property (nonatomic,assign) BOOL notSendUpSticker;
+
+@property (nonatomic,assign) long selectedIndex;
+
+@property (nonatomic,strong) NSArray *stickers;
 @end
 
 
@@ -93,8 +98,10 @@ static NSImage *higlightedImage() {
 
 
 -(void)rebuild:(NSArray *)stickers {
-    [self.containerView removeAllSubviews];
     
+    _selectedIndex = -1;
+    [self.containerView removeAllSubviews];
+    _stickers = stickers;
     
     __block NSUInteger xOffset = 0;
     
@@ -161,7 +168,8 @@ static NSImage *higlightedImage() {
             } forControlEvents:BTRControlEventLongLeftClick];
             
             
-            [button setBackgroundImage:hoverImage() forControlState:BTRControlStateHover];
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateSelected];
+            [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHover | BTRControlStateSelected];
             [button setBackgroundImage:higlightedImage() forControlState:BTRControlStateHighlighted];
             
             [imgView setCenterByView:button];
@@ -179,7 +187,50 @@ static NSImage *higlightedImage() {
     [self.containerView setFrameSize:NSMakeSize(xOffset, NSHeight(self.containerView.frame))];
 }
 
+-(void)selectNext {
+    if(_selectedIndex >= 0 && _selectedIndex < _containerView.subviews.count) {
+        [_containerView.subviews[_selectedIndex] setSelected:NO];
+    }
+    
+    _selectedIndex++;
+    
+    
+    if(_containerView.subviews.count == _selectedIndex) {
+        _selectedIndex = 0;
+    }
+    
+    
+    [_containerView.subviews[_selectedIndex] setSelected:YES];
+    
+    if(!NSContainsRect([_scrollView.documentView visibleRect], _containerView.subviews[_selectedIndex].frame)) {
+        [_scrollView.documentView scrollPoint:NSMakePoint(_containerView.subviews[_selectedIndex].frame.origin.x - NSWidth(_scrollView.frame)/2.0 + NSWidth(_containerView.subviews[_selectedIndex].frame)/2.0f, _containerView.subviews[_selectedIndex].frame.origin.y)];
+    }
 
+}
+
+-(TLDocument *)selectedSticker {
+    return _selectedIndex >= 0 ? _stickers[_selectedIndex] : nil;
+}
+
+-(void)selectPrev {
+    if(_selectedIndex >= 0 && _selectedIndex < _containerView.subviews.count) {
+        [_containerView.subviews[_selectedIndex] setSelected:NO];
+    }
+
+    _selectedIndex--;
+    
+    if(_selectedIndex < 0) {
+        _selectedIndex = _containerView.subviews.count-1;
+    }
+    
+    
+    [_containerView.subviews[_selectedIndex] setSelected:YES];
+    
+    if(!NSContainsRect([_scrollView.documentView visibleRect], _containerView.subviews[_selectedIndex].frame)) {
+        [_scrollView.documentView scrollPoint:NSMakePoint(_containerView.subviews[_selectedIndex].frame.origin.x - NSWidth(_scrollView.frame)/2.0 + NSWidth(_containerView.subviews[_selectedIndex].frame)/2.0f, _containerView.subviews[_selectedIndex].frame.origin.y)];
+    }
+    
+}
 
 -(void)show:(BOOL)animated stickers:(NSArray *)stickers {
     
@@ -226,7 +277,7 @@ bool isRemoteStickersLoaded() {
     [[Storage yap] asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         
-        NSDictionary *data = [transaction objectForKey:@"modern_stickers" inCollection:STICKERS_COLLECTION];
+        NSDictionary *data = [transaction objectForKey:@"modern_stickers2" inCollection:STICKERS_COLLECTION];
         
         NSDictionary *stickers = data[@"serialized"];
         
@@ -240,7 +291,7 @@ bool isRemoteStickersLoaded() {
             
             [stickers[@(obj.n_id)] enumerateObjectsUsingBlock:^(TL_document *evaluatedObject, NSUInteger idx, BOOL * _Nonnull stop) {
                 
-                TL_documentAttributeSticker *attr = (TL_documentAttributeSticker *) [evaluatedObject attributeWithClass:[TL_documentAttributeSticker class]];
+                TL_documentAttributeSticker *attr = evaluatedObject.stickerAttr;
                 
                 if([[attr.alt fixEmoji] isEqualToString:emotion]) {
                     [s addObject:evaluatedObject];
@@ -292,9 +343,7 @@ bool isRemoteStickersLoaded() {
     __block BOOL has = NO;
     
     
-    TL_documentAttributeSticker *attribute = (TL_documentAttributeSticker *) [document attributeWithClass:[TL_documentAttributeSticker class]];
-    
-    if(attribute && attribute.stickerset)
+    if(document.stickerAttr && document.stickerAttr.stickerset)
     {
         return YES;
     }

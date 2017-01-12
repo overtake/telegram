@@ -9,14 +9,12 @@
 #import "MessageReplyContainer.h"
 #import "MessageTableItem.h"
 #import "MessageTableElements.h"
-#import "UIImageView+AFNetworking.h"
 #import "TGTextLabel.h"
 #import "TGTimer.h"
 @interface MessageReplyContainer ()
 @property (nonatomic,strong) TGTextLabel *nameView;
 
 @property (nonatomic,strong) TGImageView *thumbImageView;
-@property (nonatomic,strong) NSImageView *locationImageView;
 
 @property (nonatomic,strong) NSImageView *deleteImageView;
 @property (nonatomic,strong) TGTextLabel *loadingTextField;
@@ -66,11 +64,8 @@
         
         self.thumbImageView.cornerRadius = 4;
         
-        self.locationImageView = [[NSImageView alloc] initWithFrame:NSMakeRect(5, 1, NSHeight(self.frame) - 2, NSHeight(self.frame) - 2)];
-        
         [self.thumbImageView setContentMode:BTRViewContentModeCenter];
         
-        self.locationImageView.layer.cornerRadius = 4;
         
         [self update];
         
@@ -128,7 +123,7 @@
 
 
 -(int)xOffset {
-    return _replyObject.replyThumb || _replyObject.geoURL ? _replyObject.replyThumb.imageSize.width + ([MessageTableItem defaultOffset] - 1) *2 : [MessageTableItem defaultOffset]-1;
+    return _replyObject.replyThumb ? _replyObject.replyThumb.imageSize.width + ([MessageTableItem defaultOffset] - 1) *2 : [MessageTableItem defaultOffset]-1;
 }
 
 -(void)update {
@@ -150,17 +145,9 @@
         [self.thumbImageView removeFromSuperview];
     }
     
-    
-    if(_replyObject.geoURL) {
-        [self addSubview:self.locationImageView];
-        [self.locationImageView setImageWithURL:_replyObject.geoURL];
-        
-    } else {
-        [self.locationImageView removeFromSuperview];
-    }
+
     
     [_thumbImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset]-1, 1)];
-    [_locationImageView setFrameOrigin:NSMakePoint([MessageTableItem defaultOffset]-1, 1)];
     
     [self.nameView setText:[_replyObject replyHeader] maxWidth:NSWidth(self.frame) - self.xOffset height:_replyObject.replyHeaderHeight];
     
@@ -198,7 +185,7 @@
     [self setFrame:self.frame];
     
     
-    if(self.replyObject.isEditMessage) {
+    if(self.replyObject.isEditMessage && self.replyObject.replyMessage.to_id.user_id != [UsersManager currentUserId]) {
         _editTimerLabel = [[TGTextLabel alloc] init];
         [self addSubview:_editTimerLabel];
         [_editTimerLabel setBackgroundColor:self.backgroundColor];

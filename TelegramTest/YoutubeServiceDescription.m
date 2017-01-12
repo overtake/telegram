@@ -29,7 +29,7 @@
         
         NSMutableAttributedString *serviceName = [[NSMutableAttributedString alloc] init];
         [serviceName appendString:url withColor:[NSColor whiteColor]];
-        [serviceName setFont:TGSystemFont(12) forRange:serviceName.range];
+        [serviceName setFont:[SettingsArchiver font12] forRange:serviceName.range];
         _serviceName = serviceName;
         _serviceNameSize = [serviceName size];
         _serviceNameSize.width = ceil(_serviceNameSize.width + 14);
@@ -101,7 +101,7 @@
     
     [t appendString:title.length > 25 ? [[title substringToIndex:25] stringByAppendingString:@"..."] : title withColor:[NSColor whiteColor]];
     
-    [t setFont:TGSystemFont(13) forRange:t.range];
+    [t setFont:[SettingsArchiver font13] forRange:t.range];
     
     _title = t;
     _titleSize = [t size];

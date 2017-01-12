@@ -97,7 +97,7 @@
                 if(strongSelf == weakSelf) {
                     [ASQueue dispatchOnMainQueue:^{
                         
-                        [items enumerateObjectsUsingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
+                        [items enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, MIN(result.count,items.count))] options:0 usingBlock:^(MessageTableItem *obj, NSUInteger idx, BOOL *stop) {
                             BOOL needUpdate = obj.message.views != [result[idx] intValue];
                             
                             if([result[idx] intValue] != 0) {

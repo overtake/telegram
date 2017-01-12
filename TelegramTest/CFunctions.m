@@ -186,7 +186,7 @@ static NSMutableDictionary *mimeTypes;
             [ex setObject:[single objectAtIndex:0] forKey:[single objectAtIndex:1]];
         }
         
-       extensions = ex;
+        extensions = ex;
         
         mimeTypes = types;
     });
@@ -197,7 +197,7 @@ NSString *mimetypefromExtension(NSString *extension) {
     
     [CFunctions initialize];
     
-    NSString *mimeType = [mimeTypes objectForKey:extension];
+    NSString *mimeType = [mimeTypes objectForKey:extension.lowercaseString];
     if(!mimeType)
         mimeType = [mimeTypes objectForKey:@"*"];
     return mimeType;
@@ -208,6 +208,80 @@ NSString* extensionForMimetype(NSString *mimetype) {
      [CFunctions initialize];
     
      return extensions[mimetype];
+}
+
+NSArray<NSString *> *cut_messages(NSString *message, int max_length) {
+    
+    NSMutableArray *parts = [NSMutableArray array];
+    
+    int inc = max_length;
+    
+    @try {
+        for (int i = 0; i < message.length; i += inc)
+        {
+            int length = MIN(max_length, (int)message.length - i);
+            
+            NSString *substring = [message substringWithRange:NSMakeRange(i, length)];
+            
+            NSUInteger (^giveup)(NSCharacterSet *symbol) = ^NSUInteger(NSCharacterSet *symbol) {
+                
+                NSUInteger index = NSNotFound;
+                
+                for (int j = (int)substring.length ; j > 0; j --) {
+                    
+                     if([[substring substringWithRange:NSMakeRange(j-1, 1)] rangeOfCharacterFromSet:symbol].location != NSNotFound) {
+                        index = j;
+                        break;
+                    }
+                }
+                
+                return index;
+            };
+            
+            NSArray<NSCharacterSet *> *csets = @[[NSCharacterSet newlineCharacterSet],[NSCharacterSet characterSetWithCharactersInString:@"."],[NSCharacterSet whitespaceCharacterSet]];
+            
+            NSUInteger index = substring.length;
+            
+            if(index + inc != message.length) {
+            
+                for (NSCharacterSet *set in csets) {
+                    NSUInteger idx = giveup(set);
+                    if(idx != NSNotFound) {
+                        index = idx;
+                        break;
+                    }
+                }
+                
+            }
+            
+            substring = [substring substringWithRange:NSMakeRange(0, index)];
+            
+            inc = (int) substring.length;
+            
+            if (substring.length != 0) {
+                [parts addObject:substring];
+            }
+            
+        }
+    } @catch (NSException *exception) {
+        
+        [parts removeAllObjects];
+        
+        for (NSUInteger i = 0; i < message.length; i += max_length)
+        {
+            NSString *substring = [message substringWithRange:NSMakeRange(i, MIN(max_length, message.length - i))];
+            if (substring.length != 0) {
+                
+                [parts addObject:substring];
+                
+            }
+            
+        }
+        
+        return parts;
+    }
+   
+    return parts;
 }
 
 

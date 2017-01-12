@@ -7,7 +7,7 @@
 //
 
 #import "TGHashContact.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 
 @interface TGHashContact ()
 @property (nonatomic,strong) TLUser *user;

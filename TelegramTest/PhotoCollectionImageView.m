@@ -241,11 +241,9 @@ static NSImage *playVideoImage() {
 
     if([self isset:object]) {
         
-        if (floor(NSAppKitVersionNumber) > 1187 && NSAppKitVersionNumber < 1485)  {
+        if (floor(NSAppKitVersionNumber) > 1187)  {
             
             [[TGPhotoViewer viewer] show:object.previewObject conversation:self.controller.conversation];
-
-            
             
         } else {
             
@@ -255,7 +253,6 @@ static NSImage *playVideoImage() {
             }
         }
         
-        [[TGPhotoViewer viewer] show:object.previewObject conversation:self.controller.conversation];
     } else {
         DownloadVideoItem *downloadItem = object.previewObject.reservedObject;
         

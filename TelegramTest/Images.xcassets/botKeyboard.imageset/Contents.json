@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_command@1x.png",
+      "filename" : "Input_Bots.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "ic_command@2x.png",
+      "filename" : "Input_Bots@2x.png",
       "scale" : "2x"
     },
     {

@@ -49,7 +49,7 @@ static const CGFloat BTRClipViewDecelerationRate = 0.87;
 	if (self == nil) return nil;
 	
 	self.wantsLayer = YES;
-	self.decelerationRate = BTRClipViewDecelerationRate;
+	self.decelerationRate = 0.78;
 	
     //[self setWantsBestResolutionOpenGLSurface:YES];
 //    [self set]

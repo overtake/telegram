@@ -44,6 +44,10 @@
     }
 }
 
+-(void)setSelectedRange:(NSRange)selectedRange {
+    [super setSelectedRange:selectedRange];
+}
+
 @end
 
 @interface TGGeneralInputTextRowView () <NSTextViewDelegate>
@@ -109,9 +113,16 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
-    [_textField setString:[_textField.string substringToIndex:MIN(self.item.limit > 0 ? self.item.limit : 200,_textField.string.length)]];
+    NSRange range = _textField.selectedRange;
+    
+    int limit = self.item.limit > 0 ? self.item.limit : 200;
+    
+    [_textField setString:[_textField.string substringToIndex:MIN(limit,_textField.string.length)]];
+    
+    _textField.selectedRange = NSMakeRange(MIN(range.location,limit), 0);
     
     self.item.result = [[_textField textStorage] attributedSubstringFromRange:NSMakeRange(0, _textField.string.length)];
+    
     
     
     

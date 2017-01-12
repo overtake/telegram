@@ -11,7 +11,6 @@
 #import "Telegram.h"
 #import "PreviewObject.h"
 #import "SenderHeader.h"
-#import "MessagesBottomView.h"
 #import "MessagesUtils.h"
 #import "FullUsersManager.h"
 #import "SelfDestructionController.h"
@@ -79,7 +78,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
+        dialog = [TL_conversation createWithFlags:0 peer:[TL_peerUser createWithUser_id:user.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
    
         [dialog setUser:user];
         dialog.fake = YES;
@@ -100,7 +99,7 @@
         if(chat.isChannel) {
             dialog = [self createDialogForChannel:chat];
         } else
-            dialog = [TL_conversation createWithPeer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
+            dialog = [TL_conversation createWithFlags:0 peer:[TL_peerChat createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -118,7 +117,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil pts:0 isInvisibleChannel:YES];
+        dialog = [TL_conversation createWithFlags:0 peer:[TL_peerChannel createWithChannel_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil pts:0 isInvisibleChannel:YES];
         
         [dialog save];
         
@@ -137,7 +136,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
+        dialog = [TL_conversation createWithFlags:0 peer:[TL_peerSecret createWithChat_id:chat.n_id] top_message:0 unread_count:0 last_message_date:0 notify_settings:nil last_marked_message:0 top_message_fake:0 last_marked_date:0 sync_message_id:0 read_inbox_max_id:0 read_outbox_max_id:0 draft:[TL_draftMessageEmpty create] lastMessage:nil];
         
         
         dialog.fake = YES;
@@ -154,7 +153,7 @@
     __block TL_conversation *dialog;
     
     [ASQueue dispatchOnStageQueue:^{
-        dialog = [TL_conversation createWithPeer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 read_outbox_max_id:message.n_id-1 draft:[TL_draftMessageEmpty create] lastMessage:message];
+        dialog = [TL_conversation createWithFlags:0 peer:[message peer] top_message:0 unread_count:0  last_message_date:message.date notify_settings:nil last_marked_message:message.n_id top_message_fake:0 last_marked_date:message.date sync_message_id:message.n_id read_inbox_max_id:0 read_outbox_max_id:message.n_id-1 draft:[TL_draftMessageEmpty create] lastMessage:message];
         
         
         dialog.fake = YES;
@@ -248,7 +247,9 @@
             if(lastMessage) {
                 
                 dialog.top_message = lastMessage.n_id;
-                dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
+                if (!dialog.isPinned) {
+                    dialog.last_message_date = lastMessage ? lastMessage.date : dialog.last_message_date;
+                }
                 dialog.last_marked_message = lastMessage.n_id;
                 dialog.last_marked_date = lastMessage.date;
                 
@@ -305,8 +306,9 @@
             
             
             NSUInteger position = [self positionForConversation:conversation];
-            
-            [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
+            if (position != NSNotFound) {
+                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:conversation, KEY_POSITION:@(position)}];
+            }
             
             [MessagesManager updateUnreadBadge];
         }
@@ -529,6 +531,59 @@
     }
 }
 
++(int)pullPinnedNextTime:(int)count {
+    NSInteger time = [[NSUserDefaults standardUserDefaults] integerForKey:@"pinned_time"];
+    if (time == 0) {
+        time = INT32_MAX - 100000;
+    }
+    time+=count;
+    [[NSUserDefaults standardUserDefaults] setInteger:time forKey:@"pinned_time"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    return (int) time;
+}
+
+
+-(void)togglePinned:(TL_conversation *)conversation {
+    if (!conversation.isPinned) {
+        conversation.last_message_date = [DialogsManager pullPinnedNextTime:1];
+        conversation.flags |= (1 << 2);
+    } else {
+        conversation.flags &= ~(1 << 2);
+        conversation.last_message_date = conversation.lastMessage != nil ? conversation.lastMessage.date : [[MTNetwork instance] getTime];
+    }
+    
+    [conversation save];
+    [self notifyAfterUpdateConversation:conversation];
+}
+
+-(void)pinned:(void (^)(NSArray *conversations))callback {
+    dispatch_queue_t dqueue = dispatch_get_current_queue();
+    [self.queue dispatchOnQueue:^{
+        NSMutableArray *result = [NSMutableArray array];
+        [self.all enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(obj.isPinned) {
+                [result addObject:obj];
+            } else {
+                *stop = YES;
+            }
+        }];
+        
+        dispatch_async(dqueue, ^{
+            callback(result);
+        });
+    }];
+}
+
+
+-(void)sortAndNotify:(NSArray *)keyList {
+    keyList = [keyList sortedArrayUsingComparator:^NSComparisonResult(TL_conversation *obj1, TL_conversation *obj2) {
+        return (obj1.last_message_date < obj2.last_message_date ? NSOrderedDescending : (obj1.last_message_date > obj2.last_message_date ? NSOrderedAscending : (obj1.top_message < obj2.top_message ? NSOrderedDescending : NSOrderedAscending)));
+    }];
+    [keyList enumerateObjectsWithOptions:0 usingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self notifyAfterUpdateConversation:obj];
+    }];
+}
+
 - (void)resort {
     [self->list sortUsingComparator:^NSComparisonResult(TL_conversation * obj1, TL_conversation * obj2) {
         
@@ -644,6 +699,9 @@
                 NSUInteger position = [self positionForConversation:dialog];
                 
                 if(dialog != nil) {
+                    
+                    
+                    
                     [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:dialog, KEY_POSITION:@(position)}];
                     [Notification perform:[Notification notificationNameByDialog:dialog action:@"message"] data:@{KEY_DIALOG:dialog,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:dialog]}];
                 }
@@ -808,6 +866,21 @@
     
 }
 
+- (NSArray *)unreadList {
+    NSMutableArray *unread = [[NSMutableArray alloc] init];
+    [self.queue dispatchOnQueue:^{
+        
+        [self->list enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.unread_count > 0 && !obj.isMute && obj.type == DialogTypeUser) {
+                [unread addObject:obj];
+            }
+        }];
+        
+    } synchronous:YES];
+    
+    return unread;
+}
+
 - (void)insertDialog:(TL_conversation *)dialog {
     [self add:[NSArray arrayWithObject:dialog]];
     [dialog save];
@@ -890,7 +963,9 @@
     
     int last_real_date = dialog.last_real_message_date;
   
-    dialog.last_message_date = message.date;
+    if (!dialog.isPinned) {
+        dialog.last_message_date = message.date;
+    }
     
     if(update_real_date) {
         dialog.last_real_message_date = last_real_date;
@@ -967,14 +1042,16 @@
             
             [self resort];
             
-            [last.allValues enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                
-                NSUInteger position = [self->list indexOfObject:obj];
-                
-                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
-                [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
-
-            }];
+            [self sortAndNotify:last.allValues];
+            
+//            [last.allValues enumerateObjectsUsingBlock:^(TL_conversation *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                
+//                NSUInteger position = [self->list indexOfObject:obj];
+//                
+//                [Notification perform:DIALOG_MOVE_POSITION data:@{KEY_DIALOG:obj, KEY_POSITION:@(position)}];
+//                [Notification perform:[Notification notificationNameByDialog:obj action:@"message"] data:@{KEY_DIALOG:obj,KEY_LAST_CONVRESATION_DATA:[MessagesUtils conversationLastData:obj]}];
+//
+//            }];
             
             [Notification perform:MESSAGE_LIST_RECEIVE object:messages];
             
@@ -1020,66 +1097,55 @@
 - (SSignal *)add:(NSArray *)all updateCurrent:(BOOL)updateCurrent autoStart:(BOOL)autoStart {
     
     
-    SSignal *signal = [[[SSignal alloc] initWithGenerator:^id<SDisposable>(SSubscriber * subscriber) {
+    __block BOOL dispose = NO;
+    
+    [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
+        TL_conversation *current = [keys objectForKey:@(dialog.peer_id)];
         
-        __block BOOL dispose = NO;
+        if ((dialog.type == DialogTypeUser && !dialog.user) || ((dialog.type == DialogTypeChat || dialog.type == DialogTypeChannel) && !dialog.chat)) {
+            [self removeObjectWithKey:@(dialog.peer_id)];
+            return;
+        }
         
-        [all enumerateObjectsUsingBlock:^(TL_conversation * dialog, NSUInteger idx, BOOL *stop) {
-            TL_conversation *current = [keys objectForKey:@(dialog.peer_id)];
-            if(current) {
-                if(updateCurrent) {
-                    current.unread_count = dialog.unread_count;
-                    current.top_message = dialog.top_message;
-                    current.last_message_date = dialog.last_message_date;
-                    current.notify_settings = dialog.notify_settings;
-                    current.fake = dialog.fake;
-                    current.last_marked_message = dialog.last_marked_message;
-                    current.top_message_fake = dialog.top_message_fake;
-                    current.last_marked_date = dialog.last_marked_date;
-                    current.last_real_message_date = dialog.last_real_message_date;
-                    current.dstate = dialog.dstate;
-                    current.read_inbox_max_id = dialog.read_inbox_max_id;
-                    current.read_outbox_max_id = dialog.read_outbox_max_id;
-                    current.pts = dialog.pts;
-                    current.invisibleChannel = dialog.invisibleChannel;
-                    current.lastMessage = dialog.lastMessage;
-                }
-                
-            } else {
-                [self->list addObject:dialog];
-                [self->keys setObject:dialog forKey:@(dialog.peer_id)];
-                current = dialog;
+        if(current) {
+            if(updateCurrent) {
+                current.flags = dialog.flags;
+                current.unread_count = dialog.unread_count;
+                current.top_message = dialog.top_message;
+                current.last_message_date = dialog.last_message_date;
+                current.notify_settings = dialog.notify_settings;
+                current.fake = dialog.fake;
+                current.last_marked_message = dialog.last_marked_message;
+                current.top_message_fake = dialog.top_message_fake;
+                current.last_marked_date = dialog.last_marked_date;
+                current.last_real_message_date = dialog.last_real_message_date;
+                current.dstate = dialog.dstate;
+                current.read_inbox_max_id = dialog.read_inbox_max_id;
+                current.read_outbox_max_id = dialog.read_outbox_max_id;
+                current.pts = dialog.pts;
+                current.invisibleChannel = dialog.invisibleChannel;
+                current.lastMessage = dialog.lastMessage;
             }
             
-            if(!current.notify_settings) {
-                current.notify_settings = [TL_peerNotifySettingsEmpty create];
-                [current save];
-            }
-            
-            
-            *stop = dispose;
-            
-        }];
+        } else {
+            [self->list addObject:dialog];
+            [self->keys setObject:dialog forKey:@(dialog.peer_id)];
+            current = dialog;
+        }
         
-        [self resort];
-        
-        [subscriber putNext:nil];
+        if(!current.notify_settings) {
+            current.notify_settings = [TL_peerNotifySettingsEmpty create];
+            [current save];
+        }
         
         
-        return [[SBlockDisposable alloc] initWithBlock:^
-                {
-                    dispose = YES;
-                }];
-    }] startOn:self.queue];
+        *stop = dispose;
+        
+    }];
     
+    [self resort];
     
-    if(autoStart)
-        [signal startWithNext:^(id next) {
-            
-        }];
-    
-    
-    return signal;
+    return nil;
 
 }
 

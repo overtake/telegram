@@ -1,10 +1,10 @@
 
 #import "TGUpdateMessageService.h"
 
-#import <MTProtoKit/MTIncomingMessage.h>
+#import <MtProtoKitMac/MTIncomingMessage.h>
 
-#import <MTProtoKit/MTProto.h>
-#import <MTProtoKit/MTQueue.h>
+#import <MtProtoKitMac/MTProto.h>
+#import <MtProtoKitMac/MTQueue.h>
 
 #import "TGProccessUpdates.h"
 #import "NSData+Extensions.h"

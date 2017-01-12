@@ -13,7 +13,6 @@
 #import "TGModernESGViewController.h"
 #import "TGTextLabel.h"
 #import "TGModernStickRowItem.h"
-#import "MessagesBottomView.h"
 #import "NSString+Extended.h"
 @interface TGModernEmojiRowView : TMRowView
 @property (nonatomic, strong) RBLPopover *racePopover;
@@ -241,9 +240,13 @@ static NSArray *segment_list;
     }];
     
     
-    for(int i = 1; i <= 6; i++) {
-        BTRButton *button = [self createButtonForIndex:i];//20
-        [button setFrameOrigin:NSMakePoint(i * 26 + 30 * (i - 1), roundf((NSHeight(self.bottomView.frame) - NSHeight(button.frame))/2.0f))];
+    float w = roundf( NSWidth(self.view.frame)/(float)(self.segments.count ));
+    
+    int xoffset = 0;
+    for(int i = 1; i <= self.segments.count; i++) {
+        BTRButton *button = [self createButtonForIndex:i width:w];//20
+        [button setFrameOrigin:NSMakePoint(xoffset, roundf((NSHeight(self.bottomView.frame) - NSHeight(button.frame))/2.0f))];
+        xoffset+=NSWidth(button.frame);
         [self.bottomView addSubview:button];
     }
     
@@ -301,16 +304,15 @@ static NSArray *segment_list;
 }
 
 
+-(NSArray *)segments {
+    return @[@"Emoji.Recent",@"Emoji.SmilesAndPeople",@"Emoji.AnimalsAndNature",@"Emoji.FoodAndDrink",@"Emoji.ActivityAndSport",@"Emoji.TravelAndPlaces",@"Emoji.Objects",@"Emoji.Symbols",@"Emoji.Flags"];
+}
+
 - (void)show {
     
     [self.tableView removeAllItems:NO];
     
     int rowCount = floor(NSWidth(_tableView.frame) / 34.0f) ;
-    
-    
-    NSArray *segments = @[@"Emoji.Recent",@"Emoji.People",@"Emoji.Nature",@"Emoji.Food",@"Emoji.TravelAndPlaces",@"Emoji.Symbols"];
-    if(NSAppKitVersionNumber >= 1404)
-        segments = @[@"Emoji.Recent",@"Emoji.SmilesAndPeople",@"Emoji.AnimalsAndNature",@"Emoji.FoodAndDrink",@"Emoji.ActivityAndSport",@"Emoji.TravelAndPlaces",@"Emoji.Objects",@"Emoji.Symbols",@"Emoji.Flags"];
     
     NSMutableArray *stickyItems = [NSMutableArray array];
     
@@ -318,7 +320,7 @@ static NSArray *segment_list;
         
          NSMutableArray *items = [NSMutableArray array];
         
-        id stickyItem = [[TGModernStickRowItem alloc] initWithObject:NSLocalizedString(segments[idx], nil)];
+        id stickyItem = [[TGModernStickRowItem alloc] initWithObject:NSLocalizedString(self.segments[idx], nil)];
         [stickyItems addObject:stickyItem];
         [_tableView addItem:stickyItem tableRedraw:NO];
         
@@ -466,18 +468,20 @@ static NSArray *segment_list;
 }
 
 
-- (TGModernEmojiBottomButton *)createButtonForIndex:(int)index {
+- (TGModernEmojiBottomButton *)createButtonForIndex:(int)index width:(int)width {
     
     NSImage *image = [NSImage imageNamed:[NSString stringWithFormat:@"emojiContainer%d",index]];
-    NSImage *imageSelected = [NSImage imageNamed:[NSString stringWithFormat:@"emojiContainer%dHighlighted",index]];
+    
+    image = [image imageTintedWithColor:GRAY_ICON_COLOR];
+    NSImage *active = [image imageTintedWithColor:BLUE_ICON_COLOR];
     
     
-    TGModernEmojiBottomButton *button = [[TGModernEmojiBottomButton alloc] initWithFrame:NSMakeRect(0, 0, image.size.width, image.size.height)];
-    [button setBackgroundImage:image forControlState:BTRControlStateNormal];
-    [button setBackgroundImage:image forControlState:BTRControlStateHover];
-    [button setBackgroundImage:imageSelected forControlState:BTRControlStateHover | BTRControlStateSelected];
-    [button setBackgroundImage:imageSelected forControlState:BTRControlStateHighlighted];
-    [button setBackgroundImage:imageSelected forControlState:BTRControlStateSelected];
+    TGModernEmojiBottomButton *button = [[TGModernEmojiBottomButton alloc] initWithFrame:NSMakeRect(0, 0, width, image.size.height)];
+    [button setImage:image forControlState:BTRControlStateNormal];
+    [button setImage:image forControlState:BTRControlStateHover];
+    [button setImage:active forControlState:BTRControlStateHover | BTRControlStateSelected];
+    [button setImage:active forControlState:BTRControlStateHighlighted];
+    [button setImage:active forControlState:BTRControlStateSelected];
     [button setIndex:index];
     [button addTarget:self action:@selector(bottomButtonClick:) forControlEvents:BTRControlEventLeftClick];
     return button;
@@ -504,7 +508,7 @@ static NSArray *segment_list;
     
     NSRect rect = [self.tableView rectOfRow:[self.tableView indexOfItem:currentStick]];
     
-    [self.tableView.scrollView.clipView scrollRectToVisible:NSMakeRect(0, NSMaxY(rect) + 8, NSWidth(rect), NSHeight(_tableView.containerView.frame)) animated:YES];
+    [self.tableView.scrollView.clipView scrollRectToVisible:NSMakeRect(0, NSMaxY(rect) + 20, NSWidth(rect), NSHeight(_tableView.containerView.frame)) animated:YES];
     
 }
 

@@ -250,13 +250,11 @@
 - (void)mouseUp:(NSEvent *)mouseEvent {
 	NSURL* urlAtMouse = [self urlAtMouse:mouseEvent];
     MTLog(@" %@", urlAtMouse);
-	if ( (urlAtMouse != nil)  &&  [urlAtMouse isEqualTo:self.clickedURL] ) {
-        if(self.url_delegate) {
-            [self.url_delegate textField:self handleURLClick:[urlAtMouse absoluteString]];
-        } else {
-            open_link([urlAtMouse absoluteString]);
-        }
-	}
+    if(self.url_delegate) {
+        [self.url_delegate textField:self handleURLClick:[urlAtMouse absoluteString]];
+    } else if (urlAtMouse != nil) {
+        open_link([urlAtMouse absoluteString]);
+    }
 
 	self.clickedURL = nil;
     if(!urlAtMouse)

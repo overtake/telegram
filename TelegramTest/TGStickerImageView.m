@@ -17,10 +17,6 @@
 
 @implementation TGStickerImageView
 
--(void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
-    [super drawLayer:layer inContext:ctx];
-}
-
 
 
 - (void)drawRect:(NSRect)dirtyRect {

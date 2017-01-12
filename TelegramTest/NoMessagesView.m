@@ -225,7 +225,7 @@
         
         [(TMTextField *)self.field setAttributedStringValue:self.secret];
                 
-    } if(conversation.type == DialogTypeUser && conversation.user.isSelf) {
+    } else if(conversation.type == DialogTypeUser && conversation.user.isSelf) {
       
         self.field = [TMTextField defaultTextField];
         

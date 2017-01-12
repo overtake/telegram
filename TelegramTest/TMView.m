@@ -46,9 +46,33 @@
 }
 
 - (void) initialize {
-//    self.borderColor = [NSColor clearColor];
-//    self.borderSize = 1;
+    //[self setAcceptsTouchEvents:YES];
 }
+
+-(void)swipeWithEvent:(NSEvent *)event {
+    
+}
+
+//-(void)touchesBeganWithEvent:(NSEvent *)event {
+//    NSSet *touches = [event touchesMatchingPhase:NSTouchPhaseBegan inView:self];
+//    
+//    for (NSTouch *touch in touches) {
+//        /* Once you have a touch, getting the position is dead simple. */
+//        NSPoint fraction = touch.normalizedPosition;
+//        NSSize whole = touch.deviceSize;
+//        NSPoint wholeInches = {whole.width / 72.0, whole.height / 72.0};
+//        NSPoint pos = wholeInches;
+//        pos.x *= fraction.x;
+//        pos.y *= fraction.y;
+//        NSLog(@"%s: Finger is touching %g inches right and %g inches up "
+//              @"from lower left corner of trackpad.", __func__, pos.x, pos.y);
+//    }
+//    
+//    
+//    if(touches.count == 2) {
+//        int bp = 0;
+//    } 
+//}
 
 - (void)removeFromSuperview {
     [super removeFromSuperview];
@@ -63,6 +87,9 @@
 //    MTLog(@"window %@", self.superview);
 
 }
+
+
+
 
 -(void)setFrame:(NSRect)frame {
     
@@ -148,7 +175,7 @@
 
 -(void)mouseDown:(NSEvent *)theEvent {
     
-    if((theEvent.modifierFlags & 262401) == 262401) {
+    if((theEvent.modifierFlags & NSControlKeyMask) == NSControlKeyMask) {
         [self rightMouseDown:theEvent];
         return;
     }

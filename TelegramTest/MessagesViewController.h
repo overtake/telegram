@@ -11,7 +11,6 @@
 #import "UploadOperation.h"
 #import "TMElements.h"
 #import "MessagesDelegate.h"
-#import "MessageInputGrowingTextView.h"
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
@@ -139,6 +138,9 @@ typedef enum {
 - (void)sendDocument:(NSString *)file_path forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 
 
+- (void)sendFolder:(NSString *)file_path forConversation:(TL_conversation *)conversation;
+
+
 -(void)sendSticker:(TLDocument *)sticker forConversation:(TL_conversation *)conversation addCompletionHandler:(dispatch_block_t)completeHandler;
 
 - (void)sendAudio:(NSString *)file_path forConversation:(TL_conversation *)conversation waveforms:(NSData *)waveforms;
@@ -201,4 +203,6 @@ typedef enum {
 
 -(void)paste:(id)sender;
 
+-(BOOL)selectNextStickerIfNeeded;
+-(BOOL)selectPrevStickerIfNeeded;
 @end

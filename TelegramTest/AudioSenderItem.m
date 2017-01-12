@@ -80,15 +80,10 @@
         strongWeak();
         
         if(strongSelf != nil) {
-            TL_inputMediaUploadedDocument *media = [TL_inputMediaUploadedDocument createWithFile:input mime_type:@"audio/ogg" attributes:weakSelf.message.media.document.attributes caption:weakSelf.message.media.caption];
+            TL_inputMediaUploadedDocument *media = [TL_inputMediaUploadedDocument createWithFlags:0 file:input mime_type:@"audio/ogg" attributes:weakSelf.message.media.document.attributes caption:weakSelf.message.media.caption stickers:nil];
             
-            id request = nil;
-            
-            if(weakSelf.conversation.type == DialogTypeBroadcast) {
-                request = [TLAPI_messages_sendBroadcast createWithContacts:[weakSelf.conversation.broadcast inputContacts] random_id:[weakSelf.conversation.broadcast generateRandomIds] message:@"" media:media];
-            } else {
-                request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
-            }
+            id request = [TLAPI_messages_sendMedia createWithFlags:[weakSelf senderFlags] peer:weakSelf.conversation.inputPeer reply_to_msg_id:weakSelf.message.reply_to_msg_id media:media random_id:weakSelf.message.randomId  reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]];
+
             
             weakSelf.rpc_request = [RPCRequest sendRequest:request successHandler:^(RPCRequest *request, TLUpdates *response) {
                 

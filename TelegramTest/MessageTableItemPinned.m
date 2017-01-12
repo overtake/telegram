@@ -25,7 +25,7 @@
             dispatch_once(&onceToken, ^{
                 attr = [[NSMutableAttributedString alloc] init];
                 [attr appendString:NSLocalizedString(@"Reply.Loading", nil) withColor:GRAY_TEXT_COLOR];
-                [attr setFont:TGSystemFont(13) forRange:attr.range];
+                [attr setFont:[SettingsArchiver font13] forRange:attr.range];
             });
             
             self.messageAttributedString = attr;
@@ -78,7 +78,7 @@
 {
     self.messageAttributedString = [[MessagesUtils serviceAttributedMessage:self.message forAction:self.message.action] mutableCopy];
     [self.messageAttributedString addAttribute:NSForegroundColorAttributeName value:LINK_COLOR range:self.messageAttributedString.range];
-    [self.messageAttributedString setFont:TGSystemFont(12) forRange:self.messageAttributedString.range];
+    [self.messageAttributedString setFont:[SettingsArchiver font12] forRange:self.messageAttributedString.range];
     [self.messageAttributedString setLink:[NSString stringWithFormat:@"chat://showreplymessage/?peer_class=%@&peer_id=%d&msg_id=%d&from_msg_id=%d",NSStringFromClass(self.message.to_id.class),self.message.peer_id,self.message.reply_to_msg_id,self.message.n_id] forRange:self.messageAttributedString.range];
 }
 

@@ -14,8 +14,7 @@
 #import "MessageStateLayer.h"
 #import "NSMenuItemCategory.h"
 #import "MessageReplyContainer.h"
-#import "POPCGUtils.h"
-#import "MessagesBottomView.h"
+#import <pop/POPCGUtils.h>
 #import "TGHeadChatPanel.h"
 #import "TGModalForwardView.h"
 
@@ -90,7 +89,7 @@
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Delete", nil)];
     
     [alert addButtonWithTitle:NSLocalizedString(@"Alert.Button.Ignore", nil)];
-    [alert beginSheetModalForWindow:[[NSApp delegate] mainWindow] modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
+    [alert beginSheetModalForWindow:appWindow() modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:(__bridge void *)(self.item)];
     
 
 }

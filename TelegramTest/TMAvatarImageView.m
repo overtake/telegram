@@ -595,11 +595,13 @@ static CAAnimation *ani2() {
     
     if(colorMask == -1) {
         NSBezierPath *path = [NSBezierPath bezierPath];
+//        
+//        [path appendBezierPathWithArcWithCenter: NSMakePoint(image.size.width/2, image.size.height/2)
+//                                         radius: roundf(image.size.width/2)
+//                                     startAngle: 0
+//                                       endAngle: 360 clockwise:NO];
         
-        [path appendBezierPathWithArcWithCenter: NSMakePoint(image.size.width/2, image.size.height/2)
-                                         radius: roundf(image.size.width/2)
-                                     startAngle: 0
-                                       endAngle: 360 clockwise:NO];
+        path = [NSBezierPath bezierPathWithRoundedRect:NSMakeRect(2, 2, size.width -4 , size.height - 4) xRadius:(size.width - 4)/2.0 yRadius:(size.height - 4)/2.0];
         [path setLineWidth:2];
         [GRAY_TEXT_COLOR set];
         [path stroke];
@@ -616,7 +618,8 @@ static CAAnimation *ani2() {
     
     [image unlockFocus];
     
-    image = [ImageUtils roundCorners:image size:corners == 0 ? NSMakeSize(size.width/2, size.height/2) : NSMakeSize(4, 4)];
+    if(colorMask != -1)
+        image = [ImageUtils roundCorners:image size:corners == 0 ? NSMakeSize(size.width/2, size.height/2) : NSMakeSize(4, 4)];
     
     
     

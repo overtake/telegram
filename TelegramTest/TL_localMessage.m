@@ -456,26 +456,21 @@ DYNAMIC_PROPERTY(DDialog);
     return NO;
 }
 
+-(BOOL)canDeleteForAll {
+    if (self.conversation.type == DialogTypeChannel || self.conversation.type == DialogTypeSecretChat) {
+        return false;
+    } else if (self.conversation.type == DialogTypeUser) {
+        return (self.isN_out && (self.date + edit_time_limit() > [[MTNetwork instance] getTime]) && self.to_id.user_id != [UsersManager currentUserId]);
+    } else if (self.conversation.type == DialogTypeChat) {
+        if (self.isN_out || self.conversation.chat.isAdmin) {
+            return self.date + edit_time_limit() > [[MTNetwork instance] getTime];
+        }
+    }
+    return false;
+}
+
 -(void)setReplyMessage:(TL_localMessage *)replyMessage {
-    
-    if(_replyMessage && !replyMessage) {
-        int bp = 0;
-    }
-    
-    
-    if(replyMessage) {
-        int bp = 0;
-    }
-    
-    if(self.n_id == 41345) {
-        int bp = 0;
-    }
-    
-    
     _replyMessage = replyMessage;
-    
-    
-  
 }
 
 long channelMsgId(int msg_id, int peer_id) {

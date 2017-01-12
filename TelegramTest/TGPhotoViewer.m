@@ -19,11 +19,14 @@
 #import "TGPVZoomControl.h"
 #import "TGPVDocumentsBehavior.h"
 #import "TGPVChatPhotoBehavior.h"
-@interface TGPhotoViewer ()
+#import "TGPipWindow.h"
+#import "TGAudioGlobalController.h"
+#import "MessageTableCellPhotoView.h"
+#import "MessageTableCellVideoView.h"
+#import "MessageTableCellDocumentView.h"
+@interface TGPhotoViewer () <TGPVContainerDelegate>
 @property (nonatomic,strong) TL_conversation *conversation;
 @property (nonatomic,strong) TLUser *user;
-
-
 
 @property (nonatomic,strong) TMView *background;
 
@@ -82,6 +85,10 @@ static ASQueue *queue;
     return viewer.isVisibility;
 }
 
++(void)copyClipboard {
+    [viewer.photoContainer copy:nil];
+}
+
 +(void)increaseZoom {
     [viewer.photoContainer increaseZoom];
 }
@@ -112,7 +119,6 @@ static const int controlsHeight = 75;
     [TGCache setMemoryLimit:32*1024*1024 group:PVCACHE];
     [TGCache setCountLimit:25 group:PVCACHE];
     
-    //  [CATransaction begin];
     
     
     [(NSView *)self.contentView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -122,7 +128,7 @@ static const int controlsHeight = 75;
     self.background.wantsLayer = YES;
     self.background.layer.backgroundColor = NSColorFromRGBWithAlpha(0x222222, 0.7).CGColor;
     
-    
+    self.contentView.wantsLayer = YES;
     
     weak();
     
@@ -145,7 +151,7 @@ static const int controlsHeight = 75;
     
     
     _photoContainer = [[TGPVContainer alloc] initWithFrame:NSMakeRect(0, 0, 300, 600)];
-    
+    _photoContainer.delegate = self;
     
     [self.contentView addSubview:self.photoContainer];
     
@@ -163,6 +169,48 @@ static const int controlsHeight = 75;
     self.zoomControl = [[TGPVZoomControl alloc] initWithFrame:NSMakeRect(50, 16, 200, controlsHeight)];
     
     [self.contentView addSubview:self.zoomControl];
+}
+
+-(NSRect)requestShowRect:(TGPhotoViewerItem *)item {
+    
+//    if([item previewObject].reservedObject) {
+//        NSImageView * reserved = [item previewObject].reservedObject;
+//        
+//        if(!reserved || reserved.visibleRect.size.height <= 0)
+//            return NSZeroRect;
+//        
+//        NSRect viewFrameInWindowCoords = [reserved convertRect:reserved.bounds toView:nil];
+//        return [[NSApp mainWindow] convertRectToScreen:viewFrameInWindowCoords];
+//    }
+    
+    MessagesViewController *controller = appWindow().navigationController.messagesViewController;
+    MessageTableItem *messageItem = [controller itemOfMsgId:item.previewObject.msg_id randomId:0];
+    
+    NSInteger row = [controller indexOfObject:messageItem];
+    NSView *cellView = nil;
+    
+    @try {cellView = [controller.table viewAtColumn:0 row:row makeIfNecessary:NO];}@catch (NSException *exception) {}
+    
+    NSView *previewView = nil;
+    if(cellView) {
+        if([cellView isKindOfClass:[MessageTableCellPhotoView class]]) {
+            MessageTableCellPhotoView *photoView = (MessageTableCellPhotoView *)cellView;
+            previewView = photoView.imageView;
+        } else if([cellView isKindOfClass:[MessageTableCellVideoView class]]) {
+            MessageTableCellVideoView *videoView = (MessageTableCellVideoView *)cellView;
+            previewView = videoView.imageView;
+        } else if([cellView isKindOfClass:[MessageTableCellDocumentView class]]) {
+            MessageTableCellDocumentView *documentView = (MessageTableCellDocumentView *)cellView;
+            previewView = documentView.thumbView;
+        }
+    }
+    
+    if(previewView && previewView.visibleRect.size.height > 0) {
+        NSRect viewFrameInWindowCoords = [previewView convertRect:previewView.bounds toView:nil];
+        return [controller.table.window convertRectToScreen:viewFrameInWindowCoords];
+    }
+    
+    return NSZeroRect;
 }
 
 
@@ -581,6 +629,11 @@ static TGPhotoViewer *viewer;
 
 -(void)makeKeyAndOrderFront:(id)sender {
     
+    
+    
+    
+    [TGPipWindow close];
+    
     self.invokeWindow = appWindow();
     
     
@@ -595,7 +648,7 @@ static TGPhotoViewer *viewer;
     [super makeKeyAndOrderFront:nil];
     
     
-    [[NSApp mainWindow] makeFirstResponder:self.photoContainer];
+    //[[NSApp mainWindow] makeFirstResponder:self.photoContainer];
     
     
     _isVisibility = YES;
@@ -696,6 +749,7 @@ static TGPhotoViewer *viewer;
     
     _currentItem = [self itemAtIndex:currentItemId];
     
+    
     [self.controls setCurrentPosition:_isReversed ? _totalCount - _currentItemId : _currentItemId+1 ofCount:_totalCount];
     
     
@@ -705,7 +759,7 @@ static TGPhotoViewer *viewer;
     
     [_zoomControl setHidden:[_currentItem.previewObject.reservedObject isKindOfClass:[NSDictionary class]]];
     
-    if(_list.count > 1 && !_waitRequest) {
+    if(_list.count > 1 && !_waitRequest && ![self.behavior isKindOfClass:[TGPVUserBehavior class]]) {
         int rcurrent = _isReversed ? _totalCount - (int)_currentItemId : (int)_currentItemId;
         if((next && (rcurrent <= 15 )) || (!next && ( rcurrent >= (_totalCount - 15)))) {
             _waitRequest = YES;

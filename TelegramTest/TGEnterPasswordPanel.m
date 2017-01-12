@@ -7,7 +7,7 @@
 //
 
 #import "TGEnterPasswordPanel.h"
-#import <MtProtoKit/MTEncryption.h>
+#import <MtProtoKitMac/MTEncryption.h>
 #import "UserInfoShortTextEditView.h"
 #import "NSAttributedString+Hyperlink.h"
 #import "TGSignalUtils.h"

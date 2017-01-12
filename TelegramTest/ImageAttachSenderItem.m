@@ -38,14 +38,15 @@
         [sizes addObject:size];
         [sizes addObject:size1];
         
-        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithN_id:attach.unique_id access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:attach.caption];
+        TL_messageMediaPhoto *photo = [TL_messageMediaPhoto createWithPhoto:[TL_photo createWithFlags:0 n_id:attach.unique_id access_hash:0 date:(int)[[MTNetwork instance] getTime] sizes:sizes] caption:attach.caption];
         
         
         [TGCache cacheImage:attach.image forKey:size.location.cacheKey groups:@[IMGCACHE]];
         
         self.message = [MessageSender createOutMessage:@"" media:photo conversation:conversation additionFlags:additionFlags];
         
-         [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message) error:nil];
+        if([[NSFileManager defaultManager] fileExistsAtPath:path])
+            [[NSFileManager defaultManager] copyItemAtPath:path toPath:mediaFilePath(self.message) error:nil];
         
         [self.message save:YES];
         
@@ -66,16 +67,11 @@
     if([uploadedFile isKindOfClass:[TL_inputPhoto class]]) {
         media = [TL_inputMediaPhoto createWithN_id:uploadedFile caption:self.message.media.caption];
     } else {
-        media = [TL_inputMediaUploadedPhoto createWithFile:uploadedFile caption:self.message.media.caption];
+        media = [TL_inputMediaUploadedPhoto createWithFlags:0 file:uploadedFile caption:self.message.media.caption stickers:nil];
     }
     
-    id request = nil;
-    
-    if(self.conversation.type == DialogTypeBroadcast) {
-        request = [TLAPI_messages_sendBroadcast createWithContacts:[self.conversation.broadcast inputContacts] random_id:[self.conversation.broadcast generateRandomIds] message:@"" media:media];
-    } else {
-        request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]] ;
-    }
+    id request = [TLAPI_messages_sendMedia createWithFlags:[self senderFlags] peer:self.conversation.inputPeer reply_to_msg_id:self.message.reply_to_msg_id media:media random_id:self.message.randomId reply_markup:[TL_replyKeyboardMarkup createWithFlags:0 rows:[@[]mutableCopy]]] ;
+
     
     weak();
     
@@ -116,9 +112,9 @@
             
             // fix file location for download image after clearing cache.
             {
-                MessageTableItemPhoto *item = (MessageTableItemPhoto *)strongSelf.tableItem;
-                
-                item.imageObject.location = newSize.location;
+//                MessageTableItemPhoto *item = (MessageTableItemPhoto *)strongSelf.tableItem;
+//                
+//                item.imageObject.location = newSize.location;
             }
             
             strongSelf.message.dstate = DeliveryStateNormal;

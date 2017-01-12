@@ -133,6 +133,7 @@
         [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             
             NSMutableArray *attachments = [transaction objectForKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+
             
             [attachments removeAllObjects];
             
@@ -143,6 +144,21 @@
     
     _conversation = nil;
 
+}
+
+-(BOOL)isDone {
+    __block BOOL done = YES;
+    
+    [_containerView.subviews enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if(!obj.item.isDone) {
+            done = NO;
+            *stop = YES;
+        }
+        
+    }];
+    
+    return done;
 }
 
 -(void)mouseUp:(NSEvent *)theEvent {
@@ -176,13 +192,13 @@
 -(void)removeItem:(TGImageAttachment *)attachment animated:(BOOL)animated {
     
     
-    __block NSMutableArray *attachments;
-    
     [[Storage yap] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        attachments = [transaction objectForKey:_conversation.cacheKey inCollection:ATTACHMENTS];
+        NSMutableArray *attachments = [transaction objectForKey:_conversation.cacheKey inCollection:ATTACHMENTS];
         
         [attachments removeObject:attachment.item];
+        
+        [attachment.item cancel];
         
         [transaction setObject:attachments forKey:_conversation.cacheKey inCollection:ATTACHMENTS];
         
@@ -201,12 +217,15 @@
         
         [CATransaction begin];
         
-        [self fadeAnimation:@[attachment] from:1 to:0 complete:^(BOOL finished) {
-            [attachment removeFromSuperview];
-            
+        __weak TGImageAttachment *weakAttach = attachment;
+        
+        [self fadeAnimation:@[weakAttach] from:1 to:0 complete:^(BOOL finished) {
+            [weakAttach removeFromSuperview];
             
             [self updateItemsOrigin];
             [self updateContainer];
+            
+            
             
         }];
         
@@ -312,15 +331,7 @@
 }
 
 -(NSArray *)attachments {
-    NSMutableArray *a = [[NSMutableArray alloc] init];
-    
-    [_containerView.subviews enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
-        
-        [a insertObject:obj.item atIndex:0];
-        
-    }];
-    
-    return a;
+    return _containerView.subviews;
 }
 
 
@@ -359,10 +370,8 @@
         [_scrollView.clipView scrollRectToVisible:NSMakeRect(NSWidth(_containerView.frame), 0, 0, 0) animated:animated completion:^(BOOL scrolled) {
         }];
         
+
     }];
-    
-    
-    
     
     
     if(animated)
@@ -376,7 +385,7 @@
     animation.toValue = @(to);
     animation.fromValue = @(from);
     animation.duration = 0.2;
-    
+    animation.removedOnCompletion = YES;
     
     [items enumerateObjectsUsingBlock:^(TGImageAttachment *obj, NSUInteger idx, BOOL *stop) {
         
@@ -416,6 +425,7 @@
     animation.toValue = toValue;
     animation.fromValue = fromValue;
     animation.duration = 0.2;
+    animation.removedOnCompletion = YES;
     
     TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:attachment.layer];
         

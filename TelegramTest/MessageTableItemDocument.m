@@ -72,7 +72,7 @@
     
     _fileNameSize = [_fileNameAttrubutedString coreTextSizeForTextFieldForWidth:width - self.thumbSize.width - self.defaultOffset];
     
-    self.contentSize = self.blockSize = NSMakeSize(MAX(_fileNameSize.width,90) + self.thumbSize.width + self.defaultOffset, self.thumbSize.height);
+    self.contentSize = self.blockSize = NSMakeSize(MAX(_fileNameSize.width,170) + self.thumbSize.width + self.defaultOffset, self.thumbSize.height);
     
     return [super makeSizeByWidth:width];
 }

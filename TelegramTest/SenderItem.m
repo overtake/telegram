@@ -69,11 +69,15 @@ static NSMutableDictionary *senders;
 -(void)setMessage:(TL_localMessage *)message {
     _message = message;
     
-    [ASQueue dispatchOnStageQueue:^{
-        
-        senders[@(_message.randomId)] = self;
-        
-    }];
+    if(message) {
+        [ASQueue dispatchOnStageQueue:^{
+            
+            senders[@(_message.randomId)] = self;
+            
+        }];
+
+    }
+    
 }
 
 + (id)senderForMessage:(TL_localMessage *)msg {
@@ -121,7 +125,7 @@ static NSMutableDictionary *senders;
                     item = [[ForwardSenterItem alloc] init];
                     
                     ((ForwardSenterItem *)item).fakes = @[msg];
-                    ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([msg n_id])];
+                    ((ForwardSenterItem *)item).msg_ids = [NSMutableArray arrayWithObject:@([msg fakeId])];
                 }
                 
             } else {
@@ -299,10 +303,6 @@ static NSMutableArray *waiting;
 
 }
 
--(void)setTableItem:(MessageTableItem *)tableItem {
-    self->_tableItem = tableItem;
-    tableItem.messageSender = self;
-}
 
 -(NSUInteger)indexOfListener:(id<SenderListener>)listener {
     

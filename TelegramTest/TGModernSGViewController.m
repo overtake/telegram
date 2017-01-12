@@ -22,7 +22,7 @@
     self.view.autoresizesSubviews = YES;
     self.view.autoresizingMask = NSViewHeightSizable;
     
-    _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds packHeight:_esgViewController.isLayoutStyle ? 58 : 44];
+    _stickersView = [[TGStickerPackEmojiController alloc] initWithFrame:self.view.bounds packHeight:_esgViewController.isLayoutStyle ? 50 : 44];
     _stickersView.stickers.messagesViewController = _esgViewController.messagesViewController;
     
   //  [_stickersView.stickers load:NO]; 
@@ -51,6 +51,12 @@
         
     } forControlEvents:BTRControlEventClick];
     [self.view addSubview:_showGSControllerView];
+}
+
+-(void)setHideEmoji:(BOOL)hideEmoji {
+    _hideEmoji = hideEmoji;
+    
+    [_showGSControllerView setHidden:hideEmoji];
 }
 
 -(void)reloadStickers {

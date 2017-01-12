@@ -7,23 +7,109 @@
 //
 
 #import "TGModernGrowingTextView.h"
-#import "TGTextLabel.h"
-#import "TGAnimationBlockDelegate.h"
-#import "NSAttributedStringCategory.h"
 
 @implementation TGGrowingTextView
 
 -(NSPoint)textContainerOrigin {
     
-    if([self numberOfLines] <= 1) {
+    if([self numberOfLines] < 3) {
         NSRect newRect = [self.layoutManager usedRectForTextContainer:self.textContainer];
         int yOffset = 1;
         
-        return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
+        if (NSHeight(self.frame) > NSHeight(newRect))
+            return NSMakePoint(0, roundf( (NSHeight(self.frame) - NSHeight(newRect)  )/ 2 -yOffset  ));
     }
     
     return [super textContainerOrigin];
     
+}
+
+
+-(void)changeLayoutOrientation:(id)sender {
+    
+}
+
+
+-(BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    if(menuItem.action == @selector(changeLayoutOrientation:)) {
+        return NO;
+    }
+    
+    
+    return [super validateMenuItem:menuItem];
+}
+
+
+- (void)setContinuousSpellCheckingEnabled:(BOOL)flag
+{
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
+    [super setContinuousSpellCheckingEnabled: flag];
+}
+
+-(BOOL)isContinuousSpellCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"ContinuousSpellCheckingEnabled%@",NSStringFromClass([self class])]];
+}
+
+-(void)setGrammarCheckingEnabled:(BOOL)flag {
+    
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"GrammarCheckingEnabled%@",NSStringFromClass([self class])]];
+    [super setGrammarCheckingEnabled: flag];
+}
+
+-(BOOL)isGrammarCheckingEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"GrammarCheckingEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+-(void)setAutomaticSpellingCorrectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticSpellingCorrectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticSpellingCorrectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticSpellingCorrectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+
+-(void)setAutomaticQuoteSubstitutionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticQuoteSubstitutionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticQuoteSubstitutionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticQuoteSubstitutionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+-(void)setAutomaticLinkDetectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticLinkDetectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticLinkDetectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticLinkDetectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+-(void)setAutomaticDataDetectionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticDataDetectionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticDataDetectionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticDataDetectionEnabled%@",NSStringFromClass([self class])]];
+}
+
+
+
+-(void)setAutomaticDashSubstitutionEnabled:(BOOL)flag {
+    [[NSUserDefaults standardUserDefaults] setBool: flag forKey:[NSString stringWithFormat:@"AutomaticDashSubstitutionEnabled%@",NSStringFromClass([self class])]];
+    [super setAutomaticSpellingCorrectionEnabled: flag];
+}
+
+-(BOOL)isAutomaticDashSubstitutionEnabled {
+    return  [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"AutomaticDashSubstitutionEnabled%@",NSStringFromClass([self class])]];
 }
 
 
@@ -74,13 +160,30 @@
    return [super resignFirstResponder];
 }
 
+-(void)setString:(NSString *)string {
+    [super setString:string];
+}
 
+-(void)insertText:(id)insertString {
+    if (insertString != nil) {
+        [super insertText:insertString];
+    }
+}
 
+-(void)insertText:(id)insertString replacementRange:(NSRange)replacementRange {
+    if (insertString != nil) {
+        [super insertText:insertString replacementRange:replacementRange];
+    }
+}
+
+-(void)paste:(id)sender {
+    [super paste:sender];
+}
 
 @end
 
 
-@interface TGModernGrowingTextView () <NSTextViewDelegate> {
+@interface TGModernGrowingTextView () <NSTextViewDelegate,CAAnimationDelegate> {
     int _last_height;
 }
 @property (nonatomic,strong) TGGrowingTextView *textView;
@@ -187,6 +290,8 @@
 
 - (void)textDidChange:(NSNotification *)notification {
     
+    
+    
     if([SettingsArchiver checkMaskedSetting:EmojiReplaces]) {
         NSString *replace = [self.string replaceSmilesToEmoji];
 
@@ -197,7 +302,7 @@
     }
     
     
-    _textView.font = TGSystemFont(13);
+    _textView.font = self.font;
     
     self.scrollView.verticalScrollElasticity = NSHeight(_scrollView.contentView.documentRect) <= NSHeight(_scrollView.frame) ? NSScrollElasticityNone : NSScrollElasticityAllowed;
     
@@ -303,6 +408,10 @@
             float presentX = self._needShowPlaceholder ? self._endXPlaceholder : self._startXPlaceholder;
             float presentOpacity = self._needShowPlaceholder ? 0.0f : 1.0f;
             
+            if ((presentX - 34) == NSMinX(_placeholder.frame) || (presentX - 30) == NSMinX(_placeholder.frame)) {
+                return;
+            }
+            
             CALayer *presentLayer = (CALayer *)[_placeholder.layer presentationLayer];
             
             if(presentLayer && [_placeholder.layer animationForKey:@"position"]) {
@@ -315,14 +424,9 @@
             
             CAAnimation *oAnim = [TMAnimations fadeWithDuration:0.2 fromValue:presentOpacity toValue:self._needShowPlaceholder ? 1.0f : 0.0f];
             
-            TGAnimationBlockDelegate *delegate = [[TGAnimationBlockDelegate alloc] initWithLayer:_placeholder.layer];
+
             
-            [delegate setCompletion:^(BOOL completed) {
-                if(completed)
-                    [_placeholder setHidden:!self._needShowPlaceholder];
-            }];
-            
-            oAnim.delegate = delegate;
+            oAnim.delegate = self;
             
             [_placeholder.layer removeAnimationForKey:@"opacity"];
             [_placeholder.layer addAnimation:oAnim forKey:@"opacity"];
@@ -335,9 +439,12 @@
             
             
             
+            
         } else {
             [_placeholder setHidden:!self._needShowPlaceholder];
         }
+        
+        
         
         [_placeholder setFrameOrigin:self._needShowPlaceholder ? NSMakePoint(self._startXPlaceholder, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0)) : NSMakePoint(NSMinX(_placeholder.frame) + 30, roundf((newSize.height - NSHeight(_placeholder.frame))/2.0))];
         
@@ -357,16 +464,29 @@
     
     [self refreshAttributes];
     
+    _textView.font = self.font;
+
+    
 }
+
+-(void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    [_placeholder setHidden:!self._needShowPlaceholder];
+}
+
 
 -(void)setFrameSize:(NSSize)newSize {
     [super setFrameSize:newSize];
     [_scrollView setFrameSize:NSMakeSize(newSize.width, newSize.height)];
     [_textView setFrameSize:NSMakeSize(NSWidth(_scrollView.frame), NSHeight(_textView.frame))];
+    
+    
+    [_placeholder sizeToFit];
+    [_placeholder setFrameSize:NSMakeSize(MIN(NSWidth(_textView.frame) - self._startXPlaceholder - 10,NSWidth(_placeholder.frame)), NSHeight(_placeholder.frame))];
+
 }
 
 -(BOOL)_needShowPlaceholder {
-    return _textView.string.length == 0 && _placeholderAttributedString;
+    return _textView.string.length == 0 && _placeholderAttributedString && !_textView.hasMarkedText;
 }
 
 -(void)setPlaceholderAttributedString:(NSAttributedString *)placeholderAttributedString update:(BOOL)update {
@@ -586,9 +706,10 @@
         }
 
     } @catch (NSException *exception) {
-        int bp = 0;
+        
     }
     
+
     
 
 }
@@ -690,6 +811,10 @@
 
 -(Class)_textViewClass {
     return [TGGrowingTextView class];
+}
+
+-(NSFont *)font {
+    return TGSystemFont(13);
 }
 
 -(int)_startXPlaceholder {

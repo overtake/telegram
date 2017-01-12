@@ -82,6 +82,11 @@
     __block NSImage *iconImage = nil;
     __block NSString *path = nil;
     
+    if (pasteboard.pasteboardItems.count == 0) {
+        return;
+    }
+    
+    
     NSString *url = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.file-url"];
     NSString *caption = [[[pasteboard pasteboardItems] objectAtIndex:0] stringForType:@"public.utf8-plain-text"];
     if (url != nil) {
@@ -155,10 +160,13 @@
         
     }
     
+    BOOL isDir = NO;
+    [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+    
     dispatch_block_t modal_caption_block = ^{
         TGSingleMediaSenderModalView *modalView = [[TGSingleMediaSenderModalView alloc] initWithFrame:NSZeroRect];
         
-        [modalView show:self.window animated:YES file:path ? path : image.name filedata:jpegNormalizedData(image) ptype:type caption:caption conversation:self.weakd.messagesController.conversation messagesViewController:self.weakd.messagesController];
+        [modalView show:self.window animated:YES file:path ? path : image.name filedata:jpegNormalizedData(image) ptype:type caption:nil conversation:self.weakd.messagesController.conversation messagesViewController:self.weakd.messagesController];
     };
     
     
@@ -190,10 +198,14 @@
         {
             
             if(self.weakd.messagesController.conversation.type != DialogTypeSecretChat) {
-                modal_caption_block();
                 
-                break;
-            } else {
+                
+                if(isDir) {
+                    [MessageSender sendFilesByPath:@[path] dialog:self.weakd.messagesController.conversation isMultiple:YES asDocument:YES messagesViewController:self.weakd.messagesController];
+                } else
+                    modal_caption_block();
+                
+            } else if(!isDir) {
                 alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Conversation.Confirm.SendThisFile", nil) informativeText:NSLocalizedString(@"Conversation.Confirm.SendThisFileDescription", nil) block:^(id result) {
                     if([result intValue] == 1000) {
                         
@@ -201,11 +213,11 @@
                         
                     }
                 }];
-                break;
+                
             }
             
             
-            
+            break;
             
         }
             
@@ -270,8 +282,6 @@
 
 -(void)keyDown:(NSEvent *)theEvent {
     
-    
-    
     TGMessagesHintView *hint = self.weakd.messagesController.hintView;
     
     
@@ -288,17 +298,24 @@
             
         }
         
-        
         if(isEnterAccess(theEvent)) {
+            if(hint.isVisibleAndHasSelected) {
+                [hint performSelected];
+                return;
+            }
             
-            [hint performSelected];
-            return;
             
         }
         
     } else if(theEvent.keyCode == 126 && (self.string.length == 0)) {
         [self.weakd.messagesController forceSetEditSentMessage:NO];
         return;
+    } else if(theEvent.keyCode == 124) {
+        if([self.weakd.messagesController selectNextStickerIfNeeded])
+            return;
+    } else if(theEvent.keyCode == 123) {
+        if([self.weakd.messagesController selectPrevStickerIfNeeded])
+            return;
     }
     
     //MessagesBottomView
@@ -313,6 +330,7 @@
     
     return [super becomeFirstResponder];
 }
+
 
 @end
 
@@ -337,6 +355,10 @@
 
 -(int)_startXPlaceholder {
     return _isInline ? [self.attributedString sizeForTextFieldForWidth:NSWidth(self.frame)].width - 2  : [super _startXPlaceholder];
+}
+
+-(NSFont *)font {
+    return [SettingsArchiver font];
 }
 
 -(BOOL)_needShowPlaceholder {

@@ -39,6 +39,8 @@ typedef NSUInteger TMViewBorder;
 
 @property (nonatomic,assign) BOOL dragInSuperView;
 
+@property (nonatomic,weak) id viewController;
+
 
 - (void)sizeToFit;
 
