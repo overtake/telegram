@@ -694,7 +694,7 @@ const float defYOffset = 8;
                 
                 [_messagesController.hintView showHashtagHintsWithQuery:search conversation:_messagesController.conversation peer_id:_messagesController.conversation.peer_id choiceHandler:callback];
                 
-            } else if(type == TGHintViewShowEmojiType) {
+            } else if(type == TGHintViewShowEmojiType && ![_textView.string hasPrefix:@"@"]) {
                 [_messagesController.hintView showEmojiHintsWithQuery:search conversation:_messagesController.conversation choiceHandler:callback];
             } else if(type == TGHintViewShowBotCommandType && [_textView.string rangeOfString:@"/"].location == 0) {
                 if([_messagesController.conversation.user isBot] || _messagesController.conversation.fullChat.bot_info != nil) {
