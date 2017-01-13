@@ -1,0 +1,12 @@
+[submodule "sqlcipher"]
+	path = sqlcipher
+	url = git@github.com:sqlcipher/sqlcipher.git
+[submodule "MtProtoKit"]
+	path = MtProtoKit
+	url = git@github.com:peter-iakovlev/MtProtoKit.git
+[submodule "Signals"]
+	path = Signals
+	url = git@github.com:peter-iakovlev/Signals.git
+[submodule "pop"]
+	path = pop
+	url = git@github.com:facebook/pop.git
