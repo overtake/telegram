@@ -469,7 +469,7 @@ static NSString *kDefaultDatacenter = @"default_dc";
             
             [_mtProto stop];
             
-            _mtProto = [[MTConnection alloc] initWithContext:_context datacenterId:dc_id];
+            _mtProto = [[MTConnection alloc] initWithContext:_context datacenterId:dc_id usageCalculationInfo:nil];
             
             _requestService = [[MTRequestMessageService alloc] initWithContext:_context];
             _updateService = [[TGUpdateMessageService alloc] init];
