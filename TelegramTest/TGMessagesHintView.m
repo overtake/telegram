@@ -464,35 +464,42 @@ DYNAMIC_PROPERTY(DUser);
     [recent enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         recentKeys[obj] = obj;
     }];
-    
-    
-    NSMutableArray *recentlyUsed = [NSMutableArray array];
-    
-    [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         
-        if((query.length > 0 && [key rangeOfString:[query lowercaseString]].location != NSNotFound)) {
-            [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:@{@"key":key,@"obj":obj}]];
-        } else if(query.length == 0) {
-            if([obj isEqualToString:recentKeys[obj]]) {
-                [recentlyUsed addObject:@{@"key":key,@"obj":obj}];
+    if (query.length == 0) {
+        // We only show recently used emojis when the query length is 0,
+        // aka when the input is only a colon `:`.
+        NSMutableArray *recentlyUsed = [NSMutableArray array];
+        [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            if ([obj isEqualToString:recentKeys[obj]]) {
+                [recentlyUsed addObject:@{@"key":key, @"obj":obj}];
             }
-        }
-        
-    }];
-    
-    [recentlyUsed sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        
-        NSUInteger index1 = [recent indexOfObject:obj1[@"obj"]];
-        NSUInteger index2 = [recent indexOfObject:obj2[@"obj"]];
-        return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
-        
-    }];
-    
-    [recentlyUsed enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
-    }];
-    
-
+        }];
+        [recentlyUsed sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            NSUInteger index1 = [recent indexOfObject:obj1[@"obj"]];
+            NSUInteger index2 = [recent indexOfObject:obj2[@"obj"]];
+            return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        }];
+        [recentlyUsed enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
+        }];
+    } else {
+        // Else, filter the list of emojis to extract out those that match the query.
+        NSMutableArray *queryMatches = [NSMutableArray array];
+        [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            if ([key rangeOfString:[query lowercaseString]].location != NSNotFound) {
+                [queryMatches addObject:@{@"key":key, @"obj":obj}];
+            } 
+        }];
+        // Sort emojis that contain the query according to the starting index of the matching query within the emoji.
+        [queryMatches sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            NSUInteger index1 = [obj1[@"key"] rangeOfString:[query lowercaseString]].location;
+            NSUInteger index2 = [obj2[@"key"] rangeOfString:[query lowercaseString]].location;
+            return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+        }];
+        [queryMatches enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
+        }];
+    }
     
     [self setCurrentTableView:_tableView];
     
