@@ -508,10 +508,12 @@ DYNAMIC_PROPERTY(DUser);
     
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
-    if(items.count > 0)
+    if(items.count > 0) {
         [self show:NO selectNext:NO];
-    else
+        [_tableView setSelectedObject:[_tableView itemAtPosition:0]];    
+    } else {
         [self hide];
+    }
     
 }
 
