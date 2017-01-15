@@ -1,4 +1,4 @@
-Telegram for OSX
+Telegram for macOS
 ===========
 
 [Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
@@ -16,7 +16,7 @@ Documentation for MTproto protocol is available here: http://core.telegram.org/m
 1. Checkout repository.
 1. `git submodule update --init --recursive`
 1. Open with Xcode.
-1. Click on `SSignalKit.xcodeproj` and under the "Build Settings" tab, change "Base SDK" to macOS.
+1. Click on `SSignalKit.xcodeproj` and under the "Build Settings" tab, change "Base SDK" to `macOS`.
 1. Click on `SSignalKit` target and change "ENABLE_BITCODE" from `YES` to `NO`.
 
 ### License
