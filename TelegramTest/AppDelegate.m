@@ -527,7 +527,10 @@ void exceptionHandler(NSException * exception)
         }
         
         if(incomingEvent.keyCode == 125 || incomingEvent.keyCode == 126) {
-            if(((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0 )&& incomingEvent.modifierFlags != 10617090) {
+            if(((incomingEvent.modifierFlags & (NSAlternateKeyMask)) > 0 || 
+                (incomingEvent.modifierFlags & (NSControlKeyMask)) > 0 || 
+                (incomingEvent.modifierFlags & (NSShiftKeyMask)) > 0)
+                && incomingEvent.modifierFlags != 10617090) {
                 BOOL result = YES;
                 
 //                if([responder isKindOfClass:[NSTextField class]]) {
@@ -738,14 +741,7 @@ void exceptionHandler(NSException * exception)
                 [TMViewController becomePasslock];
             }
         }
-        
-        if(result.keyCode == 48) {
-          //  NSTextView *textView = responder;
-            
-            
-            return [[NSEvent alloc]init];
-        }
-        
+
         if(isEnterAccess(result)) {
             if([appWindow().navigationController.currentController proccessEnterAction]) {
                 return [[NSEvent alloc] init];
