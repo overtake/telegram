@@ -741,7 +741,14 @@ void exceptionHandler(NSException * exception)
                 [TMViewController becomePasslock];
             }
         }
-
+        
+        // This section blocks tab keystrokes from propagating. 
+        // Not sure whether it is still needed, hence commenting out first.
+        // if(result.keyCode == 48) {
+        //   //  NSTextView *textView = responder;
+        //     return [[NSEvent alloc]init];
+        // }
+        
         if(isEnterAccess(result)) {
             if([appWindow().navigationController.currentController proccessEnterAction]) {
                 return [[NSEvent alloc] init];
