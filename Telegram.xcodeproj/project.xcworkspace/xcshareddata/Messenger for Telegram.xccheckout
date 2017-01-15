@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>704EB72A-4487-4F58-A512-5D1B1AD6D798</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Messenger for Telegram</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>50878501-B248-496B-8142-675B8EC653B2</key>
+		<string>https://bitbucket.org/keepcoder/telegram.git</string>
+		<key>DAC02095-16A3-45C6-9EC0-D102D5A9422D</key>
+		<string>https://github.com/iakovlev-peter/MtProtoKit.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Messenger for Telegram.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>50878501-B248-496B-8142-675B8EC653B2</key>
+		<string>../..</string>
+		<key>DAC02095-16A3-45C6-9EC0-D102D5A9422D</key>
+		<string>../../MtProtoKit</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://bitbucket.org/keepcoder/telegram.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>50878501-B248-496B-8142-675B8EC653B2</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DAC02095-16A3-45C6-9EC0-D102D5A9422D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MtProtoKit</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>50878501-B248-496B-8142-675B8EC653B2</string>
+			<key>IDESourceControlWCCName</key>
+			<string>new_normal</string>
+		</dict>
+	</array>
+</dict>
+</plist>
