@@ -13,11 +13,11 @@ Documentation for MTproto protocol is available here: http://core.telegram.org/m
 
 ### Setting Up
 
-1. Checkout repository
+1. Checkout repository.
 1. `git submodule update --init --recursive`
-1. Open with Xcode
-1. Click on `SSignalKit.xcodeproj` and under the "Build Settings" tab, change Base SDK to macOS.
-1. Click on `SSignalKit` target and change `ENABLE_BITCODE` from `YES` to `NO`.
+1. Open with Xcode.
+1. Click on `SSignalKit.xcodeproj` and under the "Build Settings" tab, change "Base SDK" to macOS.
+1. Click on `SSignalKit` target and change "ENABLE_BITCODE" from `YES` to `NO`.
 
 ### License
 
