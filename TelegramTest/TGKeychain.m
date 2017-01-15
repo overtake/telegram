@@ -251,7 +251,8 @@ static NSArray *groups;
                 
                 
                 if(!_notEncryptedKeychain) {
-                    MTAesDecryptInplace(decrypt, [_passcodeHash subdataWithRange:NSMakeRange(0, 32)], [_passcodeHash subdataWithRange:NSMakeRange(32, 32)]);
+                    MTAesDecryptInplaceAndModifyIv(decrypt, [_passcodeHash subdataWithRange:NSMakeRange(0, 32)], [[NSMutableData alloc] initWithData:[_passcodeHash subdataWithRange:NSMakeRange(32, 32)]]);
+
                 }
                 
                 

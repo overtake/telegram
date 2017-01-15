@@ -11,7 +11,7 @@
 @implementation MTConnection
 
 -(instancetype)initWithContext:(MTContext *)context datacenterId:(NSInteger)datacenterId {
-    if(self = [super initWithContext:context datacenterId:datacenterId]) {
+    if(self = [super initWithContext:context datacenterId:datacenterId usageCalculationInfo:nil]) {
         self.delegate = self;
     }
     return self;

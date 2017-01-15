@@ -42,7 +42,7 @@ static int workerCount = 0;
         _context = context;
         _datacenterId = datacenterId;
         
-        _mtProto = [[MTProto alloc] initWithContext:_context datacenterId:_datacenterId];
+        _mtProto = [[MTProto alloc] initWithContext:_context datacenterId:_datacenterId usageCalculationInfo:nil];
         if (_datacenterId != masterDatacenterId) {
             _mtProto.requiredAuthToken = @(masterDatacenterId);
             _mtProto.authTokenMasterDatacenterId = masterDatacenterId;

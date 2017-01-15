@@ -119,7 +119,7 @@
     
     MTContext *context = [[MTNetwork instance] context];
     
-    MTProto *mtProto = [[MTProto alloc] initWithContext:context datacenterId:datacenterId];
+    MTProto *mtProto = [[MTProto alloc] initWithContext:context datacenterId:datacenterId usageCalculationInfo:nil];
     MTRequestMessageService *requestService = [[MTRequestMessageService alloc] initWithContext:context];
     [mtProto addMessageService:requestService];
     

@@ -994,6 +994,41 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6D3800091E294C3300529336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4C0041981BFC382400ED2AD5;
+			remoteInfo = "SQLCipher iOS";
+		};
+		6D38000B1E294C3300529336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4C0041B11BFC3B2200ED2AD5;
+			remoteInfo = "SQLCipher OSX";
+		};
+		6D38000D1E294C3300529336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4C0041C31BFC3CC000ED2AD5;
+			remoteInfo = "SQLCipher tvOS";
+		};
+		6D38000F1E294C3300529336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C2E560FD1AF3726300B4CAF0 /* sqlcipher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4C0041D61BFC3E2500ED2AD5;
+			remoteInfo = "SQLCipher watchOS";
+		};
+		6D3800161E294C3300529336 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C26E80101B7B748A003CC483 /* SSignalKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D0B417ED1D7DFA63004562A4;
+			remoteInfo = SwiftSignalKitMac;
+		};
 		C23A6B331D918B8C006836C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C2D826131B6FA8A600434D37 /* MtProtoKit.xcodeproj */;
@@ -4553,6 +4588,7 @@
 				C26E801B1B7B748A003CC483 /* SSignalKitTests.xctest */,
 				C24136551C735A2700130D2E /* SwiftSignalKit.framework */,
 				C24136571C735A2700130D2E /* SwiftSignalKitTests.xctest */,
+				6D3800171E294C3300529336 /* SwiftSignalKitMac.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5783,6 +5819,10 @@
 		C2E560FE1AF3726300B4CAF0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				6D38000A1E294C3300529336 /* SQLCipher.framework */,
+				6D38000C1E294C3300529336 /* SQLCipher.framework */,
+				6D38000E1E294C3300529336 /* SQLCipher.framework */,
+				6D3800101E294C3300529336 /* SQLCipher.framework */,
 				C2E561031AF3726300B4CAF0 /* libsqlcipher.a */,
 			);
 			name = Products;
@@ -6523,6 +6563,41 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		6D38000A1E294C3300529336 /* SQLCipher.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLCipher.framework;
+			remoteRef = 6D3800091E294C3300529336 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6D38000C1E294C3300529336 /* SQLCipher.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLCipher.framework;
+			remoteRef = 6D38000B1E294C3300529336 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6D38000E1E294C3300529336 /* SQLCipher.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLCipher.framework;
+			remoteRef = 6D38000D1E294C3300529336 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6D3800101E294C3300529336 /* SQLCipher.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SQLCipher.framework;
+			remoteRef = 6D38000F1E294C3300529336 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		6D3800171E294C3300529336 /* SwiftSignalKitMac.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = SwiftSignalKitMac.framework;
+			remoteRef = 6D3800161E294C3300529336 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		C23A6B341D918B8C006836C0 /* MtProtoKitStabilityTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
@@ -7732,6 +7807,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
 					"./MtProtoKit/**",
+					"./Signals/**",
+					"./pop/**",
 				);
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
@@ -7982,6 +8059,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
 					"./MtProtoKit/**",
+					"./Signals/**",
+					"./pop/**",
 				);
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
@@ -8033,6 +8112,8 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					./sqlcipher/sr,
 					"./MtProtoKit/**",
+					"./Signals/**",
+					"./pop/**",
 				);
 				INFOPLIST_FILE = "TelegramTest/Telegraph-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @executable_path/../Frameworks";
