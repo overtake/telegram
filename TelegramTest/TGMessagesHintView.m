@@ -482,8 +482,9 @@ DYNAMIC_PROPERTY(DUser);
         [recentlyUsed enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
         }];
-    } else {
-        // Else, filter the list of emojis to extract out those that match the query.
+    } else if (query.length >= 2) {
+        // Filter the list of emojis to extract out those that match a query 
+        // that is at least 2 characters.
         NSMutableArray *queryMatches = [NSMutableArray array];
         [emoji enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
             if ([key rangeOfString:[query lowercaseString]].location != NSNotFound) {
@@ -507,10 +508,12 @@ DYNAMIC_PROPERTY(DUser);
     
     [_tableView insert:items startIndex:0 tableRedraw:YES];
     
-    if(items.count > 0)
+    if(items.count > 0) {
         [self show:NO selectNext:NO];
-    else
+        [_tableView setSelectedObject:[_tableView itemAtPosition:0]];    
+    } else {
         [self hide];
+    }
     
 }
 

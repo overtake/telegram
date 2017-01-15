@@ -286,16 +286,14 @@
     
     
     if(!hint.isHidden) {
-        if(theEvent.keyCode == 125 || theEvent.keyCode == 126) {
-            
-            if(theEvent.keyCode == 125) {
+        if(theEvent.keyCode == 125 || theEvent.keyCode == 126 || theEvent.keyCode == 48) {
+            // (Down arrow key) or (Tab where modifier is not Shift).
+            if(theEvent.keyCode == 125 || (theEvent.keyCode == 48 && theEvent.modifierFlags != 131330)) {
                 [hint selectNext];
             } else {
                 [hint selectPrev];
             }
-            
             return;
-            
         }
         
         if(isEnterAccess(theEvent)) {
@@ -303,10 +301,7 @@
                 [hint performSelected];
                 return;
             }
-            
-            
         }
-        
     } else if(theEvent.keyCode == 126 && (self.string.length == 0)) {
         [self.weakd.messagesController forceSetEditSentMessage:NO];
         return;
