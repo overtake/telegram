@@ -415,7 +415,8 @@
         return NO;
     if(!isEnter && e.keyCode ==  0x4C)
         return YES;
-    return (flags == 0 || flags == 65536) && isEnter;
+    return (flags == 0 || flags == 65536) && isEnter
+            && !self.hasMarkedText; //Determine whether an input method has uncommitted ("marked") text
 }
 
 - (void) keyDown:(NSEvent *)theEvent {
