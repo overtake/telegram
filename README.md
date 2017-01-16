@@ -1,7 +1,7 @@
 Telegram for macOS
 ===========
 
-[Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
+[Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s super fast, simple and free.
 
 This repo contains official [Telegram for macOS](https://macos.telegram.org/) source code.
 
@@ -21,4 +21,4 @@ Documentation for MTproto protocol is available here: http://core.telegram.org/m
 
 ### License
 
-GPL V2
+GPL v2

@@ -491,11 +491,28 @@ DYNAMIC_PROPERTY(DUser);
                 [queryMatches addObject:@{@"key":key, @"obj":obj}];
             } 
         }];
-        // Sort emojis that contain the query according to the starting index of the matching query within the emoji.
+        // Sort emojis that contain the query according to:
+        // - Appearance in the recently used emoji list
+        // - The starting index of the matching query within the emoji
+        // Recently used emojis have higher priority over the other emojis that match the query
         [queryMatches sortUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            NSUInteger index1 = [obj1[@"key"] rangeOfString:[query lowercaseString]].location;
-            NSUInteger index2 = [obj2[@"key"] rangeOfString:[query lowercaseString]].location;
-            return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+            if (recentKeys[obj1[@"obj"]] && recentKeys[obj2[@"obj"]]) {
+                // Both emojis are in the recent array. Compare using position within that array.
+                NSUInteger index1 = [recent indexOfObject:obj1[@"obj"]];
+                NSUInteger index2 = [recent indexOfObject:obj2[@"obj"]];
+                return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+            } else if (recentKeys[obj1[@"obj"]] && !recentKeys[obj2[@"obj"]]) {
+                // obj1 is a recent emoji but not obj2, obj1 should appear higher.
+                return NSOrderedAscending;
+            } else if (!recentKeys[obj1[@"obj"]] && recentKeys[obj2[@"obj"]]) {
+                // obj2 is a recent emoji but not obj1, obj2 should appear higher.
+                return NSOrderedDescending;
+            } else {
+                // Both emojis are not in the recent array, sort according to index of matching query.
+                NSUInteger index1 = [obj1[@"key"] rangeOfString:[query lowercaseString]].location;
+                NSUInteger index2 = [obj2[@"key"] rangeOfString:[query lowercaseString]].location;
+                return index1 > index2 ? NSOrderedDescending : index1 < index2 ? NSOrderedAscending : NSOrderedSame;
+            }
         }];
         [queryMatches enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [items addObject:[[TGMessagesHintRowItem alloc] initWithEmojiData:obj]];
