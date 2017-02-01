@@ -249,7 +249,7 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
     
     [self.mainWindow.navigationController showMessagesViewController:dialog];
     
-    if (notification.activationType != NSUserNotificationActivationTypeReplied) {
+    if (notification.activationType != 3) {
         // only deminiaturize the window if user clicked the notification itself
         // and not replied
         [self.mainWindow deminiaturize:self];
