@@ -245,13 +245,15 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         ELog(@"nil dialog here, check it");
         return;
     }
-    
-     [self.mainWindow deminiaturize:self];
+
     
     [self.mainWindow.navigationController showMessagesViewController:dialog];
     
-    
-    if (floor(NSAppKitVersionNumber) > 1187 && notification.activationType == 3) { //NSUserNotificationActivationTypeReplied)
+    if (notification.activationType != NSUserNotificationActivationTypeReplied) {
+        // only deminiaturize the window if user clicked the notification itself
+        // and not replied
+        [self.mainWindow deminiaturize:self];
+    } else if (floor(NSAppKitVersionNumber) > 1187 && notification.activationType == 3) { //NSUserNotificationActivationTypeReplied)
         NSString *userResponse = notification.response.string;
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -272,9 +274,6 @@ static void TGTelegramLoggingFunction(NSString *format, va_list args)
         
         return;
     }
-    
-   
-    
     
 }
 
