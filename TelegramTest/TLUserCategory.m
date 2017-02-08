@@ -462,9 +462,7 @@ DYNAMIC_PROPERTY(DFullName);
         if(!self.last_name)
             self.last_name = @"";
         
-        NSString *fullName = [[[[NSString stringWithFormat:@"%@%@%@", self.first_name,self.first_name.length > 0 ? @" " : @"", self.last_name] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] singleLine] htmlentities];
-        if(fullName.length > 30)
-            fullName = [fullName substringToIndex:30];
+        NSString *fullName = [[[NSString stringWithFormat:@"%@%@%@", self.first_name,self.first_name.length > 0 ? @" " : @"", self.last_name] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] singleLine];
         
         
         [self setDFullName:fullName];
@@ -655,10 +653,6 @@ DYNAMIC_PROPERTY(STATUS_CHAT_HEADER);
     
     
     userName = [userName singleLine];
-    
-    if(userName.length > 30)
-        userName = [userName substringToIndex:30];
-    
     
     return userName;
 }
