@@ -1,0 +1,50 @@
+/* 
+  Localizable.strings
+  Telegram
+
+  Created by keepcoder on 20.05.15.
+  Copyright (c) 2015 keepcoder. All rights reserved.
+*/
+"Search" = "Søk";
+"Passcode.EnterPlaceholder" = "Tast inn passkoden";
+"NoAuthDescription" = "Beklager. Du trenger innloggingsinformasjon fra hovedapplikasjonen for å benytte deg av delingsmenyen.";
+
+"Time.at" = "klokken";
+"Time.last_seen" = "sett sist";
+"Time.today" = "i dag";
+"Time.tomorrow" = "i morgen";
+"Time.yesterday" = "i går";
+"Time.agoHour" = "%d time siden";
+"Time.agoHours" = "%d timer siden";
+"Time.agoMinute" = "%d minutt siden";
+"Time.agoMinutes" = "%d minutter siden";
+"Time.justnow" = "akkurat nå";
+
+"Weekday.Friday" = "Fredag";
+"Weekday.Monday" = "Mandag";
+"Weekday.Saturday" = "Søndag";
+"Weekday.ShortFriday" = "Fre";
+"Weekday.ShortMonday" = "Man";
+"Weekday.ShortSaturday" = "Lør";
+"Weekday.ShortSunday" = "Søn";
+"Weekday.ShortThursday" = "Tor";
+"Weekday.ShortTuesday" = "Tir";
+"Weekday.ShortWednesday" = "Ons";
+"Weekday.Sunday" = "Søndag";
+"Weekday.Thursday" = "Torsdag";
+"Weekday.Tuesday" = "Tirsdag";
+"Weekday.Wednesday" = "Onsdag";
+
+"LastSeen.longTimeAgo" = "sist sett for lenge siden";
+"LastSeen.Recently" = "sist sett nylig";
+"LastSeen.Monthly" = "sist sett innen en måned";
+"LastSeen.Weekly" = "sist sett innen en uke";
+
+"Account.Online" = "pålogget";
+"Account.Offline" = "avlogget";
+
+"Group.membersCount" = "%d medlemmer";
+"Group.memberCount" = "%d medlem";
+
+"Share" = "Del";
+"Cancel" = "Avbryt";
