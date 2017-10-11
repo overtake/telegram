@@ -440,9 +440,9 @@
 
 -(void)updateAccount:(NSString *)firstName lastName:(NSString *)lastName completeHandler:(void (^)(TLUser *))completeHandler errorHandler:(void (^)(NSString *))errorHandler {
     
-    firstName = firstName.length > 30 ? [firstName substringToIndex:30] : firstName;
+    firstName = firstName.length > 255 ? [firstName substringToIndex:255] : firstName;
     
-    lastName = lastName.length > 30 ? [lastName substringToIndex:30] : lastName;
+    lastName = lastName.length > 255 ? [lastName substringToIndex:255] : lastName;
     
     
     if([firstName isEqualToString:self.userSelf.first_name] && [lastName isEqualToString:self.userSelf.last_name])
